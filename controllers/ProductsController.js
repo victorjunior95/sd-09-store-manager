@@ -5,4 +5,4 @@ const productsRouter = express.Router();
 
 productsRouter.post('/', mdwProducts.postOneProduct);
 
-module.exports = productsRouter;
+module.exports = productsRouter ;
