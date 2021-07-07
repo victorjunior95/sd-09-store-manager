@@ -1,13 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ControllerProducts = require('./controllers/ControllerProducts');
+const Middlewares = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
 
 const PORT = 3000;
 
-app.post('/products', ControllerProducts.create);
+app.post('/products', Middlewares.validProducts, ControllerProducts.create);
+// app.get('/products', ControllerProducts.getAll);
+// app.get('/products/:id', ControllerProducts.getFindById);
+
+app.use(Middlewares.errorMiddlewares);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
