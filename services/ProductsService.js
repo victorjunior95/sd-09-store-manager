@@ -1,4 +1,3 @@
-const connection = require('../models/connection');
 const ProductsModel = require('../models/ProductsModel');
 
 const getAllProducts = async () => {
@@ -9,7 +8,7 @@ const getAllProducts = async () => {
 
 const findById = async (id) => {
   const product = await ProductsModel.findById(id);
-
+  
   return product;
 };
 
