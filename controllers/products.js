@@ -10,7 +10,7 @@ const create = rescue(async (request, response, next) => {
   const { error } = Joi.object({
     name: Joi.string().not().empty().min(MIN_STRING).required(),
     quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
-  }).validate(request.body);
+  }).validate(request.body, { convert: false });
 
   if (error) return response.json(boom.badData(`${error.message}`));
 
