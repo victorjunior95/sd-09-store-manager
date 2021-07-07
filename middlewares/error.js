@@ -1,6 +1,7 @@
 const error = (err, _req, res, _next) => {
   const errorCode = {
     invalid_data: 422,
+    not_found: 404
   };
 
   const errorStatusService = 500;
