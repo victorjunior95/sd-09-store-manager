@@ -1,21 +1,20 @@
 const productModel = require('../models/productModel');
 
-const alreadyExists =   (name) => {
-  const response =    productModel.getByName(name);
-  // return response;
-  return false;
+const alreadyExists =   async (name) => {
+  const response =    await productModel.getByName(name);
+  return response;
 };
 
-const isValidName = (name) => {
+const isValidName = async (name) => {
   const minLength = 5;
-  const exists =  alreadyExists(name);
+  const zero = 0;
+  const exists =  await alreadyExists(name);
   if (name.length < minLength) {
     return { 'err':
     {'code': 'invalid_data',
       'message': '"name" length must be at least 5 chracters long'}};
   }
-  console.log(exists, 'existe saporra');
-  if ( typeof exists === 'object' ) {
+  if ( exists.length > zero ) {
     return  { 'err':
     {'code': 'invalid_data',
       'message': 'Product already exists'}};
@@ -39,7 +38,7 @@ const isValidQuantity = (quantity) => {
 };
 
 const create = async ({name, quantity}) => {
-  const nameValidity = isValidName(name);
+  const nameValidity = await isValidName(name);
   const quantityValidity = isValidQuantity(quantity);
 
   // console.log(nameValidity);
