@@ -44,11 +44,12 @@ const ALREADY_EXIST = {
 };
 
 const validateBody = (name, quantity) => {
+  // console.log(name, quantity);
   if (name.length < MIN_CHARACTERS) return INVALID_NAME;
   if (typeof quantity !== 'number') return INVALID_QUANTITY_TYPE;
   if (quantity < MIN_QUANTITY) return INVALID_QUANTITY;
 
-  return true;
+  return null;
 };
 
 const register = async (name, quantity) => {

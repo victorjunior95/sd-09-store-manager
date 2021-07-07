@@ -2,14 +2,14 @@
 const connect = require('./connection');
 
 const findByName = async (name) => {
-  const connection = connect();
+  const connection = await connect();
   const newProduct = await connection.collection('products').findOne({ name }) ;
 
   return Boolean(newProduct);
 };
 
 const register = async (name, quantity) => {
-  const connection = connect();
+  const connection = await connect();
   const newProduct = await connection.collection('products')
     .insertOne({ name, quantity });
 
