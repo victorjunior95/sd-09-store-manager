@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb');
 const { DB_NAME } = require('../../utils')
 
 const { getConnection } = require('./connectionMock')
-const registerProduct = require('../../models/registerProduct')
+const { registerProductModel } = require('../../models/registerProductModel')
 
 describe('Insere um novo produto no DB', () => {
     const productExemple = {
@@ -27,17 +27,17 @@ describe('Insere um novo produto no DB', () => {
         MongoClient.connect.restore();
     })
 
-    describe('Quando é inserido com sucesso', () => {
-        it('retorna um objeto', () => {
-            const response = await registerProduct(productExemple);
+    describe('Quando é inserido com sucesso', async () => {
+        it('retorna um objeto', async () => {
+            const response = await registerProductModel(productExemple);
 
             expect(response).to.be.a('object');
         });
 
-        it('o objeto possui o "id" do novo produto', () => {
-            const response = await registerProduct(productExemple);
-            
-            expect(response).to.be.a.property('id');
+        it('o objeto possui o "id" do novo produto', async () => {
+            const response = await registerProductModel(productExemple);
+
+            expect(response).to.be.a.property('_id');
         });
     })
 });
