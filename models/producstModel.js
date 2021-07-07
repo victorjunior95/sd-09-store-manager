@@ -4,9 +4,9 @@ const create = async ({ name, quantity }) => {
   const productsCollection = await connection()
     .then((db) => db.collection('products'));
 
-  const obj = await productsCollection.insertOne({ name, quantity });
-
-  return obj;
+  const response = await productsCollection.insertOne({ name, quantity });
+  const inserted = response.ops[0];
+  return inserted;
 };
 
 module.exports = {

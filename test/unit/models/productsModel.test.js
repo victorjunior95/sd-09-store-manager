@@ -1,9 +1,9 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const { MongoClient } = require('mongodb');
-const { getConnection } = require('../connectionMock');
 const ProductsModel = require('../../../models/producstModel');
 const connection = require('../../../models/connection');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const payloadProduct = {
   name: "led rgb",
@@ -11,22 +11,25 @@ const payloadProduct = {
 }
 
 let connectionMock;
+
+beforeEach(async () => {
+  const URLMock = await DBServer.getUri();
+  connectionMock = await MongoClient.connect(URLMock,{ useNewUrlParser: true,
+    useUnifiedTopology: true });
+  sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+});
+
+afterEach(async () => {
+  await connectionMock.db('StoreManager').collection('products').deleteMany({});
+  await DBServer.stop();
+  MongoClient.connect.restore();
+})
+
+const DBServer = new MongoMemoryServer();
+
 describe('Insert new product into database', () => {
 
-  // const response = {};
-
   describe('When it is successfully inserted', () => {
-
-    beforeEach(async () => {
-      connectionMock = await getConnection();
-      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-    });
-
-    afterEach(async () => {
-      await connectionMock.db('StoreManager').collection('products').deleteMany({});
-      await connectionMock.close();
-      MongoClient.connect.restore();
-    })
 
     it('returns an object', async () => {
         const response = await ProductsModel.create(payloadProduct);
