@@ -16,6 +16,10 @@ app.post('/products', productController.addProduct);
 app.get('/products', productController.getAllProducts);
 app.get('/products/:id', productController.getProductById);
 
+app.put('/products/:id', productController.updateProduct);
+
+app.delete('/products/:id', productController.deleteProduct);
+
 app.use((err, req, res, next) => {
   const errStatus = 422;
   res.status(errStatus).json(err);
