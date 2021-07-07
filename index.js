@@ -6,7 +6,6 @@ const saleController = require ('./controllers/saleController');
 const PORT = 3000;
 
 app.use(bodyParser.json());
-
 app.use('/products', productController);
 app.use('/sales', saleController);
 
