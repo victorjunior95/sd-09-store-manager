@@ -1,7 +1,7 @@
-const { ObjectId } = require('mongodb');
+// const { ObjectId } = require('mongodb');
 const connect = require('./connection');
 
-const findByName = (name) => {
+const findByName = async (name) => {
   const connection = connect();
   const newProduct = await connection.collection('products').findOne({ name }) ;
 
