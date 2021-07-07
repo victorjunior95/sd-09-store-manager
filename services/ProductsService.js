@@ -10,15 +10,6 @@ const getAllProducts = async () => {
 const findById = async (id) => {
   const product = await ProductsModel.findById(id);
 
-  if (!product) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
-
   return product;
 };
 
@@ -49,9 +40,16 @@ const editProduct = async (id, name, quantity) => {
   return newProduct;
 };
 
+const deleteProduct = async (id) => {
+  const product = await ProductsModel.deleteProduct(id);
+
+  return product;
+};
+
 module.exports = {
   createProduct,
   findById,
   getAllProducts,
-  editProduct
+  editProduct,
+  deleteProduct
 };
