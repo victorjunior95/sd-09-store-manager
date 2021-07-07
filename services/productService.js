@@ -3,6 +3,7 @@ const productModel = require('../models/productModel');
 const alreadyExists =   async (name) => {
   const response =    await productModel.getByName(name);
   return response;
+  // return false;
 };
 
 const isValidName = async (name) => {
