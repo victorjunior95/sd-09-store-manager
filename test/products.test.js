@@ -138,7 +138,7 @@ describe('1 - Crie um endpoint para o cadastro de produtos', () => {
   });
 });
 
-describe('2 - Crie um endpoint para listar os produtos', () => {
+skip.describe('2 - Crie um endpoint para listar os produtos', () => {
   let connection;
   let db;
 
@@ -231,7 +231,7 @@ describe('2 - Crie um endpoint para listar os produtos', () => {
   });
 });
 
-describe('3 - Crie um endpoint para atualizar um produto', () => {
+skip.describe('3 - Crie um endpoint para atualizar um produto', () => {
   let connection;
   let db;
 
@@ -393,7 +393,7 @@ describe('3 - Crie um endpoint para atualizar um produto', () => {
   });
 });
 
-describe('4 - Crie um endpoint para deletar um produto', () => {
+skip.describe('4 - Crie um endpoint para deletar um produto', () => {
   let connection;
   let db;
 

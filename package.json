@@ -7,7 +7,8 @@
     "test": "jest --runInBand",
     "test:mocha": "nyc --all --include models --include services --include controllers mocha test/unit/*.js --exit",
     "start": "nodemon index.js",
-    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -29,8 +30,7 @@
     "faker": "^4.1.0",
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
-    "mongodb": "^3.5.9",
-    "nodemon": "^2.0.4"
+    "mongodb": "^3.5.9"
   },
   "devDependencies": {
     "chai": "^4.3.4",
@@ -39,6 +39,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-sonarjs": "^0.5.0",
     "mocha": "^8.4.0",
+    "nodemon": "^2.0.9",
     "nyc": "^15.1.0",
     "sinon": "^11.1.1"
   }
