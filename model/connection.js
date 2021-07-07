@@ -15,7 +15,7 @@ let db = null;
 const connection = () => {
   return db
     ? Promise.resolve(db)
-    : MongoClient.connect(MONGO_DB_URL, OPTIONS)
+    : MongoClient.connect(MONGO_DB_URL_LOCALHOST, OPTIONS)
       .then((conn) => {
         db = conn.db(DB_NAME);
         return db;

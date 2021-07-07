@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 const PORT = 3000;
 
 app.post('/products', Middlewares.validProducts, ControllerProducts.create);
-// app.get('/products', ControllerProducts.getAll);
-// app.get('/products/:id', ControllerProducts.getFindById);
+app.get('/products', ControllerProducts.getAllOrById);
+app.get('/products/:id', ControllerProducts.getAllOrById);
 
 app.use(Middlewares.errorMiddlewares);
 
