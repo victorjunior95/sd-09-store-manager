@@ -17,9 +17,11 @@ const validQuantity = (quantity) => {
 const createErrorMsg = (status, message) => (
   {
     status,
-    err: {
-      code: 'invalid_data',
-      message,
+    result: {
+      err: {
+        code: 'invalid_data',
+        message,
+      },
     },
   }
 );
@@ -59,7 +61,7 @@ const addProduct = async (name, quantity) => {
   } 
 
   const result = await ProductsModel.create(name, quantity);
-  return result.ops[0];
+  return { status: 201, result: result.ops[0] };
 };
 
 const listProducts =  () => ProductsModel.find();
