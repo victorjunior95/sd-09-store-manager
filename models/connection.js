@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const { MONGO_DB_URL, DB_NAME } = require('../utils');
+const { mongoInfos: { MONGO_DB_URL, DB_NAME }} = require('../utils');
 let schema = null;
 
 async function connection() {
