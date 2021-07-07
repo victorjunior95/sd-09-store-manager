@@ -29,4 +29,13 @@ ProductsRouter.post('/', validatorNameAndQuant, async (req, res, next) => {
   return res.status(statusSucessCreate).json(product);
 });
 
+ProductsRouter.put('/:id', validatorNameAndQuant, async (req, res, _next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const newProduct = await ProductsService.editProduct(id, name, quantity );
+
+  return res.status(statusSucess).json(newProduct);
+});
+
 module.exports = ProductsRouter;

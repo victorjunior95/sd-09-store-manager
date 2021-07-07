@@ -1,3 +1,4 @@
+const connection = require('../models/connection');
 const ProductsModel = require('../models/ProductsModel');
 
 const getAllProducts = async () => {
@@ -42,8 +43,15 @@ const createProduct = async (name, quantity) => {
   };
 };
 
+const editProduct = async (id, name, quantity) => {
+  const newProduct = await ProductsModel.editProduct(id, name, quantity);
+
+  return newProduct;
+};
+
 module.exports = {
   createProduct,
   findById,
-  getAllProducts
+  getAllProducts,
+  editProduct
 };
