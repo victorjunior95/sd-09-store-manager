@@ -10,4 +10,8 @@ ProductRouter.get('/', ProductsController.getAllProducts);
 
 ProductRouter.get('/:id', ProductsController.getProductById);
 
+ProductRouter.put('/:id', ProductsController.updateProduct);
+
+ProductRouter.delete('/:id', ProductsController.deleteProduct);
+
 module.exports = ProductRouter;

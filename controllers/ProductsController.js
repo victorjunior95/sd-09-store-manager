@@ -36,8 +36,33 @@ const getProductById = rescue(async (req, res, next) => {
     : next(getById);
 });
 
+// Atualiza um produto
+const updateProduct = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const updatedProduct = await productValidation.updateProduct(id, name, quantity);
+
+  return updatedProduct.name
+    ? res.status(STATUS_CODE.ok).json(updatedProduct)
+    : next(updatedProduct);
+});
+
+// Deleta um produto por id
+const deleteProduct = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const deleteById = await productValidation.deleteProduct(id);
+
+  return deleteById.name
+    ? res.status(STATUS_CODE.ok).json(deleteById)
+    : next(deleteById);
+});
+
 module.exports = {
   addNewProduct,
   getAllProducts,
   getProductById,
+  updateProduct,
+  deleteProduct,
 };

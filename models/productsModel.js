@@ -42,7 +42,34 @@ const getProductById = async (id) => {
 
   const getById = await collection.findOne({ _id: ObjectId(id) });
 
-  return getById;
+  return getById || false;
+};
+
+const updateProduct = async (id, name, quantity) => {
+  const db = await connection();
+
+  const collection = await db.collection('products');
+
+  const updatedProduct = await collection
+    .updateOne(
+      {_id: ObjectId(id)}, { $set: { name, quantity }}
+    );
+
+  const getUpdatedProduct = await collection.findOne({ _id: ObjectId(id) });
+
+  return updatedProduct && getUpdatedProduct;
+};
+
+const deleteProduct = async (id) => {
+  const db = await connection();
+
+  const collection = await db.collection('products');
+
+  const productToBeDeleted = await collection.findOne({ _id: ObjectId(id) });
+
+  const deleteProduct = await collection.deleteOne({ _id: ObjectId(id) });
+
+  return deleteProduct && productToBeDeleted;
 };
 
 module.exports = {
@@ -50,4 +77,6 @@ module.exports = {
   getProductByName,
   getAllProducts,
   getProductById,
+  updateProduct,
+  deleteProduct,
 };
