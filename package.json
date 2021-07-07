@@ -7,7 +7,8 @@
     "test": "jest --runInBand",
     "test:mocha": "nyc --all --include models --include services --include controllers mocha test/unit/*.js --exit",
     "start": "nodemon index.js",
-    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx",
+    "unit": "mocha ./test/**/*$NAME*.test.js --reporter=nyan --exit"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
     "mongodb": "^3.5.9",
+    "mongodb-memory-server": "^7.2.0",
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
