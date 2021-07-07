@@ -1,10 +1,15 @@
-const { findProductByName, createProductsModel } = require('../model/productsModel');
+const {
+  findProductByName,
+  createProduct,
+  getProductsAll,
+  getProductById,
+} = require('../model/productsModel');
 
 const MIN_CHARACTERS = 5;
 const VALUE_LIMIT = 0;
 const DATA_ERROR_CODE = 'invalid_data';
 
-const createProductsService = async (data) => {
+const createProductService = async (data) => {
   const { name, quantity } = data;
   const productExists = await findProductByName(name);
 
@@ -32,8 +37,27 @@ const createProductsService = async (data) => {
       message: '"quantity" must be a number'}});
   }
 
-  const result = await createProductsModel(data);
+  const result = await createProduct(data);
   return result;
 };
 
-module.exports = createProductsService;
+const getProductsAllService = async () => {
+  const result = await getProductsAll();
+  return result;
+};
+
+const getProductByIdService = async (productId) => {
+  const result = await getProductById(productId);
+  if (result === null) {
+    return  ({ err: {
+      code: DATA_ERROR_CODE,
+      message: 'Wrong id format'}});
+  }
+  return result;
+};
+
+module.exports = {
+  createProductService,
+  getProductsAllService,
+  getProductByIdService,
+};
