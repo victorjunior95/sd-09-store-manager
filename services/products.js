@@ -1,13 +1,13 @@
 const Products = require('../models/products');
 const rescue = require('express-rescue');
 
-const create = rescue(async (name, quantity) => {
+const create = async (name, quantity) => {
 
   const existingProduct = await Products.findByName(name);
-
   if (existingProduct) return { err: { message: 'Product already exists'}};
 
-  return Products.create(name, quantity);
-});
+  const { insertedId } = await Products.create(name, quantity);
+  return insertedId;
+};
 
 module.exports = { create };

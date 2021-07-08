@@ -17,13 +17,12 @@ const create = rescue(async (request, response, next) => {
   const { name, quantity } = request.body;
 
   const newProduct = await services.create(name, quantity);
-  console.log(newProduct);
 
   if (newProduct.err) return response.status(UNPROCESSED)
-    .json({ err: { code: 'invalid_data', message: newProduct.error.message}});
+    .json({ err: { code: 'invalid_data', message: newProduct.err.message}});
 
   response.status(CREATED).json({
-    _id: newProduct._id,
+    _id: newProduct,
     name,
     quantity,
   });
