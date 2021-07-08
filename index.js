@@ -4,9 +4,10 @@ const router = require('./routes/router');
 
 const app = express();
 app.use(bodyParser);
-app.use(router);
 
 const PORT = 3000;
+
+app.use(router);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

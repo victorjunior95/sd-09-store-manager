@@ -1,31 +1,28 @@
 const express = require('express');
+const productsServices = require('../services/productsServices');
 const response = require('../middlewares/responseCodes');
-const mw = require('../middlewares/index');
-const {
-  getAllProducts,
-  addNewProduct,
-} = require('../models/productsModel');
 
 const ProductsRouter = express.Router();
+
 ProductsRouter.get('/', async(req, res) => {
-  const products = await getAllProducts();
-  if(products.error) return next(products);
-  return res.status(response.STATUS_OK).json(products);
+  const products = await productsServices.getAllProducts();
+  if(products.error) return res.status(response.INVALID_DATA).json(products);
+  return res.status(response.STATUS_OK).json({products: products});
+});
+
+ProductsRouter.get('/:id', async (req, res) => {
+  const searchedId = req.params.id;
+  const foundProduct = await productsServices.getProductById(searchedId);
+  if(foundProduct.err) return res.status(response.INVALID_DATA).json(foundProduct);
+  return res.status(response.STATUS_OK).json(foundProduct);
 });
 
 ProductsRouter.post('/',
-  mw.validateName,
-  mw.validateQuantity,
   async (req, res) => {
-    const newProduct = await addNewProduct(req.body);
+    const { name, quantity } = req.body;
+    const newProduct = await productsServices.createNewProduct(name, quantity);
+    if(newProduct.err) return res.status(response.INVALID_DATA).json(newProduct);
     return res.status(response.STATUS_CREATED).json(newProduct);
   });
-
-// app.get('/products/:id', async (req, res, next) => {
-//   const searchProduct = await getProductById(req.params.id);
-//   console.log(searchProduct);
-//   if(searchProduct.error) return next(searchProduct);
-//   return res.status(response.STATUS_OK).json(searchProduct);
-// });
 
 module.exports = ProductsRouter;

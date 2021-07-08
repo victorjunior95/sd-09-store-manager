@@ -1,10 +1,11 @@
 const connection = require('./connection');
-const ObjectID = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
+const response = require('../middlewares/responseCodes');
 
 const getAllProducts = async () => {
   try {
     return connection()
-      .then ((db) => db.collection('products').find().toArray());
+      .then((db) => db.collection('products').find().toArray());
   } catch (error) {
     return {
       error: error.status,
@@ -16,18 +17,31 @@ const getAllProducts = async () => {
 const getProductById = async (id) => {
   try {
     const foundProduct = await connection()
-      .then((db) => db.collection('products').findOne({ _id: ObjectID(id)}));
-    if (!foundProduct) throw new Error();
+      .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
+    if(foundProduct === null) throw new Error();
     return foundProduct;
   } catch (error) {
-    return {
-      error: 422,
-      message: 'Wrong id format',
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Wrong id format'
+      }
     };
+    return errorObj;
   }
 };
 
-const addNewProduct = async ({ name, quantity }) => {
+const createNewProduct = async (name, quantity) => {
+  const dbProducts = await getAllProducts();
+  if (dbProducts.some((product) => product.name === name)) {
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Product already exists'
+      }
+    };
+    return errorObj;
+  }
   return connection()
     .then((db) => db.collection('products').insertOne({ name, quantity }))
     .then(result => result.ops[0]);
@@ -36,5 +50,5 @@ const addNewProduct = async ({ name, quantity }) => {
 module.exports = {
   getAllProducts,
   getProductById,
-  addNewProduct,
+  createNewProduct,
 };
