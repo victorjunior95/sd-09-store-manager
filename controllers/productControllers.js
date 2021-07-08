@@ -23,8 +23,17 @@ const getProduct = async (req, res) => {
   res.status(request.status).json(request.response);
 };
 
+const editProduct = async (req, res) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  const request = await productServices.editProduct(name, quantity, id);
+
+  res.status(request.status).json(request.response);
+};
+
 module.exports = {
   postProduct,
   getAllProducts,
-  getProduct
+  getProduct,
+  editProduct
 };
