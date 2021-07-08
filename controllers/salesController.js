@@ -5,7 +5,6 @@ const {
 } = require('../services/salesService');
 
 const OK = 200;
-const CREATE = 201;
 const INVALID_DATA = 422;
 const NOT_FOUND = 404;
 
