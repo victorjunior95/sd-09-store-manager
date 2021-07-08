@@ -1,12 +1,21 @@
 const Products = require('../models/products');
-const rescue = require('express-rescue');
+const Joi = require('@hapi/joi');
+const { MIN_STRING, MIN_NUMBER } = require('../constants/magicNumbers.json');
 
-const create = async (name, quantity) => {
+const create = async (product) => {
 
-  const existingProduct = await Products.findByName(name);
-  if (existingProduct) return { err: { message: 'Product already exists'}};
+  const { error } = Joi.object({
+    name: Joi.string().not().empty().min(MIN_STRING).required(),
+    quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
+  }).validate(product, { convert: false });
 
-  const { insertedId } = await Products.create(name, quantity);
+  if (error) return { err: { message: error.message } };
+
+  const existingProduct = await Products.findByName(product.name);
+
+  if (existingProduct) return { err: { message: 'Product already exists' } };
+
+  const { insertedId } = await Products.create(product.name, product.quantity);
   return insertedId;
 };
 
