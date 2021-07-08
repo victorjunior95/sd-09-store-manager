@@ -33,4 +33,17 @@ productRouter.get('/:id', async (req, res, _next) => {
   return res.status(ok).json(listProduct);
 });
 
+productRouter.put('/:id', async (req, res, _next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const updateProduct = await productServices.productToUpdate(id, name, quantity);
+
+  if (updateProduct && updateProduct.err) {
+    return res.status(unprocessable).json(updateProduct);
+  }
+
+  return res.status(ok).json(updateProduct);
+});
+
 module.exports = productRouter;

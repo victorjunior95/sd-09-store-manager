@@ -50,9 +50,7 @@ module.exports = {
   },
 
   findAllProducts: async () => {
-    const finded = await productsModels.listAllProducts();
-
-    return finded;
+    return await productsModels.listAllProducts();
   },
 
   findOneProduct: async (id) => {
@@ -68,5 +66,40 @@ module.exports = {
         'message': 'Wrong id format'
       }
     };
+  },
+
+  productToUpdate: async (id, name, quantity) => {
+    if (!ObjectId.isValid(id)) return null;
+
+    const minCharacters = 5;
+
+    if (name.length < minCharacters || !name.length) {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': '"name" length must be at least 5 characters long'
+        }
+      };
+    }
+
+    if (typeof quantity !== 'number') {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': '"quantity" must be a number'
+        }
+      };
+    }
+
+    if (Number(quantity) < 1) {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': '"quantity" must be larger than or equal to 1'
+        }
+      };
+    }
+
+    return await productsModel.updateProduct(id, name, quantity);
   },
 };

@@ -26,4 +26,16 @@ module.exports = {
     return connection().then((db) =>
       db.collection('products').findOne({ _id: ObjectId(id) }));
   },
+
+  updateProduct: async (id, name, quantity) => {
+    // if (!ObjectId.isValid(id)) return null;
+
+    const edited = await connection().then((db) =>
+      db.collection('products')
+        .update({ _id: ObjectId(id) }, { $set: { name, quantity } })
+        .then(() => ({ _id: id, name, quantity }))
+    );
+
+    return edited;
+  },
 };
