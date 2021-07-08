@@ -9,8 +9,7 @@ const create = rescue(async (request, response, next) => {
 
   const newProduct = await services.create({ name, quantity });
 
-  if (newProduct.err) return response.status(UNPROCESSED)
-    .json({ err: { code: 'invalid_data', message: newProduct.err.message}});
+  if (newProduct.err) next(err);
 
   response.status(CREATED).json({
     _id: newProduct,
