@@ -1,0 +1,31 @@
+@hostname = localhost
+@port = 3000
+
+### PRODUCTS
+@productId = 60e705357779ea6b67673088
+
+POST http://{{hostname}}:{{port}}/products
+Content-Type: application/json
+
+{
+  "name": "Produto 1",
+  "quantity": 10
+}
+
+### GET ALL
+GET http://{{hostname}}:{{port}}/products
+
+### FIND BY ID
+GET http://{{hostname}}:{{port}}/products/{{productId}}
+
+### UPDATE BY ID
+PUT http://{{hostname}}:{{port}}/products/{{productId}}
+Content-Type: application/json
+
+{
+  "name": "Produto 2",
+  "quantity": 18
+}
+
+### DELETE BY ID
+DELETE http://{{hostname}}:{{port}}/products/{{productId}}
