@@ -44,7 +44,23 @@ const create = async (salesArray) => {
   return sales;
 };
 
-module.exports = {
-  create,
+
+const getAll = async () => {
+  const sales = await salesModel.getAll();
+  return sales;
 };
 
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+  const sale = await salesModel.getById(id);
+  return sale;
+};
+
+
+module.exports = {
+  create,
+  getAll,
+  getById
+};

@@ -17,6 +17,24 @@ const create = async (salesArray) => {
   };
 };
 
+const getAll = async () => {
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+
+  const sales = await salesCollection.find().toArray();
+
+  return sales;
+};
+
+const getById = async (id) => {
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+  const sale = await salesCollection.findOne(new ObjectId(id));
+
+  return sale;
+};
+
+
 
 const findProductId = async (id) => {
   const productsCollection = await connection()
@@ -27,5 +45,7 @@ const findProductId = async (id) => {
 
 module.exports = {
   create,
-  findProductId
+  findProductId,
+  getAll,
+  getById
 };
