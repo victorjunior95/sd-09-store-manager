@@ -44,9 +44,19 @@ const updateProduct = async (req, res) => {
 };
 
 // 4 - Crie um endpoint para deletar um produto
+const deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+
+  const result = await productsServices.deleteProduct(id);
+
+  if(result.err) return next(result.err);
+
+  res.status(httpCodes.ok).json(result);
+};
 
 module.exports = {
   postNewProduct,
   getProducts,
   updateProduct,
+  deleteProduct,
 };

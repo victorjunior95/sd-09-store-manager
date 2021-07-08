@@ -31,9 +31,23 @@ const updateProduct = async ({ id, name, quantity }) => {
   return result;
 };
 
+const deleteProduct = async (id) => {
+  const result = await productsModel.deleteProduct(id);
+
+  if (!result) return ({
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    },
+  });
+
+  return result;
+};
+
 module.exports = {
   postNewProduct,
   getAllProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };

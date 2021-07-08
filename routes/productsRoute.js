@@ -14,5 +14,6 @@ router.get(['/', '/:id'], validateId , productsController.getProducts);
 router.put('/:id',validateId ,validateProductInput, productsController.updateProduct);
 
 // 4 - Crie um endpoint para deletar um produto
+router.delete('/:id', validateId, productsController.deleteProduct);
 
 module.exports = router;
