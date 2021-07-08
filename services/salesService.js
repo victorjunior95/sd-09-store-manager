@@ -99,7 +99,7 @@ const updateQuantity = async (sales, op, saleId) => {
 const updateQuantityWhenDeleteSales = async (salesToDelete) => {
   const products = await getAllProducts();
   const { itensSold } = salesToDelete;
-  console.log(itensSold);
+  // console.log(itensSold);
   itensSold.forEach(async (item) => {
     const product = products
       .find(({ _id }) => _id.toString() === item.productId.toString());
@@ -127,7 +127,8 @@ const registerSalesService = async (sales) => {
 
 const getAllSalesService = async () => {
   const sales = await getAllSales();
-  return { code: HTTP_OK_STATUS, response: sales };
+  const obj = { sales };
+  return { code: HTTP_OK_STATUS, response: obj };
 };
 
 const getSalesByIdService = async (id) => {

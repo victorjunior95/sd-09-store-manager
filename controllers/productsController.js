@@ -16,7 +16,7 @@ const registerProductController = async (req, res) => {
 const getAllProductsController = async (_req, res) => {
   const result = await getAllProductsService();
   const { code, response } = result;
-  return res.status(code).json({ products: [...response] });
+  return res.status(code).json(response);
 };
 
 const getByIdController = async (req, res) => {

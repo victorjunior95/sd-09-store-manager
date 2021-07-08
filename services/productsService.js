@@ -85,7 +85,8 @@ const registerProductService = async (product) => {
 
 const getAllProductsService = async () => {
   const products = await getAllProducts();
-  return { code: HTTP_OK_STATUS, response: products };
+  const obj = { products };
+  return { code: HTTP_OK_STATUS, response: obj };
 };
 
 const getByIdService = async (id) => {
