@@ -39,17 +39,17 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const product = await productModel.getById(id);
+  const products = await productModel.getById(id);
 
-  if (!product) {
+  if (!products) {
     return {
       code: 'invalid_data',
-      error: { message: 'Product already exists' },
+      error: { message: 'Wrong id format' },
       status: 422,
     };
   }
 
-  return product;
+  return products;
 };
 
 module.exports = {
