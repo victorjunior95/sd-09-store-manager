@@ -2,9 +2,11 @@ const productsModel = require('../models/ProductsModel');
 
 const HTTP_NOTPROCESS_STATUS = 422;
 const HTTP_CREATED_STATUS = 201;
+const productMaxLength = 5;
+const productMinQuantity = 0;
 
 const create = async (name, quantity) => {
-  if (name.length < 5)
+  if (name.length < productMaxLength)
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: {
@@ -24,7 +26,7 @@ const create = async (name, quantity) => {
     };
   }
 
-  if (quantity < 0)
+  if (quantity < productMinQuantity)
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: {
@@ -33,7 +35,7 @@ const create = async (name, quantity) => {
       },
     };
 
-  if (quantity === 0)
+  if (quantity === productMinQuantity)
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: {
