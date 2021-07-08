@@ -1,14 +1,20 @@
+const { unprocessableEntity } = require('./httpStatusCode');
+const errors = require('./errorsMessage');
 const {
   createNewProduct,
   getAllProductsFromDB,
-  findProductByIdFromDB
+  findProductByIdFromDB,
+  updateProductFromDB,
 } = require('../models/productsModel');
-const { validateName, validateQuantity } = require('./validations');
-const { unprocessableEntity } = require('./httpStatusCode');
-const errors = require('./errorsMessage');
+const {
+  validateNameLength,
+  validateProductExists,
+  validateQuantity
+} = require('./validations');
 
 async function addProductToDB(name, quantity) {
-  await validateName(name);
+  validateNameLength(name);
+  await validateProductExists(name);
   validateQuantity(quantity);
   const result = createNewProduct(name, quantity);
   return result;
@@ -32,8 +38,16 @@ async function findProductById(id) {
   return result;
 }
 
+async function updateProduct(id, name, quantity) {
+  validateQuantity(quantity);
+  validateNameLength(name);
+  const result = await updateProductFromDB(id, name, quantity);
+  return result;
+}
+
 module.exports = {
   addProductToDB,
   getAll,
   findProductById,
+  updateProduct,
 };

@@ -4,7 +4,7 @@ const { unprocessableEntity } = require('./httpStatusCode');
 
 const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
 
-async function validateName(name) {
+function validateNameLength(name) {
   const mimNameLength = 5;
   
   if (name.length < mimNameLength ) throw { 
@@ -14,7 +14,9 @@ async function validateName(name) {
       message: errors.nameLength,
     }
   };
+}
 
+async function validateProductExists(name) {
   const result = await findProductByName(name);
 
   if (result) throw {
@@ -47,6 +49,7 @@ function validateQuantity(quantity) {
 }
 
 module.exports = {
-  validateName,
+  validateNameLength,
+  validateProductExists,
   validateQuantity,
 };

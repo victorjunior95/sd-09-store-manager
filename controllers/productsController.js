@@ -1,7 +1,8 @@
 const {
   addProductToDB,
   getAll,
-  findProductById
+  findProductById,
+  updateProduct,
 } = require('../services/productsService');
 
 const { created, ok } = require('../services/httpStatusCode');
@@ -33,10 +34,22 @@ async function getProductById(req, res, next) {
   } catch (error) {
     next(error);
   }
+}
+
+async function updateProductById(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+    const result = await updateProduct(id, name, quantity);
+    res.status(ok).json(result);
+  } catch (error) {
+    next(error);
+  }
 } 
 
 module.exports = {
   postProductToDB,
   getAllProducts,
   getProductById,
+  updateProductById,
 };
