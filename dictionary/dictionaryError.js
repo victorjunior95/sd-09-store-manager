@@ -4,6 +4,13 @@ const invalidProduct = (status, code, message) => ({
   message,    
 });
 
+const alreadyExists = () => ({
+  status: 422,
+  code: 'invalid_data',
+  message: 'Product already exists',
+});
+
 module.exports = {
-  invalidProduct
+  invalidProduct,
+  alreadyExists
 };

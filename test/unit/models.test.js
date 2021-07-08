@@ -4,29 +4,28 @@ const { MongoClient } = require('mongodb');
 const { DB_NAME } = require('../../utils')
 
 const { getConnection } = require('./connectionMock')
-const { registerProductModel } = require('../../models/registerProductModel')
+const { registerProductModel } = require('../../models/productsModel')
 
 describe('Insere um novo produto no DB', () => {
     const productExemple = {
         name: 'product name',
         quantity: 'product quantity'
     };
-
+    
     let connectionMock;
-
-    before(async() => {
+    beforeEach(async() => {
         connectionMock = await getConnection()
 
         sinon.stub(MongoClient, 'connect').resolves(connectionMock)
     });
 
-    after(async () => {
+    afterEach(async () => {
         await connectionMock.db(DB_NAME)
-          .collection('produtos').deleteMany({});
-
+        .collection('products').deleteMany({});
+        
         MongoClient.connect.restore();
     })
-
+    
     describe('Quando é inserido com sucesso', async () => {
         it('retorna um objeto', async () => {
             const response = await registerProductModel(productExemple);

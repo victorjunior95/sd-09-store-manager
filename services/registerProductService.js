@@ -1,10 +1,17 @@
 const Joi = require('@hapi/joi');
-const { registerProductModel } = require('../models/registerProductModel');
-const { invalidProduct } = require('../dictionary/dictionaryError');
+const { 
+  registerProductModel,
+  existsProduct,
+} = require('../models/productsModel');
+
+const { 
+  invalidProduct,
+  alreadyExists
+} = require('../dictionary/dictionaryError');
 const { httpStatusCode: { unprocessableEntity } } = require('../utils');
 
 const minLength = 5;
-const minQuantity = 0;
+const minQuantity = 1;
 
 const productSchema = Joi.object({
   name: Joi.string()
@@ -13,7 +20,7 @@ const productSchema = Joi.object({
 
   quantity: Joi.number()
     .integer()
-    .greater(minQuantity)
+    .min(minQuantity)
     .required()
 });
 
@@ -22,6 +29,7 @@ const registerProductService = async (name, quantity) => {
     .validate({name, quantity});
   if (error) throw invalidProduct(unprocessableEntity, 'invalid_data', error.message);
   
+  if (await existsProduct(name)) throw alreadyExists();
 
   const response = await registerProductModel(name, quantity);
   return response;
