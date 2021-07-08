@@ -11,7 +11,7 @@ const errorMiddleware = async (err, _req, res, _next) => {
     return res.status(UNPROCESSABLE_ENTITY).json({ err });
   }
 
-  if (err.code === 'not_found') {
+  if (err.code === 'not_found' || err.code === 'stock_problem') {
     return res.status(NOT_FOUND).json({ err });
   }
 

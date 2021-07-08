@@ -2,7 +2,7 @@
 @port = 3000
 
 ### PRODUCTS
-@productId = 60e74d3d22acaefb43fa0f19
+@productId = 60e7766b10a3216f4f942c47
 
 ### CREATE
 POST http://{{hostname}}:{{port}}/products
@@ -32,7 +32,7 @@ Content-Type: application/json
 DELETE http://{{hostname}}:{{port}}/products/{{productId}}
 
 ### SALES
-@saleId = 60e7571632f8db11e41f04b0
+@saleId = 60e776dd0e997a6fb917ad00
 
 ### CREATE
 POST http://{{hostname}}:{{port}}/sales
@@ -40,11 +40,7 @@ Content-Type: application/json
 
 [
   {
-    "productId": "60e705357779ea6b67673088",
-    "quantity": 10
-  },
-  {
-    "productId": "60e705357779ea6b67673089",
+    "productId": "60e7766b10a3216f4f942c47",
     "quantity": 15
   }
 ]
@@ -61,7 +57,10 @@ Content-Type: application/json
 
 [
   {
-    "productId": "60e705357779ea6b67673088",
+    "productId": "60e7766b10a3216f4f942c47",
     "quantity": 25
   }
 ]
+
+### DELETE BY ID
+DELETE http://{{hostname}}:{{port}}/sales/{{saleId}}

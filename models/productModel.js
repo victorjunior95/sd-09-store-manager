@@ -47,8 +47,6 @@ const updateById = async (id, { name, quantity }) => {
 
   if (!newProduct) return null;
 
-  console.log(newProduct);
-
   return {
     _id: id,
     name,
