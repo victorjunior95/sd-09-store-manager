@@ -94,9 +94,20 @@ const updateById = async (id, name, quantity) => {
   return product;
 };
 
+
+const deleteById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  const productValid = await productModel.getById(id);
+  if (!productValid) return null;
+
+  await productModel.deleteById(id);
+  return productValid;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
-  updateById
+  updateById,
+  deleteById
 };

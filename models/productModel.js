@@ -18,9 +18,20 @@ const updateById = async (id, name, quantity) => {
   const productsCollection = await connection()
     .then((db) => db.collection('products'));
 
-  const result = await productsCollection
+  await productsCollection
     .updateOne({_id: ObjectId(id)},{$set :{ name, quantity}});
   return {_id: id, name, quantity};
+};
+
+
+const deleteById = async (id) => {
+  const productsCollection = await connection()
+    .then((db) => db.collection('products'));
+
+  const result = await productsCollection
+    .deleteOne({_id: ObjectId(id)});
+  console.log(result);
+  return result;
 };
 
 const getAll = async () => {
@@ -56,4 +67,5 @@ module.exports = {
   getAll,
   getById,
   updateById,
+  deleteById
 };

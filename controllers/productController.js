@@ -40,6 +40,21 @@ const getById = async (req, res) => {
     .json(response);
 };
 
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const response = await productService.deleteById(id);
+  if (!response ) {
+    return res
+      .status(status422)
+      .json({ 'err':
+    {'code': 'invalid_data',
+      'message': 'Wrong id format'}});
+  }
+  return res
+    .status(status200)
+    .json(response);
+};
+
 const updateById = async (req, res) => {
   const { id } = req.params;
   const {name, quantity} = req.body;
@@ -59,5 +74,6 @@ module.exports = {
   create,
   getAll,
   getById,
-  updateById
+  updateById,
+  deleteById
 };
