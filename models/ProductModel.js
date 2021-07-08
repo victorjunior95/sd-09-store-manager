@@ -6,7 +6,8 @@ const create = async (name, quantity) => connection()
 
 const getAll = async () => connection()
   .then((db) => db.collection('products').find().toArray())
-  .then((products) => products.map(({ _id, name, quantity }) => ({ _id, name, quantity })));
+  .then((products) => products
+  .map(({ _id, name, quantity }) => ({ _id, name, quantity })));
 
 module.exports = {
   create,
