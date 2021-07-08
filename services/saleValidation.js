@@ -39,9 +39,25 @@ const getSaleById = async (id) => {
   return await salesModel.getSaleFromDb(id);
 };
 
+const updateSale = async (id, quantity) => {
+  if (!sale.quantityValueIsValid(quantity)
+  || !sale.quantityTypeIsValid(quantity)) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
+      },
+      status: 422,
+    };
+  }
+
+  return salesModel.updateSale(id, quantity);
+};
+
 module.exports = {
   postValidateOneSale,
   postValidateManySales,
   getAllSales,
   getSaleById,
+  updateSale,
 };

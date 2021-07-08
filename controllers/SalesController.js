@@ -36,8 +36,22 @@ const getSaleById = async (req, res, next) => {
     : res.status(STATUS_CODE.ok).json(sale);
 };
 
+const updateSale = async (req, res, next) => {
+  const { id } = req.params;
+  const [{quantity}] = req.body;
+
+  const updatedSale = await saleValidation.updateSale(id, quantity);
+
+  console.log(updatedSale);
+
+  return updatedSale.err
+    ? next(updatedSale)
+    : res.status(STATUS_CODE.ok).json(updatedSale);
+};
+
 module.exports = {
   addNewSale,
   getAllSales,
   getSaleById,
+  updateSale,
 };

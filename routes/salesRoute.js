@@ -9,4 +9,6 @@ SalesRouter.get('/', SalesController.getAllSales);
 
 SalesRouter.get('/:id', SalesController.getSaleById);
 
+SalesRouter.put('/:id', SalesController.updateSale);
+
 module.exports = SalesRouter;

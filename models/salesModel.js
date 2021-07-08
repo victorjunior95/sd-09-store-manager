@@ -50,8 +50,23 @@ const getSaleFromDb = async (id) => {
   const salesCollection = await db.collection('sales');
 
   const sale = await salesCollection.findOne({ _id: ObjectId(id) });
-  
+
   return sale || false;
+};
+
+const updateSale = async (id, quantity) => {
+  const db = await connection();
+
+  const salesCollection = await db.collection('sales');
+
+  const updatedSale = await salesCollection.
+    updateOne(
+      { _id: ObjectId(id) }, { $set: { 'itensSold.0.quantity': quantity }}
+    );
+
+  const getUpdatedSale = await salesCollection.findOne({_id: ObjectId(id)});
+
+  return updatedSale && getUpdatedSale;
 };
 
 module.exports = {
@@ -59,4 +74,5 @@ module.exports = {
   postManySalesIntoDb,
   getAllSalesFromDb,
   getSaleFromDb,
+  updateSale,
 };
