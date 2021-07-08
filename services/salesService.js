@@ -6,10 +6,9 @@ const {
   updateSalesById,
   deleteSalesById,
 } = require('../models/salesModel');
-const { getAllProducts } = require('../models/productsModel');
+const { getAllProducts, updateProductById } = require('../models/productsModel');
 
 const HTTP_OK_STATUS = 200;
-const HTTP_CREATED_STATUS = 201;
 const HTTP_NOT_FOUND_STATUS = 404;
 const HTTP_UNPROCESSABLE_ENTITY_STATUS = 422;
 
@@ -31,6 +30,12 @@ const errorWrongSaleId = {
   err: {
     code: 'invalid_data',
     message: 'Wrong sale ID format',
+  },
+};
+const errorStockProblem = {
+  err: {
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
   },
 };
 
@@ -57,13 +62,44 @@ const verifySales = async (sales) => {
   return (allProductsExists && allQuantitiesIsOk);
 };
 
+const verifyStocks = async (sales) => {
+  const products = await getAllProducts();
+  let isOk = true;
+  sales.forEach((sale) => {
+    const product = products
+      .find(({ _id }) => _id.toString() === sale.productId.toString());
+    if (product.quantity < sale.quantity) {
+      isOk = false;
+    }
+  });
+  return isOk;
+};
+
+const updateQuantity = async (sales) => {
+  const products = await getAllProducts();
+  sales.forEach(async (sale) => {
+    const product = products
+      .find(({ _id }) => _id.toString() === sale.productId.toString());
+    const newQuantity = product.quantity - sale.quantity;
+    await updateProductById(sale.productId, { quantity: newQuantity });
+  });
+};
+
 const registerSalesService = async (sales) => {
   const isValidSales = await verifySales(sales);
   if (!isValidSales) {
     return { code: HTTP_UNPROCESSABLE_ENTITY_STATUS, response: invalidIdOrQuantity };
   }
+  
+  const stocksIsOk = await verifyStocks(sales);
+  if (!stocksIsOk) {
+    return { code: HTTP_NOT_FOUND_STATUS, response: errorStockProblem };
+  }
+  
+  await updateQuantity(sales);
+
   const registeredSales = await registerSales(sales);
-  return { code: HTTP_CREATED_STATUS, response: registeredSales };
+  return { code: HTTP_OK_STATUS, response: registeredSales };
 };
 
 const getAllSalesService = async () => {

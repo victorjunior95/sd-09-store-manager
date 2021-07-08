@@ -16,7 +16,7 @@ const registerSalesController = async (req, res) => {
 const getAllSalesController = async (_req, res) => {
   const result = await getAllSalesService();
   const { code, response } = result;
-  res.status(code).json(response);
+  res.status(code).json({ sales: [...response] });
 };
 
 const getSalesByIdController = async (req, res) => {
