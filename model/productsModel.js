@@ -18,7 +18,7 @@ const register = async (name, quantity) => {
 
 const list = async (_id) => {
   const connection = await connect();
-  if (id) {
+  if (_id) {
     try {
       const find = await connection.collection('products').findOne({
         _id: ObjectId(_id)
