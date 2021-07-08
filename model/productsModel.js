@@ -3,9 +3,9 @@ const connect = require('./connection');
 
 const findByName = async (name) => {
   const connection = await connect();
-  const newProduct = await connection.collection('products').findOne({ name }) ;
+  const product = await connection.collection('products').findOne({ name }) ;
 
-  return Boolean(newProduct);
+  return Boolean(product);
 };
 
 const register = async (name, quantity) => {
@@ -25,7 +25,7 @@ const list = async (_id) => {
       });
 
       return find;
-    } catch (err) {
+    } catch {
       return;
     }
   }
@@ -48,9 +48,28 @@ const update = async (_id, name, quantity) => {
   return updateProduct;
 };
 
+const remove = async (_id) => {
+  try {
+    const connection = await connect();
+
+    const checkedProduct = await connection.collection('products')
+      .findOne({ _id: ObjectId(_id) });
+    if (!checkedProduct) return;
+
+    const deleteOne = await connection.collection('products')
+      .deleteOne({ _id: ObjectId(_id) });
+    if (deleteOne.deletedCount !== 1) return;
+
+    return checkedProduct;
+  } catch {
+    return;
+  }
+};
+
 module.exports = {
   findByName,
   register,
   list,
-  update
+  update,
+  remove
 };

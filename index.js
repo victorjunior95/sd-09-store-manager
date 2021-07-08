@@ -17,5 +17,6 @@ app.post('/products', ProductsController.registerProduct);
 app.get('/products', ProductsController.listProducts);
 app.get('/products/:id', ProductsController.listProducts);
 app.put('/products/:id', ProductsController.updateProduct);
+app.delete('/products/:id', ProductsController.deleteProduct);
 
 app.listen(PORT, console.log(`Server running in port ${PORT}`));
