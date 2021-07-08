@@ -58,7 +58,7 @@ const deleteProductById = async (productId) => {
 
   const result = await connection()
     .then((db) => db.collection('products')
-      .deleteOne({ _id: new ObjectId(productId)}));
+      .deleteOne({ _id: new ObjectId(productId) }));
 
   if (!result) return null;
   return result;

@@ -3,6 +3,7 @@ const {
   getSalesAll,
   getSaleById,
   updateSaleById,
+  deleteSaleById,
 } = require('../model/salesModel');
 
 const VALUE_LIMIT = 1;
@@ -43,10 +44,10 @@ const getSaleByIdService = async (saleId) => {
   const result = await getSaleById(saleId);
 
   if (result === null) {
-    return { err: {
+    return ({ err: {
       code: 'not_found',
       message: 'Sale not found'
-    }};
+    }});
   }
 
   return result;
@@ -59,9 +60,22 @@ const updateSaleByIdService = async (saleId, data) => {
   return result;
 };
 
+const deleteSaleByIdService = async (saleId) => {
+  const result = await deleteSaleById(saleId);
+
+  if (result === null) {
+    return ({ err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'}});
+  }
+
+  return result;
+};
+
 module.exports = {
   createSalesService,
   getSalesAllService,
   getSaleByIdService,
   updateSaleByIdService,
+  deleteSaleByIdService,
 };

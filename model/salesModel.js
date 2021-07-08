@@ -24,9 +24,7 @@ const getSaleById = async (saleId) => {
 
   const result = await connection()
     .then((db) => db.collection('sales')
-      .find({ _id: new ObjectId(saleId) }));
-  
-  if (!result) return null;
+      .findOne({ _id: new ObjectId(saleId) }));
 
   return result;
 };
@@ -43,9 +41,22 @@ const updateSaleById = async (saleId, data) => {
   return { _id: saleId, itensSold: data };
 };
 
+const deleteSaleById = async (saleId) => {
+  if (!ObjectId.isValid(saleId)) {
+    return null;
+  }
+
+  const result = await connection()
+    .then((db) => db.collection('sales')
+      .deleteOne({ _id: new ObjectId(saleId) }));
+
+  return result;
+};
+
 module.exports = {
   createSales,
   getSalesAll,
   getSaleById,
   updateSaleById,
+  deleteSaleById,
 };
