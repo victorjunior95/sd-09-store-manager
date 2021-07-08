@@ -43,6 +43,16 @@ const ALREADY_EXIST = {
   }
 };
 
+const PRODUCTS_NOT_FOUND = {
+  status: 422,
+  response: {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    }
+  }
+};
+
 const validateBody = (name, quantity) => {
   // console.log(name, quantity);
   if (name.length < MIN_CHARACTERS) return INVALID_NAME;
@@ -63,6 +73,16 @@ const register = async (name, quantity) => {
   return { status: 201, response: newProduct };
 };
 
+const list = async (id) => {
+  const products = await Products.list(id);
+  if (!products) return PRODUCTS_NOT_FOUND;
+
+  if (id) return { status: 200, response: products };
+
+  return { status: 200, response: { products } };
+};
+
 module.exports = {
   register,
+  list
 };
