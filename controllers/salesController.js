@@ -1,22 +1,19 @@
-const serverStatus = {
-  ok: 200,
-};
+const httpCodes = require('../auxiliarFunctions/httpCodes');
+const salesServices = require('../services/salesServices');
 
-// dummy
-const getAllSales = (req, res) => {
-  res.status(serverStatus.ok).json({
-    message: 'getAll on sales'
-  });
-};
+// 5 - Crie um endpoint para cadastrar vendas
+const postNewSale = async (req, res, next) => {
+  const mySaleArray = req.body;
+  const result = await salesServices.postNewSale(mySaleArray);
 
-// dummy
-const getSaleById = (req, res) => {
-  res.status(serverStatus.ok).json({
-    message: 'getById on sales'
+  if (result.err) return next(result.err);
+
+  res.status(httpCodes.ok).json({
+    _id: result,
+    itensSold: mySaleArray,
   });
 };
 
 module.exports = {
-  getAllSales,
-  getSaleById,
+  postNewSale,
 };
