@@ -1,0 +1,54 @@
+const { createProduct, getProduct } = require('../models/productsModel');
+
+const NAME_LENGTH = 5;
+
+const productNameValidate = async (name) => {
+  const product = await getProduct(name);
+  if (product !== null) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Product already exists'
+    }
+  };
+  if (name.length < NAME_LENGTH) return {
+    err: {
+      code: 'invalid_data',
+      message: '"name" length must be at least 5 characters long'
+    }
+  };
+  return name;
+};
+
+const quantityValidate = (quantity) => {
+  if (typeof quantity !== 'number') return {
+    err: {
+      code: 'invalid_data',
+      message: '"quantity" must be a number'
+    }
+  };
+  if (quantity < 1) return {
+    err: {
+      code: 'invalid_data',
+      message: '"quantity" must be larger than or equal to 1'
+    }
+  };
+  return quantity;
+};
+
+const newProduct = async (name, quantity) => {
+  const productName = await productNameValidate(name);
+  const productQuantity = await quantityValidate(quantity);
+  if (productName.err) {
+    return productName;
+  }
+  if (productQuantity.err) {
+    return productQuantity;
+  } else {
+    const product = await createProduct(productName, productQuantity);
+    return product;
+  }
+};
+
+module.exports = {
+  newProduct
+};
