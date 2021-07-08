@@ -1,6 +1,6 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const productsModel = require('../../models/productsModel');
@@ -9,17 +9,17 @@ const salesModel = require('../../models/salesModel');
 const product1 = { name: 'Mjolnir', quantity: 15 };
 const arrayOfProducts = [
   {
-    "_id": "60e7004bdf412826618020a8",
+    "_id": ObjectId("60e7004bdf412826618020a8"),
     "name": "Mjolnir",
     "quantity": 10
   },
   {
-    "_id": "60e70050df412826618020a9",
+    "_id": ObjectId("60e70050df412826618020a9"),
     "name": "Escudo de Vibranium",
     "quantity": 15
   },
   {
-    "_id": "60e70062df412826618020ab",
+    "_id": ObjectId("60e70062df412826618020ab"),
     "name": "Manopla do Infinito",
     "quantity": 20
   },
@@ -35,7 +35,7 @@ const arrayOfSales = [
   },
 ];
 const completeSale = {
-  "_id": "60e70068df412826618020ac",
+  "_id": ObjectId("60e70068df412826618020ac"),
   "itensSold": [
     {
       "productId": "60e7004bdf412826618020a8",
@@ -75,6 +75,11 @@ describe('Testa o model de produtos', () => {
   });
 
   describe('Testa a funcao registerProduct', () => {
+
+    after(async () => {
+      await connectionMock
+        .db('StoreManager').collection('products').deleteMany({});
+    });
     
     it('Adiciona um produto e retorna um objeto', async () => {
       const result = await productsModel.registerProduct(product1);
@@ -196,16 +201,19 @@ describe('Testa o model de sales', () => {
 
   describe('Testa se a funcao registerSales registra uma venda', () => {
 
+    after(async () => {
+      await connectionMock
+        .db('StoreManager').collection('sales').deleteMany({});
+    });
+
     it('A funcao registra uma venda e retorna um objeto de venda', async () => {
       const result = await salesModel.registerSales(arrayOfSales);
-      const productOnDB = await productsModel.getById('60e7004bdf412826618020a8');
 
       expect(result).to.be.a('object');
       expect(result).to.have.property('_id');
       expect(result).to.have.property('itensSold');
       expect(result.itensSold).to.be.a('array');
       expect(result.itensSold).to.be.length(2);
-      expect(productOnDB.quantity).to.be.equal(arrayOfProducts[0].quantity - arrayOfSales[0].quantity)
     });
     
   });
@@ -242,7 +250,7 @@ describe('Testa o model de sales', () => {
       expect(result).to.have.property('itensSold');
       expect(result.itensSold).to.be.a('array');
       expect(result.itensSold).to.be.length(2);
-      expect(resutl._id.toString()).to.be.equal('60e70068df412826618020ac');
+      expect(result._id.toString()).to.be.equal('60e70068df412826618020ac');
     });
 
   });
