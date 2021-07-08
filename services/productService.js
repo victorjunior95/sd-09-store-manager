@@ -44,10 +44,10 @@ const getById = async (id) => {
   if (!product) {
     return {
       code: 'invalid_data',
-      error: { message: 'Wrong id format' },
+      error: { message: 'Product already exists' },
       status: 422,
     };
-  };
+  }
 
   return product;
 };
