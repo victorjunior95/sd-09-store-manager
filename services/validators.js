@@ -28,6 +28,11 @@ const createValidator = async (allProducts, name, quantity) => {
   }
 };
 
+// const getByIdValidator = () => {
+
+// }
+
 module.exports = {
   createValidator,
+  // getByIdValidator,
 };
