@@ -42,7 +42,6 @@ const getSaleById = async (id) => {
 
 const editSale = async (data, id) => {
   try {
-    console.log({ladata: data});
     if(id.length !== idValidation) throw {response: errors.saleNotFoundErr, status: 404};
     
     if(data.some((element) => element.quantity <= limit))
@@ -50,7 +49,8 @@ const editSale = async (data, id) => {
 
     if(data.some((element) => typeof element.quantity === 'string')) 
       throw {response: errors.quantitySaleErr, status: 422};
-    return { response: await saleModels.editSaleById(data, id), status: 200 };
+    const res = await saleModels.editSaleById(data, id);
+    return { response: res, status: 200 };
 
   } catch(err) {
     return err;

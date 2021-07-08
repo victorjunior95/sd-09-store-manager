@@ -23,7 +23,7 @@ const getSaleById = async (req, res) => {
 const editSale = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
-  const request = await saleServices.editSale(body.itensSold, id);
+  const request = await saleServices.editSale(body, id);
   res.status(request.status).json(request.response);
 };
 

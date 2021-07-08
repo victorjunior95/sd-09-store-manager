@@ -22,9 +22,10 @@ const getDataById = async (id) => {
   return request;
 };
 
-const editSaleById =  (data, id) => {
-  const request = connection().then((db) => 
-    db.collection(DB_COLLECTION).updateOne({ _id: ObjectId(id)}, { $set : { data }})
+const editSaleById =  async (data, id) => {
+  const request = await connection().then((db) => 
+    db.collection(DB_COLLECTION)
+      .updateOne({ _id: ObjectId(id)}, { $set : { itensSold: data }})
       .then(() => ({_id: id, itensSold: data})));
 
   return request;
