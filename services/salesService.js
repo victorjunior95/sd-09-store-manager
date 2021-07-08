@@ -38,6 +38,11 @@ const validasale = async(arrvenda) => {
   let products;
   let involvedPdt= []; 
   
+  // se vendeu quantidade menor que zero ou quantidade é uma string
+  if (arrvenda.some((p)=> p.quantity <= z || typeof p.quantity == 'string'
+  || !ObjectId.isValid(p.productId) 
+  )){ return objerr; };
+  
   for await( i of arrvenda){
     products = await getbyid(i.productId);
     onDB.push(products);
@@ -54,11 +59,7 @@ const validasale = async(arrvenda) => {
     });
   };
   console.log('involved',involvedPdt);
-  if (involvedPdt.length > z ){return errstock;};
-  // se vendeu quantidade menor que zero ou quantidade é uma string
-  if (arrvenda.some((p)=> p.quantity <= z || typeof p.quantity == 'string' 
-  )){ return objerr; }else return 'ok';
-  
+  if (involvedPdt.length > z ){return errstock;}else {return 'ok';};
 };
 
 

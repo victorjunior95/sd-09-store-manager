@@ -333,11 +333,11 @@ describe('2 - controller /sales', () => {
 
                 })
 
-            })
-            it('2-3 Retorna um objeto com a propriedade "err.code"', () => {
+            
+              it('2-3 Retorna um objeto com a propriedade "err.code"', () => {
                 expect(responde.body).to.have.haveOwnProperty('err');
 
-            }),
+              }),
                 it('2-3 Retorna um objeto com a propriedade "err" e codigo: "stock_problem" ', () => {
                     expect(responde.body).to.have.haveOwnProperty('err'
                     ).to.haveOwnProperty('code').equal('stock_problem');
@@ -347,7 +347,7 @@ describe('2 - controller /sales', () => {
                     expect(responde).to.have.status(404);
                 })
 
-
+            });
 
         });
 
@@ -455,7 +455,7 @@ describe('2 - controller /sales', () => {
                     db = connection.db('StoreManager');
                     fromDb = await db.collection('products').find().toArray();
                     id = fromDb[0].ops[0]._id,
-                        newSale = [{ productId: id, quantity: 9999 }]
+                    newSale = [{ productId: id, quantity: 9999 }]
                 });
 
 
