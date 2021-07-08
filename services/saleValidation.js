@@ -19,7 +19,29 @@ const postValidateOneSale = async (productId, quantity) => {
 const postValidateManySales = async (sales) => await salesModel
   .postManySalesIntoDb(sales);
 
+const getAllSales = async () => {
+  const allSales = await salesModel.getAllSalesFromDb();
+
+  return allSales;
+};
+
+const getSaleById = async (id) => {
+  if (!sale.idIsValid(id)) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+      status: 404,
+    };
+  }
+
+  return await salesModel.getSaleFromDb(id);
+};
+
 module.exports = {
   postValidateOneSale,
   postValidateManySales,
+  getAllSales,
+  getSaleById,
 };

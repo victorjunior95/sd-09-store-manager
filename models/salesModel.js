@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { connection } = require('./connection');
 
 const postOneSaleIntoDb = async (productId, quantity) => {
@@ -33,7 +34,29 @@ const postManySalesIntoDb = async (salesArray) => {
   return newSale && sale;
 };
 
+const getAllSalesFromDb = async () => {
+  const db = await connection();
+
+  const salesCollection = await db.collection('sales');
+
+  const allSales = await salesCollection.find().toArray();
+
+  return allSales || false;
+};
+
+const getSaleFromDb = async (id) => {
+  const db = await connection();
+
+  const salesCollection = await db.collection('sales');
+
+  const sale = await salesCollection.findOne({ _id: ObjectId(id) });
+  
+  return sale || false;
+};
+
 module.exports = {
   postOneSaleIntoDb,
   postManySalesIntoDb,
+  getAllSalesFromDb,
+  getSaleFromDb,
 };

@@ -19,7 +19,7 @@ const addNewProduct = rescue(async (req, res, next) => {
 });
 
 // Lista todos os produtos
-const getAllProducts = rescue(async (req, res, _next) => {
+const getAllProducts = rescue(async (_req, res, _next) => {
   const allProducts = await productValidation.getAllProducts();
 
   return res.status(STATUS_CODE.ok).json({products: allProducts});
