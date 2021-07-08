@@ -8,7 +8,7 @@ const { validateSalesInput, validateSaleId } = require('../middlewares/index');
 router.post('/', validateSalesInput, salesController.postNewSale);
 
 // 6 - Crie um endpoint para listar as vendas
-router.get(['/', '/:id'], validateSaleId, salesController.getSales);
+router.get(['/', '/:id'], salesController.getSales);
 
 // 7 - Crie um endpoint para atualizar uma venda
 router.put('/:id', validateSaleId, validateSalesInput, salesController.updateSale);

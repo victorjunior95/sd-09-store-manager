@@ -334,7 +334,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
 
   it('Será validado que não é possível listar uma venda inexistente', async () => {
     await frisby
-      .get(`${url}/sales/60e67209a1c944fdb3fdc9ab`)
+      .get(`${url}/sales/9999`)
       .expect('status', 404)
       .then((responseOne) => {
         const { body } = responseOne;
