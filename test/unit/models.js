@@ -87,14 +87,14 @@ describe('List all the products in the DB', () => {
   });
 
   describe('When there is at least one product registered', () => {
-    before(async () => {
+    beforeEach(async () => {
       await connectionMock.db(DB_NAME).collection(COLLECTION_NAME).insertOne({
         name: 'candy',
         quantity: 8000,
       });
     });
 
-    after(async () => {
+    afterEach(async () => {
       await connectionMock.db(DB_NAME).collection(COLLECTION_NAME).deleteMany({});
     })
 
