@@ -1,5 +1,4 @@
 const productsModel = require('../models/products');
- 
 
 const getAll = async () => productsModel.getAll();
 
@@ -11,23 +10,11 @@ const create = async (name, quantity) => {
 };
 
 
-// const findById = async (id) => {
-//     // Solicitamos que o model realize a busca no banco
-//     const author = await Author.findById(id);
-  
-//     // Caso nenhum autor seja encontrado, retornamos um objeto de erro.
-//     if (!author) {
-//       return {
-//         error: {
-//           code: 'notFound',
-//           message: `Não foi possível encontrar um autor com o id ${id}`,
-//         },
-//       };
-//     }
-  
-//     // Caso haja um autor com o ID informado, retornamos esse autor
-//     return author;
-//   };
+const getById = async (id) => {
+  const product = await productsModel.getById(id);
+  return product;
+};
+
   // const create = async (firstName, middleName, lastName) => {
   //   // Buscamos um autor com o mesmo nome completo que desejamos criar
   //   const existingAuthor = await Author.findByName(firstName, middleName, lastName);
@@ -50,6 +37,6 @@ const create = async (name, quantity) => {
   
 module.exports = {
   getAll,
-  // findById,
+  getById,
   create,
 };

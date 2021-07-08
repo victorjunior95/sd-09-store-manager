@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/products', productsController.getAll);
-// app.get('/authors/:id', Author.findById);
+app.get('/products/:id', productsController.getById);
 app.post('/products',validationName, validationQuantity, productsController.create);
 
 // app.get('/books', Book.getAll);
@@ -27,4 +27,4 @@ app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log('O Pai tá ON lá na 3k!!!'))
+app.listen(PORT, () => console.log('O Pai tá ON!!'))

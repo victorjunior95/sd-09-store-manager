@@ -17,20 +17,12 @@ const getAll = async () => {
 Busca um autor específico, a partir do seu ID
 @param {String} id ID do autor a ser recuperado
 */
-// const findById = async (id) => {
-//     if (!ObjectId.isValid(id)) {
-//         return null;
-//     }
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection()
+    .then((db) => db.collection('products').findOne(ObjectId(id))).toArray();
+};
 
-//     const authorData = await connection()
-//         .then((db) => db.collection('authors').findOne(new ObjectId(id)));
-
-//     if (!authorData) return null;
-
-//     const { firstName, middleName, lastName } = authorData;
-
-//     return getNewAuthor({ id, firstName, middleName, lastName });
-// };
 
 // const isNonEmptyString = (value) => {
 //     if (!value) return false;
@@ -58,7 +50,7 @@ const findByName = async (name) => {
 module.exports = {
   getAll,
   findByName,
-  // findById,
+  getById,
   // isValid,
   create,
 };
