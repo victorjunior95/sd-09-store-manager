@@ -44,11 +44,35 @@ const deleteProduct = (id) => {
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
 };
 
+const buyProduct = async (id, quantity) => {
+  const result = await connection()
+    .then((db) => db.collection('products')
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        {$inc: { quantity: -quantity } },
+        {returnOriginal: false}))
+    .then((result) => result.value);
+
+  return result;
+};
+
+const deleteSale = async (id, quantity) => {
+  return connection()
+    .then((db) => db.collection('products')
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        {$inc: { quantity: quantity } },
+        {returnOriginal: false}))
+    .then((result) => result.value);
+};
+
 module.exports = {
   findByName,
   createProduct,
   findById,
   getAllProducts,
   editProduct,
-  deleteProduct
+  deleteProduct,
+  buyProduct,
+  deleteSale
 };

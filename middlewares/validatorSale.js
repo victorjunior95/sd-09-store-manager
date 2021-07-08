@@ -1,4 +1,5 @@
 const ProductService = require('../services/ProductsService');
+const SalesService = require('../services/SalesService');
 
 const isValidQuantity = (value, min) => {
   return value > min;
@@ -55,8 +56,40 @@ const validatorIdAndQuantity = (req, _res, next) => {
   next();
 };
 
+const buyProduct = async (req, _res, next) => {
+  const { body } = req;
+
+  const productId = body[0].productId;
+  const quantityBuy = body[0].quantity;
+
+  const { quantity } = await ProductService.findById(productId);
+
+  if (quantityBuy > quantity) return next({
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
+  });
+
+
+  await ProductService.buyProduct(productId, quantityBuy);
+  
+  next();
+};
+
+const deleteSale = async (req, _res, next) => {
+  const { id } = req.params;
+
+  const { itensSold } = await SalesService.findById(id);
+
+  itensSold.forEach(({ productId, quantity }) => ProductService
+    .deleteSale(productId, quantity));
+  
+  next();
+};
+
 module.exports = {
   validatorIdAndQuantity,
   isValidId,
-  validatorId
+  validatorId,
+  buyProduct,
+  deleteSale
 };

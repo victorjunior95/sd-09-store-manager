@@ -2,7 +2,9 @@ const express = require('express');
 const {
   validatorIdAndQuantity,
   isValidId,
-  validatorId } = require('../middlewares/validatorSale');
+  validatorId, 
+  deleteSale,
+  buyProduct} = require('../middlewares/validatorSale');
 const SalesService = require('../services/SalesService');
 const statusSucess = 200;
 
@@ -24,7 +26,7 @@ SalesRouter.get('/:id', isValidId, async (req, res, next) => {
   return res.status(statusSucess).json(sale);
 });
 
-SalesRouter.post('/', validatorIdAndQuantity, async (req, res, _next) => {
+SalesRouter.post('/', validatorIdAndQuantity, buyProduct, async (req, res, _next) => {
   const { body } = req;
 
   const productsSale = await SalesService.createSales(body);
@@ -41,7 +43,7 @@ SalesRouter.put('/:id', validatorIdAndQuantity, async (req, res, _next) => {
   return res.status(statusSucess).json(newSale);
 });
 
-SalesRouter.delete('/:id', validatorId, async (req, res, _next) => {
+SalesRouter.delete('/:id', validatorId, deleteSale, async (req, res, _next) => {
   const { id } = req.params;
 
   const deleteProduct = await SalesService.deleteSale(id);
