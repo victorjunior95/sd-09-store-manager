@@ -17,7 +17,7 @@ const add = async (req, res, next) => {
     }
   });
 
-  res.status(success).json(insertedSale);
+  return res.status(success).json(insertedSale);
 };
 
 const getAll = async (_req, res) => {
@@ -25,7 +25,7 @@ const getAll = async (_req, res) => {
 
   const sales = await salesService.getAll();
 
-  res.status(success).json(sales);
+  return res.status(success).json(sales);
 };
 
 const getById = async (req, res, next) => {
