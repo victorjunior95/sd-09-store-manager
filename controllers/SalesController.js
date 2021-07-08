@@ -3,6 +3,6 @@ const mdwSales = require('../middlewares/mdwSales');
 
 const SalesRouter = express.Router();
 
-SalesRouter.post('/', mdwSales.putOneSale);
+SalesRouter.post('/', mdwSales.verifyProductsOfSale, mdwSales.putOneSale);
 
 module.exports = SalesRouter ;

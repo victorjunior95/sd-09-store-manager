@@ -130,6 +130,7 @@ async function deleteOneProduct(id) {
 }
 
 module.exports = {
+  errorObj,
   verifyMongoId,
   verifyBody,
   postOneProduct,

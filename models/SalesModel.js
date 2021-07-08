@@ -1,8 +1,8 @@
 const connection = require('./connection');
 
-const addSale =  async (arrayOfSoldProducts) => {
+const addSale =  async (itensSold) => {
   const product = await connection()
-    .then((db) => db.collection('sales').insertOne({arrayOfSoldProducts}));
+    .then((db) => db.collection('sales').insertOne({itensSold}));
   return product.ops[0];
 };
 
