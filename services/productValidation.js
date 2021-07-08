@@ -1,6 +1,7 @@
 const product = require('../validations/product');
 const productsModel = require('../models/productsModel');
 
+// Depois tentar implementar o Joi ou adicionar middlewares para todos esses casos
 const postValidateProduct = async (name, quantity) => {
   if (!product.nameIsValid(name)) {
     return {

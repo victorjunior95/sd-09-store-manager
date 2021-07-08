@@ -8,9 +8,9 @@ const postIntoDb = async (name, quantity) => {
 
   const newProduct = await products.insertOne({ name, quantity });
 
-  const getNewProduct = await db.collection('products').findOne({ name });
+  const product = await newProduct.ops[0];
 
-  return newProduct && getNewProduct;
+  return newProduct && product;
 };
 
 const getProductByName = async (name) => {
@@ -19,8 +19,6 @@ const getProductByName = async (name) => {
   const products = await db.collection('products');
 
   const product = await products.findOne({ name });
-
-  // console.log(product);
 
   return product || false;
 };
