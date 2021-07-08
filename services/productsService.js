@@ -48,7 +48,7 @@ function verifyTypeOfQuantity(quantity) {
 }
 
 async function verifyProductRepeated(name) {
-  const product = await getOneProductByName(name);
+  const product = await getOneProduct({name});
   if (product) {
     return {
       status: status.unprocessableEntity,
@@ -61,31 +61,37 @@ async function verifyProductRepeated(name) {
 
 function verifyMongoId(id) {
   try {
+    console.log('verifica ID');
     return ObjectID(id);
   } catch (error) {
-    return {
+    return { err: {
       status: status.unprocessableEntity,
       code: 'invalid_data',
       message: 'Wrong id format'
-    };
+    }};
   }
 }
 
-async function getOneProductByName(name) {
+async function verifyBody(name, quantity) { 
   try {
-    const productFound = await ProductsModel.findOneProductByName(name);
-    return productFound;
+    const nameBiggerThanFive = verifyNameLength(name);
+    const productRepeated = await verifyProductRepeated(name);
+    const quantityBiggerThanZero = verifyQuantity(quantity);
+    const quantityMustBeValidNumber = verifyTypeOfQuantity(quantity);
+
+    if (nameBiggerThanFive) throw nameBiggerThanFive;
+    if (quantityBiggerThanZero) throw quantityBiggerThanZero;
+    if (quantityMustBeValidNumber) throw quantityMustBeValidNumber;
+    if (productRepeated) throw productRepeated;
+    return {};
   } catch (error) {
     return errorObj(error);
   }
 }
 
-async function getOneProductById(id) {
+async function getOneProduct(obj) {
   try {
-    const productId = verifyMongoId(id);
-    if (productId.message) throw productId;
-    const productFound = await ProductsModel.findOneProductById(productId);
-    return productFound;
+    return await ProductsModel.findOneProduct(obj);
   } catch (error) {
     return errorObj(error);
   }
@@ -103,19 +109,16 @@ async function getAllProducts() {
 
 async function postOneProduct(name, quantity) {
   try {
-    const nameBiggerThanFive = verifyNameLength(name);
-    const productRepeated = await verifyProductRepeated(name);
-    const quantityBiggerThanZero = verifyQuantity(quantity);
-    const quantityMustBeValidNumber = verifyTypeOfQuantity(quantity);
-
-    if (nameBiggerThanFive) throw nameBiggerThanFive;
-    if (quantityBiggerThanZero) throw quantityBiggerThanZero;
-    if (quantityMustBeValidNumber) throw quantityMustBeValidNumber;
-    if (productRepeated) throw productRepeated;
     return await ProductsModel.addProduct(name, quantity);
   } catch (error) {
     return errorObj(error);
   }
 }
 
-module.exports = { postOneProduct, getAllProducts, getOneProductById };
+module.exports = {
+  verifyMongoId,
+  verifyBody,
+  postOneProduct,
+  getAllProducts,
+  getOneProduct,
+};
