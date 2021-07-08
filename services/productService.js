@@ -9,15 +9,25 @@ const alreadyExists =   async (name) => {
   // return false;
 };
 
-const isValidName = async (name) => {
+
+const isValidNameLength = (name) => {
   const minLength = 5;
-  const zero = 0;
-  const exists =  await alreadyExists(name);
+
   if (name.length < minLength) {
     return { 'err':
     {'code': 'invalid_data',
       'message': '"name" length must be at least 5 characters long'}};
   }
+
+  return true;
+};
+
+
+const isValidName = async (name) => {
+  const zero = 0;
+  const exists =  await alreadyExists(name);
+  const nameLength = isValidNameLength(name);
+  if (typeof nameLength !== 'boolean') return nameLength;
   if ( exists.length > zero ) {
     return  { 'err':
     {'code': 'invalid_data',
@@ -73,8 +83,20 @@ const getById = async (id) => {
   return product;
 };
 
+const updateById = async (id, name, quantity) => {
+  const nameValidity = isValidNameLength(name);
+  const quantityValidity = isValidQuantity(quantity);
+
+  if (typeof nameValidity === 'object') return nameValidity;
+  if (typeof quantityValidity === 'object') return quantityValidity;
+
+  const product = await productModel.updateById(id, name, quantity);
+  return product;
+};
+
 module.exports = {
   create,
   getAll,
-  getById
+  getById,
+  updateById
 };

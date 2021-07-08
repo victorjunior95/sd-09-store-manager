@@ -19,6 +19,8 @@ const PORT = '3000';
 
 app.post('/products', productController.create);
 
+app.put('/products/:id', productController.updateById);
+
 app.get('/products/:id', productController.getById);
 
 app.get('/products', productController.getAll);
