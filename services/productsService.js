@@ -1,4 +1,9 @@
-const { createProduct, getProduct } = require('../models/productsModel');
+const {
+  createProduct,
+  getProduct,
+  getAllProducts,
+  findProductById
+} = require('../models/productsModel');
 
 const NAME_LENGTH = 5;
 
@@ -43,12 +48,29 @@ const newProduct = async (name, quantity) => {
   }
   if (productQuantity.err) {
     return productQuantity;
-  } else {
-    const product = await createProduct(productName, productQuantity);
-    return product;
   }
+  const product = await createProduct(productName, productQuantity);
+  return product;
+};
+
+const productsList = async () => {
+  const products = await getAllProducts();
+  return products;
+};
+
+const productById = async (id) => {
+  const product = await findProductById(id);
+  if (!product) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+  return product;
 };
 
 module.exports = {
-  newProduct
+  newProduct,
+  productsList,
+  productById,
 };
