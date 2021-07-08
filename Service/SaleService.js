@@ -28,15 +28,7 @@ const createSale = async (products) => {
     // busca o produto
     const dbProduct = await ProductService.getProductId(product.productId);
 
-    const updatedProduct = await ProductService.updateProduct(
-      dbProduct._id,
-      dbProduct.name,
-      dbProduct.quantity - product.quantity,
-    );
-    console.log('começou');
-    console.log(updatedProduct.quantity, 'venhaa');
-    
-    if (updatedProduct.quantity < ZERO) {
+    if (dbProduct.quantity - product.quantity < ZERO) {
       return {
         isError: true,
         err: {
@@ -46,6 +38,15 @@ const createSale = async (products) => {
         status: StatusCodes.NOT_FOUND,
       };
     } 
+    const updatedProduct = await ProductService.updateProduct(
+      dbProduct._id,
+      dbProduct.name,
+      dbProduct.quantity - product.quantity,
+    );
+    console.log('começou');
+    console.log(updatedProduct.quantity, 'venhaa');
+    
+  
     if (updatedProduct) {
       updatedProducts.push(updatedProduct);
     }
@@ -57,10 +58,10 @@ const createSale = async (products) => {
     return {
       isError: true,
       err: {
-        code: 'invalid_data',
-        message: 'Wrong product ID or invalid quantity',
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
       },
-      status: StatusCodes.UNPROCESSABLE_ENTITY,
+      status: StatusCodes.NOT_FOUND,
     };
   } 
   console.log(products);
