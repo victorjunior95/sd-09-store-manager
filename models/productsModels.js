@@ -28,8 +28,6 @@ module.exports = {
   },
 
   updateProduct: async (id, name, quantity) => {
-    // if (!ObjectId.isValid(id)) return null;
-
     const edited = await connection().then((db) =>
       db.collection('products')
         .update({ _id: ObjectId(id) }, { $set: { name, quantity } })
@@ -37,5 +35,16 @@ module.exports = {
     );
 
     return edited;
+  },
+
+  deleteProduct: async (id) => {
+    const deleted = connection().then((db) =>
+      db.collection('products').findOne({ _id: ObjectId(id) })
+    );
+
+    connection().then((db) =>
+      db.collection('products').deleteOne({ _id: ObjectId(id) }));
+
+    return deleted;
   },
 };

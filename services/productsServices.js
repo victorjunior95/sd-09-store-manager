@@ -44,9 +44,7 @@ module.exports = {
       };
     }
 
-    const newProduct = await productsModel.addProduct(name, quantity);
-
-    return newProduct;
+    return await productsModel.addProduct(name, quantity);
   },
 
   findAllProducts: async () => {
@@ -102,4 +100,17 @@ module.exports = {
 
     return await productsModel.updateProduct(id, name, quantity);
   },
+
+  productToDelete: async (id) => {
+    if (!ObjectId.isValid(id)) {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': 'Wrong id format'
+        }
+      };
+    }
+
+    return await productsModel.deleteProduct(id);
+  }
 };
