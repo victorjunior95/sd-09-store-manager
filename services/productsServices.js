@@ -21,6 +21,13 @@ const getAllProducts = async () => {
 
 const getProductById = async (id) => {
   const result = await productsModel.getProductById(id);
+  
+  if(!result) return ({
+    err: {
+      code: 'not_found',
+      message: 'Product not found'
+    },
+  });
 
   return result;
 };

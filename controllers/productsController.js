@@ -12,7 +12,7 @@ const postNewProduct = async (req, res, next) => {
 };
 
 // 2 - Crie um endpoint para listar os produtos
-const getProducts = async (req, res) => {
+const getProducts = async (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -22,6 +22,8 @@ const getProducts = async (req, res) => {
   };
 
   const result = await productsServices.getProductById(id);
+
+  if (result.err) return next(result.err);
 
   res.status(httpCodes.ok).json(result);
 };

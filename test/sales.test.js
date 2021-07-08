@@ -5,7 +5,7 @@ const mongoDbUrl = 'mongodb://localhost:27017';
 const url = 'http://localhost:3000';
 const invalidId = 99999;
 
-describe.only('5 - Crie um endpoint para cadastrar vendas', () => {
+describe('5 - Crie um endpoint para cadastrar vendas', () => {
   let connection;
   let db;
 
@@ -334,7 +334,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
 
   it('Será validado que não é possível listar uma venda inexistente', async () => {
     await frisby
-      .get(`${url}/sales/9999`)
+      .get(`${url}/sales/60e67209a1c944fdb3fdc9ab`)
       .expect('status', 404)
       .then((responseOne) => {
         const { body } = responseOne;
