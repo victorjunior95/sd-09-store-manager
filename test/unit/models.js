@@ -15,8 +15,10 @@ describe('Testando productsModel', () => {
     sinon.stub(MongoClient, 'connect').resolves(connectionMock);
   });
 
-  after(() => {
+  after(async () => {
     MongoClient.connect.restore();
+
+    await connectionMock.db('StoreManager').collection('products').deleteMany({});
   });
   describe('Testa a inserção de produtos no banco de dados', () => {
     describe('Quando é inserido com sucesso', () => {
@@ -197,15 +199,38 @@ describe('Testando productsModel', () => {
   });
 });
 describe('Testando salesModel', () => {
+  console.log('****************************************************')
   let connectionMock;
+  let existentProduct;
 
   before(async () => {
     connectionMock = await getConnection();
 
     sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+
+    existentProduct = await productsModel.add('Produto teste', 100);
   });
 
-  after(() => {
+  after(async () => {
     MongoClient.connect.restore();
+
+    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+  });
+
+  describe('Testando a inserção de compras', () => {
+    describe('testa a inserçao de um produto existente', () => {
+      
+      it('deve-se retornar um objeto', async () => {
+        const insertedSale = await salesModel.add([{ productId: existentProduct._id, quantity: 10 }]);
+        
+        expect(insertedSale).to.be.a('object');
+      });
+
+      it('o objeto retornado deve possuir as chaves "_id", "itensSold"', async () => {
+        const insertedSale = await salesModel.add([{ productId: existentProduct._id, quantity: 10 }]);
+        
+        expect(insertedSale).to.include.all.keys('_id', 'itensSold');
+      });
+    });
   });
 });
