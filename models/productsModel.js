@@ -50,7 +50,7 @@ const deleteProduct = async (id) => {
 
   if(!product) return null;
 
-  const result = await connection()
+  await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id)}));
   return product;
 };
@@ -60,5 +60,6 @@ module.exports = {
   getAllProducts,
   getProductById,
   updateProduct,
-  deleteProduct,
+  deleteProduct, 
+  findProductByName,
 };
