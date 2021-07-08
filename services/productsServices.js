@@ -11,7 +11,7 @@ const MIN_CHARACTERS = 5;
 const VALUE_LIMIT = 0;
 const DATA_ERROR_CODE = 'invalid_data';
 
-const validData = (data) => {
+const validateData = (data) => {
   const { name, quantity } = data;
 
   if (name.length < MIN_CHARACTERS) {
@@ -45,7 +45,7 @@ const createProductService = async (data) => {
       message: 'Product already exists'}});
   }
 
-  let result = validData(data);
+  let result = validateData(data);
 
   if(result === null) result = await createProduct(data);
 
@@ -70,7 +70,7 @@ const getProductByIdService = async (productId) => {
 };
 
 const updateProductByIdService = async (productId, data) => {
-  let result = validData(data);
+  let result = validateData(data);
 
   if (result === null) result = await updateProductById(productId, data);
 

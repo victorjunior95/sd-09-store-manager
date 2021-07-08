@@ -11,6 +11,8 @@ const {
 
 const {
   createSalesController,
+  getSalesAllController,
+  getSaleByIdController,
 } = require('./controllers/salesController');
 
 const { get } = require('frisby');
@@ -32,5 +34,8 @@ app.put('/products/:id', updateProductByIdController);
 app.delete('/products/:id', deleteProductByIdController);
 
 app.post('/sales', createSalesController);
+app.get('/sales/:id', getSaleByIdController);
+app.get('/sales', getSalesAllController);
+
 
 app.listen(PORT, () => console.log('server ONLINE #VQV !!!'));
