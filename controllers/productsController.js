@@ -3,6 +3,7 @@ const {
   getAll,
   findProductById,
   updateProduct,
+  deleteProduct,
 } = require('../services/productsService');
 
 const { created, ok } = require('../services/httpStatusCode');
@@ -45,11 +46,22 @@ async function updateProductById(req, res, next) {
   } catch (error) {
     next(error);
   }
-} 
+}
+
+async function deleteProductById(req, res, next) {
+  try {
+    const { id } = req.params;
+    const result = await deleteProduct(id);
+    res.status(ok).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   postProductToDB,
   getAllProducts,
   getProductById,
   updateProductById,
+  deleteProductById,
 };

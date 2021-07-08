@@ -32,7 +32,7 @@ async function updateProductFromDB(id, name, quantity) {
   if (!ObjectId.isValid(id)) return null;
   const values = { $set: { name, quantity } };
   const db = await connection();
-  await db.collection('products').update({ _id: ObjectId(id) }, values);
+  await db.collection('products').updateOne({ _id: ObjectId(id) }, values);
 
   return {
     _id: id,
@@ -41,10 +41,17 @@ async function updateProductFromDB(id, name, quantity) {
   };
 }
 
+async function deleteProductFromDB(id) {
+  if (!ObjectId.isValid(id)) return null;
+  const db = await connection();
+  await db.collection('products').deleteOne({ _id: ObjectId(id) });
+}
+
 module.exports = {
   createNewProduct,
   findProductByName,
   getAllProductsFromDB,
   findProductByIdFromDB,
   updateProductFromDB,
+  deleteProductFromDB,
 };

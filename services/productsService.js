@@ -5,6 +5,7 @@ const {
   getAllProductsFromDB,
   findProductByIdFromDB,
   updateProductFromDB,
+  deleteProductFromDB,
 } = require('../models/productsModel');
 const {
   validateNameLength,
@@ -45,9 +46,23 @@ async function updateProduct(id, name, quantity) {
   return result;
 }
 
+async function deleteProduct(id) {
+  const productToDelete = await findProductByIdFromDB(id);
+  if (!productToDelete) throw {
+    status: unprocessableEntity,
+    err: {
+      code: errors.invalidData,
+      message: errors.idFormat,
+    }
+  };
+  await deleteProductFromDB(id);
+  return productToDelete;
+}
+
 module.exports = {
   addProductToDB,
   getAll,
   findProductById,
   updateProduct,
+  deleteProduct,
 };
