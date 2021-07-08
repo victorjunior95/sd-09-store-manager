@@ -47,8 +47,20 @@ const updateSale = async (req, res) => {
   });
 };
 
+// 8 - Crie um endpoint para deletar uma venda
+const deleteSale = async (req, res, next) => {
+  const { id } = req.params;
+
+  const result = await salesServices.deleteSale(id);
+
+  if(result.err) return next(result.err);
+
+  res.status(httpCodes.ok).json(result);
+};
+
 module.exports = {
   postNewSale,
   getSales,
   updateSale,
+  deleteSale,
 };

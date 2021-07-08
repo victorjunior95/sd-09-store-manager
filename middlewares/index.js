@@ -1,6 +1,7 @@
 const errorMiddleware = require('./errorMiddleware');
 const validateProductInput = require('./validateProductInput');
 const validateId = require('./validateId');
+const validateSaleId = require('./validateSaleId');
 const validateSalesInput = require('./validateSalesInput');
 
 module.exports = {
@@ -8,5 +9,6 @@ module.exports = {
   validateProductInput,
   validateId,
   validateSalesInput,
+  validateSaleId,
 };
 
