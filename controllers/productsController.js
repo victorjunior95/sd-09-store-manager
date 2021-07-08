@@ -13,4 +13,11 @@ productRouter.post('/', async (req, res) => {
   return res.status(created).json(newProduct);
 });
 
+// productRouter.get('/', async (req, res) => {
+
+
+//   if (newProduct.err) return res.status(unprocessable_entity).json(newProduct);
+//   return res.status(created).json(newProduct);
+// });
+
 module.exports = productRouter;

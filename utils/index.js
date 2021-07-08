@@ -5,8 +5,4 @@ module.exports = {
     not_found: 404,
     unprocessable_entity: 422,
   },
-  errorMiddleware: {
-
-  }
-
 };
