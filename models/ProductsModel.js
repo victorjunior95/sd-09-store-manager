@@ -13,8 +13,8 @@ const findName = async (name) => {
   const findNameProduct = await connection().then((db) =>
     db.collection(collectionProduct).findOne({name}),
   );
-  console.log(findNameProduct !== null);
-  return findNameProduct !== null;
+  if(!findNameProduct) return false;
+  return true;
 
 };
 

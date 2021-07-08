@@ -10,8 +10,8 @@ const create = async (name, quantity) => {
       message: '"name" length must be at least 5 characters long',
       code: 'invalid_data',
     };
-
-  if ( productsModel.findName(name) === true ) 
+  const existsName = await productsModel.findName(name);
+  if ( existsName) {
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: { 
@@ -19,6 +19,7 @@ const create = async (name, quantity) => {
         code: 'invalid_data',
       }
     };
+  };
 
   if (quantity < 0 )
     return {
