@@ -82,7 +82,17 @@ const list = async (id) => {
   return { status: 200, response: { products } };
 };
 
+const update = async (id, name, quantity) => {
+  const bodyValidated = validateBody(name, quantity);
+  if (bodyValidated) return bodyValidated;
+
+  await Products.update(id, name, quantity);
+
+  return { status: 200, response: { _id: id, name, quantity } };
+};
+
 module.exports = {
   register,
-  list
+  list,
+  update
 };
