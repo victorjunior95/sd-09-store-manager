@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const findByName = require('./models/Products');
+const Product = require('./controllers/Products');
+const errorMiddleware = require('./middlewares/error');
 const app = express();
+
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
@@ -13,12 +15,8 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-async function xablau() {
-  console.log(await findByName.findByName('leite'));
-}
+app.post('/products', Product.createProduct);
 
-xablau();
-
-
+app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

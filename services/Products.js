@@ -8,7 +8,7 @@ const create = async (name, quantity) => {
     return {
       error: {
         code: 'invalid_data',
-        message: '"\"name\" length must be at least 5',
+        message: '"name" length must be at least 5 characters long',
       },
     };
   }
@@ -18,7 +18,7 @@ const create = async (name, quantity) => {
   if (existingProduct) {
     return {
       error: {
-        code: 'alreadyExists',
+        code: 'invalid_data',
         message: 'Product already exists',
       }
     };
@@ -28,16 +28,16 @@ const create = async (name, quantity) => {
     return {
       error: {
         code: 'invalid_data',
-        message: '"\"quantity\" must be larger than or equal to 1'
+        message: '"quantity" must be larger than or equal to 1'
       }
     };
   }
 
-  if (typeof quantity !== 'number') {
+  if (typeof(quantity) !== 'number') {
     return {
       error: {
         code: 'invalid_data',
-        message: '"\"quantity\" must be a number',
+        message: '"quantity" must be a number',
       }
     };
   }
