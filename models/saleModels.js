@@ -31,9 +31,18 @@ const editSaleById =  async (data, id) => {
   return request;
 };
 
+const deleteData = async (id) => {
+  const response = await getDataById(id);
+  const request = await connection().then((db) => 
+    db.collection(DB_COLLECTION).deleteOne({ _id: ObjectId(id)}).then(() => response));
+
+  return request;
+};
+
 module.exports = {
   postSales,
   getAllData,
   getDataById,
-  editSaleById
+  editSaleById,
+  deleteData
 };

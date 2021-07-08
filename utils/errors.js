@@ -47,6 +47,20 @@ const saleNotFoundErr = {
   }
 };
 
+const saleErr = {
+  'err': {
+    'code': 'invalid_data',
+    'message':'Wrong sale ID format'
+  }
+};
+
+const notStockErr = {
+  err: {
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
+  },
+};
+
 module.exports = {
   nameLengthErr,
   quantityErr,
@@ -54,5 +68,7 @@ module.exports = {
   productExistenceErr,
   idFormatErr,
   quantitySaleErr,
-  saleNotFoundErr
+  saleNotFoundErr,
+  saleErr,
+  notStockErr
 };
