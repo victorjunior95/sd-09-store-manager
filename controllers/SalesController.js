@@ -3,6 +3,7 @@ const saleValidation = require('../services/saleValidation');
 const STATUS_CODE = {
   created: 201,
   ok: 200,
+  notFound: 404,
 };
 
 const addNewSale = async (req, res, next) => {
@@ -42,11 +43,19 @@ const updateSale = async (req, res, next) => {
 
   const updatedSale = await saleValidation.updateSale(id, quantity);
 
-  console.log(updatedSale);
-
   return updatedSale.err
     ? next(updatedSale)
     : res.status(STATUS_CODE.ok).json(updatedSale);
+};
+
+const deleteSale = async (req, res, next) => {
+  const { id } = req.params;
+
+  const deletedSale = await saleValidation.deleteSale(id);
+  
+  return deletedSale.err
+    ? next(deletedSale)
+    : res.status(STATUS_CODE.ok).json(deletedSale);
 };
 
 module.exports = {
@@ -54,4 +63,5 @@ module.exports = {
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };

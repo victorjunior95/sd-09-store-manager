@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-// const salesModel = require('../models/salesModel');
+const salesModel = require('../models/salesModel');
 
 const minQuantity = 0;
 

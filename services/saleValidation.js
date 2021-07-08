@@ -1,5 +1,6 @@
 const sale = require('../validations/sale');
 const salesModel = require('../models/salesModel');
+const { ObjectId } = require('mongodb');
 
 const postValidateOneSale = async (productId, quantity) => {
   if (!sale.quantityValueIsValid(quantity)
@@ -36,6 +37,18 @@ const getSaleById = async (id) => {
     };
   }
 
+  const saleExists = await salesModel.getSaleFromDb(id);
+
+  if (!saleExists) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+      status: 404,
+    };
+  }
+
   return await salesModel.getSaleFromDb(id);
 };
 
@@ -54,10 +67,35 @@ const updateSale = async (id, quantity) => {
   return salesModel.updateSale(id, quantity);
 };
 
+const deleteSale = async (id) => {
+  if (!sale.idIsValid(id)) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+      status: 422,
+    };
+  }
+
+  // if (!sale.idIsValid(id)) {
+  //   return {
+  //     err: {
+  //       code: 'invalid_data',
+  //       message: 'Wrong sale ID format',
+  //     },
+  //     status: 422,
+  //   };
+  // }
+
+  return await salesModel.deleteFromDb(id);
+};
+
 module.exports = {
   postValidateOneSale,
   postValidateManySales,
   getAllSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };
