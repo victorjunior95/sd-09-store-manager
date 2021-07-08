@@ -14,20 +14,30 @@ const add = async (name, quantity) => {
 
 const getAll = async () => {
   return await connection()
-    .then((db) => db.collection('products').find().toArray())
-    .then((response) => response);
+    .then((db) => db.collection('products').find().toArray());
 };
 
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) return null;
 
   return await connection()
-    .then((db) => db.collection('products').findOne(new ObjectId(id)))
-    .then((response) => response);
+    .then((db) => db.collection('products').findOne(new ObjectId(id)));
+};
+
+const update = async (id, name, quantity) => {
+  const objId = new ObjectId(id);
+
+  if (!ObjectId.isValid(id)) return null;
+
+  return await connection()
+    .then((db) => db.collection('products')
+      .update({ _id: objId }, { name, quantity }))
+    .then(() => ({ _id: id, name, quantity }));
 };
 
 module.exports = {
   add,
   getAll,
-  getById
+  getById,
+  update
 };
