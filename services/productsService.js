@@ -1,3 +1,4 @@
+const { ObjectID } = require('mongodb');
 const ProductsModel = require('../models/ProductsModel');
 const status = require('./statusCode');
 
@@ -47,8 +48,7 @@ function verifyTypeOfQuantity(quantity) {
 }
 
 async function verifyProductRepeated(name) {
-  const product = await getOneProduct(name);
-  console.log('PRODUCT', product);
+  const product = await getOneProductByName(name);
   if (product) {
     return {
       status: status.unprocessableEntity,
@@ -59,11 +59,42 @@ async function verifyProductRepeated(name) {
   return false;
 }
 
-
-async function getOneProduct(name) {
+function verifyMongoId(id) {
   try {
-    const productFound = await ProductsModel.findOneProduct(name);
+    return ObjectID(id);
+  } catch (error) {
+    return {
+      status: status.unprocessableEntity,
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    };
+  }
+}
+
+async function getOneProductByName(name) {
+  try {
+    const productFound = await ProductsModel.findOneProductByName(name);
     return productFound;
+  } catch (error) {
+    return errorObj(error);
+  }
+}
+
+async function getOneProductById(id) {
+  try {
+    const productId = verifyMongoId(id);
+    if (productId.message) throw productId;
+    const productFound = await ProductsModel.findOneProductById(productId);
+    return productFound;
+  } catch (error) {
+    return errorObj(error);
+  }
+}
+
+async function getAllProducts() {
+  try {
+    const data = await ProductsModel.findAllProducts();
+    return { products: [...data] };
   } catch (error) {
     return errorObj(error);
   }
@@ -87,4 +118,4 @@ async function postOneProduct(name, quantity) {
   }
 }
 
-module.exports = { postOneProduct };
+module.exports = { postOneProduct, getAllProducts, getOneProductById };

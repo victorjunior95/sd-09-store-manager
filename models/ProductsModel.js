@@ -6,12 +6,27 @@ const addProduct =  async (name, quantity) => {
   return product.ops[0];
 };
 
-const findOneProduct = async (name) => {
+const findOneProductByName = async (name) => {
   const product = await connection()
     .then((db) => db.collection('products').findOne({name}));
   return product;
 };
 
-const findAllProducts = async () => {};
+const findOneProductById = async (id) => {
+  const product = await connection()
+    .then((db) => db.collection('products').findOne({_id: id}));
+  return product;
+};
 
-module.exports = { addProduct, findOneProduct, findAllProducts };
+const findAllProducts = async () => {
+  const products = await connection()
+    .then((db) => db.collection('products').find().toArray());
+  return products;
+};
+
+module.exports = {
+  addProduct,
+  findOneProductByName,
+  findOneProductById,
+  findAllProducts,
+};
