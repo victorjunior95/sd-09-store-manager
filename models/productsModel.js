@@ -25,19 +25,32 @@ const getById = async (id) => {
 };
 
 const update = async (id, name, quantity) => {
-  const objId = new ObjectId(id);
-
   if (!ObjectId.isValid(id)) return null;
 
   return await connection()
     .then((db) => db.collection('products')
-      .update({ _id: objId }, { name, quantity }))
+      .update({ _id: new ObjectId(id) }, { name, quantity }))
     .then(() => ({ _id: id, name, quantity }));
+};
+
+const remove = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const productToBeRemoved = await getById(id);
+
+  console.log(productToBeRemoved);
+
+  if (!productToBeRemoved) return null;
+
+  return await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id) }))
+    .then(() => productToBeRemoved);
 };
 
 module.exports = {
   add,
   getAll,
   getById,
-  update
+  update,
+  remove
 };
