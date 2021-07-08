@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const productsController = require('../controllers/productsController');
-const { validateProductInput } = require('../middlewares/index');
+const { validateProductInput, validateId } = require('../middlewares/index');
 
+// 1 - Crie um endpoint para o cadastro de produtos
 router.post('/', validateProductInput, productsController.postNewProduct);
 
-router.get('/', productsController.getAllProducts);
-
-router.get('/:id',productsController.getProductById);
+// 2 - Crie um endpoint para listar os produtos
+router.get(['/', '/:id'], validateId , productsController.getProducts);
 
 module.exports = router;

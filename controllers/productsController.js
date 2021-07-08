@@ -11,22 +11,22 @@ const postNewProduct = async (req, res, next) => {
   res.status(httpCodes.created).json(result);
 };
 
-// dummy
-const getAllProducts = async (req, res) => {
-  res.status(httpCodes.ok).json({
-    message: 'getAll on products'
-  });
-};
+// 2 - Crie um endpoint para listar os produtos
+const getProducts = async (req, res) => {
+  const { id } = req.params;
 
-// dummy
-const getProductById = (req, res) => {
-  res.status(httpCodes.ok).json({
-    message: 'getById on products'
-  });
+  if (!id) {
+    const result = await productsServices.getAllProducts();
+
+    return res.status(httpCodes.ok).json(result);
+  };
+
+  const result = await productsServices.getProductById(id);
+
+  res.status(httpCodes.ok).json(result);
 };
 
 module.exports = {
-  getAllProducts,
-  getProductById,
   postNewProduct,
+  getProducts,
 };
