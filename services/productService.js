@@ -1,5 +1,8 @@
 const productModel = require('../models/productModel');
 
+const { ObjectId } = require('mongodb');
+
+
 const alreadyExists =   async (name) => {
   const response =    await productModel.getByName(name);
   return response;
@@ -55,6 +58,23 @@ const create = async ({name, quantity}) => {
   };
 };
 
+
+const getAll = async () => {
+  const products = await productModel.getAll();
+  return products;
+};
+
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    console.log('invalido');
+    return null;
+  }
+  const product = await productModel.getById(id);
+  return product;
+};
+
 module.exports = {
   create,
+  getAll,
+  getById
 };

@@ -19,6 +19,10 @@ const PORT = '3000';
 
 app.post('/products', productController.create);
 
+app.get('/products/:id', productController.getById);
+
+app.get('/products', productController.getAll);
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
