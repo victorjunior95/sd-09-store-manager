@@ -13,4 +13,25 @@ const create = async (name, quantity) => {
 	  .then((result) => ({ _id: result.insertedId, name, quantity }));
 };
 
-module.exports = { create, findProductbyName };
+const getAll = async () => {
+  return connection()
+    .then((db) => db.collection('products').find().toArray());
+};
+
+async function getById(id) {
+  if (!ObjectId.isValid(id)) return null;
+
+  const product = await connection()
+    .then((db) => db.collection('products').findOne(ObjectId(id)));
+
+  if (!product) return null;
+
+  return product;
+};
+
+module.exports = { 
+  create, 
+  findProductbyName,
+  getAll,
+  getById,
+};
