@@ -42,8 +42,6 @@ const update = async (req, res) => {
   const success = 200;
 
   const updatedSale = await salesService.update(productId, quantity);
- 
-  console.log(updatedSale)
 
   res.status(success).json(updatedSale);
 };
