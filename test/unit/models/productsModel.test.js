@@ -1,9 +1,14 @@
 const sinon = require('sinon');
-const { expect } = require('chai');
+const httpStatusCode = require('../../../httpStatusCodes');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 const { MongoClient } = require('mongodb');
 const ProductsModel = require('../../../models/producstModel');
 const connection = require('../../../models/connection');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const ApiError = require('../../../errors/apiError');
 
 const payloadProduct = {
   name: "led rgb",
@@ -31,7 +36,7 @@ describe('Insert new product into database', () => {
 
   describe('When it is successfully inserted', () => {
 
-    it('returns an object', async () => {
+    it('Returns an object', async () => {
         const response = await ProductsModel.create(payloadProduct);
 
         expect(response).to.be.a('object');
@@ -41,5 +46,17 @@ describe('Insert new product into database', () => {
         const response = await ProductsModel.create(payloadProduct);
         expect(response).to.deep.include({name: payloadProduct.name, quantity: payloadProduct.quantity})
     });
+  });
+
+  describe('When the product name already exists in database', () => {
+    it('Throws an ApiException, with code: "invalid_data", message: Product already existis and statuCode: 422', async () => {
+      try{
+        await ProductsModel.create(payloadProduct);
+        await ProductsModel.create(payloadProduct);
+      } catch(err) {
+        const expectedError = new ApiError('invalid_data', 'Product already existis', httpStatusCode.unprocessableEntity);
+        expect(err).to.include({code: expectedError.code, message: expectedError.message, statusCode: expectedError.statusCode});
+      }
+    })
   })
 })
