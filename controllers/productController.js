@@ -14,9 +14,8 @@ const create = rescue(async (req, res) => {
   return res.status(CREATED).json(newProduct);
 });
 
-const findAll = rescue(async (req, res) => {
+const findAll = rescue(async (_req, res) => {
   const product = await ProductService.findAll();
-  console.log(res.body);
   return res.status(OK).json(product);
 });
 
@@ -28,10 +27,21 @@ const findById = rescue(async (req, res) => {
   return res.status(OK).json(product);
 });
 
+const update = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const product = await ProductService.update(id, name, quantity);
+
+  if (product.err) return res.status(UNPROCESSABLE_ENTITY).json(product);
+  return res.status(OK).json({ id, name, quantity });
+});
+
 module.exports = {
   create,
   findAll,
   findById,
+  update,
 };
 
 /* 

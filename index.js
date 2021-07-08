@@ -13,5 +13,6 @@ app.get('/products', ProductController.findAll);
 app.get('/products/:id', ProductController.findById);
 
 app.post('/products', ProductController.create);
+app.put('/products/:id', ProductController.update);
 
 app.listen(port, () => console.log(`Example app listening on ${port}!`));

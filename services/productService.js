@@ -1,29 +1,14 @@
 const ProductModel = require('../models/productModel');
-
-const isValidName = (name) => {
-  if (!name || typeof name !== 'string' || name.length < Number('5')) return false;
-  return true;
-};
-
-const isValidNumber = (quantity) => {
-  if (!quantity || !Number.isInteger(quantity)) return false;
-  return true;
-};
+const validateQuantity = require('../validations/products/validateQuantity');
+const validateName = require('../validations/products/validateName');
 
 const create = async (name, quantity) => {
-  const nameIsValid = isValidName(name);
-  const numberIsValid = isValidNumber(quantity);
   const wantedName = await ProductModel.findByName(name);
+  const msgErrName = validateName.isValidName(name);
+  const msgErrPosNumber = validateQuantity.isPositiveNumber(quantity);
+  const msgErrIsNumber = validateQuantity.isValidNumber(quantity);
 
-  if (!nameIsValid) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"name" length must be at least 5 characters long',
-      },
-    };
-  }
-
+  if (msgErrName) return msgErrName;
   if (wantedName !== null) {
     return {
       err: {
@@ -32,24 +17,8 @@ const create = async (name, quantity) => {
       },
     };
   }
-
-  if (quantity <= Number('0')) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"quantity" must be larger than or equal to 1',
-      },
-    };
-  }
-
-  if (!numberIsValid) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"quantity" must be a number',
-      },
-    };
-  }
+  if (msgErrPosNumber) return msgErrPosNumber;
+  if (msgErrIsNumber) return msgErrIsNumber;
 
   return ProductModel.create(name, quantity);
 };
@@ -74,8 +43,30 @@ const findById = async (id) => {
   return product;
 };
 
+const update = async (id, name, quantity) => {
+  const product = await ProductModel.update(id, name, quantity);
+  const msgErrName = validateName.isValidName(name);
+  const msgErrPosNumber = validateQuantity.isPositiveNumber(quantity);
+  const msgErrIsNumber = validateQuantity.isValidNumber(quantity);
+
+  if (msgErrName) return msgErrName;
+  if (msgErrPosNumber) return msgErrPosNumber;
+  if (msgErrIsNumber) return msgErrIsNumber;
+  if (product === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+
+  return product;
+};
+
 module.exports = {
   create,
   findAll,
   findById,
+  update,
 };

@@ -5,7 +5,7 @@ const MONGO_DB_URL2 = 'mongodb://mongodb:27017/StoreManager'; // teste avaliador
 const DB_NAME = 'StoreManager';
 
 const connection = () => MongoClient
-  .connect(MONGO_DB_URL2, {
+  .connect(MONGO_DB_URL1, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
