@@ -3,21 +3,15 @@ const {
   createProduct,
   getProductsAll,
   getProductById,
+  updateProductById,
 } = require('../model/productsModel');
 
 const MIN_CHARACTERS = 5;
 const VALUE_LIMIT = 0;
 const DATA_ERROR_CODE = 'invalid_data';
 
-const createProductService = async (data) => {
+const validaData = (data) => {
   const { name, quantity } = data;
-  const productExists = await findProductByName(name);
-
-  if (productExists.length > VALUE_LIMIT) {
-    return ({ err: {
-      code: DATA_ERROR_CODE,
-      message: 'Product already exists'}});
-  }
 
   if (name.length < MIN_CHARACTERS) {
     return ({ err: {
@@ -37,7 +31,23 @@ const createProductService = async (data) => {
       message: '"quantity" must be a number'}});
   }
 
-  const result = await createProduct(data);
+  return null;
+};
+
+const createProductService = async (data) => {
+  const { name } = data;
+  const productExists = await findProductByName(name);
+
+  if (productExists.length > VALUE_LIMIT) {
+    return ({ err: {
+      code: DATA_ERROR_CODE,
+      message: 'Product already exists'}});
+  }
+
+  let result = validaData(data);
+
+  if(result === null) result = await createProduct(data);
+
   return result;
 };
 
@@ -56,8 +66,17 @@ const getProductByIdService = async (productId) => {
   return result;
 };
 
+const updateProductByIdService = async (productId, data) => {
+  let result = validaData(data);
+
+  if (result === null) result = await updateProductById(productId, data);
+
+  return result;
+};
+
 module.exports = {
   createProductService,
   getProductsAllService,
   getProductByIdService,
+  updateProductByIdService,
 };

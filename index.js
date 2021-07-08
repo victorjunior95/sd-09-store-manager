@@ -5,6 +5,7 @@ const {
   createProductController,
   getProductsAllController,
   getProductByIdController,
+  updateProductByIdController,
 } = require('./controllers/productsController');
 const { get } = require('frisby');
 
@@ -21,5 +22,6 @@ app.get('/', (_request, response) => {
 app.post('/products', createProductController);
 app.get('/products/:id', getProductByIdController);
 app.get('/products', getProductsAllController);
+app.put('/products/:id', updateProductByIdController);
 
 app.listen(PORT, () => console.log('server ONLINE #VQV !!!'));
