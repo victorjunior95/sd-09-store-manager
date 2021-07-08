@@ -81,7 +81,7 @@ async function postOneProduct(name, quantity) {
     if (quantityBiggerThanZero) throw quantityBiggerThanZero;
     if (quantityMustBeValidNumber) throw quantityMustBeValidNumber;
     if (productRepeated) throw productRepeated;
-    return ProductsModel.addProduct(name, quantity);
+    return await ProductsModel.addProduct(name, quantity);
   } catch (error) {
     return errorObj(error);
   }
