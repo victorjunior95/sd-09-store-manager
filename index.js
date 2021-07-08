@@ -7,7 +7,6 @@ const app = express();
 const PORT = 3000;
 
 app.use(bodyParser);
-app.use('/products', productController);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -16,4 +15,4 @@ app.get('/', (_request, response) => {
 
 app.use('/products', productController);
 
-app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Running on port ${PORT} :]`));

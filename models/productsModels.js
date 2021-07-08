@@ -12,4 +12,18 @@ module.exports = {
 
     return newProduct.ops[0];
   },
+
+  listAllProducts: () => {
+    const allProducts =  connection().then((db) =>
+      db.collection('products').find().toArray());
+
+    return allProducts;
+  },
+
+  listProductById: (id) => {
+    if (!ObjectId(id)) return null;
+
+    return connection().then((db) =>
+      db.collection('products').findOne({ _id: ObjectId(id) }));
+  },
 };
