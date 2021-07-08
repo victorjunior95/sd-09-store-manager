@@ -40,7 +40,14 @@ const getAllOrById = async (id) => {
   return findProductById;
 };
 
+const editProduct = async (id, { name, quantity }) => {
+  const editedProduct = await ModelProducts.editProduct(id, { name, quantity });
+
+  return editedProduct;
+};
+
 module.exports = {
   create,
   getAllOrById,
+  editProduct,
 };

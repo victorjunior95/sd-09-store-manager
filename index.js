@@ -11,6 +11,7 @@ const PORT = 3000;
 app.post('/products', Middlewares.validProducts, ControllerProducts.create);
 app.get('/products', ControllerProducts.getAllOrById);
 app.get('/products/:id', ControllerProducts.getAllOrById);
+app.put('/products/:id', Middlewares.validProducts, ControllerProducts.editProduct);
 
 app.use(Middlewares.errorMiddlewares);
 
