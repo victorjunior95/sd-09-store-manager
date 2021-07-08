@@ -22,7 +22,17 @@ const getAllOrById = async (req, res, next) => {
   res.status(SUCCESS).json(findAllOrById);
 };
 
+const editSale = async (req, res, _next) => {
+  const itensSold = req.body;
+  const { id } = req.params;
+
+  const editedSale = await ServiceSales.editSale(id, itensSold);
+
+  return res.status(SUCCESS).json(editedSale);
+};
+
 module.exports = {
   create,
   getAllOrById,
+  editSale,
 };

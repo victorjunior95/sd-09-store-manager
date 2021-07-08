@@ -29,7 +29,14 @@ const getAllOrById = async (id) => {
   return findSaleById;
 };
 
+const editSale = async (id, itensSold) => {
+  const editedSale = await ModelSales.editSale(id, itensSold);
+
+  return editedSale;
+};
+
 module.exports = {
   create,
   getAllOrById,
+  editSale,
 };

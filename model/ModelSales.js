@@ -3,10 +3,10 @@ const { ObjectId } = require('mongodb');
 
 
 const create = async (itensSold) => {
-  
+
   const connect = await connection();
   const createItensSold = await connect.collection('sales')
-    .insertOne({ 'itensSold': [...itensSold]});
+    .insertOne({ 'itensSold': [...itensSold] });
 
   return {
     _id: createItensSold.insertedId,
@@ -19,7 +19,7 @@ const getAll = async () => {
   const findAll = await connect.collection('sales').find().toArray();
 
   return {
-    sales: [ ...findAll ],
+    sales: [...findAll],
   };
 };
 
@@ -34,8 +34,28 @@ const getById = async (id) => {
   return findSale;
 };
 
+const editSale = async (id, itensSold) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const connect = await connection();
+  const editedSale = await connect.collection('sales')
+    .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } });
+
+  if (editedSale.modifiedCount < 1) {
+    return false;
+  }
+
+  return {
+    _id: id,
+    itensSold,
+  };
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  editSale,
 };
