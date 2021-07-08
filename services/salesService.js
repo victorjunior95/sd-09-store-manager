@@ -48,8 +48,8 @@ const create = async (salesArray) => {
   const productPreUpdate = await productModel.getById(sales.itensSold[0].productId);
   const newQuantity = productPreUpdate.quantity - sales.itensSold[0].quantity;
   if (newQuantity < minProductQuantity ) return { 'err':
-  {'code': 'invalid_data',
-    'message': 'Wrong product ID or invalid quantity'}};
+  {'code': 'stock_problem',
+    'message': 'Such amount is not permitted to sell'}};
 
   const updatedProducts = await productModel
     .updateById(productPreUpdate._id, productPreUpdate.name, newQuantity);
