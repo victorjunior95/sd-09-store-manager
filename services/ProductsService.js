@@ -59,15 +59,38 @@ const create = async (name, quantity) => {
   const productExists = await productAlreadyExists(name);
   const nameValid = isNameValid(name);
   const quantityValid = isQuantityValid(quantity);
-  
+
   if (productExists.err) return productExists;
   if (nameValid.err) return nameValid;
   if (quantityValid.err) return quantityValid;
-  
+
 
   return newProduct;
 };
 
+const getAll = async () => {
+  const productsList = await ProductsModel.getAll();
+
+  return productsList;
+};
+
+const getById = async (id) => {
+  const product = await ProductsModel.getById(id);
+
+  if (!product) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    };
+  }
+
+  return product;
+};
+
 module.exports = {
   create,
+  getAll,
+  getById,
 };
