@@ -17,7 +17,6 @@ const add = async (name, quantity) => {
 const getAll = async () => {
   try {
     const response = (await (await connection()).collection('products').find().toArray());
-    console.log(response[0]);
     return response;
   } catch (error) {
     return error;
@@ -47,16 +46,22 @@ const getByName = async (name) => {
   }
 };
 
-// // update
-// const update = async (id, name, quantity) => {
-//   const response = (await connection()).
+// update
+const update = async (id, name, quantity) => {
+  const response = await(await connection())
+    .collection('products').updateOne({ _id: id }, { $set: { name, quantity } });
+  const newProduct = { _id: id, name, quantity };
 
-
-// };
+  if (response.result.nModified) {
+    // colocar uma messagem
+  }
+  return newProduct;
+};
 
 module.exports = {
   add,
   getAll,
   getByName,
   getById,
+  update,
 };

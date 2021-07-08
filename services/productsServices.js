@@ -6,13 +6,14 @@ const generateMessage = (msg) => {
   return ({ code: msg.code, message: msg.message, status: msg.status });
 };
 
-const validateName = async (name) => {
-  const minLength = 5;
+const validateNameRepeted = async (name) => {
   const productInDB = await productModel.getByName(name);
-
-  if (name.length < minLength) return (generateMessage(messageErr.nameInvalid));
-
   if (productInDB.length) return (generateMessage(messageErr.nameRepeated));
+};
+
+const validateNameInvalidLength = (name) => {
+  const minLength = 5;
+  if (name.length < minLength) return (generateMessage(messageErr.nameInvalid));
 };
 
 const validateQuantity = (quantity) => {
@@ -26,22 +27,25 @@ const validateQuantity = (quantity) => {
 };
 
 // create
-const add = async (name, quantity, next) => {
-  const errorName = await validateName(name);
+const add = async (name, quantity) => {
+  const errorNameRepeted = await validateNameRepeted(name);
+  const errorNameInvalidLength = validateNameInvalidLength(name);
+
   const errorQuantity = validateQuantity(quantity);
 
-  if (errorName) return next(errorName);
-  if (errorQuantity) return next(errorQuantity);
+  if (errorNameRepeted) throw (errorNameRepeted);
+  if (errorNameInvalidLength) throw (errorNameInvalidLength);
+  if (errorQuantity) throw (errorQuantity);
 
   return (await productModel.add(name, quantity));
 };
 
-// select
+// getAll
 const getAll = async () => ({ products: await productModel.getAll() });
 
-// getByName
-const getById = async (id, next) => {
-  if (!ObjectId.isValid(id)) return next(generateMessage(messageErr.idFormatInvalid));
+// getById
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
   const product = await productModel.getById(ObjectId(id));
 
   return product;
@@ -55,9 +59,24 @@ const getByName = async (name) => {
   return product;
 };
 
+// update
+const update = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
+
+  const errorNameInvalidLength = validateNameInvalidLength(name);
+
+  const errorQuantity = validateQuantity(quantity);
+
+  if (errorNameInvalidLength) throw (errorNameInvalidLength);
+  if (errorQuantity) throw (errorQuantity);
+
+  return (await productModel.update(new ObjectId(id), name, quantity));
+};
+
 module.exports = {
   add,
   getAll,
   getByName,
   getById,
+  update,
 };

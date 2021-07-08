@@ -6,5 +6,5 @@ module.exports = (error, _req, res, _next) => {
       err: { code: error.code, message: error.message },
     });
   }
-  return res.status(INTERNAL_ERROR).json(err);
+  return res.status(INTERNAL_ERROR).json(error);
 };
