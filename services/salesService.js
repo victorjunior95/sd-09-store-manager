@@ -2,6 +2,7 @@ const {
   createSales,
   getSalesAll,
   getSaleById,
+  updateSaleById,
 } = require('../model/salesModel');
 
 const VALUE_LIMIT = 1;
@@ -51,8 +52,16 @@ const getSaleByIdService = async (saleId) => {
   return result;
 };
 
+const updateSaleByIdService = async (saleId, data) => {
+  let result = validateSales(data);
+  if (result === null) result = await updateSaleById(saleId, data);
+
+  return result;
+};
+
 module.exports = {
   createSalesService,
   getSalesAllService,
   getSaleByIdService,
+  updateSaleByIdService,
 };

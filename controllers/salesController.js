@@ -2,6 +2,7 @@ const {
   createSalesService,
   getSalesAllService,
   getSaleByIdService,
+  updateSaleByIdService,
 } = require('../services/salesService');
 
 const OK = 200;
@@ -32,8 +33,19 @@ const getSaleByIdController = async (req, res) => {
   res.status(OK).json(result);
 };
 
+const updateSaleByIdController = async (req, res) => {
+  const saleId = req.params.id;
+  const data = req.body;
+  const result = await updateSaleByIdService(saleId, data);
+
+  if (result.err) return res.status(INVALID_DATA).json(result);
+
+  res.status(OK).json(result);
+};
+
 module.exports = {
   createSalesController,
   getSalesAllController,
   getSaleByIdController,
+  updateSaleByIdController,
 };
