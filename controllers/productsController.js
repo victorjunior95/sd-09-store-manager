@@ -45,9 +45,20 @@ const update = ('/:id', async (req, res, next) => {
   }
 });
 
+const exclude = ('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await products.exclude(id);
+    res.status(STATUS_200_OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   create,
   findAll,
   findById,
   update,
+  exclude,
 };
