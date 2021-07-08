@@ -10,4 +10,9 @@ router.post('/', validateProductInput, productsController.postNewProduct);
 // 2 - Crie um endpoint para listar os produtos
 router.get(['/', '/:id'], validateId , productsController.getProducts);
 
+// 3 - Crie um endpoint para atualizar um produto
+router.put('/:id',validateId ,validateProductInput, productsController.updateProduct);
+
+// 4 - Crie um endpoint para deletar um produto
+
 module.exports = router;

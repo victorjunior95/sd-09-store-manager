@@ -26,7 +26,27 @@ const getProducts = async (req, res) => {
   res.status(httpCodes.ok).json(result);
 };
 
+// 3 - Crie um endpoint para atualizar um produto
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const result = await productsServices.updateProduct({id, name, quantity});
+
+  if(result === 1) return res.status(httpCodes.ok).json({ id, name, quantity });
+
+  res.status(httpCodes.bad_request).json({
+    err: {
+      code: 'bad_request',
+      message: 'Não foi possivel atualizar'
+    }
+  });
+};
+
+// 4 - Crie um endpoint para deletar um produto
+
 module.exports = {
   postNewProduct,
   getProducts,
+  updateProduct,
 };
