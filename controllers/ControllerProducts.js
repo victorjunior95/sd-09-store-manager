@@ -36,8 +36,23 @@ const editProduct = async (req, res, _next) => {
   return res.status(SUCCESS).json(editedProduct);
 };
 
+const deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+
+  const findAllOrById = await ServiceProducts.getAllOrById(id);
+
+  if (findAllOrById.err) {
+    return next(findAllOrById.err);
+  }
+
+  const deletedProduct = await ServiceProducts.deleteProduct(id);
+
+  return res.status(SUCCESS).json(deletedProduct);
+};
+
 module.exports = {
   create,
   getAllOrById,
   editProduct,
+  deleteProduct,
 };

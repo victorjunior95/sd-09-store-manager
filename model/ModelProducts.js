@@ -60,10 +60,23 @@ const editProduct = async (id, { name, quantity }) => {
   };
 };
 
+const deleteProduct = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const connect = await connection();
+  const deletedProduct = await connect.collection('products')
+    .findOneAndDelete({ _id: ObjectId(id) });
+  
+  return deletedProduct.value;
+};
+// deletedCount
 module.exports = {
   create,
   getByName,
   getAll,
   getById,
   editProduct,
+  deleteProduct,
 };

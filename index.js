@@ -12,6 +12,7 @@ app.post('/products', Middlewares.validProducts, ControllerProducts.create);
 app.get('/products', ControllerProducts.getAllOrById);
 app.get('/products/:id', ControllerProducts.getAllOrById);
 app.put('/products/:id', Middlewares.validProducts, ControllerProducts.editProduct);
+app.delete('/products/:id', ControllerProducts.deleteProduct);
 
 app.use(Middlewares.errorMiddlewares);
 
