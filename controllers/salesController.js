@@ -9,7 +9,6 @@ const status200 = 200;
 const create = async (req, res) => {
   const sales = req.body;
   const response = await salesService.create(sales);
-  console.log('response', response);
   if ( response['err']) {
     return res
       .status(status422)

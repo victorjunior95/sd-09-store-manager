@@ -11,7 +11,8 @@ const create = async (salesArray) => {
   //   .insertMany(salesArray).then((result) => result);
   const sales = await salesCollection
     .insertOne({itensSold: salesArray}).then((result) => result.ops[0]);
-  console.log(sales, 'model');
+
+  // console.log(sales, 'model');
   return {
     sales
   };
@@ -49,7 +50,7 @@ const deleteById = async (id) => {
 
   const result = await salesCollection
     .deleteOne({_id: ObjectId(id)});
-  console.log(result);
+  // console.log(result);
   return result;
 };
 

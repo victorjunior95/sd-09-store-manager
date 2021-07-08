@@ -1,4 +1,6 @@
 const salesModel = require('../models/salesModel');
+const productModel = require('../models/productModel');
+
 
 const { ObjectId } = require('mongodb');
 
@@ -24,6 +26,7 @@ const isValidId = async (salesArray) => {
 };
 
 const create = async (salesArray) => {
+  const minProductQuantity = 0;
   const idValidity = await isValidId(salesArray);
   const errorId = idValidity.find((curr) => curr === null);
   if (errorId === null) {
@@ -38,9 +41,19 @@ const create = async (salesArray) => {
   if (errorQuantity) return errorQuantity;
 
 
-
   const { sales }= await salesModel
     .create(salesArray);
+
+
+  const productPreUpdate = await productModel.getById(sales.itensSold[0].productId);
+  const newQuantity = productPreUpdate.quantity - sales.itensSold[0].quantity;
+  if (newQuantity < minProductQuantity ) return { 'err':
+  {'code': 'invalid_data',
+    'message': 'Wrong product ID or invalid quantity'}};
+
+  const updatedProducts = await productModel
+    .updateById(productPreUpdate._id, productPreUpdate.name, newQuantity);
+  console.log(updatedProducts);
   return sales;
 };
 
@@ -77,15 +90,15 @@ const deleteById = async (id) => {
     'message': 'Wrong sale ID format'}};
   const sale = await salesModel.getById(id);
 
-  // const productValid = await productModel.getById(id);
-  // if (!productValid) return { 'err':
-  // {'code': 'invalid_data',
-  //   'message': 'Wrong sale ID format'}};
+  const productPreDelete = await productModel.getById(sale.itensSold[0].productId);
+  const newQuantity = productPreDelete.quantity + sale.itensSold[0].quantity;
 
   const response = await salesModel.deleteById(id);
   if (!response['deletedCount']) return { 'err':
   {'code': 'invalid_data',
     'message': 'Wrong sale ID format'}};
+  await productModel
+    .updateById(productPreDelete._id, productPreDelete.name, newQuantity);
   return sale;
 };
 
