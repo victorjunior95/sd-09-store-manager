@@ -3,7 +3,6 @@ const { ObjectId } = require('mongodb');
 const DB_COLLECTION = 'products';
 
 const insertProduct = async (name, quantity) => {
-  console.log('llego');
   const request = await connection().then((db) => 
     db.collection(DB_COLLECTION).insertOne({name, quantity})
       .then((response) => response.ops[0]));
@@ -36,13 +35,22 @@ const editProductData = async (name, quantity, id) => {
       .updateOne({ _id: ObjectId(id)}, { $set: { name, quantity } })
       .then(() => ({ _id: id, name, quantity }))
   );
-  console.log(request);
+
   return request;
+};
+
+const deleteData = async (id) => {
+  const response = await getProduct(id);
+  const request = await connection().then((db) => 
+    db.collection(DB_COLLECTION).deleteOne({ _id: ObjectId(id)}).then(() => response));
+  console.log(response);
+  return(request);
 };
 
 module.exports = {
   insertProduct,
   getAllData,
   getProduct,
-  editProductData
+  editProductData,
+  deleteData,
 };

@@ -42,6 +42,7 @@ const getAllProducts = async () => {
 
 const getOneProduct = async (id) => {
   try {
+  
     if(id.length !== idValidation) throw {response: errors.idFormatErr, status: 422};
     const request = await productModel.getProduct(id);
     if(!request) throw {response: errors.idFormatErr, status: 422};
@@ -71,15 +72,24 @@ const editProduct = async (name, quantity, id) => {
   } catch(err) {
     return err;
   }
+};
 
+const deleteProduct = async (id) => {
+  try{
+    if(id.length !== idValidation) throw {response: errors.idFormatErr, status: 422};
+    const request = await productModel.getProduct(id);
+    if(!request) throw {response: errors.idFormatErr, status: 422};
 
-
-
+    return {response: await productModel.deleteData(id), status: 200 };
+  } catch(err) {
+    return err;
+  }
 };
 
 module.exports = {
   postServices,
   getAllProducts,
   getOneProduct,
-  editProduct
+  editProduct,
+  deleteProduct
 };

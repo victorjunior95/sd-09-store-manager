@@ -33,10 +33,26 @@ const idFormatErr = {
   }
 };
 
+const quantitySaleErr = {
+  'err': {
+    'code': 'invalid_data',
+    'message':'Wrong product ID or invalid quantity'
+  }
+};
+
+const saleNotFoundErr = {
+  'err': {
+    'code': 'not_found',
+    'message':'Sale not found'
+  }
+};
+
 module.exports = {
   nameLengthErr,
   quantityErr,
   dataTypeErr,
   productExistenceErr,
-  idFormatErr
+  idFormatErr,
+  quantitySaleErr,
+  saleNotFoundErr
 };
