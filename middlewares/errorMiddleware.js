@@ -1,4 +1,4 @@
-const { UNPROCESSABLE_ENTITY } = require('../httpCodes');
+const { UNPROCESSABLE_ENTITY, NOT_FOUND } = require('../httpCodes');
 
 const errorMiddleware = async (err, _req, res, _next) => {
   if (err.isJoi) {
@@ -9,6 +9,10 @@ const errorMiddleware = async (err, _req, res, _next) => {
 
   if (err.code === 'invalid_data') {
     return res.status(UNPROCESSABLE_ENTITY).json({ err });
+  }
+
+  if (err.code === 'not_found') {
+    return res.status(NOT_FOUND).json({ err });
   }
 
   return res

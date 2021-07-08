@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { productRouter } = require('./routes');
+const { productRouter, salesRouter } = require('./routes');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
@@ -14,6 +14,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productRouter);
+
+app.use('/sales', salesRouter);
 
 app.use(errorMiddleware);
 

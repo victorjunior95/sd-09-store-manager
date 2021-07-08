@@ -2,8 +2,9 @@
 @port = 3000
 
 ### PRODUCTS
-@productId = 60e705357779ea6b67673088
+@productId = 60e74d3d22acaefb43fa0f19
 
+### CREATE
 POST http://{{hostname}}:{{port}}/products
 Content-Type: application/json
 
@@ -23,9 +24,44 @@ PUT http://{{hostname}}:{{port}}/products/{{productId}}
 Content-Type: application/json
 
 {
-  "name": "Produto 2",
+  "name": "Produto 1",
   "quantity": 18
 }
 
 ### DELETE BY ID
 DELETE http://{{hostname}}:{{port}}/products/{{productId}}
+
+### SALES
+@saleId = 60e7571632f8db11e41f04b0
+
+### CREATE
+POST http://{{hostname}}:{{port}}/sales
+Content-Type: application/json
+
+[
+  {
+    "productId": "60e705357779ea6b67673088",
+    "quantity": 10
+  },
+  {
+    "productId": "60e705357779ea6b67673089",
+    "quantity": 15
+  }
+]
+
+### GET ALL
+GET http://{{hostname}}:{{port}}/sales
+
+### FIND BY ID
+GET http://{{hostname}}:{{port}}/sales/{{saleId}}
+
+### UPDATE BY ID
+PUT http://{{hostname}}:{{port}}/sales/{{saleId}}
+Content-Type: application/json
+
+[
+  {
+    "productId": "60e705357779ea6b67673088",
+    "quantity": 25
+  }
+]
