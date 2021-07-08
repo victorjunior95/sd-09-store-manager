@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 // const Joi = require('joi');
 
 const productController = require('./controllers/productController');
+const salesController = require('./controllers/salesController');
+
 
 // const minNameLength = 5;
 
@@ -26,6 +28,9 @@ app.get('/products/:id', productController.getById);
 app.get('/products', productController.getAll);
 
 app.delete('/products/:id', productController.deleteById);
+
+
+app.post('/sales', salesController.create);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
