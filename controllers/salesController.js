@@ -57,9 +57,24 @@ const updateById = async (req, res) => {
     .json(response);
 };
 
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const response = await salesService.deleteById(id);
+  if (response['err'] ) {
+    return res
+      .status(status422)
+      .json(response);
+  }
+  return res
+    .status(status200)
+    .json(response);
+};
+
+
 module.exports = {
   create,
   getAll,
   getById,
-  updateById
+  updateById,
+  deleteById
 };

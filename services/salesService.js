@@ -57,6 +57,9 @@ const getById = async (id) => {
       'message': 'Sale not found'}};
   }
   const sale = await salesModel.getById(id);
+  if (sale === null) return  {'err':
+  {'code': 'not_found',
+    'message': 'Sale not found'}};
   return sale;
 };
 
@@ -68,10 +71,30 @@ const updateById = async (id, productId, quantity) => {
   return sale;
 };
 
+const deleteById = async (id) => {
+  if (!ObjectId.isValid(id)) return { 'err':
+  {'code': 'invalid_data',
+    'message': 'Wrong sale ID format'}};
+  const sale = await salesModel.getById(id);
+
+  // const productValid = await productModel.getById(id);
+  // if (!productValid) return { 'err':
+  // {'code': 'invalid_data',
+  //   'message': 'Wrong sale ID format'}};
+
+  const response = await salesModel.deleteById(id);
+  if (!response['deletedCount']) return { 'err':
+  {'code': 'invalid_data',
+    'message': 'Wrong sale ID format'}};
+  return sale;
+};
+
+
 
 module.exports = {
   create,
   getAll,
   getById,
-  updateById
+  updateById,
+  deleteById
 };
