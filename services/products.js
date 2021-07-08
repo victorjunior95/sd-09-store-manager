@@ -5,9 +5,9 @@ const create = rescue(async (name, quantity) => {
 
   const existingProduct = await Products.findByName(name);
 
-  if (existingProduct) return { error: { message: 'Product already exists'}};
-  return newProduct;
-  return err;
+  if (existingProduct) return { err: { message: 'Product already exists'}};
+
+  return Products.create(name, quantity);
 });
 
 module.exports = { create };
