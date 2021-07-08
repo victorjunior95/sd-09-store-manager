@@ -71,7 +71,7 @@ const deleteProduct = async (id) => {
   
   return deletedProduct.value;
 };
-// deletedCount
+
 module.exports = {
   create,
   getByName,

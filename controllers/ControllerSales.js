@@ -31,8 +31,23 @@ const editSale = async (req, res, _next) => {
   return res.status(SUCCESS).json(editedSale);
 };
 
+const deleteSale = async (req, res, next) => {
+  const { id } = req.params;
+
+  const findForDeleteSaleById = await ServiceSales.deleteSale(id);
+
+  if (findForDeleteSaleById.err) {
+    return next(findForDeleteSaleById.err);
+  }
+
+  const deletedSale = await ServiceSales.deleteSale(id);
+
+  return res.status(SUCCESS).json(deletedSale);
+};
+
 module.exports = {
   create,
   getAllOrById,
   editSale,
+  deleteSale,
 };

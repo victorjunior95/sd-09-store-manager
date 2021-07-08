@@ -21,6 +21,7 @@ app.post('/sales', Middlewares.validSales, ControllerSales.create);
 app.get('/sales', ControllerSales.getAllOrById);
 app.get('/sales/:id', ControllerSales.getAllOrById);
 app.put('/sales/:id', Middlewares.validSales, ControllerSales.editSale);
+app.delete('/sales/:id', ControllerSales.deleteSale);
 
 app.use(Middlewares.errorMiddlewares);
 

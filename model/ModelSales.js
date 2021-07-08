@@ -53,9 +53,22 @@ const editSale = async (id, itensSold) => {
   };
 };
 
+const deleteSale = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const connect = await connection();
+  const deletedSale = await connect.collection('sales')
+    .findOneAndDelete({ _id: ObjectId(id) });
+  
+  return deletedSale.value;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   editSale,
+  deleteSale,
 };
