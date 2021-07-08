@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const errorMiddleWare = require('./middlewares/error');
 const PORT = 3000;
 const app = express();
 
@@ -11,5 +12,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', require('./routers/products'));
+
+app.use(errorMiddleWare);
 
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
