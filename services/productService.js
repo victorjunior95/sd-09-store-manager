@@ -10,11 +10,6 @@ const isValidNumber = (quantity) => {
   return true;
 };
 
-const findByName = async(name) => {
-  const product = await ProductModel.findByName(name);
-  return product;
-};
-
 const create = async (name, quantity) => {
   const nameIsValid = isValidName(name);
   const numberIsValid = isValidNumber(quantity);
@@ -59,7 +54,28 @@ const create = async (name, quantity) => {
   return ProductModel.create(name, quantity);
 };
 
+const findAll = async () => {
+  const products = await ProductModel.findAll();
+  return products;
+};
+
+const findById = async (id) => {
+  const product = await ProductModel.findById(id);
+
+  if (product === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+
+  return product;
+};
+
 module.exports = {
-  findByName,
   create,
+  findAll,
+  findById,
 };

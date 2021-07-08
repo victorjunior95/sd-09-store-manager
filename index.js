@@ -9,6 +9,9 @@ app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => { response.send();});
+app.get('/products', ProductController.findAll);
+app.get('/products/:id', ProductController.findById);
+
 app.post('/products', ProductController.create);
 
 app.listen(port, () => console.log(`Example app listening on ${port}!`));
