@@ -6,8 +6,9 @@ const create = async (name, quantity) => {
   const isValid = await Validate.validateReturn(name, quantity);
 
   if(isValid === 'aprove') {
-
+    console.log(name);
     const existingProduct = await ProductModels.findByName(name);
+    console.log(existingProduct);
     if (existingProduct) {
       return {
         error: {
@@ -20,7 +21,7 @@ const create = async (name, quantity) => {
     const { insertedId } = await ProductModels.create(name, quantity);
     
     return {
-      id: insertedId,
+      _id: insertedId,
       name,
       quantity,
     };
