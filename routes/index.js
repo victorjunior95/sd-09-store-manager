@@ -10,5 +10,7 @@ routes.put('/products/:id', products.update);
 routes.delete('/products/:id', products.exclude);
 
 routes.post('/sales/', sales.create);
+routes.get('/sales/', sales.findAll);
+routes.get('/sales/:id', sales.findById);
 
 module.exports = routes;
