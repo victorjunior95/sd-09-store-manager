@@ -1,5 +1,8 @@
 const { MongoClient } = require('mongodb');
 
+const DB_URL = 'mongodb://mongodb:27017/StoreManager';
+const DB_NAME = 'StoreManager';
+
 const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -10,9 +13,9 @@ let db = null;
 const connection = () => {
   return db
     ? Promise.resolve(db)
-    : MongoClient.connect(process.env.DB_URL, OPTIONS)
+    : MongoClient.connect(DB_URL, OPTIONS)
       .then((conn) => {
-        db = conn.db(process.env.DB_NAME);
+        db = conn.db(DB_NAME);
         return db;
       })
       .catch((err) => {
