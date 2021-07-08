@@ -37,10 +37,19 @@ const postOneProduct = async (req, res, next) => {
   return res.status(status.created).json(newProduct);
 };
 
+const putOneProduct = async (req, res, next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const updatedProduct = await productsService.putOneProduct(id, name, quantity);
+  if (updatedProduct.err) { return next(updatedProduct); }
+  return res.status(status.OK).json(updatedProduct);
+};
+
 module.exports = {
   verifyProductBody,
   verifyProductId,
   getAllProducts,
   getOneProduct,
-  postOneProduct
+  postOneProduct,
+  putOneProduct
 };

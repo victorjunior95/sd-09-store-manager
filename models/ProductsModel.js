@@ -6,6 +6,16 @@ const addProduct =  async (name, quantity) => {
   return product.ops[0];
 };
 
+const updateOneProduct = async (id, name, quantity) => {
+  const product = await connection()
+    .then((db) => db.collection('products').updateOne(
+      { _id: id },
+      { $set: { name, quantity } },
+      { upsert: true }))
+    .then(() => ({ id, name, quantity }));
+  return product;
+};
+
 const findOneProduct = async (objSearch) => {
   const product = await connection()
     .then((db) => db.collection('products').findOne(objSearch));
@@ -20,6 +30,7 @@ const findAllProducts = async () => {
 
 module.exports = {
   addProduct,
+  updateOneProduct,
   findOneProduct,
   findAllProducts,
 };

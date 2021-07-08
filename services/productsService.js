@@ -106,10 +106,18 @@ async function getAllProducts() {
   }
 }
 
-
 async function postOneProduct(name, quantity) {
   try {
     return await ProductsModel.addProduct(name, quantity);
+  } catch (error) {
+    return errorObj(error);
+  }
+}
+
+async function putOneProduct(id, name, quantity) {
+  try {
+    const data = await ProductsModel.updateOneProduct(id, name, quantity);
+    return data;
   } catch (error) {
     return errorObj(error);
   }
@@ -121,4 +129,5 @@ module.exports = {
   postOneProduct,
   getAllProducts,
   getOneProduct,
+  putOneProduct,
 };
