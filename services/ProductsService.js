@@ -7,43 +7,45 @@ const create = async (name, quantity) => {
   if (name.length < 5)
     return {
       status: HTTP_NOTPROCESS_STATUS,
-      message: '"name" length must be at least 5 characters long',
-      code: 'invalid_data',
+      err: {
+        message: '"name" length must be at least 5 characters long',
+        code: 'invalid_data',
+      },
     };
+
   const existsName = await productsModel.findName(name);
-  if ( existsName) {
+  if (existsName) {
     return {
       status: HTTP_NOTPROCESS_STATUS,
-      err: { 
+      err: {
         message: 'Product already exists',
         code: 'invalid_data',
-      }
+      },
     };
-  };
+  }
 
-  if (quantity < 0 )
+  if (quantity < 0)
     return {
       status: HTTP_NOTPROCESS_STATUS,
-      err: { 
-        message: '"quantity" must be larger than or equal to 1"',
+      err: {
+        message: '"quantity" must be larger than or equal to 1',
         code: 'invalid_data',
-      }
+      },
     };
 
-  if (quantity === 0 )
+  if (quantity === 0)
     return {
       status: HTTP_NOTPROCESS_STATUS,
-      err: { message: '"quantity" must be larger than or equal to 1"',
+      err: {
+        message: '"quantity" must be larger than or equal to 1',
         code: 'invalid_data',
-      }
+      },
     };
 
   if (typeof quantity !== 'number')
     return {
       status: HTTP_NOTPROCESS_STATUS,
-      err: { message: '"quantity" must be a number"',
-        code: 'invalid_data',
-      }
+      err: { message: '"quantity" must be a number', code: 'invalid_data' },
     };
 
   const product = await productsModel.create(name, quantity);
