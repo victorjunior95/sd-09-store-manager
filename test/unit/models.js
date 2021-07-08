@@ -199,7 +199,6 @@ describe('Testando productsModel', () => {
   });
 });
 describe('Testando salesModel', () => {
-  console.log('****************************************************')
   let connectionMock;
   let existentProduct;
 
