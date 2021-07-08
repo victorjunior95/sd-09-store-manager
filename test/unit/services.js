@@ -1,11 +1,18 @@
 const sinon = require('sinon');
-const { expect } = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const { Product } = require('../../models');
 const { productsService } = require('../../services');
 const { InvalidArgumentError } = require('../../errors');
 const { MongoClient } = require('mongodb');
 const connect = require('../mocks/connection');
 const { describe } = require('mocha');
+
+// Setando chai para teste assíncrono
+// Issue no Github: https://github.com/chaijs/chai/issues/415
+// Obgd, nato <3
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 const DB_NAME = 'StoreManager';
 const COLLECTION_NAME = 'products';
@@ -33,9 +40,9 @@ describe('Create a new product', () => {
           name: 'doce', quantity: 8000,
         }
 
-        expect(
-          () => productsService.create(invalidNamePayload)
-        ).to.throw(
+        return expect(
+          productsService.create(invalidNamePayload)
+        ).to.be.rejectedWith(
           InvalidArgumentError,
           '"name" length must be at least 5 characters long',
         );
@@ -47,8 +54,8 @@ describe('Create a new product', () => {
         await connectionMock.db(DB_NAME).collection(COLLECTION_NAME).insertOne(repeatedPayload);
 
         expect(
-          () => productsService.create(repeatedPayload)
-        ).to.throw(
+          productsService.create(repeatedPayload)
+        ).to.be.rejectedWith(
           InvalidArgumentError,
           'Product already exists',
         );
@@ -62,8 +69,8 @@ describe('Create a new product', () => {
         };
 
         expect(
-          () => productsService.create(invalidQuantityPayload)
-        ).to.throw(
+          productsService.create(invalidQuantityPayload)
+        ).to.be.rejectedWith(
           InvalidArgumentError,
           '"quantity" must be larger than or equal to 1',
         );
@@ -75,8 +82,8 @@ describe('Create a new product', () => {
         };
 
         expect(
-          () => productsService.create(invalidQuantityPayload)
-        ).to.throw(InvalidArgumentError);
+          productsService.create(invalidQuantityPayload)
+        ).to.be.rejectedWith(InvalidArgumentError);
       });
 
       it('should throw an InvalidArgumentError if a string is provided', async () => {
@@ -85,8 +92,8 @@ describe('Create a new product', () => {
         };
 
         expect(
-          () => productsService.create(invalidQuantityPayload)
-        ).to.throw(
+          productsService.create(invalidQuantityPayload)
+        ).to.be.rejectedWith(
           InvalidArgumentError,
           '"quantity" must be larger than or equal to 1',
         );

@@ -11,7 +11,6 @@ module.exports = {
     const quantityIsValid = quantity >= QUANT_MIN_AMOUNT;
 
     if (!nameIsValid) {
-      console.log(nameIsValid, name.length);
       throw new InvalidArgumentError('"name" length must be at least 5 characters long');
     }
     if (typeof quantity !== 'number') {
@@ -26,8 +25,6 @@ module.exports = {
     const repeatedName = products.some(({ name: dbName }) => dbName === name);
 
     if (repeatedName) throw new InvalidArgumentError('Product already exists');
-    console.log('xablau');
     return product.create(payload);
-
   },
 };
