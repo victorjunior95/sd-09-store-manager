@@ -1,22 +1,16 @@
 const ProductModel = require('../models/productModel');
 const validateQuantity = require('../validations/products/validateQuantity');
 const validateName = require('../validations/products/validateName');
+const validadeProductExists = require('../validations/validadeProductExists');
 
 const create = async (name, quantity) => {
-  const wantedName = await ProductModel.findByName(name);
+  const msgErrExistName = await validadeProductExists.isProductExist(name);
   const msgErrName = validateName.isValidName(name);
   const msgErrPosNumber = validateQuantity.isPositiveNumber(quantity);
   const msgErrIsNumber = validateQuantity.isValidNumber(quantity);
 
   if (msgErrName) return msgErrName;
-  if (wantedName !== null) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      },
-    };
-  }
+  if (msgErrExistName) return msgErrExistName;
   if (msgErrPosNumber) return msgErrPosNumber;
   if (msgErrIsNumber) return msgErrIsNumber;
 
@@ -64,9 +58,24 @@ const update = async (id, name, quantity) => {
   return product;
 };
 
+const exclude = async (id) => {
+  const product = await ProductModel.exclude(id);
+  
+  if (product === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+  return product;
+};
+
 module.exports = {
   create,
   findAll,
   findById,
   update,
+  exclude,
 };

@@ -37,11 +37,21 @@ const update = rescue(async (req, res) => {
   return res.status(OK).json({ id, name, quantity });
 });
 
+const exclude = rescue(async(req, res) => {
+  const { id } = req.params;
+
+  const product = await ProductService.exclude(id);
+
+  if (product.err) return res.status(UNPROCESSABLE_ENTITY).json(product);
+  return res.status(OK).json(product);
+});
+
 module.exports = {
   create,
   findAll,
   findById,
   update,
+  exclude,
 };
 
 /* 

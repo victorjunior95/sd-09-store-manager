@@ -14,5 +14,6 @@ app.get('/products/:id', ProductController.findById);
 
 app.post('/products', ProductController.create);
 app.put('/products/:id', ProductController.update);
+app.delete('/products/:id', ProductController.exclude);
 
 app.listen(port, () => console.log(`Example app listening on ${port}!`));
