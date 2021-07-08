@@ -42,4 +42,16 @@ route.put('/:id', async (req, res, next) => {
   }
 });
 
+route.delete('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const productDeleted = await productsServices.exclude(id);
+
+    res.status(OK).json(productDeleted);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = route;

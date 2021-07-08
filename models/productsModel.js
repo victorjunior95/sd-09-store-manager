@@ -27,7 +27,7 @@ const getAll = async () => {
 const getById = async (id) => {
   try {
     const product = (await (await connection()).collection('products')
-      .find({ _id: id }).toArray());
+      .find({ _id: ObjectId(id) }).toArray());
 
     return product[0];
   } catch (error) {
@@ -49,7 +49,11 @@ const getByName = async (name) => {
 // update
 const update = async (id, name, quantity) => {
   const response = await(await connection())
-    .collection('products').updateOne({ _id: id }, { $set: { name, quantity } });
+    .collection('products').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity }},
+    );
+
   const newProduct = { _id: id, name, quantity };
 
   if (response.result.nModified) {
@@ -58,10 +62,23 @@ const update = async (id, name, quantity) => {
   return newProduct;
 };
 
+// DELETE
+const exclude = async (id) => {
+  const product = await getById(id);
+
+  const result = await (await connection())
+    .collection('products').deleteOne({ _id: id });
+
+  if (result.deletedCount) {
+    return product;
+  }
+};
+
 module.exports = {
   add,
   getAll,
   getByName,
   getById,
   update,
+  exclude,
 };

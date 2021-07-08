@@ -46,7 +46,7 @@ const getAll = async () => ({ products: await productModel.getAll() });
 // getById
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
-  const product = await productModel.getById(ObjectId(id));
+  const product = await productModel.getById(id);
 
   return product;
 };
@@ -70,7 +70,14 @@ const update = async (id, name, quantity) => {
   if (errorNameInvalidLength) throw (errorNameInvalidLength);
   if (errorQuantity) throw (errorQuantity);
 
-  return (await productModel.update(new ObjectId(id), name, quantity));
+  return (await productModel.update(id, name, quantity));
+};
+
+//DELETE
+const exclude = async (id) => {
+  if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
+
+  return (await productModel.exclude(ObjectId(id)));
 };
 
 module.exports = {
@@ -79,4 +86,5 @@ module.exports = {
   getByName,
   getById,
   update,
+  exclude,
 };
