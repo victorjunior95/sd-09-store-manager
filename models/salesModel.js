@@ -9,6 +9,9 @@ const add = async (itensSold) => {
   const currentProduct = await productsModel.getById(productId);
   const currentQuantity = currentProduct.quantity;
   const newQuantity = currentQuantity - quantity;
+  const minQuantity = 0;
+
+  if (newQuantity < minQuantity) return null;
 
   await productsModel.update(productId, currentProduct.name, newQuantity);
 
