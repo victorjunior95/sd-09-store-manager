@@ -75,13 +75,36 @@ const verifyStocks = async (sales) => {
   return isOk;
 };
 
-const updateQuantity = async (sales) => {
+const updateQuantity = async (sales, op, saleId) => {
   const products = await getAllProducts();
   sales.forEach(async (sale) => {
     const product = products
       .find(({ _id }) => _id.toString() === sale.productId.toString());
-    const newQuantity = product.quantity - sale.quantity;
+    let newQuantity;
+    if (op === 'register') {
+      newQuantity = product.quantity - sale.quantity;
+    }
+    if (op === 'update') {
+      const { itensSold } = await getSalesById(saleId);
+      const productOldSale = itensSold
+        .find(({ productId }) => productId.toString() === sale.productId.toString());
+      newQuantity = productOldSale.quantity < sale.quantity 
+        ? product.quantity - (sale.quantity - productOldSale.quantity)
+        : product.quantity + (productOldSale.quantity - sale.quantity);
+    }
     await updateProductById(sale.productId, { quantity: newQuantity });
+  });
+};
+
+const updateQuantityWhenDeleteSales = async (salesToDelete) => {
+  const products = await getAllProducts();
+  const { itensSold } = salesToDelete;
+  console.log(itensSold);
+  itensSold.forEach(async (item) => {
+    const product = products
+      .find(({ _id }) => _id.toString() === item.productId.toString());
+    const newQuantity = item.quantity + product.quantity;
+    await updateProductById(item.productId, { quantity: newQuantity });
   });
 };
 
@@ -96,7 +119,7 @@ const registerSalesService = async (sales) => {
     return { code: HTTP_NOT_FOUND_STATUS, response: errorStockProblem };
   }
   
-  await updateQuantity(sales);
+  await updateQuantity(sales, 'register');
 
   const registeredSales = await registerSales(sales);
   return { code: HTTP_OK_STATUS, response: registeredSales };
@@ -123,6 +146,14 @@ const updateSalesByIdService = async (id, newInfos) => {
   if (!isValidSales) {
     return { code: HTTP_UNPROCESSABLE_ENTITY_STATUS, response: invalidIdOrQuantity };
   }
+
+  const stocksIsOk = await verifyStocks(newInfos);
+  if (!stocksIsOk) {
+    return { code: HTTP_NOT_FOUND_STATUS, response: errorStockProblem };
+  }
+
+  await updateQuantity(newInfos, 'update', id);
+
   await updateSalesById(id, newInfos);
   const updatedSales = { _id: id, itensSold: newInfos };
   return { code: HTTP_OK_STATUS, response: updatedSales };
@@ -133,6 +164,9 @@ const deleteSalesByIdService = async (id) => {
     return { code: HTTP_UNPROCESSABLE_ENTITY_STATUS, response: errorWrongSaleId };
   }
   const deletedSales = await getSalesById(id);
+
+  await updateQuantityWhenDeleteSales(deletedSales);
+
   await deleteSalesById(id);
   return { code: HTTP_OK_STATUS, response: deletedSales };
 };
