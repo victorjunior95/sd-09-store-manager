@@ -22,7 +22,6 @@ productRouter.get('/', async (_req, res) => {
 productRouter.get('/:id', async (req, res) => {
   const id = req.params.id;
   const product = await productsService.getById(id);
-  console.log('product ###############', product, '############3')
   if (product.err) return res.status(unprocessable_entity).json(product);
 
   return res.status(OK).json(product);
