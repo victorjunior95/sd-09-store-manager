@@ -3,6 +3,7 @@ const {
   getProductsAllService,
   getProductByIdService,
   updateProductByIdService,
+  deleteProductByIdService,
 } = require('../services/productsServices');
 
 const OK = 200;
@@ -42,9 +43,19 @@ const updateProductByIdController = async (req, res) => {
   res.status(OK).json(result);
 };
 
+const deleteProductByIdController = async (req, res) => {
+  const productId = req.params.id;
+  const result = await deleteProductByIdService(productId);
+
+  if (result.err) return res.status(INVALID_DATA).json(result);
+
+  res.status(OK).json(result);
+};
+
 module.exports = {
   createProductController,
   getProductsAllController,
   getProductByIdController,
   updateProductByIdController,
+  deleteProductByIdController,
 };
