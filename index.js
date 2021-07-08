@@ -8,6 +8,11 @@ const {
   updateProductByIdController,
   deleteProductByIdController,
 } = require('./controllers/productsController');
+
+const {
+  createSalesController,
+} = require('./controllers/salesController');
+
 const { get } = require('frisby');
 
 const app = express();
@@ -25,5 +30,7 @@ app.get('/products/:id', getProductByIdController);
 app.get('/products', getProductsAllController);
 app.put('/products/:id', updateProductByIdController);
 app.delete('/products/:id', deleteProductByIdController);
+
+app.post('/sales', createSalesController);
 
 app.listen(PORT, () => console.log('server ONLINE #VQV !!!'));

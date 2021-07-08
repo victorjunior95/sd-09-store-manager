@@ -10,6 +10,7 @@ const findProductByName = async (productName) => {
 const createProduct = async (data) => {
   const result = await connection()
     .then((db) => db.collection('products').insertOne(data));
+
   return result.ops[0];
 };
 
@@ -23,12 +24,14 @@ const getProductById = async (productId) => {
       .findOne({ _id: new ObjectId(productId) }));
 
   if (!result) return null;
+
   return result;
 };
 
 const getProductsAll = async () => {
   const result = await connection()
     .then((db) => db.collection('products').find({}).toArray());
+    
   return { products: result };
 };
 
