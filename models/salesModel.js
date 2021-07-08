@@ -35,8 +35,6 @@ const remove = async (id) => {
 
   const saleToBeRemoved = await getById(id);
 
-  console.log(saleToBeRemoved);
-
   if (!saleToBeRemoved) return null;
 
   const { productId, quantity } = saleToBeRemoved.itensSold[0];
