@@ -42,7 +42,7 @@ const quantityValidate = (quantity) => {
 
 const newProduct = async (name, quantity) => {
   const productName = await productNameValidate(name);
-  const productQuantity = await quantityValidate(quantity);
+  const productQuantity = quantityValidate(quantity);
   if (productName.err) {
     return productName;
   }

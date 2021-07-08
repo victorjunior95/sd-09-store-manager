@@ -24,7 +24,7 @@ const getProductById = async (req, res) => {
 
 const getProducts = async (_req, res) => {
   const products = await productsList();
-  return res.status(STATUS_200).json(products);
+  return res.status(STATUS_200).json({ products });
 };
 
 module.exports = {
