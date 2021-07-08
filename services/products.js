@@ -9,11 +9,15 @@ const create = async (product) => {
     quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
   }).validate(product, { convert: false });
 
-  if (error) return { err: { message: error.message } };
+  if (error) return {
+    err: { code: 'invalid_data', message: error.message }
+  };
 
   const existingProduct = await Products.findByName(product.name);
 
-  if (existingProduct) return { err: { message: 'Product already exists' } };
+  if (existingProduct) return {
+    err: { code: 'invalid_data', message: 'Product already exists' }
+  };
 
   const { insertedId } = await Products.create(product.name, product.quantity);
   return insertedId;
