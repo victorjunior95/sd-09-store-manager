@@ -28,12 +28,10 @@ const getAll = async (_req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const response = await productService.getById(id);
-  if ( !response ) {
+  if ( response['err'] ) {
     return res
       .status(status422)
-      .json({ 'err':
-      {'code': 'invalid_data',
-        'message': 'Wrong id format'}});
+      .json(response);
   }
   return res
     .status(status200)
@@ -43,12 +41,10 @@ const getById = async (req, res) => {
 const deleteById = async (req, res) => {
   const { id } = req.params;
   const response = await productService.deleteById(id);
-  if (!response ) {
+  if (response['err'] ) {
     return res
       .status(status422)
-      .json({ 'err':
-    {'code': 'invalid_data',
-      'message': 'Wrong id format'}});
+      .json(response);
   }
   return res
     .status(status200)

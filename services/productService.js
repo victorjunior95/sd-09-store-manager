@@ -76,8 +76,9 @@ const getAll = async () => {
 
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) {
-    console.log('invalido');
-    return null;
+    return { 'err':
+    {'code': 'invalid_data',
+      'message': 'Wrong id format'}};
   }
   const product = await productModel.getById(id);
   return product;
@@ -96,9 +97,13 @@ const updateById = async (id, name, quantity) => {
 
 
 const deleteById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
+  if (!ObjectId.isValid(id)) return { 'err':
+  {'code': 'invalid_data',
+    'message': 'Wrong id format'}};
   const productValid = await productModel.getById(id);
-  if (!productValid) return null;
+  if (!productValid) return { 'err':
+  {'code': 'invalid_data',
+    'message': 'Wrong id format'}};
 
   await productModel.deleteById(id);
   return productValid;

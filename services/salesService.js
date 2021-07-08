@@ -52,9 +52,19 @@ const getAll = async () => {
 
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) {
-    return null;
+    return { 'err':
+    {'code': 'not_found',
+      'message': 'Sale not found'}};
   }
   const sale = await salesModel.getById(id);
+  return sale;
+};
+
+const updateById = async (id, productId, quantity) => {
+  const quantityValidity = isValidQuantity(quantity);
+  if (typeof quantityValidity === 'object') return quantityValidity;
+
+  const sale = await salesModel.updateById(id, productId, quantity);
   return sale;
 };
 
@@ -62,5 +72,6 @@ const getById = async (id) => {
 module.exports = {
   create,
   getAll,
-  getById
+  getById,
+  updateById
 };
