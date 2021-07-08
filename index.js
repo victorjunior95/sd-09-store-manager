@@ -18,7 +18,8 @@ app.delete('/products/:id', ControllerProducts.deleteProduct);
 
 // ENDPOINTS SALES
 app.post('/sales', Middlewares.validSales, ControllerSales.create);
-
+app.get('/sales', ControllerSales.getAllOrById);
+app.get('/sales/:id', ControllerSales.getAllOrById);
 
 app.use(Middlewares.errorMiddlewares);
 
