@@ -32,7 +32,7 @@ const quantityIsValid = (quantity) => {
       }};
   };
 
-  if (typeof quantity === 'number') {
+  if (typeof quantity !== 'number') {
     return {
       err: {
         code: 'invalid_data',
@@ -42,18 +42,16 @@ const quantityIsValid = (quantity) => {
 };
 
 const createNewProduct = async(name, quantity) => {
-  const newProduct = await productModel.create(name, quantity);
-  console.log(newProduct);
   if (nameIsValid(name)) return nameIsValid(name);
   if (quantityIsValid(quantity)) return quantityIsValid(quantity);
-  if (getByName(name) === name ) {
+  if (await getByName(name)) {
     return {
       err: {
         code: 'invalid_data',
         message: 'Product already exists'
       } };
   }
-
+  const newProduct = await productModel.create(name, quantity);
   return newProduct;
 };
 
