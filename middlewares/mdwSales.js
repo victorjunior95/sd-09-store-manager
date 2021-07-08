@@ -15,7 +15,22 @@ const putOneSale = async (req, res, next) => {
   return res.status(status.OK).json(updatedProduct);
 };
 
+const getAllSales = async (_req, res, next) => {
+  const allSales = await salesService.getAllSales();
+  if (allSales.err) { return next(allSales) ;}
+  return res.status(status.OK).json(allSales);
+};
+
+const getOneSale = async (req, res, next) => {
+  const { id } = req.params;
+  const sale = await salesService.getOneSale(id);
+  if (sale.err) { return next(sale) ;}
+  return res.status(status.OK).json(sale);
+};
+
 module.exports = {
   verifyProductsOfSale,
   putOneSale,
+  getAllSales,
+  getOneSale
 };
