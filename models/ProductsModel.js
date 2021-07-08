@@ -28,9 +28,18 @@ const findAllProducts = async () => {
   return products;
 };
 
+const excludeOneProduct = async (id) => {
+  const product = findOneProduct({ _id: id });
+  await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: id }))
+    .then(() => (product));
+  return product;
+};
+
 module.exports = {
   addProduct,
   updateOneProduct,
   findOneProduct,
   findAllProducts,
+  excludeOneProduct,
 };

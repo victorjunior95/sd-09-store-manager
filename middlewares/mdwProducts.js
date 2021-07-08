@@ -45,11 +45,19 @@ const putOneProduct = async (req, res, next) => {
   return res.status(status.OK).json(updatedProduct);
 };
 
+const deleteOneProduct = async (req, res, next) => {
+  const { id } = req.params;
+  const deletedProduct = await productsService.deleteOneProduct(id);
+  if (deletedProduct.err) { return next(deletedProduct); }
+  return res.status(status.OK).json(deletedProduct);
+};
+
 module.exports = {
   verifyProductBody,
   verifyProductId,
   getAllProducts,
   getOneProduct,
   postOneProduct,
-  putOneProduct
+  putOneProduct,
+  deleteOneProduct,
 };

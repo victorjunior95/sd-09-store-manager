@@ -10,6 +10,6 @@ productsRouter.put('/:id',
   mdwProducts.verifyProductId,
   mdwProducts.verifyProductBody,
   mdwProducts.putOneProduct);
-
+productsRouter.delete('/:id', mdwProducts.verifyProductId, mdwProducts.deleteOneProduct);
 
 module.exports = productsRouter ;

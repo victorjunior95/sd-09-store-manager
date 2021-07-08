@@ -61,7 +61,6 @@ async function verifyProductRepeated(name) {
 
 function verifyMongoId(id) {
   try {
-    console.log('verifica ID');
     return ObjectID(id);
   } catch (error) {
     return { err: {
@@ -116,8 +115,15 @@ async function postOneProduct(name, quantity) {
 
 async function putOneProduct(id, name, quantity) {
   try {
-    const data = await ProductsModel.updateOneProduct(id, name, quantity);
-    return data;
+    return await ProductsModel.updateOneProduct(id, name, quantity);
+  } catch (error) {
+    return errorObj(error);
+  }
+}
+
+async function deleteOneProduct(id) {
+  try {
+    return await ProductsModel.excludeOneProduct(id);
   } catch (error) {
     return errorObj(error);
   }
@@ -130,4 +136,5 @@ module.exports = {
   getAllProducts,
   getOneProduct,
   putOneProduct,
+  deleteOneProduct,
 };
