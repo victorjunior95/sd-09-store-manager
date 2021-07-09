@@ -22,5 +22,15 @@ module.exports = {
     } catch (err) {
       next(err);
     }
-  }
+  },
+  async get(req, res, next) {
+    try {
+      const { id } = req.params;
+      const response = await productsService.get(id);
+
+      res.status(HTTP_200_OK).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

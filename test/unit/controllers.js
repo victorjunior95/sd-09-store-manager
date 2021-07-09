@@ -268,3 +268,71 @@ describe('List all products (controller)', () => {
     expect(response.json.calledWith({ products })).to.be.equal(true);
   });
 });
+
+describe('List a product by its ID (controller)', () => {
+  const product = { _id: 'sdf9s7f9s89d7f8s', name: 'candy', quantity: 8000 };
+  const response = {};
+  const request = {};
+
+  before(() => {
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+  });
+
+  describe('when a valid id is provided', () => {
+    before(() => {
+      request.params = { id: product._id }
+
+      sinon.stub(productsService, 'get')
+        .resolves(product);
+    });
+
+    after(() => {
+      productsService.get.restore();
+    });
+
+    it('should return a status code 200', async () => {
+      await productsController.get(request, response);
+
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+
+    it('should return the product with the respective id', async () => {
+      await productsController.get(request, response);
+
+      expect(response.json.calledWith(product)).to.be.equal(true);
+    });
+  });
+
+  describe('when an invalid id is provided', () => {
+    before(() => {
+      request.params = { id: 'abcdefg' };
+
+      sinon.stub(productsService, 'get')
+        .rejects(new InvalidArgumentError('Wrong id format'));
+    });
+
+    after(() => {
+      productsService.get.restore();
+    });
+
+    it('should return a status code 422', async () => {
+      await productsController.get(request, response);
+
+      expect(response.status.calledWith(422)).to.be.equal(true);
+    });
+
+    it('should return an object with the following properties', async () => {
+      const errorResponse = {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        }
+      };
+
+      await productsController.get(request, response);
+
+      expect(response.json.calledWith(errorResponse)).to.be.equal(true);
+    });
+  });
+});

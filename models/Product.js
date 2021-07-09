@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectID, ObjectId } = require('mongodb');
 const connection = require('./connection');
 
 class Product {
@@ -24,8 +24,8 @@ class Product {
 
     return connection()
       .then((db) => db.collection(this.collection))
-      .then((collection) => collection.find({ _id: id }).toArray())
-      .then((result) => result[0]);
+      .then((collection) => collection.find({ _id: ObjectId(id) }).toArray())
+      .then((result) => result.length ? result[0] : []);
   }
 }
 
