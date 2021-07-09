@@ -1,5 +1,8 @@
 const productService  = require('../services/registerProductService');
-const { httpStatusCode: { created }} = require('../utils');
+const { httpStatusCode: {
+  created,
+  ok
+}} = require('../utils');
 
 const createProduct = async (req, res, next) => {
   try {
@@ -12,4 +15,29 @@ const createProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { createProduct };
+const listAllProducts = async (req, res, next) => {
+  try {
+    const products = await productService.listaAllProductsService();
+    res.status(ok).json({ products });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getByIDController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    
+    const response = await productService.getByIDService(id);
+    res.status(ok).json(response);
+  } catch (error) {
+    return next(error);
+  }
+  
+};
+
+module.exports = {
+  createProduct,
+  listAllProducts,
+  getByIDController
+};

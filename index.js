@@ -2,7 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {mongoInfos: { PORT }} = require('./utils');
 const errorMiddleware = require('./middlewares/errorMiddleware');
-const { createProduct } = require('./controllers/productsController');
+const {
+  createProduct,
+  listAllProducts,
+  getByIDController,
+} = require('./controllers/productsController');
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,6 +17,9 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', createProduct);
+
+app.get('/products', listAllProducts);
+app.get('/products/:id', getByIDController);
 
 app.use(errorMiddleware);
 

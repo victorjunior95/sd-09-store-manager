@@ -1,7 +1,7 @@
 const invalidProduct = (status, code, message) => ({
   status,
   code,
-  message,    
+  message,
 });
 
 const alreadyExists = () => ({

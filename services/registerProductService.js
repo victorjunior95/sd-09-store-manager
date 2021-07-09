@@ -2,6 +2,8 @@ const Joi = require('@hapi/joi');
 const { 
   registerProductModel,
   existsProduct,
+  listaAllProductsModel,
+  getByID,
 } = require('../models/productsModel');
 
 const { 
@@ -35,4 +37,21 @@ const registerProductService = async (name, quantity) => {
   return response;
 };
 
-module.exports = { registerProductService };
+const listaAllProductsService = async () => await listaAllProductsModel();
+
+const getByIDService = async (id) => {
+  const response = await getByID(id);
+  if (response === null) throw {
+    status: unprocessableEntity,
+    message: 'Wrong id format',
+    code: 'invalid_data'
+  };
+
+  return response;
+};
+
+module.exports = {
+  registerProductService,
+  listaAllProductsService,
+  getByIDService
+};
