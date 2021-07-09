@@ -1,11 +1,12 @@
-@hostname = localhost
-@port = 3000
+@url = http://localhost:3000
+
+@productId = 60e84f0ea4f80445892aa774
+@saleId = 60e78cd1137bfe9359c55d09
 
 ### PRODUCTS
-@productId = 60e7766b10a3216f4f942c47
 
 ### CREATE
-POST http://{{hostname}}:{{port}}/products
+POST {{url}}/products
 Content-Type: application/json
 
 {
@@ -14,13 +15,13 @@ Content-Type: application/json
 }
 
 ### GET ALL
-GET http://{{hostname}}:{{port}}/products
+GET {{url}}/products
 
 ### FIND BY ID
-GET http://{{hostname}}:{{port}}/products/{{productId}}
+GET {{url}}/products/{{productId}}
 
 ### UPDATE BY ID
-PUT http://{{hostname}}:{{port}}/products/{{productId}}
+PUT {{url}}/products/{{productId}}
 Content-Type: application/json
 
 {
@@ -29,38 +30,37 @@ Content-Type: application/json
 }
 
 ### DELETE BY ID
-DELETE http://{{hostname}}:{{port}}/products/{{productId}}
+DELETE {{url}}/products/{{productId}}
 
 ### SALES
-@saleId = 60e776dd0e997a6fb917ad00
 
 ### CREATE
-POST http://{{hostname}}:{{port}}/sales
+POST {{url}}/sales
 Content-Type: application/json
 
 [
   {
-    "productId": "60e7766b10a3216f4f942c47",
+    "productId": "{{productId}}",
     "quantity": 15
   }
 ]
 
 ### GET ALL
-GET http://{{hostname}}:{{port}}/sales
+GET {{url}}/sales
 
 ### FIND BY ID
-GET http://{{hostname}}:{{port}}/sales/{{saleId}}
+GET {{url}}/sales/{{saleId}}
 
 ### UPDATE BY ID
-PUT http://{{hostname}}:{{port}}/sales/{{saleId}}
+PUT {{url}}/sales/{{saleId}}
 Content-Type: application/json
 
 [
   {
-    "productId": "60e7766b10a3216f4f942c47",
+    "productId": "{{productId}}",
     "quantity": 25
   }
 ]
 
 ### DELETE BY ID
-DELETE http://{{hostname}}:{{port}}/sales/{{saleId}}
+DELETE {{url}}/sales/{{saleId}}

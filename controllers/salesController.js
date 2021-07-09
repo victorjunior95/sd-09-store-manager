@@ -1,12 +1,13 @@
 const SalesService = require('../services/salesService');
 const { OK } = require('../httpCodes');
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   const data = req.body;
-
   const sale = await SalesService.create(data);
 
-  return res.status(OK).json(sale);
+  return sale.err
+    ? next(sale.err)
+    : res.status(OK).json(sale);
 };
 
 const getAll = async (_req, res) => {
