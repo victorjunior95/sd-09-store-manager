@@ -3,6 +3,7 @@ const {
   findProductByName,
   getAllProducts,
   getProductById,
+  updateProduct,
 } = require('../models/productsModel');
 
 const register = async (name, quantity) => {
@@ -118,6 +119,14 @@ const checkId = (id) => {
   }
 };
 
+const update = async (id, name, quantity) => {
+  const updatedProduct = await updateProduct(id, name, quantity);
+  checksLengthName(name);
+  checkQuantity(quantity);
+  checkIfQuantityIsANumber(quantity);
+  return updatedProduct;
+};
+
 
 module.exports = {
   register,
@@ -128,5 +137,6 @@ module.exports = {
   getProducts,
   getSingleProduct,
   checkIfProductExists,
-  checkId
+  checkId,
+  update
 };

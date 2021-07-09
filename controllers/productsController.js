@@ -8,10 +8,13 @@ const {
   getSingleProduct,
   checkIfProductExists,
   checkId,
+  update,
 } = require('../services/productServices');
 
+const status200 = 200;
+const status201 = 201;
+
 const registerProduct = async (req, res, next) => {
-  const statusOK = 201;
   const { name, quantity } = req.body;
   try{
     await findByName(name);
@@ -19,26 +22,35 @@ const registerProduct = async (req, res, next) => {
     await checkQuantity(quantity);
     await checkIfQuantityIsANumber(quantity);
     const registeredProduct = await register(name, quantity);
-    return res.status(statusOK).json(registeredProduct);
+    return res.status(status201).json(registeredProduct);
   }catch (error) {
     next(error);
   }
 };
 
-const getAllProducts = async (req, res, next) => {
-  const statusOK = 200;
+const getAllProducts = async (_req, res, _next) => {
   const allProducts = await getProducts();
-  res.status(statusOK).json({ products: allProducts });
+  res.status(status200).json({ products: allProducts });
 };
 
 const getProductById = async (req, res, next) => {
-  const statusOK = 200;
   const { id } = req.params;
   try{
     await checkId(id);
     const product = await getSingleProduct(id);
     await checkIfProductExists(product);
-    res.status(statusOK).json(product);
+    res.status(status200).json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateProduct = async (req, res, next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  try {
+    const updatedProduct = await update( id, name, quantity);
+    return res.status(status200).json(updatedProduct);
   } catch (error) {
     next(error);
   }
@@ -47,5 +59,6 @@ const getProductById = async (req, res, next) => {
 module.exports = {
   registerProduct,
   getAllProducts,
-  getProductById
+  getProductById,
+  updateProduct
 };
