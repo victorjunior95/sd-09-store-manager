@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const salesModel = require('../models/salesModel');
-const { messageErrorsSales: messageErr } = require('../helpers/messagesErros');
+const { messageErrorsSales: messageErr,
+  messageErrorsProducts } = require('../helpers/messagesErros');
 const { generateMessage, validateQuantitySales } = require('../helpers/funcValidate');
 
 const findErrorQuantite = (itensSold) => {
@@ -27,8 +28,10 @@ const getAll = async () => ({ sales: await salesModel.getAll() });
 // getById
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.saleNotFound));
-  console.log(id);
+
   const sale = await salesModel.getById(id);
+
+  if (!sale) throw (generateMessage(messageErr.saleNotFound));
   return sale;
 };
 
@@ -43,9 +46,18 @@ const update = async (id, itensSold) => {
   return (await salesModel.update(id, itensSold));
 };
 
+//DELETE
+const exclude = async (id) => {
+  if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
+
+  return (await salesModel.exclude(id));
+};
+
+
 module.exports = {
   add,
   getAll,
   getById,
   update,
+  exclude,
 };

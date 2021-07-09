@@ -57,6 +57,11 @@ const messageErrorsSales = {
     message: 'Sale not found',
     status: 404,
   },
+  idFormatInvalid: {
+    code: 'invalid_data',
+    message: 'Wrong sale ID format',
+    status: 422,
+  }
 };
 
 module.exports = {

@@ -51,9 +51,22 @@ const update = async (id, itensSold) => {
   return newProduct;
 };
 
+// DELETE
+const exclude = async (id) => {
+  const sale = await getById(id);
+
+  const result = await (await connection())
+    .collection(sales).deleteOne({ _id: ObjectId(id) });
+
+  if (result.deletedCount) {
+    return sale;
+  }
+};
+
 module.exports = {
   add,
   getAll,
   getById,
   update,
+  exclude,
 };
