@@ -7,11 +7,6 @@ const status200 = 200;
 const create = async (req, res) => {
   const { name, quantity } = req.body;
   const response = await productService.create({name, quantity});
-  if ( response['err']) {
-    return res
-      .status(status422)
-      .json(response);
-  }
 
   return res
     .status(status201)
@@ -28,11 +23,6 @@ const getAll = async (_req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const response = await productService.getById(id);
-  if ( response['err'] ) {
-    return res
-      .status(status422)
-      .json(response);
-  }
   return res
     .status(status200)
     .json(response);
@@ -41,11 +31,11 @@ const getById = async (req, res) => {
 const deleteById = async (req, res) => {
   const { id } = req.params;
   const response = await productService.deleteById(id);
-  if (response['err'] ) {
-    return res
-      .status(status422)
-      .json(response);
-  }
+  // if (response['err'] ) {
+  //   return res
+  //     .status(status422)
+  //     .json(response);
+  // }
   return res
     .status(status200)
     .json(response);
