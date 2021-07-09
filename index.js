@@ -13,8 +13,14 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', productController.productCreate);
-//app.get('/', (req, res) => res.send('Estou funcionando'));
 
+// lista todos os produtos
+app.get('/products', productController.listAllProducts);
+
+// lista por id ou seja, por um único id
+app.get('/products/:id', productController.listProductId);
+
+//app.get('/', (req, res) => res.send('Estou funcionando'));
 app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
 
 

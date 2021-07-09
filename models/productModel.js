@@ -1,4 +1,5 @@
 const connections = require('./connections');
+const { ObjectId } = require('mongodb');
 
 const create = async(name, quantity) => {
   const newProduct = await connections()
@@ -18,5 +19,30 @@ const queryByName = async (name) => {
   return nameProduct;
 };
 
-module.exports = { create, queryByName };
+const listAllProductsModel = async () => {
+  const listProduct = await connections()
+    .then((db) => db
+      .collection('products')
+      .find().toArray());
+  return listProduct;
+};
+
+const productIdModel = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const productId = await connections()
+    .then((db) => db
+      .collection('products')
+      .findOne( new ObjectId(id)));
+
+  return productId;
+};
+
+
+module.exports = {
+  create,
+  queryByName,
+  listAllProductsModel,
+  productIdModel,
+};
 // fazer as querys dos bancos de dados

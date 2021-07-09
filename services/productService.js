@@ -1,4 +1,6 @@
 const productModel = require('../models/productModel');
+const { ObjectId } = require('mongodb');
+
 const five = 5;
 const zero = 0;
 // const Joi = require('joi');
@@ -6,6 +8,7 @@ const zero = 0;
 const getByName = async (name) => {
   const productName = await productModel.queryByName(name);
   return productName;
+  // pegando o produto pelo nome
 };
 
 // const schema = Joi.object({
@@ -55,6 +58,28 @@ const createNewProduct = async(name, quantity) => {
   return newProduct;
 };
 
+
+const listAllProduct = async () => {
+  const products = await productModel.listAllProductsModel();
+  const allProducts = { products: [...products] };
+  return allProducts;
+};
+
+const listProductById = async (id) => {
+  const product = await productModel.productIdModel(id);
+  console.log(product);
+  if (product === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+  return product;
+};
 module.exports = {
-  createNewProduct
+  createNewProduct,
+  listAllProduct,
+  listProductById
 };
