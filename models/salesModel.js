@@ -7,6 +7,9 @@ const coll = 'sales';
 const add = async (itensSold) => {
   const { productId, quantity } = itensSold[0];
   const currentProduct = await productsModel.getById(productId);
+
+  if (!currentProduct) return null;
+
   const currentQuantity = currentProduct.quantity;
   const newQuantity = currentQuantity - quantity;
   const minQuantity = 0;
