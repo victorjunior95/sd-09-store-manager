@@ -2,20 +2,13 @@ const Products = require('../models/Products');
 
 const validateLength = async (name) => {
   const nameLength = 5;
-  const product = await Products.getProduct(name);
-  if (product !== null) return {
-    err: {
-      code: 'invalid_data',
-      message: 'Product already exists'
-    }
-  };
-  if (name.name.length < nameLength) return {
+  if (name.length < nameLength) return {
     err: {
       code: 'invalid_data',
       message: '"name" length must be at least 5 characters long'
     }
   };
-  return name.name;
+  return name;
 };
 
 const validateQuantity = (quantity) => {
@@ -35,7 +28,14 @@ const validateQuantity = (quantity) => {
 };
 
 const newProduct = async ({ name, quantity }) => {
-  const productName = await validateLength({ name });
+  const productName = await validateLength(name);
+  const productExists = await Products.getProduct({ name });
+  if (productExists !== null) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Product already exists'
+    }
+  };
   const productQuantity = validateQuantity(quantity);
   if (productName.err) {
     return productName;
@@ -65,8 +65,30 @@ const getOne = async (id) => {
   return product;
 };
 
+const updateProduct = async (data) => {
+  const productName = await validateLength(data.name);
+  const productQuantity = validateQuantity(data.quantity);
+  if (productName.err) {
+    return productName;
+  }
+  if (productQuantity.err) {
+    return productQuantity;
+  }
+  const product = await Products.updateProduct(data);
+  
+  if (!product) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+
+  return product;
+};
+
 module.exports = {
   newProduct,
   getAll,
   getOne,
+  updateProduct,
 };

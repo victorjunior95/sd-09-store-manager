@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.post('/products', Products.addNewProduct);
 app.get('/products', Products.getAll);
 app.get('/products/:id', Products.getOne);
+app.put('/products/:id', Products.updateProduct);
 
 app.use(errorMiddleware);
 
