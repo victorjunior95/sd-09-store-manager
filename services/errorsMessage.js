@@ -5,6 +5,8 @@ const errors = {
   quantityMinValue: '"quantity" must be larger than or equal to 1',
   idFormat: 'Wrong id format',
   idAndQuantity: 'Wrong product ID or invalid quantity',
+  saleNotFound: 'Sale not found',
+  notFound: 'not_found',
 };
 
 module.exports = errors;

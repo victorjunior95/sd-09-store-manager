@@ -1,4 +1,4 @@
-const { createSale } = require('../services/salesService');
+const { createSale, listAllSales, findOneSale } = require('../services/salesService');
 const { ok } = require('../services/httpStatusCode');
 
 async function postSale(req, res, _next) {
@@ -7,6 +7,19 @@ async function postSale(req, res, _next) {
   res.status(ok).json(result);
 }
 
+async function getAllSales(_req, res, _next) {
+  const result = await listAllSales();
+  res.status(ok).json(result);
+}
+
+async function getOneSale(req, res, _next) {
+  const { id } = req.params;
+  const result  = await findOneSale(id);
+  res.status(ok).json(result);
+}
+
 module.exports = {
   postSale,
+  getAllSales,
+  getOneSale,
 };

@@ -35,7 +35,6 @@ async function findProductById(id) {
       message: errors.idFormat,
     }
   };
-
   return result;
 }
 

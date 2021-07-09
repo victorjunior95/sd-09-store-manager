@@ -1,5 +1,11 @@
-const { createNewSale } = require('../models/salesModels');
+const {
+  createNewSale,
+  getAllSalesFromDB,
+  findSaleById
+} = require('../models/salesModels');
 const { validateSaleQuantity } = require('./validations');
+const errors = require('./errorsMessage');
+const httpStatusCode = require('./httpStatusCode');
 
 async function createSale(sale) {
   sale.forEach((item) => {
@@ -9,6 +15,25 @@ async function createSale(sale) {
   return result;
 }
 
+async function listAllSales() {
+  const result = await getAllSalesFromDB();
+  return { sales: result};
+}
+
+async function findOneSale(id) {
+  const result = await findSaleById(id);
+  if (!result) throw {
+    status: httpStatusCode.notFound,
+    err: {
+      code: errors.notFound,
+      message: errors.saleNotFound,
+    }
+  };
+  return result;
+}
+
 module.exports = {
   createSale,
+  listAllSales,
+  findOneSale,
 };
