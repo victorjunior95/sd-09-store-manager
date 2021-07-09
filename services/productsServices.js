@@ -1,6 +1,5 @@
 const productsModel = require('../models/productsModels');
 const { ObjectId } = require('mongodb');
-const productsModels = require('../models/productsModels');
 
 module.exports = {
   validateProduct: async (name, quantity) => {
@@ -48,7 +47,7 @@ module.exports = {
   },
 
   findAllProducts: async () => {
-    return await productsModels.listAllProducts();
+    return await productsModel.listAllProducts();
   },
 
   findOneProduct: async (id) => {
