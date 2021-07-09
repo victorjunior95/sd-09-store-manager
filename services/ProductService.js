@@ -1,4 +1,5 @@
 const ProductModel = require('../models/ProductModel');
+const { ObjectId } = require('mongodb'); 
 
 async function validateNameAvailability(name) {
   const getByNameResp = await ProductModel.getByName(name);
@@ -7,6 +8,18 @@ async function validateNameAvailability(name) {
       err: {
         code: 'invalid_data',
         message: 'Product already exists',
+      },
+    };
+  }
+  return {};
+}
+
+function validateId(id) {
+  if (!ObjectId.isValid(id)) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
       },
     };
   }
@@ -22,4 +35,26 @@ async function create(data) {
   return newProduct;
 }
 
-module.exports = { create };
+async function getAll() {
+  const products = await ProductModel.getAll();
+  return products;
+}
+
+async function getById(id) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    return idValidation;
+  }
+  const product = await ProductModel.getById(new ObjectId(id));
+  if (!product) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+  return product;
+}
+
+module.exports = { create, getAll, getById };

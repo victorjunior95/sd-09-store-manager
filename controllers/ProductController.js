@@ -4,6 +4,7 @@ const ProductService = require('../services/ProductService');
 
 const ProductRouter = Router();
 
+const HTTP_OK = 200;
 const HTTP_CREATED = 201;
 const STRING_LENGTH = 5;
 
@@ -34,6 +35,20 @@ ProductRouter.post('/', async (req, res, next) => {
     return next(response);
   }
   return res.status(HTTP_CREATED).json(response);
+});
+
+ProductRouter.get('/', async (_req, res) => {
+  const products = await ProductService.getAll();
+  return res.status(HTTP_OK).json({ products });
+});
+
+ProductRouter.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const product = await ProductService.getById(id);
+  if (product.err) {
+    return next(product);
+  }
+  return res.status(HTTP_OK).json(product);
 });
 
 module.exports = ProductRouter;

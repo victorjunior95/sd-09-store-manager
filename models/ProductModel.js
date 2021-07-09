@@ -16,10 +16,16 @@ async function getAll() {
     .then((products) => products);
 }
 
+async function getById(id) {
+  return connection()
+    .then((db) => db.collection('products').findOne({ _id: id }))
+    .then((product) => product);
+}
+
 async function getByName(name) {
   return connection()
     .then((db) => db.collection('products').findOne({ name }))
-    .then((products) => products);
+    .then((product) => product);
 }
 
-module.exports = { create, getAll, getByName };
+module.exports = { create, getAll, getById, getByName };
