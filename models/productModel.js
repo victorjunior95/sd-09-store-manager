@@ -11,23 +11,37 @@ const listProduct = async () => {
   return connection().then((db) => db.collection('products').find().toArray());
 };
 // 3 - Crie um endpoint para atualizar um produto
-const updateProduct = async (name, quantity) => {
+const updateProduct = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
   return connection()
     .then((db) => db.collection('products').updateOne(
       {
-        name: `${name}`
+        _id: new ObjectId(id),
       },
       {
-        $set: { quantity: quantity },
+        $set: {
+          name: name,
+          quantity: quantity
+        },
       },
     ));
 };
 // 4 - Crie um endpoint para deletar um produto
+const deleteProduct = async (id) => {
+  return connection()
+    .then((db) => db.collection('products').delete({ _id: new ObjectId(id)}))
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+};
 
 module.exports = {
   createProduct,
+  listProduct,
+  updateProduct,
+  deleteProduct,
 };
-
-/* { "name": "Produto Silva", "quantity": 10 }
-{ "_id": ObjectId("5f43cbf4c45ff5104986e81d"), "name": "Produto Silva", "quantity": 10 }
-*/

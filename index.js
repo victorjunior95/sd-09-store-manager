@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const product = require('./models/productModel');
 
 const app = express();
 const PORT = 3000;
@@ -11,10 +10,10 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/products', async (_request, response) => {
-  const test = await product.getAll();
-  console.log(test);
-  response.json();
-});
+app.post('/products', );
+
+app.get('/products/:id', );
+
+app.put('/products', );
 
 app.listen(PORT, () => console.log(`> Server is up and running on PORT : ${PORT}`));
