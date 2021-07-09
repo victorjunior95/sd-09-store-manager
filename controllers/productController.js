@@ -29,4 +29,13 @@ productController.post('/', validateProduct, rescue(async (req, res) => {
   return res.status(CREATED).json(newProduct);
 }));
 
+productController.put('/:id', validateProduct, rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const updatedProduct = await productServices.update(id, name, quantity);
+
+  return res.status(OK).json( updatedProduct );
+}));
+
 module.exports = productController;

@@ -42,9 +42,33 @@ const create = async (name, quantity) => {
   return newProduct.ops[0];
 };
 
+const update = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) throw {
+    customError: {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    },
+  };
+
+  await connection()
+    .then((db) => db.collection('products')
+      .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
+
+  const updatedProduct = {
+    _id: id,
+    name,
+    quantity
+  };
+
+  return updatedProduct;
+};
+
 module.exports = { 
   getAll, 
   getByName,
   getById,
   create,
+  update,
 };
