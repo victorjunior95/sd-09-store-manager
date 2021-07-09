@@ -13,6 +13,7 @@ describe('Insere um novo produto no DB', () => {
     };
     
     let connectionMock;
+
     beforeEach(async() => {
         connectionMock = await getConnection()
 
@@ -38,6 +39,6 @@ describe('Insere um novo produto no DB', () => {
 
             expect(response).to.be.a.property('_id');
         });
-    })
+    });
 });
 
