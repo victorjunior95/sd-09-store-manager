@@ -13,41 +13,77 @@ const VALID_PRODUCT_INPUT_1 = {
   quantity: 100,
 };
 
-
 const VALID_PRODUCT_INPUT_2 = {
   name:'Borracha branca Mono',
   quantity: 70,
 };
 
-const VALID_ID = ObjectId('60e770a1f02f7e8cab42588a');
+const VALID_ID_1 = ObjectId('60e770a1f02f7e8cab42588a');
+const VALID_ID_2 = ObjectId('60e770a1f02f7e8cab42589a');
+const VALID_ID_3 = ObjectId('60e770a1f02f7e8cab42581d');
+const VALID_ID_4 = ObjectId('60e770a1f02f7e8cab42580e');
 
 const VALID_PRODUCT_INPUT_1_FULL = {
-  _id: VALID_ID,
+  _id: VALID_ID_1,
   name:'Lapiseira Graphgear 1000',
   quantity: 100,
 };
 
+const VALID_PRODUCT_INPUT_2_FULL = {
+  _id: VALID_ID_2,
+  name:'Borracha branca Mono',
+  quantity: 60,
+};
+
 const VALID_PRODUCT_INPUT_1_UPDATED = {
-  id: VALID_ID,
+  id: VALID_ID_1,
   name:'Lapiseira Graphgear 1005',
   quantity: 175,
 };
 
-const INVALID_PRODUCT_INPUT_1 = {
-  name: 'Cad',
-  quantity: 100,
+const VALID_SALE_INPUT_1 = [
+  {
+    productId: VALID_ID_1,
+    quantity: 10,
+  },
+];
+
+const VALID_SALE_INPUT_2 = [
+  {
+    productId: VALID_ID_1,
+    quantity: 10,
+  },
+  {
+    productId: VALID_ID_2,
+    quantity: 15,
+  },
+];
+
+const VALID_SALE_INPUT_3 = [
+  {
+    productId: VALID_ID_1,
+    quantity: 200,
+  },
+];
+const VALID_SALE_INPUT_1_FULL = {
+  _id: VALID_ID_1,
+  itensSold: [
+    {
+      productId: VALID_ID_2,
+      quantity: 10,
+    },
+  ],
 };
 
-const INVALID_PRODUCT_INPUT_2 = {
-  name: 'Caderno',
-  quantity: 0,
+const VALID_SALE_INPUT_2_FULL = {
+  _id: VALID_ID_3,
+  itensSold: [
+    {
+      productId: VALID_ID_4,
+      quantity: 10,
+    },
+  ],
 };
-
-const INVALID_PRODUCT_INPUT_3 = {
-  name: 'Caderno',
-  quantity: -5,
-};
-
 describe('Testes para os arquivos de model', () => {
   let connectionMock;
   let db;
@@ -74,8 +110,8 @@ describe('Testes para os arquivos de model', () => {
     await db.collection('sales').deleteMany({});
   });
 
-  describe('Testes para as funções de produtos', () => {
-    describe('Testes as funções associadas ao método POST', () => {
+  describe('Testes para as funções de "products"', () => {
+    describe('Testes para as funções associadas ao método POST', () => {
       describe('Quando um produto é inserido com sucesso', () => {
         it('deve retornar um objeto', async () => {
           const response = await productsModel.postNewProduct(VALID_PRODUCT_INPUT_1);
@@ -98,7 +134,7 @@ describe('Testes para os arquivos de model', () => {
         });
       });
       describe('Quando procuramos o produto por NOME', () =>{
-        it('Deve retornar um objeto com chaves "_id", "name" e "quantity"', async () => {
+        it('deve retornar um objeto com chaves "_id", "name" e "quantity"', async () => {
           const name = 'Lapiseira Graphgear 1000';
           const db = connectionMock.db('StoreManager');
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1);
@@ -110,16 +146,16 @@ describe('Testes para os arquivos de model', () => {
     // fim do método POST
     });
     describe('Testes as funções associadas ao método GET', () => {
-      describe('Quando utilizamos a função getAllProducts', () => {
-        it('Deve retornar um objeto com uma chave products', async ()=> {
+      describe('Testes para a função getAllProducts', () => {
+        it('deve retornar um objeto com uma chave products', async ()=> {
           const result = await productsModel.getAllProducts();
           expect(result).to.be.an('object').to.have.key('products');
         });
-        it('O retorno deve conter na chave products, um array com a lista dos produtos', async () => {
+        it('o retorno deve conter na chave products, um array com a lista dos produtos', async () => {
           const result = await productsModel.getAllProducts();
           expect(result.products).to.be.an('array');
         });
-        it('A chave products deve ter o tamanho certo, igual ao número de produtos cadastrados', async () => {
+        it('a chave products deve ter o tamanho certo, igual ao número de produtos cadastrados', async () => {
           const db = connectionMock.db('StoreManager');
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1);
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_2);
@@ -127,23 +163,23 @@ describe('Testes para os arquivos de model', () => {
 
           expect(result.products).to.have.length(2);
         });
-        it('A chave products deve ter tamanho 0 no caso de não ter nenhum produto cadastrado', async () => {
+        it('a chave products deve ter tamanho 0 no caso de não ter nenhum produto cadastrado', async () => {
           const result = await productsModel.getAllProducts();
 
           expect(result.products).to.have.length(0);
         });
       //fim dos testes do getAllProducts
       });
-      describe('Quando utilizamos a função getProductById', () => {
-        it('Deve retornar um objeto com as chaves "_id", "name", "quantity" referentes ao produto', async () => {
+      describe('Testes para a função getProductById', () => {
+        it('deve retornar um objeto com as chaves "_id", "name", "quantity" referentes ao produto', async () => {
           const db = connectionMock.db('StoreManager');
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
-          const result = await productsModel.getProductById(VALID_ID);
+          const result = await productsModel.getProductById(VALID_ID_1);
 
           expect(result).to.be.an('Object').to.have.all.keys('_id', 'name', 'quantity');
         });
-        it('Deve retornar um null se não encontrar nenhum produto', async () => {
-          const result = await productsModel.getProductById(VALID_ID);
+        it('deve retornar um null se não encontrar nenhum produto', async () => {
+          const result = await productsModel.getProductById(VALID_ID_1);
 
           expect(result).to.be.null;
         });
@@ -153,17 +189,16 @@ describe('Testes para os arquivos de model', () => {
     });
     describe('Testes as funções associadas ao método PUT', () => {
       describe('Em caso de sucesso', () => {
-        it('Deve retornar 1 ao fazer o update' , async () => {
+        it('deve retornar 1 ao fazer o update' , async () => {
           const db = connectionMock.db('StoreManager');
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
-
           const result = await productsModel.updateProduct(VALID_PRODUCT_INPUT_1_UPDATED);
 
           expect(result).to.be.equal(1);
         });
       });
       describe('Em caso de falha', () => {
-        it('Deve retornar um null', async () => {
+        it('deve retornar um null', async () => {
           const result = await productsModel.updateProduct(VALID_PRODUCT_INPUT_1_UPDATED);
 
           expect(result).to.be.null;
@@ -173,18 +208,18 @@ describe('Testes para os arquivos de model', () => {
     });
     describe('Testes as funções associadas ao método DELETE', () => {
       describe('Em caso de sucesso', () => {
-        it('Deve retornar um objeto com os dados do produto deletado', async () => {
+        it('deve retornar um objeto com os dados do produto deletado', async () => {
           const db = connectionMock.db('StoreManager');
           await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
 
-          const result = await productsModel.deleteProduct(VALID_ID);
+          const result = await productsModel.deleteProduct(VALID_ID_1);
 
           expect(result).to.be.an('Object').to.have.all.keys('_id', 'name', 'quantity');
         });
       });
       describe('Em caso de falha', () => {
-        it('Deve retornar um null', async () => {
-          const result = await productsModel.deleteProduct(VALID_ID);
+        it('deve retornar um null', async () => {
+          const result = await productsModel.deleteProduct(VALID_ID_1);
 
           expect(result).to.be.null;
         });
@@ -193,5 +228,140 @@ describe('Testes para os arquivos de model', () => {
     });
   // fim dos testes de produtos
   });
-  // fim dos testes
+  describe('Testes para as funções de "sales"', () => {
+    describe('Testes para as funções associadas ao método POST', () => {
+      describe('Testes para a função postNewSale', () => {
+        describe('Quando a sale é cadastrada com sucesso', () => {
+          it('deve retornar um objeto', async () => {
+            const db = connectionMock.db('StoreManager');
+            await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
+
+            const result = await salesModel.postNewSale(VALID_SALE_INPUT_1);
+
+            expect(result).to.be.an('object');
+          });
+        });
+        describe('Quando a sale não foi cadastrada com sucesso', () => {
+          it('deve retornar um erro, quando o produto não está cadastrado', async () => {
+            const result = await salesModel.postNewSale(VALID_SALE_INPUT_1);
+
+            expect(result.err).to.be.an('object');
+            expect(result.err.code).to.be.a('string').to.be.equal('invalid_data');
+            expect(result.err.message).to.be.a('string').to.be.equal('Não existe produto com o Id fornecido');
+          });
+          it('deve retornar um erro quando não há produtos o suficiente no estoque', async() => {
+            const db = connectionMock.db('StoreManager');
+            await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
+
+            const result = await salesModel.postNewSale(VALID_SALE_INPUT_3);
+
+            expect(result.err).to.be.an('object');
+            expect(result.err.code).to.be.a('string').to.be.equal('stock_problem');
+            expect(result.err.message).to.be.a('string').to.be.equal('Such amount is not permitted to sell');
+          });
+        });
+      });
+    // fim do método POST
+    });
+    describe('Testes das funções do metodo GET', () => {
+      describe('Testes para a função getAllSales', () => {
+        it('deve retornar uma chave com uma key "sales"', async () => {
+          const result = await salesModel.getAllSales();
+
+          expect(result).to.be.an('object').to.have.key('sales');
+        });
+        it('a chave sales deve ser um array com a lista de vendas', async() => {
+          const result = await salesModel.getAllSales();
+
+          expect(result.sales).to.be.an('array');
+        });
+        it('o retorno deve ter o tamanho certo, igual ao número de vendas cadastradas', async () => {
+          const db = connectionMock.db('StoreManager');
+          await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
+          await db.collection('products').insertOne(VALID_PRODUCT_INPUT_2_FULL);
+
+          await db.collection('sales').insertOne({itensSold: VALID_SALE_INPUT_1});
+          await db.collection('sales').insertOne({itensSold: VALID_SALE_INPUT_2});
+          const result = await salesModel.getAllSales();
+
+          expect(result.sales).to.have.length(2);
+        });
+        it('o retorno deve ter tamanho 0, se não tiver nenhuma venda cadastrada', async () => {
+          const result = await salesModel.getAllSales();
+
+          expect(result.sales).to.have.length(0);
+        });
+      });
+      describe('Testes para a função getSaleById', () => {
+        describe('Caso encontre uma venda', () => {
+          it('deve retornar os dados da venda', async () => {
+            const db = connectionMock.db('StoreManager');
+            await db.collection('sales').insertOne(VALID_SALE_INPUT_1_FULL);
+            const result = await salesModel.getSaleById(VALID_ID_1);
+
+            expect(result).to.be.an('object').to.have.all.keys('_id', 'itensSold');
+          });
+        });
+        describe('Caso não encontre uma venda', () => {
+          it('deve retornar null', async () => {
+            const result = await salesModel.getSaleById(VALID_ID_1);
+
+            expect(result).to.be.null;
+          });
+        });
+        describe('Caso o ID não seja válido', () => {
+          it('deve retornar null', async () => {
+            const result = await salesModel.getSaleById(9999);
+
+            expect(result).to.be.null;
+          });
+        });
+      });
+    // fim do método GET
+    });
+    describe('Testes das funções do método PUT', () => {
+      describe('Em caso de sucesso', () => {
+        it('deve retornar um 1 quando conseguir fazer um update', async () => {
+          const db = connectionMock.db('StoreManager');
+          await db.collection('sales').insertOne(VALID_SALE_INPUT_1_FULL);
+          const itensSold = [{VALID_ID_2, quantity: 5}];
+          const result = await salesModel.updateSale({id: VALID_ID_1, itensSold});
+
+          expect(result).to.be.equal(1);
+        });
+      });
+      describe('Em caso de falha', () => {
+        it('deve retornar um null', async () => {
+          const itensSold = [{VALID_ID_2, quantity: 5}];
+          const result = await salesModel.updateSale({id: VALID_ID_1, itensSold});
+
+          expect(result).to.be.null;
+        });
+      });
+    // fim to método PUT
+    });
+    describe('Testes para o método DELETE', () => {
+      describe('Em caso de sucesso', () => {
+        it('deve retornar os dados da sale que foi deletada', async () => {
+          const db = connectionMock.db('StoreManager');
+          await db.collection('sales').insertOne(VALID_SALE_INPUT_1_FULL);
+
+          const result = await salesModel.deleteSale(VALID_ID_1);
+
+          expect(result).to.be.an('object').to.have.all.keys('_id', 'itensSold');
+          expect(result.itensSold).to.be.an('array').to.have.length(1);
+        });
+      });
+      describe('Em caso de falha', () => {
+        it('deve retornar um null', async () => {
+          const result = await salesModel.deleteSale(VALID_ID_1);
+
+          expect(result).to.be.null;
+        });
+      });
+    // fim to método DELETE
+    });
+  // fim dos testes de sales
+  });
 });
+

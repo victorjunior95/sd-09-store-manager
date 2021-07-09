@@ -35,7 +35,6 @@ const postNewSale = async (saleArray) => {
 
   const result = await connection()
     .then((db) => db.collection('sales').insertOne({ itensSold: saleArray}));
-
   return result.insertedId;
 };
 
@@ -56,7 +55,6 @@ const getSaleById = async (id) => {
 
 const updateSale = async ({ id, itensSold }) => {
   const sale = await getSaleById(id);
-
   if (!sale) return null;
 
   const result = await connection()
