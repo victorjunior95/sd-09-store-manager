@@ -32,7 +32,7 @@ const updateProduct = async({ id, name, quantity }) => {
   return connection().then((db) => db.collection('products')
     .findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $set: { name, quantity } }, 
+      { $set: { name, quantity } },
       { returnOriginal: false }
     ));
 };
