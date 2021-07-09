@@ -8,18 +8,26 @@ const addNewSale = async (req, res, next) => {
 
   if (sales.err) return next(sales);
 
-  const data = sales.map(({ productId, quantity }) => {
-    return { productId, quantity };
-  });
+  res.status(STATUS_200).json(...sales);
+};
 
-  const formatedSales = {
-    _id: sales[0]._id,
-    itensSold: data,
-  };
+const getAll = async (_req, res, _next) => {
+  const sales = await Sales.getAll();
+  res.status(STATUS_200).json(sales);
+};
 
-  res.status(STATUS_200).json(formatedSales);
+const getOne = async (req, res, next) => {
+  const { id } = req.params;
+  const sale = await Sales.getOne(id);
+
+  if (sale.err) return next(sale);
+
+  res.status(STATUS_200).json(sale);
+  
 };
 
 module.exports = {
   addNewSale,
+  getAll,
+  getOne,
 };

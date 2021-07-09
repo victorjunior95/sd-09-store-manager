@@ -10,6 +10,7 @@ module.exports = (err, _req, res, _next) => {
 
   const statusByErrorCode = {
     invalid_data: 422,
+    not_found: 404,
   };
 
   const status = statusByErrorCode[err.err.code] || STATUS_500;
