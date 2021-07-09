@@ -22,7 +22,6 @@ const findById = async (id) => {
     .findOne(ObjectId(id)));
 
   if (!product) return null;
-
   return product;
 };
 
@@ -39,7 +38,6 @@ const update = async (id, name, quantity) => {
     .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
 
   if (!updatedProduct) return null;
-
   return updatedProduct;
 };
 
