@@ -1,6 +1,8 @@
 const { 
   registerProduct,
-  findProductByName
+  findProductByName,
+  getAllProducts,
+  getProductById,
 } = require('../models/productsModel');
 
 const register = async (name, quantity) => {
@@ -72,6 +74,50 @@ const checkIfQuantityIsANumber = (quantity) => {
   }
 };
 
+const getProducts = async () => {
+  const allProducts = await getAllProducts();
+  return allProducts;
+};
+
+const getSingleProduct = async (id) => {
+  const product = await getProductById(id);
+  return product;
+};
+
+const checkIfProductExists = (product) => {
+  if(!product) {
+    throw [
+      {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format'
+        }
+      },
+      {
+        status: 422
+      }
+    ];
+  }
+};
+
+const checkId = (id) => {
+  const regexId = /[0-9A-Fa-f]{6}/g;
+  const bolean = regexId.test(id);
+  if(!bolean) {
+    throw [
+      {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format'
+        }
+      },
+      {
+        status: 422
+      }
+    ];
+  }
+};
+
 
 module.exports = {
   register,
@@ -79,4 +125,8 @@ module.exports = {
   checksLengthName,
   checkQuantity,
   checkIfQuantityIsANumber,
+  getProducts,
+  getSingleProduct,
+  checkIfProductExists,
+  checkId
 };
