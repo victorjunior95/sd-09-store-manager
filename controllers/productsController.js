@@ -2,7 +2,8 @@ const {
   newProduct,
   productsList,
   productById,
-  patchProduct
+  patchProduct,
+  removeProduct
 } = require('../services/productsService');
 
 const STATUS_422 = 422;
@@ -36,9 +37,17 @@ const putProduct = async (req, res) => {
   return res.status(STATUS_200).json(product);
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await removeProduct(id);
+  if (product.err) return res.status(STATUS_422).json(product);
+  return res.status(STATUS_200).json(product);
+};
+
 module.exports = {
   createProduct,
   getProducts,
   getProductById,
-  putProduct
+  putProduct,
+  deleteProduct
 };

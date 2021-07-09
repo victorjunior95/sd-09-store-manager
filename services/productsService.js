@@ -4,6 +4,7 @@ const {
   getAllProducts,
   findProductById,
   updateProduct,
+  deleteProductFromDb
 } = require('../models/productsModel');
 
 const NAME_LENGTH = 5;
@@ -80,23 +81,32 @@ const patchProduct = async (id, name, quantity) => {
   };
   const productQuantity = quantityValidate(quantity);
   const productName = await productNameValidate(name);
-
   if (productQuantity.err) {
     return productQuantity;
   }
-
   if (productName.err) {
     return productName;
   }
-
   const product = await updateProduct(id, productName, productQuantity);
-
   return product;
+};
+
+const removeProduct = async (id) => {
+  const productId = await findProductById(id);
+  if (!productId) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+  deleteProductFromDb(id);
+  return productId;
 };
 
 module.exports = {
   newProduct,
   productsList,
   productById,
-  patchProduct
+  patchProduct,
+  removeProduct
 };
