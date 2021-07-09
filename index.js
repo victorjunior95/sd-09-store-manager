@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 
 const PORT = 3000;
 
-const status_code = { not_found: 404, invalid_data: 422 };
+const status_code = { not_found: 404, invalid_data: 422, stock_problem: 404 };
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

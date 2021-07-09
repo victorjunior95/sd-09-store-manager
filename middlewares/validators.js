@@ -10,9 +10,10 @@ const message = {
   saleNotFound: 'Sale not found',
   invalidSale: 'Wrong product ID or invalid quantity',
   invalidSaleId: 'Wrong sale ID format',
+  outOfStock: 'Such amount is not permitted to sell',
 };
 
-const checkProduct = (req, _res, next) => {
+const checkProd = (req, _res, next) => {
   const { name, quantity } = req.body;
   const minLength = 5;
   if (name.length < minLength) {
@@ -27,7 +28,7 @@ const checkProduct = (req, _res, next) => {
   return next();
 };
 
-const findProduct = async (req, _res, next) => {
+const findProd = async (req, _res, next) => {
   const { name } = req.body;
   const exists = await products.getAll().then((arr) => arr.some((p) => p.name === name));
   if (exists) return next({ code: 'invalid_data', message: message.productExists });
@@ -55,4 +56,15 @@ const checkSaleId = (req, _res, next) => {
   return next({ code: 'invalid_data', message: message.invalidSaleId });
 };
 
-module.exports = { checkProduct, findProduct, checkId, checkSale, checkSaleId };
+const checkStock = async (req, _res, next) => {
+  const [...itensSold] = req.body;
+  const arr = await products.getAll();
+  const available = itensSold.every(({ productId, quantity }) => {
+    const stock = arr.find((e) => e._id.toString() === productId);
+    return stock.quantity > quantity;
+  });
+  if (!available) return next({ code: 'stock_problem', message: message.outOfStock });
+  return next();
+};
+
+module.exports = { checkProd, findProd, checkId, checkSale, checkSaleId, checkStock };
