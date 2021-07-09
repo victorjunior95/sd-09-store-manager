@@ -26,7 +26,6 @@ const getAll = rescue(async (_request, response, next) => {
   response.status(OK).json({
     products,
   });
-
 });
 
 const findById = rescue(async (request, response, next) => {
@@ -40,8 +39,22 @@ const findById = rescue(async (request, response, next) => {
   response.status(OK).json(product);
 });
 
+const update = rescue(async (request, response, next) => {
+
+  const { id } = request.params;
+
+  const { name, quantity } = request.body;
+
+  const product = await services.update({id, name, quantity});
+
+  if (product.err) return next(product);
+
+  response.status(OK).json(product);
+});
+
 module.exports = {
   create,
   getAll,
   findById,
+  update,
 };
