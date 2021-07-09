@@ -31,18 +31,24 @@ const updateProduct = async (req, res, next) => {
   const { name, quantity } = req.body;
   const newProduct = await Products.updateProduct({ id, name, quantity });
 
-  console.log(newProduct);
-
   if (newProduct.err) return next(newProduct);
-
-  // console.log(newProduct);
 
   res.status(STATUS_200).json(newProduct.value);
 };
+
+const deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+  const productDeleted = await Products.deleteProduct(id);
+
+  if (productDeleted.err) return next(productDeleted);
+
+  res.status(STATUS_200).json(productDeleted);
+}; 
 
 module.exports = {
   addNewProduct,
   getAll,
   getOne,
   updateProduct,
+  deleteProduct,
 };
