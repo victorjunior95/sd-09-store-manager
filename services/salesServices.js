@@ -6,9 +6,7 @@ module.exports = {
     let error = false;
 
     body.forEach((sale) => {
-      if (Number(sale.quantity) < 1 || typeof sale.quantity !== 'number') {
-        error = true;
-      }
+      if (Number(sale.quantity) < 1 || typeof sale.quantity !== 'number') error = true;
     });
 
     if (error) {
@@ -23,5 +21,24 @@ module.exports = {
     }
 
     return await salesModel.addSales(body);
+  },
+
+  findAllSales: async () => {
+    return await salesModel.listAllSales();
+  },
+
+  findSaleById: async (id) => {
+    if (ObjectId.isValid(id)) {
+      const finded = await salesModel.listSaleById(id);
+
+      if (finded)  return finded;
+    }
+
+    return {
+      'err': {
+        'code': 'not_found',
+        'message': 'Sale not found'
+      }
+    };
   },
 };
