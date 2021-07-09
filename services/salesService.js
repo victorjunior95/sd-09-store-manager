@@ -9,9 +9,12 @@ async function verifyIdAndQuantity(id, quantity) {
     const productId = ObjectID(id);
     const quantityProduct = Number(quantity);
     const productFound = await productsService.getOneProduct({_id: productId});
+    const totalAmountInStock = productFound.quantity - quantityProduct;
     if (!productFound) throw '';
     if (isNaN(quantityProduct)) throw '';
     if (quantityProduct <= minQuantity) throw '';
+    if (totalAmountInStock < minQuantity) throw '';
+    await productsService.putOneProduct(productId, productFound.name, totalAmountInStock);
     return {};
   } catch (error) {
     return { err: {
@@ -99,13 +102,6 @@ async function putOneSale(idSale, productsList) {
     for (let index = startIndex; index < productsList.length; index += 1) {
       const productId = productsList[index].productId;
       const productQuantity = productsList[index].quantity;
-      data = await verifyIdAndQuantity(productId, productQuantity);
-      if (data.err) { return data; }
-    }
-
-    for (let index = startIndex; index < productsList.length; index += 1) {
-      const productId = productsList[index].productId;
-      const productQuantity = productsList[index].quantity;
       data = await SalesModel.updateOneSale(idSale, productId, productQuantity);
       if (data.err) { return data; }
     }
@@ -116,9 +112,18 @@ async function putOneSale(idSale, productsList) {
   }
 };
 
-async function deleteOneSale(id) {
+async function deleteOneSale(saleId) {
   try {
-    return await SalesModel.excludeSale(id);
+    const minQuantity = 0;
+    const sale = await SalesModel.findOneSale(saleId);
+    for (let index = minQuantity; index < sale.itensSold.length; index += 1) {
+      const saleProductId = ObjectID(sale.itensSold[index].productId);
+      const saleQuantity = sale.itensSold[index].quantity;
+      const { name, quantity } = await productsService
+        .getOneProduct({_id: saleProductId});
+      await productsService.putOneProduct(saleProductId, name, quantity + saleQuantity);
+    }
+    return await SalesModel.excludeSale(saleId);
   } catch (error) {
     return productsService.errorObj(error);
   }
