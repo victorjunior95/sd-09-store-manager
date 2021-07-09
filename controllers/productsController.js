@@ -2,6 +2,7 @@ const productsServices = require('../services/products/productsServices');
 
 const createProducts= async (req, res) => {
   const { name, quantity } = req.body;
+
   const createResult = await productsServices.create(name, quantity);
 
   if (createResult.message) {
@@ -19,8 +20,13 @@ const createProducts= async (req, res) => {
 
 const findAll = async (req, res) => {
   const code = 200;
-  const result = await productsServices.findAll();
-  return res.status(code).json(result);
+
+  try {
+    const result = await productsServices.findAll();
+    return res.status(code).json({ products: result });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {

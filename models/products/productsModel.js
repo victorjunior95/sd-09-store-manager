@@ -1,15 +1,17 @@
 const connection = require('../connection');
 
-const getAll = () => {
-  const products = connection()
+const getAll = async () => {
+  return await connection()
     .then((db) => db.collection('products').find().toArray());
-
-  return products;
 };
 
 const searchProductName = async (searchName) => {
   return await connection()
     .then((db) => db.collection('products').findOne({ name: searchName }));
+};
+
+const findById = async (id) => {
+  return await connection().then((db) => db.collection('products').findOne(ObjectId(id)));
 };
 
 const createProducts = async (name, quantity) => {
@@ -27,4 +29,5 @@ module.exports = {
   getAll,
   searchProductName,
   createProducts,
+  findById,
 };

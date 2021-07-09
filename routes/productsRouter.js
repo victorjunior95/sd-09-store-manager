@@ -1,12 +1,16 @@
 const { Router } = require('express');
 
 const productsController = require('../controllers/productsController');
+const { validateProducts } = require('../middlewares/productsMiddlewares');
 
 const router = Router();
 
 router.route('/')
   .get(productsController.findAll)
-  .post(productsController.createProducts);
+  .post(validateProducts, productsController.createProducts);
 
+/* router.route('/:id')
+  .get() */
 
+validateProducts,
 module.exports = router;
