@@ -54,6 +54,13 @@ const INVALID_ID_OR_QUANTITY = {
   }
 };
 
+const INVALID_STOCK_AMOUNT = {
+  err: {
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
+  }
+};
+
 
 module.exports = {
   PRODUCT_EXISTS,
@@ -64,4 +71,5 @@ module.exports = {
   SALE_NOT_FOUND,
   WRONG_SALEID_FORMAT,
   INVALID_ID_OR_QUANTITY,
+  INVALID_STOCK_AMOUNT
 };

@@ -9,6 +9,16 @@ const create = async (productsList) => {
       .insertMany([{ itensSold: [...productsList] }])
     );
 
+  productsList.forEach(async ({ productId, quantity }) => {
+    await connection()
+      .then((db) => db.collection('products')
+        .findOneAndUpdate(
+          { _id: ObjectId(productId) },
+          { $inc: { quantity: -quantity } }
+        )
+      );
+  });
+
   return createdSale.ops[0];
 };
 
@@ -41,14 +51,29 @@ const update = async (saleId, productsList) => {
   return updatedSale.value;
 };
 
-const remove = async (id) => (
-  !ObjectId.isValid(id)
-    ? null
-    : await connection()
-      .then((db) => db.collection(DB_COLLECTION)
-        .findOneAndDelete({ _id: ObjectId(id) }) // https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
-      )
-);
+const remove = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const { itensSold } = await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .findOne({ _id: ObjectId(id) })
+    );
+
+  itensSold.forEach(async ({ productId, quantity }) => {
+    await connection()
+      .then((db) => db.collection('products')
+        .findOneAndUpdate(
+          { _id: ObjectId(productId) },
+          { $inc: { quantity: quantity } }
+        )
+      );
+  });
+
+  return await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .findOneAndDelete({ _id: ObjectId(id) }) // https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
+    );
+};
 
 module.exports = {
   create,
