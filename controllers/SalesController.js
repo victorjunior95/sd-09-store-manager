@@ -47,9 +47,22 @@ const update = async (req, res) => {
   return res.status(OK_STATUS).json(updatedSale);
 };
 
+const remove = async (req, res) => {
+  const { id } = req.params;
+
+  const removedSale = await SalesServices.remove(id);
+
+  if (removedSale.err) {
+    return res.status(UNPROCESSABLE_ENTITY_STATUS).json(removedSale);
+  }
+
+  return res.status(OK_STATUS).json(removedSale);
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  remove,
 };
