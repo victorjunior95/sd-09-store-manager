@@ -31,9 +31,19 @@ productRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   const productUpdated = await productsService.upDate(id, name, quantity);
+
   if (productUpdated.err) return res.status(unprocessable_entity).json(productUpdated);
 
   return res.status(OK).json(productUpdated);
+});
+
+productRouter.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const productDeleted = await productsService.deleteProduct(id);
+  if (productDeleted.err) return res.status(unprocessable_entity).json(productDeleted);
+
+  return res.status(OK).json(productDeleted);
 });
 
 module.exports = productRouter;
