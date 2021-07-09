@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const Products = require('./controllers/ProductsController');
+const Sales = require('./controllers/SalesController');
 const errorMiddleware = require('./middlewares/error');
 
 const app = express();
@@ -12,6 +13,8 @@ app.get('/products', Products.getAll);
 app.get('/products/:id', Products.getOne);
 app.put('/products/:id', Products.updateProduct);
 app.delete('/products/:id', Products.deleteProduct);
+
+app.post('/sales', Sales.addNewSale);
 
 app.use(errorMiddleware);
 
