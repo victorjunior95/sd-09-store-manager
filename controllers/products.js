@@ -1,43 +1,31 @@
 const products = require('../services/products');
 
-const status_code = {
-  ok: 200,
-  created: 201,
+const status_code = { ok: 200, created: 201 };
+
+const create = async (req, res) => {
+  const { name, quantity } = req.body;
+  products.create({ name, quantity })
+    .then((data) => res.status(status_code.created).json(data));
 };
 
-const create = async (request, response, next) => {
-  const { name, quantity } = request.body;
-  const res = await products.create({ name, quantity });
-  if (res.err) return next({ code: 'invalid_data', message: res.err });
-  response.status(status_code['created']).json(res);
+const getAll = async (_req, res) => products.getAll()
+  .then((data) => res.status(status_code.ok).json(data));
+
+const getById = async (req, res) => {
+  const { id } = req.params;
+  products.getById(id).then((data) => res.status(status_code.ok).json(data));
 };
 
-const getAll = async (_request, response, next) => {
-  const res = await products.getAll();
-  if (res.err) return next(res.err);
-  response.status(status_code['ok']).json(res);
+const update = async (req, res) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  products.create({ id, name, quantity })
+    .then((data) => res.status(status_code.ok).json(data));
 };
 
-const getById = async (request, response, next) => {
-  const { id } = request.params;
-  const res = await products.getById({ id });
-  if (res.err) return next({ code: 'invalid_data', message: res.err });
-  response.status(status_code['ok']).json(res);
-};
-
-const update = async (request, response, next) => {
-  const { name, quantity } = request.body;
-  const { id } = request.params;
-  const res = await products.create({ id, name, quantity });
-  if (res.err) return next({ code: 'invalid_data', message: res.err });
-  response.status(status_code['ok']).json(res);
-};
-
-const remove = async (request, response, next) => {
-  const { id } = request.params;
-  const res = await products.remove({ id });
-  if (res.err) return next({ code: 'invalid_data', message: res.err });
-  response.status(status_code['ok']).json(res);
+const remove = async (req, res) => {
+  const { id } = req.params;
+  products.remove(id).then((data) => res.status(status_code.ok).json(data));
 };
 
 module.exports = { create, getAll, getById, update, remove };
