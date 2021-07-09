@@ -1,60 +1,51 @@
 const ProductsService = require('../services/ProductsService');
-
-const OK_STATUS = 200;
-const CREATED_STATUS = 201;
-const UNPROCESSABLE_ENTITY_STATUS = 422;
+const {
+  OK_STATUS,
+  CREATED_STATUS,
+  UNPROCESSABLE_ENTITY_STATUS
+} = require('../helpers/httpStatus');
 
 const create = async (req, res) => {
   const { name, quantity } = req.body;
-  const product = await ProductsService.create(name, quantity); // Interação com o Service
+  const createdProduct = await ProductsService.create(name, quantity);
 
-  if (product.err) {
-    return res.status(UNPROCESSABLE_ENTITY_STATUS).json(product);
-  }
-
-  return res.status(CREATED_STATUS).json(product);
+  return createdProduct.err
+    ? res.status(UNPROCESSABLE_ENTITY_STATUS).json(createdProduct)
+    : res.status(CREATED_STATUS).json(createdProduct);
 };
 
 const getAll = async (_req, res) => {
-  const productsList = await ProductsService.getAll(); // Interação com o Service
-  
+  const productsList = await ProductsService.getAll();
+
   return res.status(OK_STATUS).json({ products: productsList });
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
-  const product = await ProductsService.getById(id); // Interação com o Service
+  const selectedProduct = await ProductsService.getById(id);
 
-  if (product.err) {
-    return res.status(UNPROCESSABLE_ENTITY_STATUS).json(product);
-  }
-
-  return res.status(OK_STATUS).json(product);
+  return selectedProduct.err
+    ? res.status(UNPROCESSABLE_ENTITY_STATUS).json(selectedProduct)
+    : res.status(OK_STATUS).json(selectedProduct);
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
+  const updatedProduct = await ProductsService.update(id, name, quantity);
 
-  const updatedProduct = await ProductsService.update(id, name, quantity); // Interação com o Service
-
-  if (updatedProduct.err) {
-    return res.status(UNPROCESSABLE_ENTITY_STATUS).json(updatedProduct);
-  }
-
-  return res.status(OK_STATUS).json(updatedProduct);
+  return updatedProduct.err
+    ? res.status(UNPROCESSABLE_ENTITY_STATUS).json(updatedProduct)
+    : res.status(OK_STATUS).json(updatedProduct);
 };
 
 const remove = async (req, res) => {
   const { id } = req.params;
+  const removedProduct = await ProductsService.remove(id);
 
-  const removedProduct = await ProductsService.remove(id);  // Interação com o Service
-
-  if (removedProduct.err) {
-    return res.status(UNPROCESSABLE_ENTITY_STATUS).json(removedProduct);
-  }
-
-  return res.status(OK_STATUS).json(removedProduct);
+  return removedProduct.err
+    ? res.status(UNPROCESSABLE_ENTITY_STATUS).json(removedProduct)
+    : res.status(OK_STATUS).json(removedProduct);
 };
 
 module.exports = {

@@ -4,82 +4,76 @@ const { ObjectId } = require('mongodb');
 const DB_COLLECTION = 'products';
 
 const create = async (name, quantity) => {
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
+  const createdProduct = await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .insertOne({ name, quantity })
+    );
 
-  const newProduct = await ProductsCollection
-    .insertOne({ name, quantity }); // Interação com o DB
-
-  return newProduct.ops[0];
+  return createdProduct.ops[0];
 };
 
-const findByName = async (name) => {
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
+const getAll = async () => (
+  await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .find().toArray()
+    )
+);
 
-  const foundProduct = await ProductsCollection
-    .find({ name }).toArray(); // Interação com o DB
+const getById = async (id) => (
+  !ObjectId.isValid(id)
+    ? null
+    : await connection()
+      .then((db) => db.collection(DB_COLLECTION)
+        .findOne({ _id: ObjectId(id) })
+      )
+);
 
-  return foundProduct;
-};
-
-const getAll = async () => {
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const productsList = await ProductsCollection
-    .find().toArray(); // Interação com o DB
-
-  return productsList;
-};
-
-const getById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const foundProduct = await ProductsCollection
-    .findOne({ _id: ObjectId(id) }); // Interação com o DB
-
-  return foundProduct;
-};
+const getByName = async (name) => (
+  await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .find({ name }).toArray()
+    )
+);
 
 const update = async (id, name, quantity) => {
   if (!ObjectId.isValid(id)) return null;
 
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
+  const updatedProduct = await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $set: { name, quantity } },
+        { returnOriginal: false } // OBS*
+      )
+    );
 
-  await ProductsCollection
-    .updateOne(
-      { _id: ObjectId(id) },
-      { $set: { name, quantity } }
-    ); // Interação com o DB
-  
-  return { _id: ObjectId(id), name, quantity };
+  return updatedProduct.value;
 };
 
-const remove = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-
-  const ProductsCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const removedProduct = await ProductsCollection
-    .findOne({ _id: ObjectId(id) }); // Interação com o DB
-  
-  await ProductsCollection
-    .deleteOne({ _id: ObjectId(id) }); // Interação com o DB
-
-  return removedProduct;
-};
+const remove = async (id) => (
+  !ObjectId.isValid(id)
+    ? null
+    : await connection()
+      .then((db) => db.collection(DB_COLLECTION)
+        .findOneAndDelete({ _id: ObjectId(id) }) // https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
+      )
+);
 
 module.exports = {
   create,
-  findByName,
   getAll,
   getById,
+  getByName,
   update,
   remove,
 };
+
+/*
+OBS*:
+
+Deveria ser usado o 'returnNewDocument', mas não funciona.
+Fonte: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+
+Já com o 'returnOriginal', funciona. Caso 'true', ele exibe o objeto antes de ser alterado, falhando o teste.
+Fonte: https://stackoverflow.com/questions/35626040/findoneandupdate-used-with-returnnewdocumenttrue-returns-the-original-document
+*/

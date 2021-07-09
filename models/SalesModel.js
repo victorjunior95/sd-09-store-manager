@@ -4,67 +4,51 @@ const { ObjectId } = require('mongodb');
 const DB_COLLECTION = 'sales';
 
 const create = async (productsList) => {
-  const SalesCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const newSale = await SalesCollection
-    .insertMany([{ itensSold: [...productsList] }]); // Interação com o DB
-
-  return newSale.ops[0];
-};
-
-const getAll = async () => {
-  const SalesCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const salesList = await SalesCollection
-    .find().toArray(); // Interação com o DB
-
-  return salesList;
-};
-
-const getById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-
-  const SalesCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const foundSale = await SalesCollection
-    .findOne({ _id: ObjectId(id) }); // Interação com o DB
-
-  return foundSale;
-};
-
-const update = async (saleId, productsList) => {
-  const SalesCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const updatedSale = await SalesCollection
-    .findOneAndUpdate(
-      { _id: ObjectId(saleId) },
-      { $set: { itensSold: productsList } },
-      { returnOriginal: false } // Caso true ele exibe o objeto antes de ser alterado, falhando o teste. Fonte: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+  const createdSale = await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .insertMany([{ itensSold: [...productsList] }])
     );
 
-  console.log(updatedSale.value);
+  return createdSale.ops[0];
+};
+
+const getAll = async () => (
+  await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .find().toArray()
+    )
+);
+
+const getById = async (id) => (
+  !ObjectId.isValid(id)
+    ? null
+    : await connection()
+      .then((db) => db.collection(DB_COLLECTION)
+        .findOne({ _id: ObjectId(id) })
+      )
+);
+
+const update = async (saleId, productsList) => {
+  const updatedSale = await connection()
+    .then((db) => db.collection(DB_COLLECTION)
+      .findOneAndUpdate(
+        { _id: ObjectId(saleId) },
+        { $set: { itensSold: productsList } },
+        { returnOriginal: false } // OBS*
+      )
+    );
 
   return updatedSale.value;
 };
 
-const remove = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-
-  const SalesCollection = await connection()
-    .then((db) => db.collection(DB_COLLECTION));
-
-  const removedSale = await SalesCollection
-    .findOne({ _id: ObjectId(id) });
-
-  await SalesCollection
-    .deleteOne({ _id: ObjectId(id) });
-
-  return removedSale;
-};
+const remove = async (id) => (
+  !ObjectId.isValid(id)
+    ? null
+    : await connection()
+      .then((db) => db.collection(DB_COLLECTION)
+        .findOneAndDelete({ _id: ObjectId(id) }) // https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
+      )
+);
 
 module.exports = {
   create,
@@ -73,3 +57,13 @@ module.exports = {
   update,
   remove,
 };
+
+/*
+OBS*:
+
+Deveria ser usado o 'returnNewDocument', mas não funciona.
+Fonte: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+
+Já com o 'returnOriginal', funciona. Caso 'true', ele exibe o objeto antes de ser alterado, falhando o teste.
+Fonte: https://stackoverflow.com/questions/35626040/findoneandupdate-used-with-returnnewdocumenttrue-returns-the-original-document
+*/
