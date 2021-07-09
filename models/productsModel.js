@@ -40,6 +40,14 @@ async function updateProductFromDB(id, name, quantity) {
   };
 }
 
+async function incrementProductQuantity(id, quantity) {
+  if (!ObjectId.isValid(id)) return null;
+  const values = { $inc: { quantity } };
+  const db = await connection();
+  await db.collection('products').updateOne({ _id: ObjectId(id) }, values);
+  return true;
+}
+
 async function deleteProductFromDB(id) {
   if (!ObjectId.isValid(id)) return null;
   const db = await connection();
@@ -52,5 +60,6 @@ module.exports = {
   getAllProductsFromDB,
   findProductByIdFromDB,
   updateProductFromDB,
+  incrementProductQuantity,
   deleteProductFromDB,
 };

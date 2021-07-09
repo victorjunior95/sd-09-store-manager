@@ -5,6 +5,7 @@ const {
   updateSaleFromDB,
   deleteSaleFromDB,
 } = require('../models/salesModels');
+const { incrementProductQuantity } = require('../models/productsModel');
 const { validateSaleQuantity } = require('./validations');
 const errors = require('./errorsMessage');
 const httpStatusCode = require('./httpStatusCode');
@@ -12,6 +13,9 @@ const httpStatusCode = require('./httpStatusCode');
 async function createSale(sale) {
   sale.forEach((item) => {
     validateSaleQuantity(item.quantity);
+  });
+  await sale.forEach(async ({ productId, quantity }) => {
+    await incrementProductQuantity(productId, -quantity);
   });
   const result = await createNewSale(sale);
   return result;
@@ -51,6 +55,9 @@ async function deleteSale(id) {
       message: errors.idSaleFormat,
     }
   };
+  await saleToDelete.itensSold.forEach(async ({ productId, quantity }) => {
+    await incrementProductQuantity(productId, quantity);
+  });
   await deleteSaleFromDB(id);
   return saleToDelete;
 }
