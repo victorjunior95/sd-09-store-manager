@@ -1,5 +1,6 @@
 const express = require('express');
 const products = require('./routes/productsRoute');
+const sales = require('./routes/salesRoutes');
 
 const app = express();
 
@@ -10,6 +11,8 @@ app.use(bodyParser);
 const PORT = 3000;
 
 app.use('/products', products);
+
+app.use('/sales', sales);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
