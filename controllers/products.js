@@ -31,7 +31,7 @@ const getAll = rescue(async (_request, response, next) => {
 
 const findById = rescue(async (request, response, next) => {
 
-  const { id } = request.body;
+  const { id } = request.params;
 
   const product = await services.findById(id);
 
