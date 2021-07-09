@@ -35,8 +35,25 @@ const getById = async (id) => {
   }
 };
 
+// update
+const update = async (id, itensSold) => {
+  const response = await(await connection())
+    .collection(sales).updateOne(
+      { _id: ObjectId(id) },
+      { $set: { itensSold }},
+    );
+
+  const newProduct = { _id: id, itensSold };
+
+  if (response.result.nModified) {
+    // colocar uma messagem
+  }
+  return newProduct;
+};
+
 module.exports = {
   add,
   getAll,
   getById,
+  update,
 };

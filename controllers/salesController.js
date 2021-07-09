@@ -28,4 +28,16 @@ route.post('/', async (req, res, next) => {
   }
 });
 
+route.put('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const newSale = await salesServices.update(id, req.body);
+    return res.status(OK).json(newSale);
+
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = route;
