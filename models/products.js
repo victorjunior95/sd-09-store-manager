@@ -8,4 +8,8 @@ const findByName = async (name) => (
   await connection().then((db) => db.collection('products').findOne({ name }))
 );
 
-module.exports = { create, findByName };
+const getAll = async () => (
+  await connection().then((db) => db.collection('products').find().toArray())
+);
+
+module.exports = { create, findByName, getAll };

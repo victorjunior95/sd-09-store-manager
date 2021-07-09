@@ -26,6 +26,7 @@ const create = async (product) => {
 const getAll = async () => {
 
   const products = await Products.getAll();
+  console.log(products);
 
   return products;
 };
