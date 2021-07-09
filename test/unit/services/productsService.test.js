@@ -59,13 +59,32 @@ describe('Insert new product into database', () => {
       ProductsModel.findOneByName.restore();
     });
 
-    it('Throws an ApiException, with code: "invalid_data", message: "Product already exists" and statusCode: "422"', async () => {
+    it('Throws an Error with code: "invalid_data", message: "Product already exists" and statusCode: "422"', async () => {
         const promise = await ProductsService.create(payloadProduct).catch((err) => err);
 
         expect(promise).to.have.property('code').which.equals('invalid_data');
         expect(promise).to.have.property('message').which.equals('Product already exists');
         expect(promise).to.have.property('statusCode').which.equals(httpStatusCode.unprocessableEntity);
     });
+  });
+
+  describe('When the product properties are invalid', () => {
+    const invalidName = {
+      name: "led",
+      quantity: 10,
+    }
+
+    const invalidQuantity = {
+      name: "led rgb",
+      quantity: -1,
+    }
+    it('Thows an Error with code: "invalid_data", message: ""name" length must be at least 5 characters long" and statusCode: "422"', async () => {
+      const promise = await ProductsService.create(invalidName).catch((err) => err);
+
+      expect(promise).to.have.property('code').which.equals('invalid_data');
+      expect(promise).to.have.property('message').which.equals('"name" length must be at least 5 characters long');
+      expect(promise).to.have.property('statusCode').which.equals(httpStatusCode.unprocessableEntity);
+    })
   })
 })
 
