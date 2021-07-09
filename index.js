@@ -2,6 +2,7 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const productController = require('./controllers/productsController');
 const errorController = require('./controllers/errorController');
+const salesController = require('./controllers/salesController');
 
 const PORT = 3000;
 
@@ -13,6 +14,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productController);
+
+app.use('/sales', salesController);
 
 app.use(errorController);
 

@@ -3,8 +3,8 @@ const connection = require('./connection');
 const sales = 'sales';
 
 const add = async (itensSold) => {
-  const response = (await (await connection())
-    .collection(sales).insertOne({ itensSold }));
+  const db = await connection();
+  const response = await db.collection(sales).insertOne({ itensSold });
 
   return response.ops[0];
 };

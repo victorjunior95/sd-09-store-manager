@@ -37,7 +37,7 @@ const messageErrorsProducts = {
 };
 
 const messageErrorsSales = {
-  quantityEqualZero: {
+  quantityInvalid: {
     code: 'invalid_data',
     message: 'Wrong product ID or invalid quantity',
     status: 422,

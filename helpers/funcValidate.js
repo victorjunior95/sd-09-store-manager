@@ -1,5 +1,6 @@
 const productModel = require('../models/productsModel');
-const { messageErrorsProducts: messageErr} = require('./messagesErros');
+const { messageErrorsProducts: messageErr,
+  messageErrorsSales: messageErrSales } = require('./messagesErros');
 
 const generateMessage = (msg) => {
   return ({ code: msg.code, message: msg.message, status: msg.status });
@@ -27,10 +28,23 @@ const validateQuantity = (quantity) => {
   if (typeof quantity !== 'number') return (generateMessage(messageErr.quantityNAN));
 };
 
+const validateQuantitySales = (quantity) => {
+  const valueInvalid = 0;
+
+  if (quantity === valueInvalid) return generateMessage(messageErrSales.quantityInvalid);
+
+  if (quantity < valueInvalid) return generateMessage(messageErrSales.quantityInvalid);
+
+  if (typeof quantity !== 'number') {
+    return generateMessage(messageErrSales.quantityInvalid);
+  }
+};
+
 
 module.exports = {
   validateNameInvalidLength,
   validateNameRepeted,
   validateQuantity,
   generateMessage,
+  validateQuantitySales,
 };
