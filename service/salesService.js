@@ -49,14 +49,14 @@ const list = async (id) => {
   return { status: 200, response: { sales } };
 };
 
-// const update = async (id, name, quantity) => {
-//   const bodyValidated = validateBody(name, quantity);
-//   if (bodyValidated) return bodyValidated;
+const update = async (id, sales) => {
+  const bodyValidated = validateBody(sales);
+  if (bodyValidated) return bodyValidated;
 
-//   await Products.update(id, name, quantity);
+  await Sales.update(id, sales);
 
-//   return { status: 200, response: { _id: id, name, quantity } };
-// };
+  return { status: 200, response: { _id: id, itensSold: sales } };
+};
 
 // const remove = async (id) => {
 //   const deleted = await Products.remove(id);
@@ -68,6 +68,6 @@ const list = async (id) => {
 module.exports = {
   register,
   list,
-  // update,
+  update,
   // remove
 };

@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const connect = require('./connection');
 
 const register = async (itensSold) => {
@@ -27,19 +27,19 @@ const list = async (_id) => {
   return salesList;
 };
 
-// const update = async (_id, name, quantity) => {
-//   const connection = await connect();
-//   const updateProduct = await connection.collection('products').updateOne(
-//     {
-//       _id: ObjectId(_id)
-//     },
-//     {
-//       $set: { name, quantity }
-//     }
-//   );
+const update = async (_id, itensSold) => {
+  const connection = await connect();
+  const updateSale = await connection.collection('sales').updateOne(
+    {
+      _id: ObjectId(_id)
+    },
+    {
+      $set: { itensSold }
+    }
+  );
 
-//   return updateProduct;
-// };
+  return updateSale;
+};
 
 // const remove = async (_id) => {
 //   try {
@@ -62,6 +62,6 @@ const list = async (_id) => {
 module.exports = {
   register,
   list,
-  // update,
+  update,
   // remove
 };
