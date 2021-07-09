@@ -44,7 +44,7 @@ async function validateAndFindSaleId(id) {
     const validSaleId = ObjectID(id);
     const sale = await SalesModel.findOneSale(validSaleId);
     if (!sale) throw '';
-    return sale;
+    return validSaleId;
   } catch (error) {
     return { err: {
       status: status.notFound,
@@ -54,7 +54,7 @@ async function validateAndFindSaleId(id) {
   }
 }
 
-async function putOneSale(itensSold) {
+async function postOneSale(itensSold) {
   try {
     return await SalesModel.addSale(itensSold);
   } catch (error) {
@@ -73,15 +73,41 @@ async function getAllSales() {
 
 async function getOneSale(id) {
   try {
-    return await validateAndFindSaleId(id);
+    return await SalesModel.findOneSale(id);
   } catch (error) {
     return productsService.errorObj(error);
   } 
 }
 
+async function putOneSale(idSale, productsList) {
+  try {
+    const startIndex = 0;
+    let data;
+    for (let index = startIndex; index < productsList.length; index += 1) {
+      const productId = productsList[index].productId;
+      const productQuantity = productsList[index].quantity;
+      data = await verifyIdAndQuantity(productId, productQuantity);
+      if (data.err) { return data; }
+    }
+
+    for (let index = startIndex; index < productsList.length; index += 1) {
+      const productId = productsList[index].productId;
+      const productQuantity = productsList[index].quantity;
+      data = await SalesModel.updateOneSale(idSale, productId, productQuantity);
+      if (data.err) { return data; }
+    }
+
+    return await SalesModel.findOneSale(idSale);
+  } catch (error) {
+    return productsService.errorObj(error);
+  }
+};
+
 module.exports = { 
+  postOneSale,
   putOneSale,
   verifyProductsList,
+  validateAndFindSaleId,
   getAllSales,
   getOneSale,
 };
