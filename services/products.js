@@ -26,12 +26,24 @@ const create = async (product) => {
 const getAll = async () => {
 
   const products = await Products.getAll();
-  console.log(products);
 
   return products;
+};
+
+const findById = async (id) => {
+
+  if (!id) {
+    return await Products.getAll();
+  }
+
+  const product = await Products.findById(id);
+
+  return product;
+
 };
 
 module.exports = {
   create,
   getAll,
+  findById,
 };
