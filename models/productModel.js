@@ -11,6 +11,17 @@ const listProduct = async () => {
   return connection().then((db) => db.collection('products').find().toArray());
 };
 // 3 - Crie um endpoint para atualizar um produto
+const updateProduct = async (name, quantity) => {
+  return connection()
+    .then((db) => db.collection('products').updateOne(
+      {
+        name: `${name}`
+      },
+      {
+        $set: { quantity: quantity },
+      },
+    ));
+};
 // 4 - Crie um endpoint para deletar um produto
 
 module.exports = {
