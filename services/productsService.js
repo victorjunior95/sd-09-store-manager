@@ -2,7 +2,8 @@ const {
   createProduct,
   getProduct,
   getAllProducts,
-  findProductById
+  findProductById,
+  updateProduct,
 } = require('../models/productsModel');
 
 const NAME_LENGTH = 5;
@@ -69,8 +70,33 @@ const productById = async (id) => {
   return product;
 };
 
+const patchProduct = async (id, name, quantity) => {
+  const productId = await findProductById(id);
+  if (!productId) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+  const productQuantity = quantityValidate(quantity);
+  const productName = await productNameValidate(name);
+
+  if (productQuantity.err) {
+    return productQuantity;
+  }
+
+  if (productName.err) {
+    return productName;
+  }
+
+  const product = await updateProduct(id, productName, productQuantity);
+
+  return product;
+};
+
 module.exports = {
   newProduct,
   productsList,
   productById,
+  patchProduct
 };
