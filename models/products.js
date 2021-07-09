@@ -1,3 +1,17 @@
 const express = require('express');
+const connection = require('./connections');
 
-app.get('/products')
+const createProduct = async(name, quantity) =>
+  connection()
+    .then((db) => db.collection('products').insertOne({name, quantity})) 
+    .then((result) => {
+      return {
+        id: result.insertedId,
+        name,
+        quantity,
+      };
+    });
+
+module.exports = {
+  createProduct,
+};
