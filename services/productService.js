@@ -35,7 +35,7 @@ const upDate = async (id, name, quantity) => {
   const productUpdated = await ProductModel.upDate(id, name, quantity);
 
   return productUpdated;
-}
+};
 
 module.exports = {
   create,

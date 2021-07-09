@@ -31,7 +31,7 @@ const deleteProduct = async (id) => {
 
   return connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
-}
+};
 
 module.exports = {
   create,
