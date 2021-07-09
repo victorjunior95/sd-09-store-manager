@@ -18,11 +18,14 @@ ProductsRouter.get('/:id', async (req, res) => {
 });
 
 ProductsRouter.post('/',
-  async (req, res) => {
-    const { name, quantity } = req.body;
-    const newProduct = await productsServices.createNewProduct(name, quantity);
-    if(newProduct.err) return res.status(response.INVALID_DATA).json(newProduct);
-    return res.status(response.STATUS_CREATED).json(newProduct);
+  async (req, res, next) => {
+    try {
+      const newProduct = await productsServices.createNewProduct(req.body);
+      return res.status(response.STATUS_CREATED).json(newProduct);
+    } catch (error) {
+      return next(error);
+    }
+    // if(newProduct.err) return res.status(response.INVALID_DATA).json(newProduct);
   });
 
 ProductsRouter.put('/:id',
@@ -33,6 +36,7 @@ ProductsRouter.put('/:id',
     if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
     return res.status(response.STATUS_OK).json(updatedProduct);
   });
+
 ProductsRouter.delete('/:id',
   async (req, res) => {
     const id = req.params.id;

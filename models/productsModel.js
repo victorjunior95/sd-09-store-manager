@@ -31,20 +31,26 @@ const getProductById = async (id) => {
   }
 };
 
-const createNewProduct = async (name, quantity) => {
-  const dbProducts = await getAllProducts();
-  if (dbProducts.some((product) => product.name === name)) {
-    const errorObj = {
-      err: {
-        code:'invalid_data',
-        message: 'Product already exists'
-      }
-    };
-    return errorObj;
+const createNewProduct = async ({ name, quantity }) => {
+  try {
+    const dbProducts = await getAllProducts();
+    if (dbProducts.some((product) => product.name === name)) {
+      return ({
+        err: {
+          err: {
+            code: 'invalid_data',
+            message: 'Product already exists'
+          },
+        },
+        code: response.INVALID_DATA,
+      });
+    }
+    return connection()
+      .then((db) => db.collection('products').insertOne({ name, quantity }))
+      .then(result => result.ops[0]);
+  } catch (error) {
+    return error;
   }
-  return connection()
-    .then((db) => db.collection('products').insertOne({ name, quantity }))
-    .then(result => result.ops[0]);
 };
 
 const updateProduct = async (name, quantity, id) => {
