@@ -27,6 +27,6 @@ app.delete('/products/:id', productsController.del);
 
 app.use(errorMiddleware);
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-app.listen(PORT, () => console.log('O Pai tá ON!!'))
+app.listen( process.env.PORT || PORT, () => console.log('O Pai tá ON!!'));
