@@ -7,7 +7,19 @@ const productServices = require('../services/productServices');
 
 const productController = express.Router();
 
-productController.get('/', (_req, res) => { res.status(OK).send('teste ok'); });
+productController.get('/', rescue(async (_req, res) => {
+  const products = await productServices.findAll();
+
+  res.status(OK).json({ products }); 
+}));
+
+productController.get('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const product = await productServices.findById(id);
+
+  res.status(OK).json(product); 
+}));
 
 productController.post('/', validateProduct, rescue(async (req, res) => {
   const { name, quantity } = req.body;

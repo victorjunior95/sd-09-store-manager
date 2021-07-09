@@ -1,7 +1,19 @@
 const productModel = require('../models/productModel');
 
+const findAll = async () => {
+  const products = await productModel.getAll();
+
+  return products;
+};
+
+const findById = async (id) => {
+  const product = await productModel.getById(id);
+
+  return product;
+};
+
 const create = async (name, quantity,) => {
-  const product = await productModel.findByName(name);
+  const product = await productModel.getByName(name);
 
   if (product) {
     throw {
@@ -19,4 +31,8 @@ const create = async (name, quantity,) => {
   return newProduct;
 };
 
-module.exports = { create };
+module.exports = { 
+  findAll,
+  findById,
+  create, 
+};

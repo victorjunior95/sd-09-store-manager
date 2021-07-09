@@ -1,4 +1,4 @@
-const teste = {
+const httpStatusCodes = {
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
   PROCESSING: 102,
@@ -43,4 +43,4 @@ const teste = {
   HTTP_VERSION_NOT_SUPPORTED: 505,
 };
 
-module.exports = teste;
+module.exports = httpStatusCodes;
