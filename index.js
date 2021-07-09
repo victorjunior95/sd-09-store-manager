@@ -15,6 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', require('./controllers/productController'));
+app.use('/sales', require('./controllers/saleController'));
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {

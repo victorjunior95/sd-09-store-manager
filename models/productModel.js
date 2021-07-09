@@ -33,20 +33,27 @@ const update = async (id, name, quantity) => {
   if (!ObjectId.isValid(id)) return null;
 
   return await connection().then((db) => db.collection('products')
-    .updateOne({ _id: ObjectId(id)}, { $set: { name, quantity } })
+    .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } })
     .then(() => ({ _id: id, name, quantity }))
   );
 };
 
 const deleteProduct = async (id) => {
   const db = await connection();
-  if(!ObjectId.isValid(id)) return null;
+  if (!ObjectId.isValid(id)) return null;
   const product = await getById(id);
   await connection()
     .then((db) => db.collection('products')
-      .deleteOne({ _id: ObjectId(id)}));
+      .deleteOne({ _id: ObjectId(id) }));
   return product;
 };
+
+const subtractQuantity = async (id, quantity) => await connection()
+  .then((db) => db.collection('products')
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: - quantity } }
+    ));
 
 module.exports = {
   create,
@@ -54,5 +61,6 @@ module.exports = {
   getAll,
   getById,
   update,
-  deleteProduct
+  deleteProduct,
+  subtractQuantity,
 };
