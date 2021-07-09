@@ -18,4 +18,4 @@ app.get('/', (_request, response) => {
 
 app.use('/products', productsRouter);
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
