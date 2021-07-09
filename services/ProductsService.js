@@ -107,6 +107,31 @@ const editProduct = async (id, name, quantity) => {
   }  
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const currentProduct = await ProductsModel.find(id);
+    const _id = await ProductsModel.exlude(id);
+    return (
+      {
+        status: 200,
+        result: {
+          _id,
+          name: currentProduct.name,
+          quantity: currentProduct.quantity
+        },
+      });
+
+  } catch (e) {
+    console.log('no catch');
+    if (e.message.includes('Argument passed')) {
+      const code = 422;
+      msg = 'Wrong id format';
+      const error = createErrorMsg(code, msg);
+      return error;
+    }
+  }  
+};
+
 const listProducts = async (id) => {
   try {
     if (id === undefined) {
@@ -130,5 +155,5 @@ module.exports = {
   addProduct,
   listProducts,
   editProduct,
-
+  deleteProduct,
 };

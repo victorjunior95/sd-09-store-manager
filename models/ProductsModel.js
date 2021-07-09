@@ -23,6 +23,16 @@ const create = async (name, quantity) => {
   return products;
 };
 
+const exlude = async (id) => {
+  const result = await connection().then((db) => db.collection('products').deleteOne({
+    _id: ObjectId(id),
+  }));
+  if (result.deletedCount === 1) {
+    return id;
+  };
+  return ({ message: 'Não foi possivel excluir' });
+};
+
 const update = async (id, name, quantity) => {
   const result = await connection().then((db) => db.collection('products').updateOne(
     {
@@ -46,4 +56,5 @@ module.exports = {
   find,
   create,
   update,
+  exlude,
 };
