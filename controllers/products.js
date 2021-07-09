@@ -37,10 +37,7 @@ const findById = rescue(async (request, response, next) => {
 
   if(product.err) return next(product);
 
-  response.status(OK).json({
-    product,
-  });
-
+  response.status(OK).json(product);
 });
 
 module.exports = {

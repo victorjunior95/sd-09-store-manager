@@ -17,8 +17,8 @@ const findById = async (id) => {
   if (!ObjectId.isValid(id)) {
     return { err: { code: 'invalid_data', message: 'Wrong id format'}};
   }
-
-  return await connection().then((db) => db.collection('products').findOne({ _id: id }));
+  return await connection()
+    .then((db) => db.collection('products').findOne(new ObjectId(id)));
 };
 
 module.exports = { create, findByName, getAll, findById };
