@@ -2,7 +2,6 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 
 const httpStatusCode = require('../../../httpStatusCodes');
-const ApiError = require('../../../errors/apiError');
 const ProductsService = require('../../../services/productsService');
 const ProductsModel = require('../../../models/producstModel');
 
@@ -53,24 +52,20 @@ describe('Insert new product into database', () => {
         quantity: 10,
       }
 
-      sinon.stub(ProductsModel, 'create').resolves(mockResponse);
       sinon.stub(ProductsModel, 'findOneByName').resolves(mockResponse);
-
     });
 
     afterEach(() => {
-      ProductsModel.create.restore();
       ProductsModel.findOneByName.restore();
     });
 
-    it('Throws an ApiException, with code: "invalid_data", message: "Product already exists" and statuCode: "422"', async () => {
-      try{
-        await ProductsService.create(payloadProduct);
-      } catch(err) {
-          const expectedError = new ApiError('invalid_data', 'Product already exists', httpStatusCode.unprocessableEntity);
-          expect(err).to.include({code: expectedError.code, message: expectedError.message, statusCode: expectedError.statusCode});
-      }
-    })
+    it('Throws an ApiException, with code: "invalid_data", message: "Product already exists" and statusCode: "422"', async () => {
+        const promise = await ProductsService.create(payloadProduct).catch((err) => err);
+
+        expect(promise).to.have.property('code').which.equals('invalid_data');
+        expect(promise).to.have.property('message').which.equals('Product already exists');
+        expect(promise).to.have.property('statusCode').which.equals(httpStatusCode.unprocessableEntity);
+    });
   })
 })
 
