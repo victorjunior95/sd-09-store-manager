@@ -138,7 +138,6 @@ const deleteProd = async (id) => {
   await deleteProduct(id);
 };
 
-
 module.exports = {
   register,
   findByName,

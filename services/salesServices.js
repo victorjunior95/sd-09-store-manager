@@ -1,5 +1,7 @@
 const {
   salesRegister,
+  getAllSales,
+  getSaleById,
 } = require('../models/salesModel');
 
 const register = async (sales) => {
@@ -28,6 +30,24 @@ const checkQuantity = (quantity) => {
   }
 };
 
+const checkId = (id) => {
+  const regexId = /[0-9A-Fa-f]{6}/g;
+  const bolean = regexId.test(id);
+  if(!bolean) {
+    throw [
+      {
+        err: {
+          code: 'not_found',
+          message: 'Sale not found'
+        }
+      },
+      {
+        status: 404
+      }
+    ];
+  }
+};
+
 const checkIfQuantityIsANumber = (quantity) => {
   if(typeof quantity !== 'number') {
     throw [
@@ -44,7 +64,36 @@ const checkIfQuantityIsANumber = (quantity) => {
   }
 };
 
+const checkIfProductExists = (product) => {
+  if(!product) {
+    throw [
+      {
+        err: {
+          code: 'not_found',
+          message: 'Sale not found'
+        }
+      },
+      {
+        status: 404
+      }
+    ];
+  }
+};
+
+const getAll = async () => {
+  const result = await getAllSales();
+  return result;
+};
+
+const getById = async (id) => {
+  checkId(id);
+  const result = await getSaleById(id);
+  checkIfProductExists(result);
+  return result;
+};
 
 module.exports = {
   register,
+  getAll,
+  getById,
 };
