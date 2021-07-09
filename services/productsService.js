@@ -4,6 +4,7 @@ const {
   getAllProducts,
   getById,
   updateProduct,
+  deleteProduct,
 } = require('../models/ProductsModel');
 
 const errors = {
@@ -123,9 +124,24 @@ const getByIdService = async (id) => {
   return product;
 };
 
+const deleteService = async (id) => {
+  const product = await deleteProduct(id);
+  if (!product) return {
+    isError: true,
+    err: {
+      code: errors.invalid,
+      message: errors.wrong_id,
+    },
+    status: UNPROCESSABLE,
+  };
+
+  return product;
+};
+
 module.exports = {
   createService,
   getAllService,
   getByIdService,
   updateService,
+  deleteService,
 };
