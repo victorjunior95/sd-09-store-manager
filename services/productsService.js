@@ -3,6 +3,7 @@ const {
   createProduct,
   getAllProducts,
   getById,
+  updateProduct,
 } = require('../models/ProductsModel');
 
 const errors = {
@@ -40,20 +41,10 @@ const quantityIsNumber = async (quantity) => {
   return true;
 };
 
-const createService = async (name, quantity) => {
+const validateNameQuantity = async (name, quantity) => {
   const validName = await nameIsValid(name);
-  const uniqueName = await nameIsUnique(name);
   const positiveQuantity = await quantityIsPositive(quantity);
   const quantityIsNum = await quantityIsNumber(quantity);
-
-  if (!uniqueName) return {
-    isError: true,
-    err: {
-      code: errors.invalid,
-      message: errors.product_exist,
-    },
-    status: UNPROCESSABLE,
-  };
 
   if (!validName) return {
     isError: true,
@@ -82,9 +73,35 @@ const createService = async (name, quantity) => {
     status: UNPROCESSABLE,
   };
 
+  return true;
+};
+
+const createService = async (name, quantity) => {
+  const uniqueName = await nameIsUnique(name);
+  const isValid = await validateNameQuantity(name, quantity);
+  
+  if (!uniqueName) return {
+    isError: true,
+    err: {
+      code: errors.invalid,
+      message: errors.product_exist,
+    },
+    status: UNPROCESSABLE,
+  };
+  
+  if (isValid !== true) return isValid;
+
   const product = await createProduct(name, quantity);
 
   return product.ops[0];
+};
+
+const updateService = async (id, name, quantity) => {
+  const isValid = await validateNameQuantity(name, quantity);
+  if (isValid !== true) return isValid;
+
+  const editedProduct = await updateProduct(id, name, quantity);
+  return editedProduct;
 };
 
 const getAllService = async () => {
@@ -110,4 +127,5 @@ module.exports = {
   createService,
   getAllService,
   getByIdService,
+  updateService,
 };

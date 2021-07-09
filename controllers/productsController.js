@@ -2,6 +2,7 @@ const {
   createService,
   getAllService,
   getByIdService,
+  updateService,
 } = require('../services/productsService');
 
 // response status code
@@ -35,8 +36,20 @@ const getById = async (req, res) => {
   res.status(OK).json(product);
 };
 
+const update = async (req, res) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+
+  const product = await updateService(id, name, quantity);
+
+  if (product.isError) return res.status(product.status).json(product);
+
+  res.status(OK).json(product);
+};
+
 module.exports = {
   getAll,
   create,
   getById,
+  update,
 };
