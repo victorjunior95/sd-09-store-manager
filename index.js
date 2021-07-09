@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const productsRoute = require('./routes/productsRoute');
-const errorController = require('./controllers/errorController');
+const salesRoute = require('./routes/salesRoute');
 
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 422;
 
@@ -18,6 +18,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRoute);
+
+app.use('/sales', salesRoute);
 
 app.use((err, _req, res, _next) => {
   if (err.err) return res.status(err.status).json({ err: err.err });

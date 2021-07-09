@@ -1,4 +1,5 @@
 const express = require('express');
+const rescue = require('express-rescue');
 
 const {
   postProductToDB,
@@ -10,10 +11,10 @@ const {
 
 const productsRoute = express.Router();
 
-productsRoute.post('/', postProductToDB);
-productsRoute.get('/', getAllProducts);
-productsRoute.get('/:id', getProductById);
-productsRoute.put('/:id', updateProductById);
-productsRoute.delete('/:id', deleteProductById);
+productsRoute.post('/', rescue(postProductToDB));
+productsRoute.get('/', rescue(getAllProducts));
+productsRoute.get('/:id', rescue(getProductById));
+productsRoute.put('/:id', rescue(updateProductById));
+productsRoute.delete('/:id', rescue(deleteProductById));
 
 module.exports = productsRoute;

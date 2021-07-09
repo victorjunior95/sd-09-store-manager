@@ -1,4 +1,4 @@
-const { findProductByName } = require('../models/productsModel');
+const { findProductByName, findProductByIdFromDB } = require('../models/productsModel');
 const errors = require('./errorsMessage');
 const { unprocessableEntity } = require('./httpStatusCode');
 
@@ -48,8 +48,34 @@ function validateQuantity(quantity) {
   };
 }
 
+function validateSaleQuantity(quantity) {
+  const minQuantity = 1;
+
+  if (typeof quantity !== 'number' || quantity < minQuantity) throw {
+    status: unprocessableEntity,
+    err: {
+      code: errors.invalidData,
+      message: errors.idAndQuantity,
+    }
+  };
+}
+
+// async function validateSaleProduct(id) {
+//   const result = await findProductByIdFromDB(id);
+//   console.log(result);
+
+//   if (result === null) throw {
+//     status: unprocessableEntity,
+//     err: {
+//       code: errors.invalidData,
+//       message: errors.idAndQuantity,
+//     }
+//   };
+// }
+
 module.exports = {
   validateNameLength,
   validateProductExists,
   validateQuantity,
+  validateSaleQuantity,
 };
