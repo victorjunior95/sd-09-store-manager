@@ -10,5 +10,6 @@ SalesRouter.put('/:id',
   mdwSales.validateAndFindSaleId,
   mdwSales.verifyProductsOfSale,
   mdwSales.putOneSale);
+SalesRouter.delete('/:id', mdwSales.validateSaleId, mdwSales.deleteOneSale);
 
 module.exports = SalesRouter ;

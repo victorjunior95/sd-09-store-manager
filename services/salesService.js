@@ -54,6 +54,19 @@ async function validateAndFindSaleId(id) {
   }
 }
 
+function validateSaleId(id) {
+  try {
+    const validSaleId = ObjectID(id);
+    return validSaleId;
+  } catch (error) {
+    return { err: {
+      status: status.unprocessableEntity,
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'
+    }};
+  }
+}
+
 async function postOneSale(itensSold) {
   try {
     return await SalesModel.addSale(itensSold);
@@ -103,11 +116,21 @@ async function putOneSale(idSale, productsList) {
   }
 };
 
+async function deleteOneSale(id) {
+  try {
+    return await SalesModel.excludeSale(id);
+  } catch (error) {
+    return productsService.errorObj(error);
+  }
+}
+
 module.exports = { 
   postOneSale,
   putOneSale,
   verifyProductsList,
   validateAndFindSaleId,
+  validateSaleId,
   getAllSales,
   getOneSale,
+  deleteOneSale,
 };

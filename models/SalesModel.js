@@ -19,12 +19,6 @@ const findOneSale = async (id) => {
 };
 
 const updateOneSale = async (idSale, idProduct, quantityProduct ) => {
-  // const sale = await connection()
-  //   .then((db) => db.collection('sales').updateMany(
-  //     { _id: id },
-  //     { $set: { itensSold: arrayOfProducts } },
-  //     { upsert: true }))
-  //   .then(() => ({ id, arrayOfProducts }));
   const sale = await connection()
     .then((db) => db.collection('sales').updateOne(
       {_id: idSale},
@@ -33,9 +27,18 @@ const updateOneSale = async (idSale, idProduct, quantityProduct ) => {
   return sale;
 };
 
+const excludeSale = async (id) => {
+  const sale = await findOneSale(id);
+  await connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: id }))
+    .then(() => (sale));
+  return sale;
+};
+
 module.exports = {
   addSale,
   findAllSales,
   findOneSale,
   updateOneSale,
+  excludeSale,
 };

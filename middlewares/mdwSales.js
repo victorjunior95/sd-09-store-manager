@@ -16,6 +16,14 @@ const validateAndFindSaleId = async ( req, _res, next) => {
   return next();
 };
 
+const validateSaleId = async (req, _res, next) => {
+  const { id } = req.params;
+  const sale = await salesService.validateSaleId(id);
+  req.params.id = sale;
+  if (sale.err) { return next(sale); }
+  return next();
+};
+
 const postOneSale = async (req, res, next) => {
   const [...products] = req.body;
   const addSale = await salesService.postOneSale(products);
@@ -33,22 +41,31 @@ const putOneSale = async (req, res, next) => {
 
 const getAllSales = async (_req, res, next) => {
   const allSales = await salesService.getAllSales();
-  if (allSales.err) { return next(allSales) ;}
+  if (allSales.err) { return next(allSales); }
   return res.status(status.OK).json(allSales);
 };
 
 const getOneSale = async (req, res, next) => {
   const { id } = req.params;
   const sale = await salesService.getOneSale(id);
-  if (sale.err) { return next(sale) ;}
+  if (sale.err) { return next(sale); }
   return res.status(status.OK).json(sale);
+};
+
+const deleteOneSale = async (req, res, next) => {
+  const { id } = req.params;
+  const saleDeleted = await salesService.deleteOneSale(id);
+  if (saleDeleted.err) { return next(saleDeleted); }
+  return res.status(status.OK).json(saleDeleted);
 };
 
 module.exports = {
   verifyProductsOfSale,
   validateAndFindSaleId,
+  validateSaleId,
   postOneSale,
   putOneSale,
   getAllSales,
-  getOneSale
+  getOneSale,
+  deleteOneSale,
 };

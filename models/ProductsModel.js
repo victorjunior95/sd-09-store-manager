@@ -29,7 +29,7 @@ const findAllProducts = async () => {
 };
 
 const excludeOneProduct = async (id) => {
-  const product = findOneProduct({ _id: id });
+  const product = await findOneProduct({ _id: id });
   await connection()
     .then((db) => db.collection('products').deleteOne({ _id: id }))
     .then(() => (product));
