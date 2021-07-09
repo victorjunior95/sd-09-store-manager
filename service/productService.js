@@ -11,7 +11,7 @@ const validateNewProduct = async (name, quantity) => {
     } 
   };
 
-  if (await productModel.findProductByName(name)) return {
+  if (await productModel.getProductByName(name)) return {
     err: { 
       message: 'Product already exists',
       code: 'invalid_data'
@@ -35,4 +35,20 @@ const validateNewProduct = async (name, quantity) => {
   return await productModel.createProduct(name, quantity);
 };
 
-module.exports = { validateNewProduct };
+const getAllProducts =  async () => {
+  return await productModel.getAll();
+};
+
+const findProductById = async (id) => {
+  if (await productModel.getProductById(id) === []) return {
+    err: { 
+      message: 'Wrong id format',
+      code: 'invalid_data'
+    }
+  };
+
+  return await productModel.getProductById(id);
+};
+
+
+module.exports = { validateNewProduct, getAllProducts, findProductById };

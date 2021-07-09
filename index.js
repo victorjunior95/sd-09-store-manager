@@ -4,7 +4,7 @@ const { PORT = PORT_EXPRESS } = process.env;
 const bodyParser = require('body-parser').json();
 const rescue = require('express-rescue');
 
-const { postProduct } = require('./controller/productController');
+const productController = require('./controller/productController');
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -15,4 +15,6 @@ app.use(bodyParser);
 app.listen(PORT, () => console.log('Rodando na 3000'));
 
 // PRODUCTS
-app.post('/products', rescue(postProduct));
+app.post('/products', rescue(productController.postProduct));
+app.get('/products/:id', rescue(productController.getProductId));
+app.get('/products', rescue(productController.getProducts));
