@@ -33,5 +33,12 @@ ProductsRouter.put('/:id',
     if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
     return res.status(response.STATUS_OK).json(updatedProduct);
   });
+ProductsRouter.delete('/:id',
+  async (req, res) => {
+    const id = req.params.id;
+    const deletedProduct = await productsServices.deleteProduct(id);
+    if(deletedProduct.err) return res.status(response.INVALID_DATA).json(deletedProduct);
+    return res.status(response.STATUS_OK).json(deletedProduct);
+  });
 
 module.exports = ProductsRouter;

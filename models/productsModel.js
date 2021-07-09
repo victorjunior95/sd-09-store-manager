@@ -66,9 +66,30 @@ const updateProduct = async (name, quantity, id) => {
   }
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const deletedProduct = await getProductById(id);
+    await connection().then((db) => db.collection('products').deleteOne(
+      { _id: ObjectId(id)}
+    ));
+    if(deletedProduct === null) throw new Error();
+    return deletedProduct;
+  } catch (error) {
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+    return errorObj;
+  }
+};
+
+
 module.exports = {
   getAllProducts,
   getProductById,
   createNewProduct,
   updateProduct,
+  deleteProduct,
 };
