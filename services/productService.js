@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 const minCharacter = 5;
 const minQuant = 1;
 
-const createProductSchema = Joi.object({
+const validateProduct = Joi.object({
   name: Joi.string().min(minCharacter)
     .message('"name" length must be at least 5 characters long').required(),
   quantity: Joi.number().min(minQuant)
@@ -12,7 +12,7 @@ const createProductSchema = Joi.object({
 });
 
 const create = async (name, quantity) => {
-  const { error } = createProductSchema.validate({ name, quantity });
+  const { error } = validateProduct.validate({ name, quantity });
 
   if (error) {
     return {
@@ -52,8 +52,23 @@ const getById = async (id) => {
   return products;
 };
 
+const update = async (id , name, quantity) => {
+  const { error } = validateProduct.validate({ name, quantity });
+
+  if (error) {
+    return {
+      code: 'invalid_data',
+      error,
+      status: 422,
+    };
+  };
+
+  return productModel.update(id, name, quantity);
+};
+
 module.exports = {
   create,
   getAll,
-  getById
+  getById,
+  update
 };
