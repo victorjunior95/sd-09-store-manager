@@ -29,7 +29,22 @@ const getAll = rescue(async (_request, response, next) => {
 
 });
 
+const findById = rescue(async (request, response, next) => {
+
+  const { id } = request.body;
+
+  const product = await services.findById(id);
+
+  if(product.err) return next(product);
+
+  response.status(OK).json({
+    product,
+  });
+
+});
+
 module.exports = {
   create,
   getAll,
+  findById,
 };
