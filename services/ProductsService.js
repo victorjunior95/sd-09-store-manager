@@ -1,11 +1,8 @@
-const {
-  addNewProduct,
-  getProduct,
-} = require('../models/Products');
+const Products = require('../models/Products');
 
 const validateLength = async (name) => {
   const nameLength = 5;
-  const product = await getProduct(name);
+  const product = await Products.getProduct(name);
   if (product !== null) return {
     err: {
       code: 'invalid_data',
@@ -46,11 +43,30 @@ const newProduct = async ({ name, quantity }) => {
   if (productQuantity.err) {
     return productQuantity;
   }
-  const product = await addNewProduct(productName, productQuantity);
+  const product = await Products.addNewProduct(productName, productQuantity);
   return product;
 };
 
+const getAll = async () => {
+  const products = await Products.getAll();
+  return products;
+};
+
+const getOne = async (id) => {
+  const product = await Products.getOne(id);
+
+  if (!product) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+
+  return product;
+};
 
 module.exports = {
   newProduct,
+  getAll,
+  getOne,
 };
