@@ -10,8 +10,8 @@ const create = async (name, quantity) =>
 
 const getAll = async () => {
   return connection()
-    .then((db) => db.collection('products').find().toArray())
-}
+    .then((db) => db.collection('products').find().toArray());
+};
 
 /*
 Busca um autor específico, a partir do seu ID
@@ -30,6 +30,7 @@ const change = async (id, name, quantity) => {
   );
   return { _id: id, name, quantity };
 };
+
 //  https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/
 
 const del = async (id) => {
