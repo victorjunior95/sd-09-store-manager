@@ -7,12 +7,12 @@ const registerSales = async (req, res) => {
   res.status(status).json(response);
 };
 
-// const listProducts = async (req, res) => {
-//   const { id } = req.params;
-//   const { status, response } = await productsService.list(id);
+const listSales = async (req, res) => {
+  const { id } = req.params;
+  const { status, response } = await salesService.list(id);
 
-//   res.status(status).json(response);
-// };
+  res.status(status).json(response);
+};
 
 // const updateProduct = async (req, res) => {
 //   const { id } = req.params;
@@ -31,7 +31,7 @@ const registerSales = async (req, res) => {
 
 module.exports = {
   registerSales,
-  // listProducts,
+  listSales,
   // updateProduct,
   // deleteProduct
 };

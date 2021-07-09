@@ -12,6 +12,16 @@ const INVALID_QUANTITY_OR_ID = {
   }
 };
 
+const PRODUCTS_NOT_FOUND = {
+  status: 404,
+  response: {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found',
+    }
+  }
+};
+
 const validateBody = (sales) => {
   const wrongQuantity = sales.find((sale) => (
     typeof sale.quantity !== 'number' || sale.quantity < MIN_QUANTITY
@@ -30,14 +40,14 @@ const register = async (sales) => {
   return { status: 200, response: newSale };
 };
 
-// const list = async (id) => {
-//   const products = await Products.list(id);
-//   if (!products) return PRODUCTS_NOT_FOUND;
+const list = async (id) => {
+  const sales = await Sales.list(id);
+  if (!sales) return PRODUCTS_NOT_FOUND;
 
-//   if (id) return { status: 200, response: products };
+  if (id) return { status: 200, response: sales };
 
-//   return { status: 200, response: { products } };
-// };
+  return { status: 200, response: { sales } };
+};
 
 // const update = async (id, name, quantity) => {
 //   const bodyValidated = validateBody(name, quantity);
@@ -57,7 +67,7 @@ const register = async (sales) => {
 
 module.exports = {
   register,
-  // list,
+  list,
   // update,
   // remove
 };

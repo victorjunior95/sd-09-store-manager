@@ -9,23 +9,23 @@ const register = async (itensSold) => {
   return newSale.ops[0];
 };
 
-// const list = async (_id) => {
-//   const connection = await connect();
-//   if (_id) {
-//     try {
-//       const find = await connection.collection('products').findOne({
-//         _id: ObjectId(_id)
-//       });
+const list = async (_id) => {
+  const connection = await connect();
+  if (_id) {
+    try {
+      const find = await connection.collection('sales').findOne({
+        _id: ObjectId(_id)
+      });
 
-//       return find;
-//     } catch {
-//       return;
-//     }
-//   }
+      return find;
+    } catch {
+      return;
+    }
+  }
 
-//   const productsList = await connection.collection('products').find().toArray();
-//   return productsList;
-// };
+  const salesList = await connection.collection('sales').find().toArray();
+  return salesList;
+};
 
 // const update = async (_id, name, quantity) => {
 //   const connection = await connect();
@@ -61,7 +61,7 @@ const register = async (itensSold) => {
 
 module.exports = {
   register,
-  // list,
+  list,
   // update,
   // remove
 };
