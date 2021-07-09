@@ -20,15 +20,14 @@ const postProduct = async (req, res, next) => {
 const getProducts = async (_req, res, next) => {
   const products = await getAllProducts();
 
-  if (products) return res.status(status_ok).json(products);
+  if (products) return res.status(status_ok).json({ products });
 };
 
 const getProductId = async (req, res, next) => {
-  const { _id } = req.body;
-  const product = await findProductById(_id);
-  console.log(product);
-  if(product) return res.status(status_ok).json(product);
+  const { id } = req.params;
+  const product = await findProductById(id);
   if(product.err) return res.status(unprocessable).json(product);
+  if(product) return res.status(status_ok).json(product);
 };
 
 module.exports = { postProduct, getProducts, getProductId };

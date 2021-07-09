@@ -3,6 +3,7 @@ const productModel = require('../model/productModel');
 const validateNewProduct = async (name, quantity) => {
   const minNameLength = 5;
   const minQuantity = 0;
+  const product = await productModel.getProductByName(name);
 
   if(name.length < minNameLength) return { 
     err: { 
@@ -11,7 +12,7 @@ const validateNewProduct = async (name, quantity) => {
     } 
   };
 
-  if (await productModel.getProductByName(name)) return {
+  if (product) return {
     err: { 
       message: 'Product already exists',
       code: 'invalid_data'
@@ -32,7 +33,7 @@ const validateNewProduct = async (name, quantity) => {
     }
   };
 
-  return await productModel.createProduct(name, quantity);
+  return product;
 };
 
 const getAllProducts =  async () => {
@@ -40,15 +41,15 @@ const getAllProducts =  async () => {
 };
 
 const findProductById = async (id) => {
-  if (await productModel.getProductById(id) === []) return {
+  const product = await productModel.getProductById(id);
+  if (!product) return {
     err: { 
       message: 'Wrong id format',
       code: 'invalid_data'
     }
   };
 
-  return await productModel.getProductById(id);
+  return product;
 };
-
 
 module.exports = { validateNewProduct, getAllProducts, findProductById };
