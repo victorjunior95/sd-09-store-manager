@@ -15,16 +15,27 @@ productRouter.post('/', async (req, res) => {
 
 productRouter.get('/', async (_req, res) => {
   const allProducts = await productsService.getAll();
-  if (!allProducts) return res.status(unprocessable_entity).json(newProduct);
+  if (!allProducts) return res.status(unprocessable_entity).json(allProducts);
   return res.status(OK).json(allProducts);
 });
 
 productRouter.get('/:id', async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const product = await productsService.getById(id);
   if (product.err) return res.status(unprocessable_entity).json(product);
 
   return res.status(OK).json(product);
+});
+
+productRouter.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const productUpdated = await productsService.upDate(id, name, quantity);
+  console.log('111111111111111111111111111111111111111111111')
+  if (productUpdated.err) return res.status(unprocessable_entity).json(productUpdated);
+  console.log('11111111111111111111122222222222222222222222222')
+
+  return res.status(OK).json(productUpdated);
 });
 
 module.exports = productRouter;
