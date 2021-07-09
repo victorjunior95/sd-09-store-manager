@@ -32,11 +32,28 @@ const getById = async (id) => {
   const foundSale = await SalesCollection
     .findOne({ _id: ObjectId(id) }); // Interação com o DB
 
-  return foundSale;  
+  return foundSale;
+};
+
+const update = async (saleId, productsList) => {
+  const SalesCollection = await connection()
+    .then((db) => db.collection(DB_COLLECTION));
+
+  const updatedSale = await SalesCollection
+    .findOneAndUpdate(
+      { _id: ObjectId(saleId) },
+      { $set: { itensSold: productsList } },
+      { returnOriginal: false } // Caso true ele exibe o objeto antes de ser alterado, falhando o teste. Fonte: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+    );
+
+  console.log(updatedSale.value);
+
+  return updatedSale.value;
 };
 
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };

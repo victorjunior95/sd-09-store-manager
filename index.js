@@ -28,6 +28,9 @@ app.post('/sales', SalesController.create);
 app.get('/sales/', SalesController.getAll);
 app.get('/sales/:id', SalesController.getById);
 
+// Requisito 07
+app.put('/sales/:id', SalesController.update);
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
