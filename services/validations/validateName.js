@@ -7,6 +7,7 @@ const isValidName = (name) => {
       },
     };
   }
+  return false;
 };
 
 module.exports = {

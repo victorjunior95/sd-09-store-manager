@@ -1,7 +1,7 @@
 const ProductModel = require('../models/productModel');
-const validateQuantity = require('../validations/products/validateQuantity');
-const validateName = require('../validations/products/validateName');
-const validadeProductExists = require('../validations/validadeProductExists');
+const validateQuantity = require('./validations/validateQuantity');
+const validateName = require('./validations/validateName');
+const validadeProductExists = require('./validations/validadeProductExists');
 
 const create = async (name, quantity) => {
   const msgErrExistName = await validadeProductExists.isProductExist(name);
