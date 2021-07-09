@@ -1,6 +1,6 @@
 const rescue = require('express-rescue');
 const services = require('../services/products');
-const { CREATED } = require('../constants/httpCodes.json');
+const { CREATED, OK } = require('../constants/httpCodes.json');
 
 const create = rescue(async (request, response, next) => {
 
@@ -17,6 +17,19 @@ const create = rescue(async (request, response, next) => {
   });
 });
 
+const getAll = rescue(async (_request, response, next) => {
+
+  const products = await services.getAll();
+
+  if(products.err) return next(products);
+
+  response.status(OK).json({
+    products,
+  });
+
+});
+
 module.exports = {
   create,
+  getAll,
 };
