@@ -23,4 +23,14 @@ const create = async (product) => {
   return insertedId;
 };
 
-module.exports = { create };
+const getAll = async () => {
+
+  const products = await Products.getAll();
+
+  return products;
+};
+
+module.exports = {
+  create,
+  getAll,
+};
