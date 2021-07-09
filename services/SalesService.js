@@ -2,13 +2,16 @@ const SalesModel = require('../models/SalesModel');
 const error = require('../helpers/errors');
 const {
   productExists,
-  isSalesQuantityValid
+  isSalesQuantityValid,
+  isProductStockAvailable
 } = require('../middlewares/validations');
 
 const create = async (productsList) => {
   for (const { productId, quantity } of productsList) {
     if (!productExists(productId)) return error.INVALID_ID_OR_QUANTITY;
     if (!isSalesQuantityValid(quantity)) return error.INVALID_ID_OR_QUANTITY;
+    if (!await isProductStockAvailable(productId, quantity))
+      return { error: error.INVALID_STOCK_AMOUNT };
   }
 
   const createdSale = await SalesModel.create(productsList);

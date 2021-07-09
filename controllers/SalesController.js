@@ -9,9 +9,9 @@ const create = async (req, res) => {
   const productsList = req.body;
   const createdSale = await SalesServices.create(productsList);
 
-  return createdSale.err
-    ? res.status(UNPROCESSABLE_ENTITY_STATUS).json(createdSale)
-    : res.status(OK_STATUS).json(createdSale);
+  if (createdSale.err) return res.status(UNPROCESSABLE_ENTITY_STATUS).json(createdSale);
+  if (createdSale.error) return res.status(NOT_FOUND).json(createdSale.error);
+  return res.status(OK_STATUS).json(createdSale);
 };
 
 const getAll = async (_req, res) => {

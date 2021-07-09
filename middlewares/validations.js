@@ -4,7 +4,6 @@ const ZERO = 0;
 
 const productAlreadyExists = async (name) => {
   const foundProduct = await ProductsModel.getByName(name);
-  
   return foundProduct.length > 1;
 };
 
@@ -20,11 +19,17 @@ const isSalesQuantityValid = (quantity) => !(
   quantity <= ZERO || typeof quantity !== 'number'
 );
 
+const isProductStockAvailable = async (id, quantity) => {
+  const foundProduct = await ProductsModel.getById(id);
+  return (foundProduct.quantity >= quantity);
+};
+
 module.exports = {
   productExists,
   productAlreadyExists,
   isNameValid,
   isQuantityValueValid,
   isQuantityTypeValid,
-  isSalesQuantityValid
+  isSalesQuantityValid,
+  isProductStockAvailable
 };
