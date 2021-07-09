@@ -4,7 +4,6 @@ const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
 
 const DB_NAME = 'StoreManager';
 
-
 let schema = null;
 
 async function connection() {
@@ -21,6 +20,7 @@ async function connection() {
     })
     .catch((err) => {
       console.error(err);
+      process.exit(1);
     });
 }
 
