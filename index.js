@@ -24,8 +24,15 @@ app.delete('/products/:id', productController.deleteProduct);
 // sales endpoint
 app.post('/sales', salesController.addSales);
 
+app.get('/sales', salesController.getSales);
+app.get('/sales/:id', salesController.getSalesById);
+
+app.put('/sales/:id', salesController.updateSaleById);
+
 app.use((err, req, res, next) => {
   const errStatus = 422;
+  const codeNotFound = 404;
+  if (err.err.code === 'not_found') res.status(codeNotFound).json(err);
   res.status(errStatus).json(err);
 });
 
