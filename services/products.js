@@ -33,4 +33,12 @@ module.exports = {
 
     return { products };
   },
+  async get(id) {
+    const product = new Product();
+    const response = await product.get(id);
+
+    if (!response) throw new InvalidArgumentError('Wrong id format');
+
+    return response;
+  }
 };

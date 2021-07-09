@@ -1,5 +1,4 @@
 const { ObjectID } = require('mongodb');
-const { InvalidArgumentError } = require('../errors');
 const connection = require('./connection');
 
 class Product {
@@ -21,7 +20,7 @@ class Product {
   }
 
   async get(id) {
-    if (!ObjectID.isValid(id)) throw new InvalidArgumentError('Wrong id format');
+    if (!ObjectID.isValid(id)) return null;
 
     return connection()
       .then((db) => db.collection(this.collection))

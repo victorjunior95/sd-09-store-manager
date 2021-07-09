@@ -1,14 +1,10 @@
 const sinon = require('sinon');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const { expect } = require('chai');
 const { describe } = require('mocha');
 const { Product } = require('../../models');
 const { InvalidArgumentError } = require('../../errors');
 const { MongoClient } = require('mongodb');
 const connect = require('../mocks/connection');
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 const DB_NAME = 'StoreManager';
 const COLLECTION_NAME = 'products';
@@ -171,17 +167,13 @@ describe('List a product by its ID (model)', () => {
   });
 
   describe('when an invalid _id is provided', () => {
-    it('should throw an InvalidArgumentError', async () => {
+    it('should return null', async () => {
       const { _id: id } = await product.create({ name: 'candy', quantity: 8000 });
 
       const invalidID = id.toString().replace('0', 'o');
+      const response = await product.get(invalidID);
 
-      expect(
-        product.get(invalidID)
-      ).to.be.rejectedWith(
-        InvalidArgumentError,
-        'Wrogn id format',
-      )
+      expect(response).to.be.equal(null);
     });
   });
 });
