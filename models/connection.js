@@ -6,10 +6,10 @@ const OPTIONS = {
 };
 
 // para uso local
-const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
+// const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
 
 // para fazer o push
-// const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
 
 const DB_NAME = 'StoreManager';
 
