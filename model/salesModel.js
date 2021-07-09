@@ -41,27 +41,27 @@ const update = async (_id, itensSold) => {
   return updateSale;
 };
 
-// const remove = async (_id) => {
-//   try {
-//     const connection = await connect();
+const remove = async (_id) => {
+  try {
+    const connection = await connect();
 
-//     const checkedProduct = await connection.collection('products')
-//       .findOne({ _id: ObjectId(_id) });
-//     if (!checkedProduct) return;
+    const checkedSale = await connection.collection('sales')
+      .findOne({ _id: ObjectId(_id) });
+    if (!checkedSale) return;
 
-//     const deleteOne = await connection.collection('products')
-//       .deleteOne({ _id: ObjectId(_id) });
-//     if (deleteOne.deletedCount !== 1) return;
+    const deleteOne = await connection.collection('sales')
+      .deleteOne({ _id: ObjectId(_id) });
+    if (deleteOne.deletedCount !== 1) return;
 
-//     return checkedProduct;
-//   } catch {
-//     return;
-//   }
-// };
+    return checkedSale;
+  } catch {
+    return;
+  }
+};
 
 module.exports = {
   register,
   list,
   update,
-  // remove
+  remove
 };

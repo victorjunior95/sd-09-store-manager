@@ -22,6 +22,16 @@ const PRODUCTS_NOT_FOUND = {
   }
 };
 
+const INVALID_SALE_ID = {
+  status: 422,
+  response: {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'
+    }
+  }
+};
+
 const validateBody = (sales) => {
   const wrongQuantity = sales.find((sale) => (
     typeof sale.quantity !== 'number' || sale.quantity < MIN_QUANTITY
@@ -58,16 +68,16 @@ const update = async (id, sales) => {
   return { status: 200, response: { _id: id, itensSold: sales } };
 };
 
-// const remove = async (id) => {
-//   const deleted = await Products.remove(id);
-//   if (!deleted) return PRODUCTS_NOT_FOUND;
+const remove = async (id) => {
+  const deleted = await Sales.remove(id);
+  if (!deleted) return INVALID_SALE_ID;
 
-//   return { status: 200, response: { deleted }};
-// };
+  return { status: 200, response: { deleted }};
+};
 
 module.exports = {
   register,
   list,
   update,
-  // remove
+  remove
 };

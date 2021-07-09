@@ -22,16 +22,16 @@ const updateSale= async (req, res) => {
   res.status(status).json(response);
 };
 
-// const deleteProduct = async (req, res) => {
-//   const { id } = req.params;
-//   const { status, response } = await productsService.remove(id);
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+  const { status, response } = await salesService.remove(id);
 
-//   res.status(status).json(response);
-// };
+  res.status(status).json(response);
+};
 
 module.exports = {
   registerSales,
   listSales,
   updateSale,
-  // deleteProduct
+  deleteSale
 };
