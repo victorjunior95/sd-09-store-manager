@@ -4,27 +4,27 @@ const CREATED = 201;
 const SUCCESS = 200;
 
 const create = async (req, res, next) => {
-  const { name, quantity } = req.body;
+  try {
+    const { name, quantity } = req.body;
 
-  const createProduct = await ServiceProducts.create({ name, quantity });
-
-  if (createProduct.err) {
-    return next(createProduct.err);
+    const createProduct = await ServiceProducts.create({ name, quantity });
+  
+    return res.status(CREATED).json(createProduct);
+  } catch(error) {
+    next(error);
   }
-
-  return res.status(CREATED).json(createProduct);
 };
 
 const getAllOrById = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const findAllOrById = await ServiceProducts.getAllOrById(id);
+    const findAllOrById = await ServiceProducts.getAllOrById(id);
 
-  if (findAllOrById.err) {
-    return next(findAllOrById.err);
+    res.status(SUCCESS).json(findAllOrById);
+  } catch(error) {
+    next(error);
   }
-
-  res.status(SUCCESS).json(findAllOrById);
 };
 
 const editProduct = async (req, res, _next) => {
@@ -37,17 +37,17 @@ const editProduct = async (req, res, _next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const findAllOrById = await ServiceProducts.getAllOrById(id);
-
-  if (findAllOrById.err) {
-    return next(findAllOrById.err);
+    await ServiceProducts.getAllOrById(id);
+  
+    const deletedProduct = await ServiceProducts.deleteProduct(id);
+  
+    return res.status(SUCCESS).json(deletedProduct);
+  } catch(error) {
+    next(error);
   }
-
-  const deletedProduct = await ServiceProducts.deleteProduct(id);
-
-  return res.status(SUCCESS).json(deletedProduct);
 };
 
 module.exports = {

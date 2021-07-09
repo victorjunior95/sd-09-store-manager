@@ -1,4 +1,8 @@
 const ModelSales = require('../model/ModelSales');
+const invalidData = require('../utils/errosFunctions');
+
+const UNPROCESSABLE_ENTITY = 422;
+const NOT_FOUND = 404;
 
 const create = async (itensSold) => {
 
@@ -17,15 +21,9 @@ const getAllOrById = async (id) => {
 
   const findSaleById = await ModelSales.getById(id);
 
-  if (!findSaleById) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    };
-  }
-
+  if (!findSaleById) throw invalidData
+  ('not_found', 'Sale not found', NOT_FOUND);
+  
   return findSaleById;
 };
 
@@ -39,14 +37,9 @@ const deleteSale = async (id) => {
 
   const findForDeleteSaleById = await ModelSales.getById(id);
 
-  if (!findForDeleteSaleById) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong sale ID format',
-      },
-    };
-  }
+  if (!findForDeleteSaleById) throw invalidData
+  ('invalid_data', 'Wrong sale ID format', UNPROCESSABLE_ENTITY);
+
   const deletedSale = await ModelSales.deleteSale(id);
 
   return deletedSale;

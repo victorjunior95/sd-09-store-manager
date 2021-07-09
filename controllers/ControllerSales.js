@@ -3,46 +3,55 @@ const ServiceSales = require('../services/ServiceSales');
 const SUCCESS = 200;
 
 const create = async (req, res, _next) => {
-  const itensSold = req.body;
+  try {
+    const itensSold = req.body;
 
-  const createSale = await ServiceSales.create(itensSold);
-
-  res.status(SUCCESS).json(createSale);
+    const createSale = await ServiceSales.create(itensSold);
+  
+    res.status(SUCCESS).json(createSale);
+  } catch(error) {
+    next(error);
+  }
 };
 
 const getAllOrById = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const findAllOrById = await ServiceSales.getAllOrById(id);
+    const findAllOrById = await ServiceSales.getAllOrById(id);
 
-  if (findAllOrById.err) {
-    return next(findAllOrById.err);
+    res.status(SUCCESS).json(findAllOrById);
+  } catch (error) {
+
+    next(error);
   }
-
-  res.status(SUCCESS).json(findAllOrById);
 };
 
 const editSale = async (req, res, _next) => {
-  const itensSold = req.body;
-  const { id } = req.params;
+  try {
+    const itensSold = req.body;
+    const { id } = req.params;
+  
+    const editedSale = await ServiceSales.editSale(id, itensSold);
+  
+    return res.status(SUCCESS).json(editedSale);
+  } catch (error) {
 
-  const editedSale = await ServiceSales.editSale(id, itensSold);
-
-  return res.status(SUCCESS).json(editedSale);
+    next(error);
+  }
 };
 
 const deleteSale = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const findForDeleteSaleById = await ServiceSales.deleteSale(id);
+    const deletedSale = await ServiceSales.deleteSale(id);
 
-  if (findForDeleteSaleById.err) {
-    return next(findForDeleteSaleById.err);
+    return res.status(SUCCESS).json(deletedSale);
+  } catch (error) {
+
+    next(error);
   }
-
-  const deletedSale = await ServiceSales.deleteSale(id);
-
-  return res.status(SUCCESS).json(deletedSale);
 };
 
 module.exports = {

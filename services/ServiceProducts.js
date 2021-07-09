@@ -1,17 +1,15 @@
 const ModelProducts = require('../model/ModelProducts');
+const invalidData = require('../utils/errosFunctions');
+
+
+const UNPROCESSABLE_ENTITY = 422;
 
 const create = async ({ name, quantity }) => {
 
   const findName = await ModelProducts.getByName({ name });
 
-  if (findName) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      },
-    };
-  }
+  if (findName) throw invalidData
+  ('invalid_data', 'Product already exists', UNPROCESSABLE_ENTITY);
 
   const createProduct = await ModelProducts.create({ name, quantity });
 
@@ -28,14 +26,8 @@ const getAllOrById = async (id) => {
 
   const findProductById = await ModelProducts.getById(id);
 
-  if (!findProductById) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
+  if (!findProductById) throw invalidData
+  ('invalid_data', 'Wrong id format', UNPROCESSABLE_ENTITY);
 
   return findProductById;
 };
