@@ -3,6 +3,7 @@ const {
   getAllSalesFromDB,
   findSaleById,
   updateSaleFromDB,
+  deleteSaleFromDB,
 } = require('../models/salesModels');
 const { validateSaleQuantity } = require('./validations');
 const errors = require('./errorsMessage');
@@ -41,9 +42,23 @@ async function updateSale(id, sale) {
   return result;
 }
 
+async function deleteSale(id) {
+  const saleToDelete = await findSaleById(id);
+  if (!saleToDelete) throw {
+    status: httpStatusCode.unprocessableEntity,
+    err: {
+      code: errors.invalidData,
+      message: errors.idSaleFormat,
+    }
+  };
+  await deleteSaleFromDB(id);
+  return saleToDelete;
+}
+
 module.exports = {
   createSale,
   listAllSales,
   findOneSale,
   updateSale,
+  deleteSale,
 };

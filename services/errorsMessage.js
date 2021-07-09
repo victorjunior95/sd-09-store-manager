@@ -7,6 +7,7 @@ const errors = {
   idAndQuantity: 'Wrong product ID or invalid quantity',
   saleNotFound: 'Sale not found',
   notFound: 'not_found',
+  idSaleFormat: 'Wrong sale ID format',
 };
 
 module.exports = errors;
