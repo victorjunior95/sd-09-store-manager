@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { describe } = require('mocha');
 const { productsController } = require('../../controllers');
 const { productsService } = require('../../services');
+const { errorTreatment } = require('../../middlewares');
 const { InvalidArgumentError } = require('../../errors');
 const { MongoClient } = require('mongodb');
 const connect = require('../mocks/connection');
@@ -12,9 +13,10 @@ const COLLECTION_NAME = 'products';
 let connectionMock;
 
 describe('Create a new product (controller)', () => {
+  const validBody = { name: 'candy', quantity: 8000 };
   const response = {};
   const request = {};
-  const validBody = { name: 'candy', quantity: 8000 };
+  let next;
 
   before(async () => {
     connectionMock = await connect();
@@ -37,6 +39,7 @@ describe('Create a new product (controller)', () => {
 
     before(() => {
       request.body = validBody;
+      next = sinon.stub().callsFake(() => {})
 
       sinon.stub(productsService, 'create')
         .resolves(successfulResponse);
@@ -47,13 +50,13 @@ describe('Create a new product (controller)', () => {
     });
 
     it('should return a status code 201', async () => {
-      await productsController.create(request, response);
+      await productsController.create(request, response, next);
 
       expect(response.status.calledWith(201)).to.be.equal(true);
     });
 
     it('should return an object with the product info', async () => {
-      await productsController.create(request, response);
+      await productsController.create(request, response, next);
 
       expect(response.json.calledWith(successfulResponse)).to.be.equal(true);
     });
