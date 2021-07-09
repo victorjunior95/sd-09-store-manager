@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
 app.get('/products', productsController.getAll);
 app.get('/products/:id', productsController.getById);
 app.post('/products',validationName, validationQuantity, productsController.create);
-
+app.put('/products/:id', validationName, validationQuantity, productsController.change);
 // app.get('/books', Book.getAll);
 // app.get('/books/author/:id', Book.findByAuthorId);
 // app.get('/books/title/:title', Book.findByTitle);

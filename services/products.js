@@ -9,13 +9,15 @@ const create = async (name, quantity) => {
   return product;
 };
 
-
-
 const getById = async (id) => {
   const product = await productsModel.getById(id);
   return product;
 };
 
+const change = async (id, name, quantity) => {
+  const product = await productsModel.change(id, name, quantity);
+  return product;
+};
 
   // const create = async (firstName, middleName, lastName) => {
   //   // Buscamos um autor com o mesmo nome completo que desejamos criar
@@ -39,6 +41,7 @@ const getById = async (id) => {
   
 module.exports = {
   getAll,
+  change,
   getById,
   create,
 };

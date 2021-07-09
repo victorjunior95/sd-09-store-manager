@@ -23,22 +23,14 @@ const getById = async (id) => {
     .findOne(ObjectId(id)));
 };
 
-
-// const isNonEmptyString = (value) => {
-//     if (!value) return false;
-//     return typeof value === 'string';
-// };
-
-// const isValid = (firstName, middleName, lastName) => {
-//     if (middleName && typeof middleName !== 'string') return false;
-//     return isNonEmptyString(firstName) && isNonEmptyString(lastName);
-// };
-
-// const create = async (firstName, middleName, lastName) =>
-//     connection()
-//         .then((db) => db.collection('authors').insertOne({ firstName, middleName, lastName }))
-//         .then(result => getNewAuthor({ id: result.insertedId, firstName, middleName, lastName }));
-
+const change = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) return null;
+  connection().then((db) => db.collection('products')
+    .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }),
+  );
+  return { _id: id, name, quantity };
+};
+//  https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/
 
 
 const findByName = async (name) => {
@@ -51,6 +43,6 @@ module.exports = {
   getAll,
   findByName,
   getById,
-  // isValid,
+  change,
   create,
 };
