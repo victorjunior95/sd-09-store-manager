@@ -61,7 +61,11 @@ const messageErrorsSales = {
     code: 'invalid_data',
     message: 'Wrong sale ID format',
     status: 422,
-  }
+  },
+  stockInvalid: {
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
+  },
 };
 
 module.exports = {

@@ -4,6 +4,10 @@ const productModel = require('../models/productsModel');
 const { messageErrorsSales: messageErr } = require('../helpers/messagesErros');
 const { generateMessage, validateQuantitySales } = require('../helpers/funcValidate');
 
+const stockValidate = (quantity) => {
+
+};
+
 const updateProductSold = async (itensSold) => {
   const allProducts = await productModel.getAll();
 
@@ -12,8 +16,9 @@ const updateProductSold = async (itensSold) => {
   });
 
   productsUpdate.forEach(async ({ _id, name, quantity }, index) => {
+    const subtraction = quantity - itensSold[index].quantity;
     await productModel
-      .update(_id, name, (quantity - itensSold[index].quantity));
+      .update(_id, name, subtraction);
   });
 };
 
