@@ -1,6 +1,8 @@
+require('dotenv/config');
 const app = require('express')();
 const bodyParser = require('body-parser').json();
-
+const ProductsController = require('./controllers/ProductsController');
+const errorMiddleware = require('./middleware/err');
 const PORT = 3000;
 
 app.use(bodyParser);
@@ -10,6 +12,8 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', );
+app.post('/products', ProductsController.create);
 
-app.listen(PORT, () => console.log(`O pai tá on na porta: ${PORT}`));
+app.use(errorMiddleware);
+
+app.listen(PORT, () => console.log(`online na porta: ${PORT}`));
