@@ -4,6 +4,7 @@ const {
   getAllProducts,
   getProductById,
   updateProduct,
+  deleteProduct
 } = require('../models/productsModel');
 
 const register = async (name, quantity) => {
@@ -127,6 +128,16 @@ const update = async (id, name, quantity) => {
   return updatedProduct;
 };
 
+const deleteProd = async (id) => {
+  checkId(id);
+  const product = await getProductById(id);
+  if(!product) {
+    checkIfProductExists(product);
+    return;
+  }
+  await deleteProduct(id);
+};
+
 
 module.exports = {
   register,
@@ -138,5 +149,6 @@ module.exports = {
   getSingleProduct,
   checkIfProductExists,
   checkId,
-  update
+  update,
+  deleteProd
 };

@@ -21,14 +21,12 @@ const findProductByName = async (name) => {
 const getAllProducts = async () => {
   const allProducts = await connection().then((db) =>
     db.collection('products').find().toArray());
-  console.log(allProducts);
   return allProducts;
 };
 
 const getProductById = async (id) => {
   const product = await connection().then((db) =>
     db.collection('products').findOne(ObjectId(id)));
-  console.log(product);
   return product;
 };
 
@@ -46,10 +44,16 @@ const updateProduct = async (id, name, quantity) => {
   return updateProduct;
 };
 
+const deleteProduct = async (id) => {
+  await connection().then((db) =>
+    db.collection('products').deleteOne({ _id: ObjectId(id) }) );
+};
+
 module.exports = {
   registerProduct,
   findProductByName,
   getAllProducts,
   getProductById,
-  updateProduct
+  updateProduct,
+  deleteProduct
 };

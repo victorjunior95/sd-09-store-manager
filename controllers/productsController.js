@@ -9,6 +9,7 @@ const {
   checkIfProductExists,
   checkId,
   update,
+  deleteProd,
 } = require('../services/productServices');
 
 const status200 = 200;
@@ -56,9 +57,20 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const deletedProduct = await deleteProd(id);
+    res.status(status200).json(deletedProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerProduct,
   getAllProducts,
   getProductById,
-  updateProduct
+  updateProduct,
+  deleteProduct
 };
