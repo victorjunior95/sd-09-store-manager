@@ -9,6 +9,14 @@ const create = async (name, quantity) => {
   return newProduct.ops[0];
 };
 
+const listAll = async () => {
+  const allProducts = await connection().then((db) =>
+    db.collection(collectionProduct).find().toArray())
+    .then((products) => products
+    );
+  return { products: allProducts };
+};
+
 const findName = async (name) => {
   const findNameProduct = await connection().then((db) =>
     db.collection(collectionProduct).findOne({name}),
@@ -21,4 +29,5 @@ const findName = async (name) => {
 module.exports = {
   create,
   findName,
+  listAll,
 };

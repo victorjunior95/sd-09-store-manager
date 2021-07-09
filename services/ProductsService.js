@@ -2,6 +2,8 @@ const productsModel = require('../models/ProductsModel');
 
 const HTTP_NOTPROCESS_STATUS = 422;
 const HTTP_CREATED_STATUS = 201;
+const HTTP_OK_STATUS = 200;
+
 const productMaxLength = 5;
 const productMinQuantity = 0;
 
@@ -55,6 +57,12 @@ const create = async (name, quantity) => {
   return { product, status: HTTP_CREATED_STATUS };
 };
 
+const listAll = async () => {
+  const products = await productsModel.listAll();
+  return { products, status: HTTP_OK_STATUS };
+};
+
 module.exports = {
   create,
+  listAll,
 };
