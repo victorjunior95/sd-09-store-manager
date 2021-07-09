@@ -7,7 +7,7 @@ const OK = 200;
 route.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const products = await productsServices.getById(id, next);
+    const products = await productsServices.getById(id);
     return res.status(OK).json(products);
   } catch (error) {
     return next(error);

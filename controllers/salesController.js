@@ -4,6 +4,21 @@ const salesServices = require('../services/salesServices');
 const OK = 200;
 const CREATED = 201;
 
+route.get('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const sales = await salesServices.getById(id);
+    return res.status(OK).json(sales);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+route.get('/', async (_req, res) => {
+  const sale = await salesServices.getAll();
+  return res.status(OK).json(sale);
+});
+
 route.post('/', async (req, res, next) => {
   try {
     const productAdd = await salesServices.add(req.body);
