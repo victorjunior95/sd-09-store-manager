@@ -31,4 +31,16 @@ ProductsRouter.get('/', async (_req, res) => {
   }
 });
 
+ProductsRouter.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const productReturn = await productsService.getProductById(id);
+    if(productReturn.err)
+      return res.status(productReturn.status).json({ err: productReturn.err });
+    return res.status(productReturn.status).json(productReturn.product); 
+  } catch (err) {
+    return res.status(HTTP_SERVERERROR_STATUS).json(err);
+  }
+});
+
 module.exports = ProductsRouter;

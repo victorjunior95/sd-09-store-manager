@@ -62,7 +62,23 @@ const listAll = async () => {
   return { products, status: HTTP_OK_STATUS };
 };
 
+const getProductById = async (id) => {
+  const product = await productsModel.findProductById(id);
+  if(!product) {
+    return {
+      status: HTTP_NOTPROCESS_STATUS,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+  return { product, status: HTTP_OK_STATUS };
+};
+
 module.exports = {
   create,
   listAll,
+  getProductById
+
 };
