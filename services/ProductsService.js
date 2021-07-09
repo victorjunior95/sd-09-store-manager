@@ -21,7 +21,7 @@ const create = async (name, quantity) => {
   const findProductName = await ProductsModel.findProductName(name);
 
   if(findProductName) {
-    throw errorHandling(unprocessableEntity, 'invalid_data', 'Product already exists' );
+    throw errorHandling(unprocessableEntity, 'invalid_data', 'Product already exists');
   }
 
   const { error } = schemaProduct.validate({ name, quantity });
@@ -35,6 +35,24 @@ const create = async (name, quantity) => {
   return newProduct;
 };
 
+const getAll = async () => {
+  const getAll = await ProductsModel.getAll();
+
+  return getAll;
+};
+
+const getById = async (id) => {
+  const product = await ProductsModel.getById(id);
+
+  if (!product) {
+    throw errorHandling(unprocessableEntity, 'invalid_data', 'Wrong id format');
+  }
+
+  return product;
+};
+
 module.exports = {
   create,
+  getAll,
+  getById,
 };
