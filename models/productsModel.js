@@ -45,6 +45,15 @@ const updateProduct = async ({ id, name, quantity }) => {
   return result.modifiedCount;
 };
 
+const updateProductWhenSold = async (saleArray) => {
+  for ( const item of saleArray) {
+    await connection().then((db) => db
+      .collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: {quantity: -item.quantity}}));
+  };
+  return null;
+};
+
 const deleteProduct = async (id) => {
   const product = await getProductById(id);
 
@@ -55,6 +64,15 @@ const deleteProduct = async (id) => {
   return product;
 };
 
+const updateProductsWhenDeleted = async (itemSoldArray) => {
+  for ( const item of itemSoldArray) {
+    await connection().then((db) => db
+      .collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: {quantity: item.quantity}}));
+  };
+  return null;
+};
+
 module.exports = {
   postNewProduct,
   getAllProducts,
@@ -62,4 +80,6 @@ module.exports = {
   updateProduct,
   deleteProduct, 
   findProductByName,
+  updateProductWhenSold,
+  updateProductsWhenDeleted,
 };

@@ -59,12 +59,8 @@ const VALID_SALE_INPUT_2 = [
   },
 ];
 
-const VALID_SALE_INPUT_3 = [
-  {
-    productId: VALID_ID_1,
-    quantity: 200,
-  },
-];
+const VALID_ITEM_ARRAY = [{ productId: '60e770a1f02f7e8cab42588a', quantity : 10 }];
+
 const VALID_SALE_INPUT_1_FULL = {
   _id: VALID_ID_1,
   itensSold: [
@@ -75,18 +71,8 @@ const VALID_SALE_INPUT_1_FULL = {
   ],
 };
 
-const VALID_SALE_INPUT_2_FULL = {
-  _id: VALID_ID_3,
-  itensSold: [
-    {
-      productId: VALID_ID_4,
-      quantity: 10,
-    },
-  ],
-};
 describe('Testes para os arquivos de model', () => {
   let connectionMock;
-  let db;
   const DBServer = new MongoMemoryServer();
 
   before( async () => {
@@ -226,6 +212,36 @@ describe('Testes para os arquivos de model', () => {
       });
     // fim do método DELETE
     });
+    describe('Teste para a função updateProductWhenSold', () => {
+      it('deve retornar um null quando completar e as quantidades devem estar certas', async () => {
+        const db = connectionMock.db('StoreManager');
+        await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
+        const productOriginal = await productsModel.getProductById(VALID_ID_1);
+        const result = await productsModel.updateProductWhenSold(VALID_ITEM_ARRAY);
+        const productUpdated = await productsModel.getProductById(VALID_ID_1);
+
+        expect(result).to.be.null;
+        expect(productOriginal).to.be.an('object');
+        expect(productOriginal.quantity).to.be.equal(100);
+        expect(productUpdated).to.be.an('object');
+        expect(productUpdated.quantity).to.be.equal(90);
+      });
+    });
+    describe('Teste para a função updateProductWhenDeleted', () => {
+      it('deve retornar um null quando completar e as quantidades devem estar certas', async () => {
+        const db = connectionMock.db('StoreManager');
+        await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
+        const productOriginal = await productsModel.getProductById(VALID_ID_1);
+        const result = await productsModel.updateProductsWhenDeleted(VALID_ITEM_ARRAY);
+        const productUpdated = await productsModel.getProductById(VALID_ID_1);
+
+        expect(result).to.be.null;
+        expect(productOriginal).to.be.an('object');
+        expect(productOriginal.quantity).to.be.equal(100);
+        expect(productUpdated).to.be.an('object');
+        expect(productUpdated.quantity).to.be.equal(110);
+      });
+    });
   // fim dos testes de produtos
   });
   describe('Testes para as funções de "sales"', () => {
@@ -237,27 +253,7 @@ describe('Testes para os arquivos de model', () => {
             await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
 
             const result = await salesModel.postNewSale(VALID_SALE_INPUT_1);
-
             expect(result).to.be.an('object');
-          });
-        });
-        describe('Quando a sale não foi cadastrada com sucesso', () => {
-          it('deve retornar um erro, quando o produto não está cadastrado', async () => {
-            const result = await salesModel.postNewSale(VALID_SALE_INPUT_1);
-
-            expect(result.err).to.be.an('object');
-            expect(result.err.code).to.be.a('string').to.be.equal('invalid_data');
-            expect(result.err.message).to.be.a('string').to.be.equal('Não existe produto com o Id fornecido');
-          });
-          it('deve retornar um erro quando não há produtos o suficiente no estoque', async() => {
-            const db = connectionMock.db('StoreManager');
-            await db.collection('products').insertOne(VALID_PRODUCT_INPUT_1_FULL);
-
-            const result = await salesModel.postNewSale(VALID_SALE_INPUT_3);
-
-            expect(result.err).to.be.an('object');
-            expect(result.err.code).to.be.a('string').to.be.equal('stock_problem');
-            expect(result.err.message).to.be.a('string').to.be.equal('Such amount is not permitted to sell');
           });
         });
       });
@@ -265,7 +261,7 @@ describe('Testes para os arquivos de model', () => {
     });
     describe('Testes das funções do metodo GET', () => {
       describe('Testes para a função getAllSales', () => {
-        it('deve retornar uma chave com uma key "sales"', async () => {
+        it('deve retornar um objeto com uma key "sales"', async () => {
           const result = await salesModel.getAllSales();
 
           expect(result).to.be.an('object').to.have.key('sales');
@@ -311,7 +307,7 @@ describe('Testes para os arquivos de model', () => {
         });
         describe('Caso o ID não seja válido', () => {
           it('deve retornar null', async () => {
-            const result = await salesModel.getSaleById(9999);
+            const result = await salesModel.getSaleById('9999');
 
             expect(result).to.be.null;
           });
@@ -364,4 +360,3 @@ describe('Testes para os arquivos de model', () => {
   // fim dos testes de sales
   });
 });
-

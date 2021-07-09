@@ -1,14 +1,22 @@
 const salesModel = require('../models/salesModel');
 
-const postNewSale = async (array) => {
-  const result = await salesModel.postNewSale(array);
+const productsModel = require('../models/productsModel');
+const productsService = require('../services/productsServices');
 
+const postNewSale = async (array) => {
+
+  const stock = await productsService.checkStock(array);
+
+  if(stock.err) return stock;
+
+  await productsModel.updateProductWhenSold(array);
+
+  const result = await salesModel.postNewSale(array);
   return result;
 };
 
 const getAllSales = async () => {
   const result = await salesModel.getAllSales();
-
   return result;
 };
 
@@ -40,6 +48,8 @@ const deleteSale = async (id) => {
       message: 'Wrong sale ID format'
     }
   });
+
+  await productsModel.updateProductsWhenDeleted(result.itensSold);
 
   return result;
 };

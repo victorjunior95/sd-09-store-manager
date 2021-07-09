@@ -1,15 +1,14 @@
 const productsModel = require('../models/productsModel');
+const { ObjectId } = require('mongodb');
 
 const postNewProduct = async ({name, quantity}) => {
   const product = await productsModel.postNewProduct({ name, quantity });
-
   if(!product) return ({
     err: {
       code: 'invalid_data',
       message: 'Product already exists'
     },
   });
-
   return product;
 };
 
@@ -51,10 +50,26 @@ const deleteProduct = async (id) => {
   return result;
 };
 
+const checkStock = async (saleArray) => {
+  for ( const item of saleArray ) {
+    const product = await productsModel.getProductById(ObjectId(item.productId));
+    if (!product) return { err: { 
+      code: 'invalid_data',
+      message: 'Não existe produto com o Id fornecido'
+    }};
+    if (product.quantity < item.quantity) return { err: {
+      code: 'stock_problem',
+      message: 'Such amount is not permitted to sell',
+    }};
+  };
+  return {};
+};
+
 module.exports = {
   postNewProduct,
   getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,
+  checkStock,
 };
