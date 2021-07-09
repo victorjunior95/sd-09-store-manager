@@ -1,4 +1,9 @@
-const { createSale, listAllSales, findOneSale } = require('../services/salesService');
+const {
+  createSale,
+  listAllSales,
+  findOneSale,
+  updateSale,
+} = require('../services/salesService');
 const { ok } = require('../services/httpStatusCode');
 
 async function postSale(req, res, _next) {
@@ -18,8 +23,16 @@ async function getOneSale(req, res, _next) {
   res.status(ok).json(result);
 }
 
+async function updateOneSale(req, res, _next) {
+  const { id } = req.params;
+  const sale = req.body;
+  const result = await updateSale(id, sale);
+  res.status(ok).json(result);
+}
+
 module.exports = {
   postSale,
   getAllSales,
   getOneSale,
+  updateOneSale,
 };

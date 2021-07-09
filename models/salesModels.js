@@ -20,8 +20,20 @@ async function findSaleById(id) {
   return result;
 }
 
+async function updateSaleFromDB(id, itensSold) {
+  if(!ObjectId(id)) return null;
+  const values = { $set: { itensSold } };
+  const db = await connection();
+  await db.collection('sales').updateOne({ _id: ObjectId(id) }, values);
+  return {
+    _id: id,
+    itensSold,
+  };
+}
+
 module.exports = {
   createNewSale,
   getAllSalesFromDB,
   findSaleById,
+  updateSaleFromDB,
 };

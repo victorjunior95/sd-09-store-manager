@@ -33,7 +33,6 @@ async function updateProductFromDB(id, name, quantity) {
   const values = { $set: { name, quantity } };
   const db = await connection();
   await db.collection('products').updateOne({ _id: ObjectId(id) }, values);
-
   return {
     _id: id,
     name,

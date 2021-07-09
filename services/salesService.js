@@ -1,7 +1,8 @@
 const {
   createNewSale,
   getAllSalesFromDB,
-  findSaleById
+  findSaleById,
+  updateSaleFromDB,
 } = require('../models/salesModels');
 const { validateSaleQuantity } = require('./validations');
 const errors = require('./errorsMessage');
@@ -32,8 +33,17 @@ async function findOneSale(id) {
   return result;
 }
 
+async function updateSale(id, sale) {
+  sale.forEach((item) => {
+    validateSaleQuantity(item.quantity);
+  });
+  const result = await updateSaleFromDB(id, sale);
+  return result;
+}
+
 module.exports = {
   createSale,
   listAllSales,
   findOneSale,
+  updateSale,
 };
