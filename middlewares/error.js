@@ -1,7 +1,5 @@
-module.exports = (err, req, res, _next) => {
+module.exports = (err, _req, res, _next) => {
   const STATUS_500 = 500;
-
-  console.log(err.err);
 
   const error = {
     err: {

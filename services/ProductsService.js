@@ -4,7 +4,6 @@ const {
 } = require('../models/Products');
 
 const validateLength = async (name) => {
-  console.log(name);
   const nameLength = 5;
   const product = await getProduct(name);
   if (product !== null) return {
