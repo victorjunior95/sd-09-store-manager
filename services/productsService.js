@@ -1,4 +1,9 @@
-const { getAllProducts, createProduct } = require('../models/ProductsModel');
+const {
+  getNewProduct,
+  createProduct,
+  getAllProducts,
+  getById,
+} = require('../models/ProductsModel');
 
 const errors = {
   invalid: 'invalid_data',
@@ -6,6 +11,7 @@ const errors = {
   name_length: '"name" length must be at least 5 characters long',
   quantity_type: '"quantity" must be a number',
   quantity_min: '"quantity" must be larger than or equal to 1',
+  wrong_id: 'Wrong id format',
 };
 
 const UNPROCESSABLE = 422;
@@ -19,7 +25,7 @@ const nameIsValid = async (name) => {
 };
 
 const nameIsUnique = async (name) => {
-  const productsData = await getAllProducts();
+  const productsData = await getNewProduct();
   if (productsData.some(product => product.name === name) === true) return false;
   return true;
 };
@@ -76,14 +82,32 @@ const createService = async (name, quantity) => {
     status: UNPROCESSABLE,
   };
 
-  await createProduct(name, quantity);
+  const product = await createProduct(name, quantity);
 
-  return ({
-    name,
-    quantity,
-  });
+  return product.ops[0];
+};
+
+const getAllService = async () => {
+  const products = await getAllProducts();
+  return products;
+};
+
+const getByIdService = async (id) => {
+  const product = await getById(id);
+  if (!product) return {
+    isError: true,
+    err: {
+      code: errors.invalid,
+      message: errors.wrong_id,
+    },
+    status: UNPROCESSABLE,
+  };
+
+  return product;
 };
 
 module.exports = {
   createService,
+  getAllService,
+  getByIdService,
 };

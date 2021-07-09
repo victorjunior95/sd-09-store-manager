@@ -1,28 +1,42 @@
 const {
   createService,
+  getAllService,
+  getByIdService,
 } = require('../services/productsService');
 
 // response status code
+const OK = 200;
 const CREATED = 201;
-const UNPROCESSABLE = 422;
-/*
-const getAll = async (req, res) => {
-  const products = await getAllProducts();
+//const UNPROCESSABLE = 422;
 
-  res.status(200).json(products);
+const getAll = async (_req, res) => {
+  const products = await getAllService();
+
+  res.status(OK).json({ products });
 };
-*/
+
 const create = async (req, res) => {
-  const { _id, name, quantity } = req.body;
+  const { name, quantity } = req.body;
 
   const product = await createService(name, quantity);
 
-  if (product.isError) return res.status(product.status).json(product.err);
+  if (product.isError) return res.status(product.status).json(product);
 
-  res.status(CREATED).json({ message: 'Produto criado com sucesso' });
+  res.status(CREATED).json(product);
+};
+
+const getById = async (req, res) => {
+  const { id } = req.params;
+
+  const product = await getByIdService(id);
+
+  if (product.isError) return res.status(product.status).json(product);
+
+  res.status(OK).json(product);
 };
 
 module.exports = {
-  //getAll,
+  getAll,
   create,
+  getById,
 };

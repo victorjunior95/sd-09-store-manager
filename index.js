@@ -3,9 +3,7 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 
-// const { getAllProducts, createProduct } = require('./models/ProductsModel');
-// const { isValid } = require('./services/productsService');
-const { getAll, create } = require('./controllers/productsController');
+const { getAll, create, getById } = require('./controllers/productsController');
 
 app.use(bodyParser.json());
 
@@ -16,7 +14,9 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-//app.get('/products', getAll);
+app.get('/products', getAll);
+
+app.get('/products/:id', getById);
 
 app.post('/products', create);
 
