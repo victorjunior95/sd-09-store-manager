@@ -21,4 +21,19 @@ const findById = async (id) => {
     .then((db) => db.collection('products').findOne(new ObjectId(id)));
 };
 
-module.exports = { create, findByName, getAll, findById };
+const update = async (product) => {
+  const { id } = product;
+
+  if (!ObjectId.isValid(id)) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format'}};
+  }
+  return await connection()
+    .then(
+      (db) => db.collection('products')
+        .findOneAndUpdate(
+          { _id: new ObjectId(id) }, { $set: product }, { returnOriginal: false }
+        ).then((result) => result.value)
+    );
+};
+
+module.exports = { create, findByName, getAll, findById, update };
