@@ -20,6 +20,8 @@ app.get('/products', productController.listAllProducts);
 // lista por id ou seja, por um único id
 app.get('/products/:id', productController.listProductId);
 
+app.put('/products/:id', productController.productCreate);
+
 //app.get('/', (req, res) => res.send('Estou funcionando'));
 app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
 

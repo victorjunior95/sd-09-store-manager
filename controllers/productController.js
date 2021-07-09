@@ -5,12 +5,17 @@ const UNPROCESSABLE = 422;
 
 const productCreate =  async (req, res) => {
   const { name, quantity } = req.body;
+  const {id} = req.params;
 
   const newProduct = await productService.createNewProduct(name, quantity);
   if (newProduct.err) {
     return res.status(UNPROCESSABLE).json(newProduct);
   }
+  if (id) {
+    return res.status(OK).json(newProduct);
+  }
   return res.status(CREATED).json(newProduct);
+
 };
 
 const listAllProducts = async (req, res) => {
