@@ -25,4 +25,13 @@ ProductsRouter.post('/',
     return res.status(response.STATUS_CREATED).json(newProduct);
   });
 
+ProductsRouter.put('/:id',
+  async (req, res) => {
+    const { name, quantity } = req.body;
+    const id = req.params.id;
+    const updatedProduct = await productsServices.updateProduct(name, quantity, id);
+    if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
+    return res.status(response.STATUS_OK).json(updatedProduct);
+  });
+
 module.exports = ProductsRouter;
