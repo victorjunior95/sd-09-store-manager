@@ -32,6 +32,11 @@ const change = async (id, name, quantity) => {
 };
 //  https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/
 
+const del = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection().then((db) => db.collection('products')
+    .deleteOne({ _id: ObjectId(id) })); 
+};
 
 const findByName = async (name) => {
   const existeProduct = await connection()
@@ -40,6 +45,7 @@ const findByName = async (name) => {
 };
 
 module.exports = {
+  del,
   getAll,
   findByName,
   getById,

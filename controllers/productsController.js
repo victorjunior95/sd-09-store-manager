@@ -41,6 +41,21 @@ const getById = async (req, res) => {
   }
 };
 
+const del = async (req, res) => {
+  const { id } = req.params;
+  const product = await productsServices.del(id);
+  if (product !== null) {
+    return res.status(STATUS_200).send(product);
+  } else {
+    res.status(STATUS_422).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    });
+  }
+};
+
 const change = async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,6 +97,7 @@ const change = async (req, res) => {
 
 
 module.exports = {
+  del,
   getById,
   change,
   getAll,

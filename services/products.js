@@ -14,6 +14,11 @@ const getById = async (id) => {
   return product;
 };
 
+const del = async (id) => {
+  const product = await productsModel.del(id);
+  return product;
+};
+
 const change = async (id, name, quantity) => {
   const product = await productsModel.change(id, name, quantity);
   return product;
@@ -32,7 +37,7 @@ const change = async (id, name, quantity) => {
   //         message: 'Um autor já existe com esse nome completo',
   //       },
   //     };
-  //   }
+  //   }'
   
   //   // Caso o autor não exista e, portanto, possa ser criado
   //   // chamamos o model e retornamos o resultado
@@ -41,6 +46,7 @@ const change = async (id, name, quantity) => {
   
 module.exports = {
   getAll,
+  del,
   change,
   getById,
   create,
