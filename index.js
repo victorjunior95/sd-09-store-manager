@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const ProductsController = require('./controller/productsController');
+const SalesController = require('./controller/salesController');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,5 +19,11 @@ app.get('/products', ProductsController.listProducts);
 app.get('/products/:id', ProductsController.listProducts);
 app.put('/products/:id', ProductsController.updateProduct);
 app.delete('/products/:id', ProductsController.deleteProduct);
+
+app.post('/sales', SalesController.registerSales);
+// app.get('/sales', SalesController.listProducts);
+// app.get('/sales/:id', SalesController.listProducts);
+// app.put('/sales/:id', SalesController.updateProduct);
+// app.delete('/sales/:id', SalesController.deleteProduct);
 
 app.listen(PORT, console.log(`Server running in port ${PORT}`));
