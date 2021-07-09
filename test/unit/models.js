@@ -8,7 +8,7 @@ const connect = require('../mocks/connection');
 const DB_NAME = 'StoreManager';
 const COLLECTION_NAME = 'products';
 
-describe('Creation of a new product', () => {
+describe('Creation of a new product (model)', () => {
   // Link da reply do StackOverflow que salvou minha vida
   // Com o MongoMemoryServer https://stackoverflow.com/a/63675768
   const product = new Product();
@@ -52,7 +52,7 @@ describe('Creation of a new product', () => {
   });
 });
 
-describe('List all the products in the DB', () => {
+describe('List all the products (model)', () => {
   const product = new Product();
   let connectionMock;
 

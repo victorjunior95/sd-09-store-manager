@@ -27,4 +27,10 @@ module.exports = {
     if (repeatedName) throw new InvalidArgumentError('Product already exists');
     return product.create(payload);
   },
+  async getAll() {
+    const product = new Product();
+    const products = await product.getAll();
+
+    return { products };
+  },
 };

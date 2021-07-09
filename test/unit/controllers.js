@@ -224,3 +224,47 @@ describe('Create a new product (controller)', () => {
     });
   });
 });
+
+describe('List all products (controller)', () => {
+  const productsList = [
+    { name: 'candy', quantity: 8000 },
+    { name: 'eraser', quantity: 500 },
+  ];
+  const sandbox = sinon.createSandbox();
+  const request = {};
+  const response = {};
+
+  before(async () => {
+    connectionMock = await connect();
+
+    connectionMock.db(DB_NAME).collection(COLLECTION_NAME).insertMany(productsList);
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns();
+
+    sandbox.stub(MongoClient, 'connect')
+      .resolves(connectionMock);
+    sandbox.stub(productsService, 'getAll')
+      .resolves({ products: productsList});
+  });
+
+  after(() => {
+    connectionMock.db(DB_NAME).collection(COLLECTION_NAME).deleteMany({});
+
+    sandbox.restore();
+  });
+
+  it('should return a status code 200', async () => {
+    await productsController.getAll(request, response);
+
+    expect(response.status.calledWith(200)).to.be.equal(true);
+  });
+
+  it('should return an response with the following structure', async () => {
+    await productsController.getAll(request, response);
+    const products = await connectionMock.db(DB_NAME)
+      .collection(COLLECTION_NAME).find().toArray();
+
+    expect(response.json.calledWith({ products })).to.be.equal(true);
+  });
+});
