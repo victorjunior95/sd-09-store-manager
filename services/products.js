@@ -42,8 +42,33 @@ const findById = async (id) => {
 
 };
 
+const update = async (product) => {
+
+  if (!product.id) {
+    return { err: { code: 'invalid_data', message: 'no id requested'}};
+  }
+
+  const { error } = Joi.object({
+    name: Joi.string().not().empty().min(MIN_STRING).required(),
+    quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
+  }).validate(product, { convert: false });
+
+  if (error) return {
+    err: { code: 'invalid_data', message: error.message }
+  };
+
+  const existingProduct = await Products.findById(product.id);
+
+  if (!existingProduct) return {
+    err: { code: 'invalid_data', message: 'Product does not exists' }
+  };
+
+  return await Products.update(product);
+};
+
 module.exports = {
   create,
   getAll,
   findById,
+  update,
 };
