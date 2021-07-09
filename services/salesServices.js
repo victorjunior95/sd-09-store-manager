@@ -1,8 +1,36 @@
 const { ObjectId } = require('mongodb');
 const salesModel = require('../models/salesModel');
-const { messageErrorsSales: messageErr,
-  messageErrorsProducts } = require('../helpers/messagesErros');
+const productModel = require('../models/productsModel');
+const { messageErrorsSales: messageErr } = require('../helpers/messagesErros');
 const { generateMessage, validateQuantitySales } = require('../helpers/funcValidate');
+
+const updateProductSold = async (itensSold) => {
+  const allProducts = await productModel.getAll();
+
+  const productsUpdate = allProducts.filter(({ _id }) => {
+    return itensSold.find(({ productId }) => productId === _id.toString());
+  });
+
+  productsUpdate.forEach(async ({ _id, name, quantity }, index) => {
+    await productModel
+      .update(_id, name, (quantity - itensSold[index].quantity));
+  });
+};
+
+const updateProductsOfSaleDeleted = async (id) => {
+  const allProducts = await productModel.getAll();
+
+  const { itensSold } = await salesModel.getById(id);
+
+  const productsUpdate = allProducts.filter(({ _id }) => {
+    return itensSold.find(({ productId }) => productId === _id.toString());
+  });
+
+  productsUpdate.forEach(async ({ _id, name, quantity }, index) => {
+    await productModel
+      .update(_id, name, (quantity + itensSold[index].quantity));
+  });
+};
 
 const findErrorQuantite = (itensSold) => {
   return itensSold.reduce((acc, crr) => {
@@ -18,6 +46,8 @@ const add = async (itensSold) => {
   const errorQuantity = findErrorQuantite(itensSold);
 
   if (errorQuantity.length) throw (errorQuantity.find(err => err !== undefined));
+
+  await updateProductSold(itensSold);
 
   return (await salesModel.add(itensSold));
 };
@@ -43,12 +73,16 @@ const update = async (id, itensSold) => {
 
   if (errorQuantity.length) throw (errorQuantity.find(err => err !== undefined));
 
+  // await updateStock(itensSold);
+
   return (await salesModel.update(id, itensSold));
 };
 
 //DELETE
 const exclude = async (id) => {
   if (!ObjectId.isValid(id)) throw (generateMessage(messageErr.idFormatInvalid));
+
+  await updateProductsOfSaleDeleted(id);
 
   return (await salesModel.exclude(id));
 };
