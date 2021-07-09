@@ -6,7 +6,7 @@ const QUANT_MIN_AMOUNT = 1;
 
 module.exports = {
   async create(payload) {
-    const { name, quantity } = payload;
+    const { name = '', quantity = '' } = payload;
     const nameIsValid = name && name.length >= NAME_MIN_LENGTH;
     const quantityIsValid = quantity >= QUANT_MIN_AMOUNT;
 

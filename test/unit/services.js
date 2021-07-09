@@ -1,7 +1,6 @@
 const sinon = require('sinon');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { Product } = require('../../models');
 const { productsService } = require('../../services');
 const { InvalidArgumentError } = require('../../errors');
 const { MongoClient } = require('mongodb');
