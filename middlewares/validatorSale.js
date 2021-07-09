@@ -33,18 +33,18 @@ const validatorId = (req, _res, next) => {
   next();
 };
 
-const validatorIdAndQuantity = (req, _res, next) => {
+const validatorIdAndQuantity = async (req, _res, next) => {
   const { body } = req;
   const regexId = /[0-9A-Fa-f]{6}/g;
   const magicNumber = 0;
+  const productId = body[0].productId;
+  const quantityBuy = body[0].quantity;
 
-  const regexTest = body.find(({ productId }) => regexId.test(productId));
+  const regexTest = regexId.test(productId);
 
-  const quantityTest = body
-    .find(({ quantity }) => isValidQuantity(quantity, magicNumber));
+  const quantityTest = isValidQuantity(quantityBuy, magicNumber);
 
-  const isSearchProduct = body
-    .find( async ({ productId }) => await ProductService.findById(productId));
+  const isSearchProduct = await ProductService.findById(productId);
 
   if (!regexTest || !quantityTest || !isSearchProduct) {
     return next({

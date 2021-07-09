@@ -1,16 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const router = require('./routers/router');
 const erroMiddleware = require('./middlewares/error');
+const products = require('./routers/ProductsRouter');
+const sales = require('./routers/SalesRouter');
 
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
+const NumberPORT = 3000;
+const PORT = process.env.PORT || NumberPORT;
 
 app.use(bodyParser.json());
 
-app.use(router);
+app.use('/products', products);
+
+app.use('/sales', sales);
 
 app.use(erroMiddleware);
 
