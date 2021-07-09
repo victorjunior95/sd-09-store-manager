@@ -10,10 +10,12 @@ const create = async (name, quantity) => {
 };
 
 
+
 const getById = async (id) => {
   const product = await productsModel.getById(id);
   return product;
 };
+
 
   // const create = async (firstName, middleName, lastName) => {
   //   // Buscamos um autor com o mesmo nome completo que desejamos criar

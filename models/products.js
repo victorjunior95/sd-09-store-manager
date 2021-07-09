@@ -19,8 +19,8 @@ Busca um autor específico, a partir do seu ID
 */
 const getById = async (id) => {
   if (!ObjectId.isValid(id)) return null;
-  return connection()
-    .then((db) => db.collection('products').findOne(ObjectId(id))).toArray();
+  return connection().then((db) => db.collection('products')
+    .findOne(ObjectId(id)));
 };
 
 
