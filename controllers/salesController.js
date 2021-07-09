@@ -9,19 +9,6 @@ const status200 = 200;
 const create = async (req, res) => {
   const sales = req.body;
   const response = await salesService.create(sales);
-  if (response.err) {
-    if ( response.err.code === 'invalid_data') {
-      return res
-        .status(status422)
-        .json(response);
-    }
-
-    if ( response.err.code === 'stock_problem') {
-      return res
-        .status(status404)
-        .json(response);
-    }
-  }
   return res
     .status(status200)
     .json(response);
@@ -37,11 +24,6 @@ const getAll = async (_req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const response = await salesService.getById(id);
-  if ( response['err'] ) {
-    return res
-      .status(status404)
-      .json(response);
-  }
   return res
     .status(status200)
     .json(response);
@@ -52,11 +34,6 @@ const updateById = async (req, res) => {
   const itensSold = req.body;
   const { productId, quantity}  = itensSold[0];
   const response = await salesService.updateById(id, productId, quantity);
-  if ( response['err']) {
-    return res
-      .status(status422)
-      .json(response);
-  }
 
   return res
     .status(status200)
@@ -66,11 +43,6 @@ const updateById = async (req, res) => {
 const deleteById = async (req, res) => {
   const { id } = req.params;
   const response = await salesService.deleteById(id);
-  if (response['err'] ) {
-    return res
-      .status(status422)
-      .json(response);
-  }
   return res
     .status(status200)
     .json(response);
