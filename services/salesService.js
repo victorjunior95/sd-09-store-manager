@@ -3,25 +3,41 @@ const SalesModel = require('../models/SalesModel');
 const status = require('./statusCode');
 const productsService = require('../services/productsService');
 
+function verifyQuantities(saleQuantity, productQuantity) {
+  const errorObj1 = { err: {
+    status: status.unprocessableEntity,
+    code: 'invalid_data',
+    message: 'Wrong product ID or invalid quantity'
+  }};
+  const errorObj2 = { err: {
+    status: status.notFound,
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell'
+  }};
+  const minQuantity = 0;
+  const totalAmountInStock = productQuantity - saleQuantity;
+  if (!productQuantity) return errorObj1;
+  if (isNaN(saleQuantity)) return errorObj1;
+  if (saleQuantity <= minQuantity) return errorObj1;
+  if (totalAmountInStock < minQuantity) return errorObj2;
+  return false;
+}
+
+
 async function verifyIdAndQuantity(id, quantity) {
   try {
     const minQuantity = 0;
     const productId = ObjectID(id);
-    const quantityProduct = Number(quantity);
+    const quantitySale = Number(quantity);
     const productFound = await productsService.getOneProduct({_id: productId});
-    const totalAmountInStock = productFound.quantity - quantityProduct;
-    if (!productFound) throw '';
-    if (isNaN(quantityProduct)) throw '';
-    if (quantityProduct <= minQuantity) throw '';
-    if (totalAmountInStock < minQuantity) throw '';
+    const productQuantity = Number(productFound.quantity);
+    const totalAmountInStock = productQuantity - quantitySale;
+    const verifyquantities = verifyQuantities(quantitySale, productQuantity);
+    if (verifyquantities) throw verifyquantities;
     await productsService.putOneProduct(productId, productFound.name, totalAmountInStock);
     return {};
   } catch (error) {
-    return { err: {
-      status: status.unprocessableEntity,
-      code: 'invalid_data',
-      message: 'Wrong product ID or invalid quantity'
-    }};
+    return error;
   }
 }
 
