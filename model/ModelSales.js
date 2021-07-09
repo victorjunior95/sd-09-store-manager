@@ -1,13 +1,20 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
+const { editProduct } = require('./ModelProducts');
 
 
 const create = async (itensSold) => {
 
   const connect = await connection();
+
+  await itensSold.forEach((item) => {
+    connect.collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: -item.quantity}});
+  });
+
   const createItensSold = await connect.collection('sales')
     .insertOne({ 'itensSold': [...itensSold] });
-
+  
   return {
     _id: createItensSold.insertedId,
     itensSold: createItensSold.ops[0].itensSold,
@@ -57,11 +64,18 @@ const deleteSale = async (id) => {
   if (!ObjectId.isValid(id)) {
     return null;
   }
-
   const connect = await connection();
+  const { itensSold } = await getById(id);
+
+  await itensSold.forEach((item) => {
+    connect.collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: item.quantity}});
+  });
+
+
   const deletedSale = await connect.collection('sales')
     .findOneAndDelete({ _id: ObjectId(id) });
-  
+
   return deletedSale.value;
 };
 
