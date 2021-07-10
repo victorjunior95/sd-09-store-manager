@@ -48,8 +48,22 @@ const getOne = async (id) => {
   return sale;
 };
 
+const updateSale = async ({ data, id }) => {
+  console.log(data);
+  const salesQuantity = validateQuantity(data);
+  console.log(salesQuantity);
+  if (salesQuantity.err) {
+    return salesQuantity;
+  }
+
+  const sale = await Sales.updateSale(id, data);
+
+  return sale;
+};
+
 module.exports = {
   addNewSale,
   getAll,
-  getOne
+  getOne,
+  updateSale,
 };

@@ -23,11 +23,21 @@ const getOne = async (req, res, next) => {
   if (sale.err) return next(sale);
 
   res.status(STATUS_200).json(sale);
-  
+};
+
+const updateSale = async (req, res, next) => {
+  const data = req.body;
+  const { id } = req.params;
+  const sale = await Sales.updateSale({ data, id });
+
+  if (sale.err) return next(sale);
+
+  res.status(STATUS_200).json(sale.value);
 };
 
 module.exports = {
   addNewSale,
   getAll,
   getOne,
+  updateSale,
 };
