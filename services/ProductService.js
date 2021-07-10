@@ -49,12 +49,29 @@ async function getById(id) {
   if (!product) {
     return {
       err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
+        code: 'not_found',
+        message: 'Product not found',
       },
     };
   }
   return product;
 }
 
-module.exports = { create, getAll, getById };
+async function update(id, data) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    return idValidation;
+  }
+  const updatedProduct = await ProductModel.update(new ObjectId(id), data);
+  if (!updatedProduct) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Product not found',
+      },
+    };
+  }
+  return updatedProduct;
+}
+
+module.exports = { create, getAll, getById, update };

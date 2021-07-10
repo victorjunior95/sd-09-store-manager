@@ -51,4 +51,18 @@ ProductRouter.get('/:id', async (req, res, next) => {
   return res.status(HTTP_OK).json(product);
 });
 
+ProductRouter.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const productData = req.body;
+  const dataValidation = validateData(productData);
+  if (dataValidation.err) {
+    return next(dataValidation);
+  }
+  const updatedProduct = await ProductService.update(id, productData);
+  if (updatedProduct.err) {
+    return next(updatedProduct);
+  }
+  return res.status(HTTP_OK).json(updatedProduct);
+});
+
 module.exports = ProductRouter;
