@@ -14,5 +14,21 @@ router.post('/', async (req, res, next) => {
   res.status(statusSucess).json(sale);
   
 });
+
+router.get('/', async (req, res) => {
+  const sales = await saleService.getAll();
+
+  return res.status(statusSucess).json({ sales });
+});
+
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+
+  const sale = await saleService.getById(id);
+
+  if(sale.error) return next(sale);
+
+  res.status(statusSucess).json(sale);
+});
   
 module.exports = router;
