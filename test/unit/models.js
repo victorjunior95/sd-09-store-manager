@@ -195,7 +195,6 @@ describe('Insere uma nova venda no DB', () => {
   });
 
   afterEach(async ()=> {
-    // await connectionMock.close();
     MongoClient.connect.restore();
     // await DBServer.stop();
   });
