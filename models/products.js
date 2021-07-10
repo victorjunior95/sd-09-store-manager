@@ -45,7 +45,7 @@ const getById = (id) => {
 };
 
 const remove = async (id) => {
-  if (!ObjectId.isValid(id)) {
+  if (!ObjectID.isValid(id)) {
     return null;
   }
 
