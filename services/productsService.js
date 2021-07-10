@@ -4,7 +4,6 @@ const validate = require('./validateProducts');
 const create = async (product) => {
   await validate.name(product.name);
   validate.quantity(product.quantity);
-
   const result = await products.create(product);
   return result;
 };
@@ -16,37 +15,20 @@ const findAll = async () => {
 
 const findById = async (id) => {
   const result = await products.findById(id);
-  if (result === null) {
-    throw {
-      status: 422,
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      }
-    };
-  }
+  validate.id(result);
   return result;
 };
 
 const update = async (product) => {
   validate.quantity(product.quantity);
   await validate.name(product.name);
-
   const result = await products.update(product);
   return result;
 };
 
 const exclude = async (id) => {
   const result = await products.exclude(id);
-  if (result === null) {
-    throw {
-      status: 422,
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      }
-    };
-  }
+  validate.id(result);
   return result;
 };
 

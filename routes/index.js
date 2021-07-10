@@ -5,11 +5,11 @@ const products = require('../controllers/productsController');
 const sales = require('../controllers/salesController');
 
 //Products
-routes.post('/products', products.create);
-routes.get('/products', products.findAll);
-routes.get('/products/:id', products.findById);
-routes.put('/products/:id', products.update);
-routes.delete('/products/:id', products.exclude);
+routes.post('/products', rescue(products.create));
+routes.get('/products', rescue(products.findAll));
+routes.get('/products/:id', rescue(products.findById));
+routes.put('/products/:id', rescue(products.update));
+routes.delete('/products/:id', rescue(products.exclude));
 
 //Sales
 routes.post('/sales/', rescue(sales.create));

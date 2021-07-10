@@ -13,10 +13,7 @@ const name = async (name) => {
   };
 
   const result = await products.findByName(name);
-  
-  if (result === null) return result;
-
-  if (result.name === name) {
+  if (result) {
     throw {
       status: 422,
       err: { 
@@ -50,7 +47,20 @@ const quantity = (quantity) => {
   }
 };
 
+const id = (result) => {
+  if (!result) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    };
+  }
+};
+
 module.exports = {
   name,
   quantity,
+  id,
 };

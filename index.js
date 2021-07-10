@@ -16,9 +16,7 @@ app.get('/', (_request, response) => {
 app.use(routes);
 
 app.use((err, _req, res, _next) => {
-  if (err.err) {
-    return res.status(err.status).json({ err: err.err });
-  }
+  if (err.err) return res.status(err.status).json({ err: err.err });
   res.status(INTERNAL_SERVER_ERROR).json({ message: err.message });
 });
 

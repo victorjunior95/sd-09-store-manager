@@ -14,7 +14,7 @@ const create = async (product) => {
 
 const findByName = async (name) => {
   const db = await connection();
-  const result = await db.collection('products').findOne({ 'name': name });
+  const result = await db.collection('products').findOne({ name });
   return result;
 };
 
@@ -36,8 +36,8 @@ const update = async (product) => {
   if (!ObjectId.isValid(id)) return null;
   const db = await connection();
   await db.collection('products').updateOne(
-    {_id: ObjectId(id)},
-    {$set: {name, quantity}}
+    { _id: ObjectId(id) },
+    { $set: { name, quantity } }
   );
   return { id, name, quantity };
 };
@@ -46,8 +46,8 @@ const exclude = async (id) => {
   if (!ObjectId.isValid(id)) return null;
   const db = await connection();
   const deletedProduct = await db.collection('products').findOne(new ObjectId(id));
-  if (deletedProduct === null) return null;
-  await db.collection('products').findOneAndDelete({_id: ObjectId(id)});
+  if (!deletedProduct) return null;
+  await db.collection('products').findOneAndDelete({ _id: ObjectId(id) });
   return deletedProduct;
 };
 
