@@ -1,6 +1,7 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
+
 const create = async (productsArray) => connection()
   .then((db) => db.collection('sales').insertOne({ itensSold: productsArray }))
   .then(({ ops }) => ({ _id: ObjectId(ops[0]._id), itensSold: ops[0].itensSold }));
@@ -20,8 +21,16 @@ const getById = async (id) => {
     .then(db => db);
 };
 
+const deleteSale = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  return connection()
+    .then((db) => db.collection('sales').deleteOne(ObjectId(id)));
+};
+
 module.exports = {
   create,
   getAll,
-  getById
+  getById,
+  deleteSale,
 };

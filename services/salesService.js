@@ -36,10 +36,23 @@ const getById = async (id) => {
   };
 };
 
+const deleteSale = async (id) => {
+  const saleDeleted = await salesModel.deleteSale(id);
+
+  if (saleDeleted) return saleDeleted;
+
+  return { err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    }
+  }
+};
+
 
 
 module.exports = {
   create,
   getAll,
   getById,
+  deleteSale,
 };

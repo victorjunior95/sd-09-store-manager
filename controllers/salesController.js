@@ -20,12 +20,22 @@ salesRouter.get('/', async (_req, res) => {
 });
 
 salesRouter.get('/:id', async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
   const sale = await salesService.getById(id);
-  console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSss Sale', sale);
+  console.log('################ saleController', sale);
+
 
   if (sale.err) return res.status(not_found).json(sale);
   return res.status(OK).json(sale);
+});
+
+salesRouter.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log('delete 8****************** id: ', id)
+  const saleDeleted = await salesService.deleteSale(id);
+
+  if (saleDeleted.err) return res.status(unprocessable_entity).json(saleDeleted);
+  return res.status(OK).json(saleDeleted);
 });
 
 module.exports = salesRouter;
