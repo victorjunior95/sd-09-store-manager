@@ -16,5 +16,6 @@ routes.post('/sales/', rescue(sales.create));
 routes.get('/sales/', rescue(sales.findAll));
 routes.get('/sales/:id', rescue(sales.findById));
 routes.put('/sales/:id', rescue(sales.update));
+routes.delete('/sales/:id', rescue(sales.exclude));
 
 module.exports = routes;

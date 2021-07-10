@@ -28,9 +28,16 @@ const update = async (req, res) => {
   res.status(STATUS_200_OK).json(result);
 };
 
+const exclude = async (req, res) => {
+  const { id } = req.params;
+  const result = await sales.exclude(id);
+  res.status(STATUS_200_OK).json(result);
+};
+
 module.exports = {
   create,
   findAll,
   findById,
   update,
+  exclude,
 };
