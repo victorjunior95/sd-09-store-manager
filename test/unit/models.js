@@ -196,7 +196,6 @@ describe('Insere uma nova venda no DB', () => {
 
   afterEach(async ()=> {
     MongoClient.connect.restore();
-    // await DBServer.stop();
   });
 
   describe('quando a venda é inserida com sucesso', ()=> {
