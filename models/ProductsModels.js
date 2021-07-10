@@ -25,14 +25,28 @@ async function findByName(name) {
   };
 }
 
+async function findById(id) {
+  if(!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const db = await connection();
+  const product = await db.collection('products').findOne( ObjectId(id));
+  // console.log(product);
+  return product;
+}
+
 async function getAllProducts() {
   const db = await connection();
   const products = await db.collection('products').find().toArray();
-  return products;
+  return {
+    products: products
+  };
 }
 
 module.exports = {
   getAllProducts,
   create,
-  findByName
+  findByName,
+  findById
 };
