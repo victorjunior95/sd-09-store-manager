@@ -38,17 +38,17 @@ ProductRouter.post('/', async (req, res, next) => {
 });
 
 ProductRouter.get('/', async (_req, res) => {
-  const products = await ProductService.getAll();
-  return res.status(HTTP_OK).json({ products });
+  const response = await ProductService.getAll();
+  return res.status(HTTP_OK).json({ products: response });
 });
 
 ProductRouter.get('/:id', async (req, res, next) => {
   const { id } = req.params;
-  const product = await ProductService.getById(id);
-  if (product.err) {
-    return next(product);
+  const response = await ProductService.getById(id);
+  if (response.err) {
+    return next(response);
   }
-  return res.status(HTTP_OK).json(product);
+  return res.status(HTTP_OK).json(response);
 });
 
 ProductRouter.put('/:id', async (req, res, next) => {
@@ -58,11 +58,20 @@ ProductRouter.put('/:id', async (req, res, next) => {
   if (dataValidation.err) {
     return next(dataValidation);
   }
-  const updatedProduct = await ProductService.update(id, productData);
-  if (updatedProduct.err) {
-    return next(updatedProduct);
+  const response = await ProductService.updateById(id, productData);
+  if (response.err) {
+    return next(response);
   }
-  return res.status(HTTP_OK).json(updatedProduct);
+  return res.status(HTTP_OK).json(response);
+});
+
+ProductRouter.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const response = await ProductService.deleteById(id);
+  if (response.err) {
+    return next(response);
+  }
+  return res.status(HTTP_OK).json(response);
 });
 
 module.exports = ProductRouter;

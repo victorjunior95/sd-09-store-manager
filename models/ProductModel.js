@@ -28,11 +28,19 @@ async function getByName(name) {
     .catch((err) => err);
 }
 
-async function update(id, data) {
+async function updateById(id, data) {
   return connection()
     .then((db) => db.collection('products').update({ _id: id }, data))
     .then(({ result }) => (!result.nModified) ? null : ({ _id: id, ...data }))
     .catch((err) => err);
+}
+
+async function deleteById(id) {
+  const productData = await getById(id);
+  return connection()
+    .then((db) => db.collection('products').deleteOne({ _id: id }))
+    .then(() => productData)
+    .catch((err) => err);
 } 
 
-module.exports = { create, getAll, getById, getByName, update };
+module.exports = { create, getAll, getById, getByName, updateById, deleteById };

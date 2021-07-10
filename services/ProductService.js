@@ -31,13 +31,13 @@ async function create(data) {
   if (dataValidation.err) {
     return dataValidation;
   }
-  const newProduct = await ProductModel.create(data);
-  return newProduct;
+  const response = await ProductModel.create(data);
+  return response;
 }
 
 async function getAll() {
-  const products = await ProductModel.getAll();
-  return products;
+  const response = await ProductModel.getAll();
+  return response;
 }
 
 async function getById(id) {
@@ -45,8 +45,8 @@ async function getById(id) {
   if (idValidation.err) {
     return idValidation;
   }
-  const product = await ProductModel.getById(new ObjectId(id));
-  if (!product) {
+  const response = await ProductModel.getById(new ObjectId(id));
+  if (!response) {
     return {
       err: {
         code: 'not_found',
@@ -54,16 +54,16 @@ async function getById(id) {
       },
     };
   }
-  return product;
+  return response;
 }
 
-async function update(id, data) {
+async function updateById(id, data) {
   const idValidation = validateId(id);
   if (idValidation.err) {
     return idValidation;
   }
-  const updatedProduct = await ProductModel.update(new ObjectId(id), data);
-  if (!updatedProduct) {
+  const response = await ProductModel.updateById(new ObjectId(id), data);
+  if (!response) {
     return {
       err: {
         code: 'not_found',
@@ -71,7 +71,24 @@ async function update(id, data) {
       },
     };
   }
-  return updatedProduct;
+  return response;
 }
 
-module.exports = { create, getAll, getById, update };
+async function deleteById(id) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    return idValidation;
+  }
+  const response = await ProductModel.deleteById(new ObjectId(id));
+  if (!response) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Product not found',
+      },
+    };
+  }
+  return response;
+}
+
+module.exports = { create, getAll, getById, updateById, deleteById };
