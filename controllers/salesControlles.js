@@ -2,6 +2,8 @@ const {
   register,
   getAll,
   getById,
+  update,
+  removeSale,
 } = require('../services/salesServices');
 
 const status200 = 200;
@@ -35,8 +37,31 @@ const getSaleById = async (req, res, next) => {
   }
 };
 
+const updateSale = async (req, res, next) => {
+  const { id } = req.params;
+  const { body } = req;
+  try {
+    const result = await update(id, body);
+    res.status(status200).json(result);
+  } catch(error) {
+    next(error);
+  }
+};
+
+const deleteSale = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const result = await removeSale(id);
+    res.status(status200).json(result);
+  } catch(error) {
+    next(error);
+  }
+};
+
 module.exports = {
   salesRegister,
   getAllSales,
   getSaleById,
+  updateSale,
+  deleteSale,
 };

@@ -2,7 +2,11 @@ const {
   salesRegister,
   getAllSales,
   getSaleById,
+  updateSale,
+  deleteSale,
 } = require('../models/salesModel');
+
+const ZERO = 0;
 
 const register = async (sales) => {
   sales.map((sale) => {
@@ -64,6 +68,40 @@ const checkIfQuantityIsANumber = (quantity) => {
   }
 };
 
+const checkDelete = (result) => {
+  if(result === ZERO) {
+    throw [
+      {
+        err: {
+          code: 'not_found',
+          message: 'Wrong sale ID format'
+        }
+      },
+      {
+        status: 422
+      }
+    ];
+  }
+};
+
+const checkIdDelete = (id) => {
+  const regexId = /[0-9A-Fa-f]{6}/g;
+  const bolean = regexId.test(id);
+  if(!bolean) {
+    throw [
+      {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong sale ID format'
+        }
+      },
+      {
+        status: 422
+      }
+    ];
+  }
+};
+
 const checkIfProductExists = (product) => {
   if(!product) {
     throw [
@@ -92,8 +130,24 @@ const getById = async (id) => {
   return result;
 };
 
+const update = async (id, body) => {
+  checkIfQuantityIsANumber(body[0].quantity);
+  checkQuantity(body[0].quantity);
+  const result = await updateSale(id, body);
+  return result;
+};
+
+const removeSale = async (id) => {
+  checkIdDelete(id);
+  const result = await deleteSale(id);
+  checkDelete(result.deletedCount);
+  return result;
+};
+
 module.exports = {
   register,
   getAll,
   getById,
+  update,
+  removeSale,
 };

@@ -19,9 +19,30 @@ const getSaleById = async (id) => {
   return result;
 };
 
+const updateSale = async (id, body) => {
+  const result = await connection()
+    .then((db) => db.collection('sales')
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $set: { itensSold: body } }, 
+        { returnOriginal: false}
+      ))
+    .then((result) => result.value);
+  return result;
+};
+
+const deleteSale = async (id) => {
+  console.log('ola');
+  const result = await connection().then((db) =>
+    db.collection('sales').deleteOne({ _id: ObjectId(id) }) );
+ 
+  return result;
+};
 
 module.exports = {
   salesRegister,
   getAllSales,
   getSaleById,
+  updateSale,
+  deleteSale,
 };
