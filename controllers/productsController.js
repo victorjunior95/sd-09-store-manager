@@ -48,9 +48,21 @@ const updateOneProductController = async (req, res, next) => {
   }
 };
 
+const deleteOneProductController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const productDeleted = await productService.deleteOneProductService(id);
+
+    return res.status(ok).json(productDeleted);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   createProduct,
   listAllProducts,
   getByIDController,
-  updateOneProductController
+  updateOneProductController,
+  deleteOneProductController
 };

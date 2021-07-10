@@ -5,6 +5,7 @@ const {
   listaAllProductsModel,
   getByID,
   updateOneProductModel,
+  deleteOneProduct
 } = require('../models/productsModel');
 
 const { 
@@ -60,7 +61,19 @@ const updateOneProductService = async (id, name, quantity) => {
   // if (!productUpdated) lança um error aqui mas qual?
   
   const response = await getByID(id);
-  console.log(response);
+  return response;
+};
+
+const deleteOneProductService = async (id) => {
+  const response = await getByID(id);
+  const isDeleted = await deleteOneProduct(id);
+
+  if (!isDeleted) throw {
+    status: unprocessableEntity,
+    message: 'Wrong id format',
+    code: 'invalid_data'
+  };
+
   return response;
 };
 
@@ -68,5 +81,6 @@ module.exports = {
   registerProductService,
   listaAllProductsService,
   getByIDService,
-  updateOneProductService
+  updateOneProductService,
+  deleteOneProductService
 };
