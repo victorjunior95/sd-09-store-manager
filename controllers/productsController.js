@@ -1,5 +1,7 @@
 const productsServices = require('../services/products/productsServices');
 
+const code = 200;
+
 const createProducts= async (req, res) => {
   const { name, quantity } = req.body;
 
@@ -19,8 +21,6 @@ const createProducts= async (req, res) => {
 };
 
 const findAll = async (_req, res) => {
-  const code = 200;
-
   const result = await productsServices.findAll();
 
   return res.status(code).json({ products: result });
@@ -28,7 +28,6 @@ const findAll = async (_req, res) => {
 
 const findOne = async (req, res) => {
   const { id } = req.params;
-  const code = 200;
 
   const result = await productsServices.findById(id);
 
@@ -45,8 +44,18 @@ const findOne = async (req, res) => {
   return res.status(code).json(result);
 };
 
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const updatedProduct = req.body;
+
+  const result = await productsServices.update(id, updatedProduct);
+
+  return res.status(code).json(result);
+};
+
 module.exports = {
   createProducts,
   findAll,
   findOne,
+  updateProduct,
 };

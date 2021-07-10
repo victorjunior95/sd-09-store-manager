@@ -30,8 +30,24 @@ const findById = async (id) => {
   }
 };
 
+const update = async (id, updatedProduct) => {
+  try {
+    const result = await productsModel.updateProduct(id, updatedProduct);
+    console.log(`${result.matchedCount} document(s) matched `);
+    console.log(`${result.modifiedCount} document was updated `);
+    if (result === null) {
+      return { status: 422, code: 'invalid_data', message: 'Wrong id format' };
+    }
+
+    return { _id: id, ...updatedProduct, };
+  } catch (err) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   create,
   findAll,
   findById,
+  update,
 };
