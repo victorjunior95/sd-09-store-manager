@@ -9,8 +9,7 @@ router.route('/')
   .get(productsController.findAll)
   .post(validateProducts, productsController.createProducts);
 
-/* router.route('/:id')
-  .get() */
+router.route('/:id')
+  .get(productsController.findOne);
 
-validateProducts,
 module.exports = router;
