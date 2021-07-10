@@ -78,8 +78,23 @@ const listProductById = async (id) => {
   }
   return product;
 };
+
+const deleteProduct = async (id) => {
+  const product = await productModel.excludeProductModel(id);
+  if (product === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+  return product;
+};
+
 module.exports = {
   createNewProduct,
   listAllProduct,
-  listProductById
+  listProductById,
+  deleteProduct
 };

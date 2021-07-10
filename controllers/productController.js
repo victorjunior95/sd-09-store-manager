@@ -35,8 +35,20 @@ const listProductId = async (req, res) => {
   return res.status(OK).json(getIdProduct);
 };
 
+const excludeProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const excludeProduct =  await productService.deleteProduct(id);
+  if (excludeProduct.err) {
+    return res.status(UNPROCESSABLE).json(excludeProduct);
+  }
+
+  return res.status(OK).json(excludeProduct);
+};
+
 module.exports = {
   productCreate,
   listAllProducts,
-  listProductId
+  listProductId,
+  excludeProduct,
 };

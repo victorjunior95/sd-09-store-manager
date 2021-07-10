@@ -22,6 +22,8 @@ app.get('/products/:id', productController.listProductId);
 
 app.put('/products/:id', productController.productCreate);
 
+app.delete('/products/:id', productController.excludeProduct);
+
 //app.get('/', (req, res) => res.send('Estou funcionando'));
 app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
 

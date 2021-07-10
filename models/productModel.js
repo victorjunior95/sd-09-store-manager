@@ -40,9 +40,22 @@ const productIdModel = async (id) => {
   return productId;
 };
 
+const excludeProductModel = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  return connections()
+    .then((db) =>
+      ObjectId.isValid(id)
+        ? db.collection('products')
+          .deleteOne({ _id: ObjectId(id)})
+        : null
+    );
+};
+
 module.exports = {
   create,
   queryByName,
   listAllProductsModel,
   productIdModel,
+  excludeProductModel,
 };
