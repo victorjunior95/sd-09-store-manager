@@ -18,6 +18,8 @@ app.get('/products', controllerProducts.getAll);
 
 app.get('/products/:id', controllerProducts.getById);
 
+app.put('/products/:id', controllerProducts.edit);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

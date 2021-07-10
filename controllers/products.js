@@ -64,6 +64,29 @@ const create = async (req, res, _next) => {
   
 };
 
+const edit = async (req, res, _next) => {
+  const { id } = req.params;
+  const { name, quantity} = req.body;
+
+  productNameIsValid(res, name);
+  productQuantityIsValid(res, quantity);
+
+  const product = await servicesProducts.edit(id, name, quantity);
+
+  // if (!product) {
+  //   return res.status(UNPROCESSEBLEENTRY_STATUS)
+  //     .json({
+  //       err: {
+  //         code: 'invalid_data',
+  //         message: 'Product already exists',
+  //       }
+  //     });
+  // };
+
+  res.status(OK_STATUS).json(product);
+  
+};
+
 const getById = async (req, res, _next) => {
   const { id } = req.params;
   const product = await servicesProducts.getById(id);
@@ -89,6 +112,7 @@ const getAll = async (_req, res, _next) => {
 
 module.exports = {
   create,
+  edit,
   getById,
   getAll,
 };
