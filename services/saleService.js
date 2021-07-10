@@ -67,8 +67,8 @@ const getById = async (id) => {
   return sale;
 };
 
-const update = async (id, itensSold) => {
-  const { error } = validateSale.validate({ itensSold });
+const update = async (saleId, itensSold) => {
+  const { error } = validateSale.validate( itensSold );
 
   if (error) { 
     return {
@@ -78,7 +78,7 @@ const update = async (id, itensSold) => {
     };
   };
 
-  return await saleModel.update(id,itensSold);
+  return await saleModel.update(saleId,itensSold);
 };
 
 module.exports = {
