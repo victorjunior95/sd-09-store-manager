@@ -3,7 +3,7 @@ const productsService = require('../services/productService');
 
 const productRouter = express.Router();
 
-const { code: { created, unprocessable_entity, OK } } = require('../utils');
+const { code: { created, unprocessable_entity, OK, not_found} } = require('../utils');
 
 productRouter.post('/', async (req, res) => {
   const { name, quantity } = req.body;
@@ -15,6 +15,9 @@ productRouter.post('/', async (req, res) => {
 
 productRouter.get('/', async (_req, res) => {
   const allProducts = await productsService.getAll();
+  // console.log('#####################3', allProducts);
+  // if (allProducts.err) return res.status(not_found).json(allProducts)
+
   if (!allProducts) return res.status(unprocessable_entity).json(allProducts);
   return res.status(OK).json(allProducts);
 });

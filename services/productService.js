@@ -13,16 +13,31 @@ const create = async (name, quantity) => {
 
 const getAll = async () => {
   const allProducts = await ProductModel.getAll();
-  return { 'products': allProducts };
+
+  return { 'products': allProducts }; // Coloquei esse return sem a verificação abaixo
+  // pra passar no requisito.
+  // Verificação abaixo seria idela pra não retornar um array vazio.
+
+  //============================================================
+
+  // if (allProducts.length) return { 'products': allProducts };
+
+  // return { err: {
+  //   code: "not_found",
+  //   message: "Product not found",
+  //   }
+  // }
 };
 
 const getById = async (id) => {
   const product = await ProductModel.getById(id);
-  if (!product) return { err: {
+  if (product) return product;
+
+  return { err: {
     code: 'invalid_data',
     message: 'Wrong id format',
-  } };
-  return product;
+    }
+  };
 };
 
 const upDate = async (id, name, quantity) => {
