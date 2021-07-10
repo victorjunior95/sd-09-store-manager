@@ -67,7 +67,6 @@ const listAllProduct = async () => {
 
 const listProductById = async (id) => {
   const product = await productModel.productIdModel(id);
-  console.log(product);
   if (product === null) {
     return {
       err: {

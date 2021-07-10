@@ -18,6 +18,7 @@ const queryByName = async (name) => {
     .then((db) => db
       .collection('products')
       .findOne({ name }));
+
   return nameProduct;
 };
 
@@ -26,6 +27,7 @@ const listAllProductsModel = async () => {
     .then((db) => db
       .collection('products')
       .find().toArray());
+
   return listProduct;
 };
 
