@@ -7,8 +7,7 @@ const create = async (name, quantity) => {
     error: { code: 'invalid_data', message: 'Product already exists' }
   };
 
-  const newProduct = await ProductsModels.create(name, quantity);
-  return newProduct;
+  return ProductsModels.create(name, quantity);
 };
 
 const getAll = async () => {

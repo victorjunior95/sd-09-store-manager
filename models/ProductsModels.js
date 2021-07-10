@@ -18,7 +18,11 @@ async function findByName(name) {
 
   if (!findName) return null;
   
-  return findName;
+  return {
+    id: findName._id,
+    name: findName.name,
+    quantity: findName.quantity
+  };
 }
 
 async function getAllProducts() {

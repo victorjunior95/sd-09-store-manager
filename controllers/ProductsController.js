@@ -19,9 +19,9 @@ const create = rescue(async (req, res, next) => {
 
   const {name, quantity} = req.body;
   const newProduct = await ProductsServices.create(name, quantity);
-  
-  if (newProduct.err) {
-    next(newProduct.err);
+
+  if (newProduct.error) {
+    next(newProduct.error);
   }
 
   return res.status(CREATE).json(newProduct);
