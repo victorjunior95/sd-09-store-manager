@@ -29,6 +29,8 @@ app.get('/sales', controllerSales.getAll);
 
 app.get('/sales/:id', controllerSales.getById);
 
+app.delete('/sales/:id', controllerSales.remove);
+
 app.listen(PORT, () => {
   console.log('Online');
 });

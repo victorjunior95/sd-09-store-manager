@@ -24,21 +24,10 @@ const saleQuantityIsValid = (res, itensSold) => {
 
 const create = async (req, res, _next) => {
   const [...itensSold] = req.body;
-  console.log(itensSold);
 
   saleQuantityIsValid (res, itensSold);
 
   const sale = await servicesSales.create(itensSold);
-
-  // if (!sale) {
-  //   return res.status(UNPROCESSEBLEENTRY_STATUS)
-  //     .json({
-  //       err: {
-  //         code: 'invalid_data',
-  //         message: 'Product already exists',
-  //       }
-  //     });
-  // };
 
   res.status(OK_STATUS).json(sale);
   
@@ -82,19 +71,19 @@ const getAll = async (_req, res, _next) => {
 
 const remove = async (req, res, _next) => {
   const { id } = req.params;
-  const product = await servicesProducts.remove(id);
+  const sale = await servicesSales.remove(id);
 
-  if (!product) {
+  if (!sale) {
     return res.status(UNPROCESSEBLEENTRY_STATUS)
       .json({
         err: {
           code: 'invalid_data',
-          message: 'Wrong id format',
+          message: 'Wrong sale ID format',
         }
       });
   }
 
-  res.status(OK_STATUS).json(product);
+  res.status(OK_STATUS).json(sale);
 };
 
 module.exports = {
