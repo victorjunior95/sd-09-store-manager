@@ -111,5 +111,5 @@ module.exports = {
     }
 
     return await productsModel.deleteProduct(id);
-  }
+  },
 };

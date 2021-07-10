@@ -41,4 +41,32 @@ module.exports = {
       }
     };
   },
+
+  saleToUpdate: async (id, productId, quantity) => {
+    if (!ObjectId.isValid(id)) return null;
+
+    if (quantity < 1 || typeof quantity !== 'number') {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': 'Wrong product ID or invalid quantity'
+        }
+      };
+    }
+
+    return await salesModel.updateSale(id, productId, quantity);
+  },
+
+  saleToDelete: async (id) => {
+    if (!ObjectId.isValid(id)) {
+      return {
+        'err': {
+          'code': 'invalid_data',
+          'message': 'Wrong sale ID format'
+        }
+      };
+    }
+
+    return await salesModel.deleteSale(id);
+  },
 };

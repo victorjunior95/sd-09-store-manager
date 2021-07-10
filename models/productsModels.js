@@ -38,11 +38,11 @@ module.exports = {
   },
 
   deleteProduct: async (id) => {
-    const deleted = connection().then((db) =>
+    const deleted = await connection().then((db) =>
       db.collection('products').findOne({ _id: ObjectId(id) })
     );
 
-    connection().then((db) =>
+    await connection().then((db) =>
       db.collection('products').deleteOne({ _id: ObjectId(id) }));
 
     return deleted;
