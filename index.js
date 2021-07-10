@@ -22,4 +22,4 @@ app.use((err, _req, res, _next) => {
   res.status(INTERNAL_SERVER_ERROR).json({ message: err.message });
 });
 
-app.listen(PORT, () => console.log(`run in port ${PORT}`));
+app.listen(PORT, () => console.log(`listening port ${PORT}`));

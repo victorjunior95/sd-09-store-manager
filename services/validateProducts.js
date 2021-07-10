@@ -14,7 +14,7 @@ const name = async (name) => {
 
   const result = await products.findByName(name);
   
-  if (result === null) return null;
+  if (result === null) return result;
 
   if (result.name === name) {
     throw {

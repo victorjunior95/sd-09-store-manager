@@ -4,7 +4,7 @@ const validate = require('./validateSales');
 const create = async (products) => {
   products.forEach(({ quantity }) => validate.quantity(quantity));
 
-  const itensSold = [{ itensSold: [...products] }];
+  const itensSold = { itensSold: [...products] };
   const result = await sales.create(itensSold);
   return result;
 };
@@ -28,8 +28,15 @@ const findById = async (id) => {
   return result;
 };
 
+const update = async (id, products) => {
+  products.forEach(({ quantity }) => validate.quantity(quantity));
+  const result = await sales.update(id, products);
+  return result;
+};
+
 module.exports = {
   create,
   findAll,
   findById,
+  update,
 };
