@@ -30,5 +30,15 @@ router.get('/:id', async (req, res, next) => {
 
   res.status(statusSucess).json(sale);
 });
+
+router.put('/:id', async (req, res, next) => {
+
+  const product = await saleService.update(req.params.id, req.body);
+
+  if (product.error) return next(product);
+
+  res.status(statusSucess).json(product);
+  
+});
   
 module.exports = router;
