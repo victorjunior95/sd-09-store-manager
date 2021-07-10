@@ -6,6 +6,12 @@ const UNPROCESSABLE_ENTITY = 422;
 const NOT_FOUND = 404;
 
 const create = async (itensSold) => {
+  for ( const itemSold of itensSold ) {
+    const stockItem = await ModelProducts.getById(itemSold.productId);
+    if (stockItem.quantity < itemSold.quantity) throw invalidData
+    ('stock_problem', 'Such amount is not permitted to sell', NOT_FOUND);
+  }
+
   await ModelProducts.decrementProductFromStock(itensSold);
   
   const createItensSold = await ModelSales.create(itensSold);

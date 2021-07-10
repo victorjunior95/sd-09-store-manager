@@ -1,21 +1,8 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
-const { getById: getByIdProduct } = require('./ModelProducts');
 
 const create = async (itensSold) => {
   const connect = await connection();
-  
-  await itensSold.forEach(async (item) => {
-    const stockItens = await getByIdProduct(item.productId);
-    if (stockItens.quantity < item.quantity) {
-      return {
-        err: {
-          code: 'stock_problem',
-          message: 'Such amount is not permitted to sell',
-        },
-      };
-    }
-  });
 
   const createItensSold = await connect.collection('sales')
     .insertOne({ 'itensSold': [...itensSold] });
