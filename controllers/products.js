@@ -64,7 +64,32 @@ const create = async (req, res, _next) => {
   
 };
 
+const getById = async (req, res, _next) => {
+  const { id } = req.params;
+  const product = await servicesProducts.getById(id);
+
+  if (!product) {
+    return res.status(UNPROCESSEBLEENTRY_STATUS)
+      .json({
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        }
+      });
+  }
+
+  res.status(OK_STATUS).json(product);
+};
+
+const getAll = async (_req, res, _next) => {
+  const allProducts = await servicesProducts.getAll();
+
+  res.status(OK_STATUS).json({ products: allProducts});
+};
+
 module.exports = {
   create,
+  getById,
+  getAll,
 };
 
