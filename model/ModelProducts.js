@@ -72,6 +72,15 @@ const deleteProduct = async (id) => {
   return deletedProduct.value;
 };
 
+const decrementProductFromStock = async (itensSold) => {
+  const connect = await connection();
+
+  await itensSold.forEach((item) => {
+    connect.collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: -item.quantity}});
+  });
+};
+
 module.exports = {
   create,
   getByName,
@@ -79,4 +88,5 @@ module.exports = {
   getById,
   editProduct,
   deleteProduct,
+  decrementProductFromStock,
 };

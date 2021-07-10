@@ -2,7 +2,7 @@ const ServiceSales = require('../services/ServiceSales');
 
 const SUCCESS = 200;
 
-const create = async (req, res, _next) => {
+const create = async (req, res, next) => {
   try {
     const itensSold = req.body;
 
@@ -27,7 +27,7 @@ const getAllOrById = async (req, res, next) => {
   }
 };
 
-const editSale = async (req, res, _next) => {
+const editSale = async (req, res, next) => {
   try {
     const itensSold = req.body;
     const { id } = req.params;

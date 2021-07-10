@@ -27,13 +27,18 @@ const getAllOrById = async (req, res, next) => {
   }
 };
 
-const editProduct = async (req, res, _next) => {
-  const { name, quantity } = req.body;
-  const { id } = req.params;
+const editProduct = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+  
+    const editedProduct = await ServiceProducts.editProduct(id, { name, quantity });
+  
+    return res.status(SUCCESS).json(editedProduct);
+  } catch(error) {
+    next(error);
+  }
 
-  const editedProduct = await ServiceProducts.editProduct(id, { name, quantity });
-
-  return res.status(SUCCESS).json(editedProduct);
 };
 
 const deleteProduct = async (req, res, next) => {

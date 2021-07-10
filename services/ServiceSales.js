@@ -1,4 +1,5 @@
 const ModelSales = require('../model/ModelSales');
+const ModelProducts = require('../model/ModelProducts');
 const invalidData = require('../utils/errosFunctions');
 
 const UNPROCESSABLE_ENTITY = 422;
@@ -6,7 +7,9 @@ const NOT_FOUND = 404;
 
 const create = async (itensSold) => {
 
+  
   const createItensSold = await ModelSales.create(itensSold);
+  await ModelProducts.decrementProductFromStock(itensSold);
 
   return createItensSold;
 };

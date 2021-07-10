@@ -2,7 +2,6 @@ const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 const { getById: getByIdProduct } = require('./ModelProducts');
 
-
 const create = async (itensSold) => {
   const connect = await connection();
   
@@ -16,11 +15,6 @@ const create = async (itensSold) => {
         },
       };
     }
-  });
-
-  await itensSold.forEach((item) => {
-    connect.collection('products')
-      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: -item.quantity}});
   });
 
   const createItensSold = await connect.collection('sales')
