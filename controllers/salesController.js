@@ -31,7 +31,6 @@ salesRouter.get('/:id', async (req, res) => {
 
 salesRouter.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  console.log('delete 8****************** id: ', id)
   const saleDeleted = await salesService.deleteSale(id);
 
   if (saleDeleted.err) return res.status(unprocessable_entity).json(saleDeleted);

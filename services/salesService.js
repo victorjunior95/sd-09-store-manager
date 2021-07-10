@@ -41,11 +41,12 @@ const deleteSale = async (id) => {
 
   if (saleDeleted) return saleDeleted;
 
-  return { err: {
+  return {
+    err: {
       code: 'invalid_data',
       message: 'Wrong sale ID format',
     }
-  }
+  };
 };
 
 
