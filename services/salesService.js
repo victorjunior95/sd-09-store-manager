@@ -45,7 +45,6 @@ const create = async (salesArray) => {
   const { sales }= await salesModel
     .create(salesArray);
 
-
   const productPreUpdate = await productModel.getById(sales.itensSold[0].productId);
   const newQuantity = productPreUpdate.quantity - sales.itensSold[0].quantity;
   if (newQuantity < minProductQuantity ) {

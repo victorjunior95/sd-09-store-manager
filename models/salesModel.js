@@ -9,7 +9,6 @@ const create = async (salesArray) => {
 
   const sales = await salesCollection
     .insertOne({itensSold: salesArray}).then((result) => result.ops[0]);
-
   return {
     sales
   };
@@ -28,7 +27,6 @@ const getById = async (id) => {
   const salesCollection = await connection()
     .then((db) => db.collection('sales'));
   const sale = await salesCollection.findOne(new ObjectId(id));
-
   return sale;
 };
 

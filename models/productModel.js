@@ -8,6 +8,7 @@ const create = async ({name, quantity}) => {
 
   const { insertedId: id} = await productsCollection
     .insertOne({name, quantity});
+  console.log(typeof id);
 
   return {
     id,
@@ -18,8 +19,9 @@ const updateById = async (id, name, quantity) => {
   const productsCollection = await connection()
     .then((db) => db.collection('products'));
 
-  await productsCollection
+  const result = await productsCollection
     .updateOne({_id: ObjectId(id)},{$set :{ name, quantity}});
+  console.log(result, 'update');
   return {_id: id, name, quantity};
 };
 
@@ -30,7 +32,6 @@ const deleteById = async (id) => {
 
   const result = await productsCollection
     .deleteOne({_id: ObjectId(id)});
-  console.log(result);
   return result;
 };
 
@@ -39,7 +40,6 @@ const getAll = async () => {
     .then((db) => db.collection('products'));
 
   const products = await productsCollection.find().toArray();
-
   return products;
 };
 
@@ -48,7 +48,6 @@ const getById = async (id) => {
   const productsCollection = await connection()
     .then((db) => db.collection('products'));
   const product = await productsCollection.findOne(new ObjectId(id));
-
   return product;
 };
 
