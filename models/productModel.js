@@ -1,5 +1,6 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
+const throwWrongIdFormat = require('../utils/throwIdError');
 
 const getAll = async () => {
   const products = await connection()
@@ -18,14 +19,7 @@ const getByName = async (name) => {
 };
 
 const getById = async (id) => {
-  if (!ObjectId.isValid(id)) throw {
-    customError: {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    },
-  };
+  if (!ObjectId.isValid(id)) throwWrongIdFormat();
 
   const product = await connection()
     .then((db) => db.collection('products')
@@ -43,14 +37,7 @@ const create = async (name, quantity) => {
 };
 
 const update = async (id, name, quantity) => {
-  if (!ObjectId.isValid(id)) throw {
-    customError: {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    },
-  };
+  if (!ObjectId.isValid(id)) throwWrongIdFormat();
 
   await connection()
     .then((db) => db.collection('products')
@@ -65,10 +52,20 @@ const update = async (id, name, quantity) => {
   return updatedProduct;
 };
 
+const exclude = async (id) => {
+  const deletedProduct = await getById(id);
+
+  await connection().then((db) => db.collection('products')
+    .removeOne({ _id: ObjectId(id) }));
+
+  return deletedProduct;
+};
+
 module.exports = { 
   getAll, 
   getByName,
   getById,
   create,
   update,
+  exclude,
 };

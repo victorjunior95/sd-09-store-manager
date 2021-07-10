@@ -38,4 +38,12 @@ productController.put('/:id', validateProduct, rescue(async (req, res) => {
   return res.status(OK).json( updatedProduct );
 }));
 
+productController.delete('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedProduct = await productServices.exclude(id);
+
+  return res.status(OK).json( deletedProduct );
+}));
+
 module.exports = productController;
