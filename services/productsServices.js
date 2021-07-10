@@ -9,28 +9,19 @@ const {
 
 const MIN_CHARACTERS = 5;
 const VALUE_LIMIT = 0;
-const DATA_ERROR_CODE = 'invalid_data';
 
 const validateData = (data) => {
   const { name, quantity } = data;
 
   if (name.length < MIN_CHARACTERS) {
-    return ({ err: {
-      code: DATA_ERROR_CODE,
-      message: '"name" length must be at least 5 characters long' }});
+    throw(Error('"name" length must be at least 5 characters long'));
   }
 
   if (quantity < VALUE_LIMIT || quantity === VALUE_LIMIT) {
-    return ({ err: {
-      code: DATA_ERROR_CODE,
-      message: '"quantity" must be larger than or equal to 1'}});
+    throw(Error('"quantity" must be larger than or equal to 1'));
   }
 
-  if( typeof quantity !== 'number') {
-    return ({ err: {
-      code: DATA_ERROR_CODE,
-      message: '"quantity" must be a number'}});
-  }
+  if( typeof quantity !== 'number') throw(Error('"quantity" must be a number'));
 
   return null;
 };
@@ -39,11 +30,7 @@ const createProductService = async (data) => {
   const { name } = data;
   const productExists = await findProductByName(name);
 
-  if (productExists.length > VALUE_LIMIT) {
-    return ({ err: {
-      code: DATA_ERROR_CODE,
-      message: 'Product already exists'}});
-  }
+  if (productExists.length > VALUE_LIMIT) throw(Error('Product already exists'));
 
   let result = validateData(data);
 
@@ -60,11 +47,7 @@ const getProductsAllService = async () => {
 const getProductByIdService = async (productId) => {
   const result = await getProductById(productId);
 
-  if (result === null) {
-    return  ({ err: {
-      code: DATA_ERROR_CODE,
-      message: 'Wrong id format'}});
-  }
+  if (result === null) throw(Error('Wrong id format'));
 
   return result;
 };
@@ -80,11 +63,7 @@ const updateProductByIdService = async (productId, data) => {
 const deleteProductByIdService = async (productId) => {
   const result = await deleteProductById(productId);
 
-  if (result === null) {
-    return  ({ err: {
-      code: DATA_ERROR_CODE,
-      message: 'Wrong id format'}});
-  }
+  if (result === null) throw(Error('Wrong id format'));
   
   return result;
 };

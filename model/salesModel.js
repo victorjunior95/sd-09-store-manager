@@ -48,6 +48,10 @@ const deleteSaleById = async (saleId) => {
 
   const result = await connection()
     .then((db) => db.collection('sales')
+      .findOne({ _id: new ObjectId(saleId) }));
+
+  await connection()
+    .then((db) => db.collection('sales')
       .deleteOne({ _id: new ObjectId(saleId) }));
 
   return result;

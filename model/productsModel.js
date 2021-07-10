@@ -23,8 +23,6 @@ const getProductById = async (productId) => {
     .then((db) => db.collection('products')
       .findOne({ _id: new ObjectId(productId) }));
 
-  if (!result) return null;
-
   return result;
 };
 
@@ -36,10 +34,10 @@ const getProductsAll = async () => {
 };
 
 const updateProductById = async (productId, data) => {
-  const { name, quantity } = data;
   if (!ObjectId.isValid(productId)) {
     return null;
   }
+  const { name, quantity } = data;
 
   const result = await connection()
     .then((db) => db.collection('products')
@@ -51,6 +49,19 @@ const updateProductById = async (productId, data) => {
   return ({ ...data, _id: productId });
 };
 
+const updateQuantityProductById = async (productId, quantity) => {
+  if (!ObjectId.isValid(productId)) {
+    return null;
+  }
+
+  const result = await connection()
+    .then((db) => db.collection('products')
+      .updateOne(
+        { _id: new ObjectId(productId) },
+        { $inc: { quantity: Number(quantity) } }
+      ));
+};
+
 const deleteProductById = async (productId) => {
   if (!ObjectId.isValid(productId)) {
     return null;
@@ -58,9 +69,12 @@ const deleteProductById = async (productId) => {
 
   const result = await connection()
     .then((db) => db.collection('products')
-      .deleteOne({ _id: new ObjectId(productId) }));
+      .findOne({ _id: new ObjectId(productId) }));
 
-  if (!result) return null;
+  await connection()
+    .then((db) => db.collection('products')
+      .deleteOne({ _id: new ObjectId(productId) }));
+  
   return result;
 };
 
@@ -71,4 +85,5 @@ module.exports = {
   getProductsAll,
   updateProductById,
   deleteProductById,
+  updateQuantityProductById,
 };
