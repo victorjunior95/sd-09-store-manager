@@ -43,6 +43,25 @@ const getById = (id) => {
     .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
     .catch(() => null);
 };
+
+const remove = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const product = getById(id);
+  
+  const removed = await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }))
+    .catch(() => null);
+ 
+  if (!removed) {
+    return null;
+  }
+
+  return product;
+
+};
  
 module.exports = {
   create,
@@ -50,4 +69,5 @@ module.exports = {
   getAll,
   getByName,
   getById,
+  remove,
 };

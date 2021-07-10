@@ -26,9 +26,14 @@ const getById = async (id) => {
   return await modelPoducts.getById(id);
 };
 
+const remove = async (id) => {
+  return await modelPoducts.remove(id);
+};
+
 module.exports = {
   create,
   edit,
   getAll,
   getById,
+  remove,
 };

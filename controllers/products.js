@@ -73,16 +73,6 @@ const edit = async (req, res, _next) => {
 
   const product = await servicesProducts.edit(id, name, quantity);
 
-  // if (!product) {
-  //   return res.status(UNPROCESSEBLEENTRY_STATUS)
-  //     .json({
-  //       err: {
-  //         code: 'invalid_data',
-  //         message: 'Product already exists',
-  //       }
-  //     });
-  // };
-
   res.status(OK_STATUS).json(product);
   
 };
@@ -110,10 +100,28 @@ const getAll = async (_req, res, _next) => {
   res.status(OK_STATUS).json({ products: allProducts});
 };
 
+const remove = async (req, res, _next) => {
+  const { id } = req.params;
+  const product = await servicesProducts.remove(id);
+
+  if (!product) {
+    return res.status(UNPROCESSEBLEENTRY_STATUS)
+      .json({
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        }
+      });
+  }
+
+  res.status(OK_STATUS).json(product);
+};
+
 module.exports = {
   create,
   edit,
   getById,
   getAll,
+  remove,
 };
 

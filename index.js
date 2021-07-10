@@ -20,6 +20,8 @@ app.get('/products/:id', controllerProducts.getById);
 
 app.put('/products/:id', controllerProducts.edit);
 
+app.delete('/products/:id', controllerProducts.remove);
+
 app.listen(PORT, () => {
   console.log('Online');
 });
