@@ -3,20 +3,20 @@ const { expect } = require('chai');
 const { describe } = require('mocha');
 const { productsController } = require('../../controllers');
 const { productsService } = require('../../services');
-const { errorTreatment } = require('../../middlewares');
 const { InvalidArgumentError } = require('../../errors');
 const { MongoClient } = require('mongodb');
 const connect = require('../mocks/connection');
 
+const sandbox = sinon.createSandbox();
 const DB_NAME = 'StoreManager';
 const COLLECTION_NAME = 'products';
+const response = {};
+const request = {};
 let connectionMock;
+let next;
 
 describe('Create a new product (controller)', () => {
   const validBody = { name: 'candy', quantity: 8000 };
-  const response = {};
-  const request = {};
-  let next;
 
   before(async () => {
     connectionMock = await connect();
@@ -39,14 +39,20 @@ describe('Create a new product (controller)', () => {
 
     before(() => {
       request.body = validBody;
-      next = sinon.stub().callsFake(() => {})
+      next = sandbox.stub().callsFake(() => {});
 
-      sinon.stub(productsService, 'create')
+      sandbox.stub(productsService, 'create')
         .resolves(successfulResponse);
     });
 
     after(() => {
-      productsService.create.restore();
+      sandbox.restore();
+    });
+
+    it('should never call the function next', async () => {
+      await productsController.create(request,response, next);
+
+      expect(next.neverCalledWith()).to.be.equal(true);
     });
 
     it('should return a status code 201', async () => {
@@ -64,160 +70,221 @@ describe('Create a new product (controller)', () => {
 
   describe('When a invalid payload is provided', () => {
     describe('When a invalid name with less than 5 digits provided', () => {
+      const expectedResponse = {
+        err: {
+          code: 'invalid_data',
+          message: '"name" length must be at least 5 characters long',
+        }
+      };
+      const expectedError = new InvalidArgumentError('"name" length must be at least 5 characters long');
+
       before(() => {
         request.body = { name: 'doce', quantity: 8000 };
 
-        sinon.stub(productsService, 'create')
-          .rejects(new InvalidArgumentError('"name" length must be at least 5 characters long'));
+        next = sandbox.stub().callsFake((error) => {
+          return error.constructor === InvalidArgumentError
+            ? response.status(422).json(expectedResponse)
+            : null;
+        });
+
+        sandbox.stub(productsService, 'create')
+          .rejects(expectedError);
       });
 
       after(() => {
-        productsService.create.restore();
+        sandbox.restore();
+      });
+
+      it('should call the function next', async () => {
+        await productsController.create(request, response, next);
+
+        expect(next.calledWith(expectedError)).to.be.equal(true);
       });
 
       it('should return a status code 422', async () => {
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.status.calledWith(422)).to.be.equal(true);
       });
 
       it('should return an object with the following properties', async () => {
-        const expectedResponse = {
-          err: {
-            code: 'invalid_data',
-            message: '"name" length must be at least 5 characters long',
-          }
-        };
-
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
       });
     });
 
     describe('When a repeated name is provided', async () => {
+      const expectedResponse = {
+        err: {
+          code: 'invalid_data',
+          message: 'Product already exists',
+        },
+      };
+      const expectedError = new InvalidArgumentError('Product already exists');
+
       before(async () => {
         request.body = validBody;
+        next = sandbox.stub().callsFake((error) => {
+          return error.constructor === InvalidArgumentError
+            ? response.status(422).json(expectedResponse)
+            : null;
+        });
 
-        sinon.stub(productsService, 'create')
-          .rejects(new InvalidArgumentError('Product already exists'));
+        sandbox.stub(productsService, 'create')
+          .rejects(expectedError);
       });
 
       after(() => {
-        productsService.create.restore();
+        sandbox.restore();
+      });
+
+      it('should call the function next', async () => {
+        await productsController.create(request, response, next);
+
+        expect(next.calledWith(expectedError)).to.be.equal(true);
       });
 
       it('should return a status code 422', async () => {
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.status.calledWith(422)).to.be.equal(true);
       });
 
       it('should return an object with the following properties', async () => {
-        const expectedResponse = {
-          err: {
-            code: 'invalid_data',
-            message: 'Product already exists',
-          },
-        };
-
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
       });
     });
 
     describe('when a negative quantity is provided', () => {
+      const expectedResponse = {
+        err: {
+          code: 'invalid_data',
+          message: '"quantity" must be larger than or equal to 1',
+        },
+      };
+      const expectedError = new InvalidArgumentError('"quantity" must be larger than or equal to 1');
+
       before(() => {
         request.body = { name: 'candy', quantity: -5 };
+        next = sandbox.stub().callsFake((error) => {
+          return error.constructor === InvalidArgumentError
+            ? response.status(422).json(expectedResponse)
+            : null;
+        });
 
-        sinon.stub(productsService, 'create')
-          .rejects(new InvalidArgumentError('"quantity" must be larger than or equal to 1'));
+        sandbox.stub(productsService, 'create')
+          .rejects(expectedError);
       });
 
       after(() => {
-        productsService.create.restore();
+        sandbox.restore();
+      });
+
+      it('should call the function next', async () => {
+        await productsController.create(request, response, next);
+
+        expect(next.calledWith(expectedError)).to.be.equal(true);
       });
 
       it('should return a status code 422', async () => {
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.status.calledWith(422)).to.be.equal(true);
       });
 
       it('should return an objec with the following properties', async () => {
-        const expectedResponse = {
-          err: {
-            code: 'invalid_data',
-            message: '"quantity" must be larger than or equal to 1',
-          },
-        };
-
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
       });
     });
 
     describe('when the vaue zero is provided to quantity', async () => {
+      const expectedResponse = {
+        err: {
+          code: 'invalid_data',
+          message: '"quantity" must be larger than or equal to 1',
+        },
+      };
+      const expectedError = new InvalidArgumentError('"quantity" must be larger than or equal to 1');
+
       before(() => {
         request.body = { name: 'candy', quantity: 0 };
+        next = sandbox.stub().callsFake((error) => {
+          return error.constructor === InvalidArgumentError
+            ? response.status(422).json(expectedResponse)
+            : null;
+        });
 
-        sinon.stub(productsService, 'create')
-          .rejects(new InvalidArgumentError('"quantity" must be larger than or equal to 1'));
+        sandbox.stub(productsService, 'create')
+          .rejects(expectedError);
       });
 
       after(() => {
-        productsService.create.restore();
+        sandbox.restore();
+      });
+
+      it('should call the function next', async () => {
+        await productsController.create(request, response, next);
+
+        expect(next.calledWith(expectedError)).to.be.equal(true);
       });
 
       it('should return a status code 422', async () => {
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.status.calledWith(422)).to.be.equal(true);
       });
 
       it('should return as objects with the following properties', async () => {
-        const expectedResponse = {
-          err: {
-            code: 'invalid_data',
-            message: '"quantity" must be larger than or equal to 1',
-          },
-        }
-
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
       });
     });
 
     describe('When a string is provided to quantity', async () => {
+      const expectedResponse = {
+        err: {
+          code: 'invalid_data',
+          message: '"quantity" must be a number',
+        }
+      };
+      const expectedError = new InvalidArgumentError('"quantity" must be a number');
+
       before(() => {
         request.body = { name: 'candy', quantity: 'abc' };
+        next = sandbox.stub().callsFake((error) => {
+          return error.constructor === InvalidArgumentError
+            ? response.status(422).json(expectedResponse)
+            : null;
+        });
 
-        sinon.stub(productsService, 'create')
-          .rejects(new InvalidArgumentError('"quantity" must be a number'));
+        sandbox.stub(productsService, 'create')
+          .rejects(expectedError);
       });
 
       after(() => {
-        productsService.create.restore();
+        sandbox.restore();
+      });
+
+      it('should call the function next', async () => {
+        await productsController.create(request, response, next);
+
+        expect(next.calledWith(expectedError)).to.be.equal(true);
       });
 
       it('should return a status code 422', async () => {
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.status.calledWith(422)).to.be.equal(true);
       });
 
       it('should return an object with the following properties', async () => {
-        const expectedResponse = {
-          err: {
-            code: 'invalid_data',
-            message: '"quantity" must be a number',
-          }
-        };
-
-        await productsController.create(request, response);
+        await productsController.create(request, response, next);
 
         expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
       });
@@ -233,6 +300,7 @@ describe('List all products (controller)', () => {
   const sandbox = sinon.createSandbox();
   const request = {};
   const response = {};
+  let next;
 
   before(async () => {
     connectionMock = await connect();
@@ -241,6 +309,7 @@ describe('List all products (controller)', () => {
 
     response.status = sinon.stub().returns(response);
     response.json = sinon.stub().returns();
+    next = sandbox.stub().callsFake(() => {});
 
     sandbox.stub(MongoClient, 'connect')
       .resolves(connectionMock);
@@ -254,14 +323,20 @@ describe('List all products (controller)', () => {
     sandbox.restore();
   });
 
+  it('should not call the function next', async () => {
+    await productsController.getAll(request, response, next);
+
+    expect(next.neverCalledWith()).to.be.equal(true);
+  });
+
   it('should return a status code 200', async () => {
-    await productsController.getAll(request, response);
+    await productsController.getAll(request, response, next);
 
     expect(response.status.calledWith(200)).to.be.equal(true);
   });
 
   it('should return an response with the following structure', async () => {
-    await productsController.getAll(request, response);
+    await productsController.getAll(request, response, next);
     const products = await connectionMock.db(DB_NAME)
       .collection(COLLECTION_NAME).find().toArray();
 
@@ -271,8 +346,16 @@ describe('List all products (controller)', () => {
 
 describe('List a product by its ID (controller)', () => {
   const product = { _id: 'sdf9s7f9s89d7f8s', name: 'candy', quantity: 8000 };
+  const expectedResponse = {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    }
+  };
+  const expectedError = new InvalidArgumentError('Wrong id format');
   const response = {};
   const request = {};
+  let next;
 
   before(() => {
     response.status = sinon.stub().returns(response);
@@ -281,24 +364,31 @@ describe('List a product by its ID (controller)', () => {
 
   describe('when a valid id is provided', () => {
     before(() => {
-      request.params = { id: product._id }
+      request.params = { id: product._id };
+      next = sandbox.stub().callsFake(() => {});
 
-      sinon.stub(productsService, 'get')
+      sandbox.stub(productsService, 'get')
         .resolves(product);
     });
 
     after(() => {
-      productsService.get.restore();
+      sandbox.restore();
+    });
+
+    it('should never cal  the funciton next', async () => {
+      await productsController.get(request, response, next);
+
+      expect(next.neverCalledWith()).to.be.equal(true);
     });
 
     it('should return a status code 200', async () => {
-      await productsController.get(request, response);
+      await productsController.get(request, response, next);
 
       expect(response.status.calledWith(200)).to.be.equal(true);
     });
 
     it('should return the product with the respective id', async () => {
-      await productsController.get(request, response);
+      await productsController.get(request, response, next);
 
       expect(response.json.calledWith(product)).to.be.equal(true);
     });
@@ -307,32 +397,36 @@ describe('List a product by its ID (controller)', () => {
   describe('when an invalid id is provided', () => {
     before(() => {
       request.params = { id: 'abcdefg' };
+      next = sandbox.stub().callsFake((error) => {
+        return error.constructor === InvalidArgumentError
+          ? response.status(422).json(expectedResponse)
+          : null;
+      });
 
-      sinon.stub(productsService, 'get')
-        .rejects(new InvalidArgumentError('Wrong id format'));
+      sandbox.stub(productsService, 'get')
+        .rejects(expectedError);
     });
 
     after(() => {
-      productsService.get.restore();
+      sandbox.restore();
+    });
+
+    it('should call the function next', async () => {
+      await productsController.get(request, response, next);
+
+      expect(next.calledWith(expectedError)).to.be.equal(true);
     });
 
     it('should return a status code 422', async () => {
-      await productsController.get(request, response);
+      await productsController.get(request, response, next);
 
       expect(response.status.calledWith(422)).to.be.equal(true);
     });
 
     it('should return an object with the following properties', async () => {
-      const errorResponse = {
-        err: {
-          code: 'invalid_data',
-          message: 'Wrong id format',
-        }
-      };
+      await productsController.get(request, response, next);
 
-      await productsController.get(request, response);
-
-      expect(response.json.calledWith(errorResponse)).to.be.equal(true);
+      expect(response.json.calledWith(expectedResponse)).to.be.equal(true);
     });
   });
 });
