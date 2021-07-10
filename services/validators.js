@@ -32,8 +32,9 @@ const createValidator = async (allProducts, name, quantity) => {
 // [ { productId: 'product_id', quantity: '4' } ]
 
 const salesValidator = (productsArray) => {
+  const ZERO = 0;
   const [{  productId, quantity }] = productsArray;
-  if (typeof productId === 'string' && typeof quantity === 'number' && quantity > 0) {
+  if (typeof productId === 'string' && typeof quantity === 'number' && quantity > ZERO) {
     return null;
   }
   return {
@@ -41,8 +42,8 @@ const salesValidator = (productsArray) => {
       code: 'invalid_data',
       message: 'Wrong product ID or invalid quantity'
     }
-  }
-}
+  };
+};
 
 module.exports = {
   createValidator,
