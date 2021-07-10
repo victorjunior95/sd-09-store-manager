@@ -12,8 +12,8 @@ const create = async (itensSold) => {
   return sale;
 };
 
-const edit = async (itensSold) => {
-  const sale = await modelSale.edit(itensSold);
+const edit = async (id, itensSold) => {
+  const sale = await modelSales.edit(id, itensSold);
 
   return sale;
 };

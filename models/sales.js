@@ -12,13 +12,13 @@ const create =  async (itensSold) => {
   };
 };
 
-const edit = (id, name, quantity) => {
+const edit = (id, itensSold) => {
   if(!ObjectID.isValid(id)) {
     return null;
   }
 
   return connection()
-    .then((db) => db.collection('sales').updateOne({ _id: ObjectI(id) },
+    .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) },
       { $set: { itensSold }}))
     .then(() => ({ id, itensSold }));
 };

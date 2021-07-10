@@ -29,20 +29,18 @@ const create = async (req, res, _next) => {
 
   const sale = await servicesSales.create(itensSold);
 
-  res.status(OK_STATUS).json(sale);
+  return res.status(OK_STATUS).json(sale);
   
 };
 
 const edit = async (req, res, _next) => {
   const { id } = req.params;
-  const { name, quantity} = req.body;
+  const [...itensSold] = req.body;
 
-  productNameIsValid(res, name);
-  productQuantityIsValid(res, quantity);
+  saleQuantityIsValid (res, itensSold);
 
-  const product = await servicesProducts.edit(id, name, quantity);
-
-  res.status(OK_STATUS).json(product);
+  const sale = await servicesSales.edit(id, itensSold);
+  return res.status(OK_STATUS).json(sale);
   
 };
 
@@ -60,13 +58,13 @@ const getById = async (req, res, _next) => {
       });
   }
 
-  res.status(OK_STATUS).json(sale);
+  return res.status(OK_STATUS).json(sale);
 };
 
 const getAll = async (_req, res, _next) => {
   const allSales = await servicesSales.getAll();
 
-  res.status(OK_STATUS).json({ sales: allSales});
+  return res.status(OK_STATUS).json({ sales: allSales});
 };
 
 const remove = async (req, res, _next) => {
@@ -83,7 +81,7 @@ const remove = async (req, res, _next) => {
       });
   }
 
-  res.status(OK_STATUS).json(sale);
+  return res.status(OK_STATUS).json(sale);
 };
 
 module.exports = {
@@ -101,4 +99,4 @@ module.exports = {
 //             {
 //                 "name": "LX-200 GPS 500mm",
 //                 "quantity": 6
-//               }
+//                }

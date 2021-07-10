@@ -379,7 +379,7 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
     await connection.close();
   });
 
-  it.skip('Será validado que não é possível atualizar vendas com quantidade menor que zero', async () => {
+  it('Será validado que não é possível atualizar vendas com quantidade menor que zero', async () => {
     let result;
     let resultProductId;
     let resultSales;
@@ -426,7 +426,7 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
       });
   });
 
-  it.skip('Será validado que não é possível atualizar vendas com quantidade igual a zero', async () => {
+  it('Será validado que não é possível atualizar vendas com quantidade igual a zero', async () => {
     let result;
     let resultProductId;
     let resultSales;
@@ -473,7 +473,7 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
       });
   });
 
-  it.skip('Será validado que não é possível atualizar vendas com uma string no campo quantidade', async () => {
+  it('Será validado que não é possível atualizar vendas com uma string no campo quantidade', async () => {
     let result;
     let resultProductId;
     let resultSales;
@@ -520,7 +520,7 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
       });
   });
 
-  it.skip('Será validado que é possível atualizar uma venda com sucesso', async () => {
+  it('Será validado que é possível atualizar uma venda com sucesso', async () => {
     let result;
     let resultProductId;
     let resultSales;
@@ -697,7 +697,7 @@ describe('9 - Atualize a quantidade de produtos', () => {
     await connection.close();
   });
 
-  it.skip('Será validado que é possível a quantidade do produto atualize ao fazer uma compra', async () => {
+  it('Será validado que é possível a quantidade do produto atualize ao fazer uma compra', async () => {
     let result;
     let responseProductId;
 
@@ -730,7 +730,7 @@ describe('9 - Atualize a quantidade de produtos', () => {
       });
   });
 
-  it.skip('Será validado que é possível a quantidade do produto atualize ao deletar uma compra', async () => {
+  it('Será validado que é possível a quantidade do produto atualize ao deletar uma compra', async () => {
     let result;
     let resultSales;
     let responseProductId;
@@ -807,7 +807,7 @@ describe('10 - Valide a quantidade de produtos', () => {
     await connection.close();
   });
 
-  it.skip('Será validado que o estoque do produto nunca fique com a quantidade menor que zero', async () => {
+  it('Será validado que o estoque do produto nunca fique com a quantidade menor que zero', async () => {
     let result;
     let responseProductId;
 

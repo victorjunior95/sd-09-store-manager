@@ -19,9 +19,9 @@ app.get('/products', controllerProducts.getAll);
 
 app.get('/products/:id', controllerProducts.getById);
 
-app.put('/products/:id', controllerProducts.edit);
-
 app.delete('/products/:id', controllerProducts.remove);
+
+app.put('/products/:id', controllerProducts.edit);
 
 app.post('/sales', controllerSales.create);
 
@@ -29,7 +29,11 @@ app.get('/sales', controllerSales.getAll);
 
 app.get('/sales/:id', controllerSales.getById);
 
+app.put('/sales/:id', controllerSales.edit);
+
 app.delete('/sales/:id', controllerSales.remove);
+
+
 
 app.listen(PORT, () => {
   console.log('Online');
