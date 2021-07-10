@@ -18,7 +18,7 @@ const getById = async (id) => {
   return connection()
     .then((db) => db.collection('sales').findOne(ObjectId(id)))
     .then(db => db);
-}
+};
 
 module.exports = {
   create,

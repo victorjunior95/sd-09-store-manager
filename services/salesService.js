@@ -30,10 +30,10 @@ const getById = async (id) => {
 
   return {
     err: {
-      code: "not_found",
-      message: "Sale not found",
+      code: 'not_found',
+      message: 'Sale not found',
     }
-  }
+  };
 };
 
 
