@@ -5,12 +5,12 @@ const ProductsServices = require('../services/ProductsServices');
 const STATUS_OK = 200;
 const CREATE = 201;
 const MIN_LENGTH = 5;
-const HIGHER_THAN = 0;
+// const HIGHER_THAN = 0;
 
 const create = rescue(async (req, res, next) => {
   const { error } = Joi.object({
-    name: Joi.string().min(MIN_LENGTH).required(),
-    quantity: Joi.number().integer().min(HIGHER_THAN).required()
+    name: Joi.string().min(MIN_LENGTH).not().empty().required(),
+    quantity: Joi.number().integer().min(1).not().empty().required(),
   }).validate(req.body);
 
   if (error) {

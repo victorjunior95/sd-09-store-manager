@@ -3,11 +3,8 @@ module.exports = (err, _req, res, _next) => {
   const INTERNAL_SERVER_ERROR = 500;
 
   if (err.isJoi) {
-    res.status(UNPROCESSABLE).json({
-      err: { 
-        message: err.details[0].message
-      }
-    });
+    return res.status(UNPROCESSABLE)
+      .json({ err: {code: 'invalid_data', message: err.details[0].message } });
   }
 
   const statusByErrorCode = {

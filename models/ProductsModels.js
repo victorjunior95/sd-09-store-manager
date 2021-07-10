@@ -6,7 +6,7 @@ async function create(name, quantity) {
   const createNew = await db.collection('products').insertOne({name, quantity}); 
   const result = await createNew.ops[0];
   return {
-    id: result._id,
+    _id: result._id,
     name: result.name,
     quantity: result.quantity
   };
@@ -19,7 +19,7 @@ async function findByName(name) {
   if (!findName) return null;
   
   return {
-    id: findName._id,
+    _id: findName._id,
     name: findName.name,
     quantity: findName.quantity
   };
