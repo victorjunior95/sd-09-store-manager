@@ -25,12 +25,13 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const sale = await salesModel.getById(id);
-  console.log('getById =================================================', sale)
+  console.log('getById =================================================', sale);
   if (sale) return sale;
 
-  return { err: {
-    code: "not_found",
-    message: "Sale not found",
+  return {
+    err: {
+      code: "not_found",
+      message: "Sale not found",
     }
   }
 };

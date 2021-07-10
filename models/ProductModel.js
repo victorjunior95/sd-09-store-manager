@@ -22,8 +22,8 @@ const upDate = async (id, name, quantity) => {
   if (!ObjectId.isValid(id)) return null;
   return connection()
     .then((db) => db.collection('products')
-      .updateOne({ id: ObjectId(id) }, { $set: { name, quantity }}))
-    .then(() => ({ _id: id, name, quantity}));
+      .updateOne({ id: ObjectId(id) }, { $set: { name, quantity } }))
+    .then(() => ({ _id: id, name, quantity }));
 };
 
 const deleteProduct = async (id) => {

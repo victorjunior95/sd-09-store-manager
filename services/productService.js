@@ -33,9 +33,10 @@ const getById = async (id) => {
   const product = await ProductModel.getById(id);
   if (product) return product;
 
-  return { err: {
-    code: 'invalid_data',
-    message: 'Wrong id format',
+  return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
     }
   };
 };
@@ -56,10 +57,12 @@ const deleteProduct = async (id) => {
   const product = await ProductModel.getById(id);
   const productDeleted = await ProductModel.deleteProduct(id);
 
-  if (!productDeleted) return { err: {
-    code: 'invalid_data',
-    message: 'Wrong id format',
-  } };
+  if (!productDeleted) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    }
+  };
 
   return product;
 };

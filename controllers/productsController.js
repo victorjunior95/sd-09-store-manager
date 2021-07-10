@@ -3,7 +3,7 @@ const productsService = require('../services/productService');
 
 const productRouter = express.Router();
 
-const { code: { created, unprocessable_entity, OK, not_found} } = require('../utils');
+const { code: { created, unprocessable_entity, OK, not_found } } = require('../utils');
 
 productRouter.post('/', async (req, res) => {
   const { name, quantity } = req.body;

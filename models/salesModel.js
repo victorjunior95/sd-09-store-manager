@@ -10,14 +10,14 @@ const getAll = async () => connection()
   .then((salesArray) => salesArray.map(({ _id, itensSold }) => ({ _id, itensSold })));
 
 const getById = async (id) => {
-  console.log('getById MODEL <<<<<<<<<<<<<<<<')
+  console.log('getById MODEL <<<<<<<<<<<<<<<<');
 
   if (!ObjectId.isValid(id)) return null;
 
-  console.log('getById MODEL >>>>>>>>>>>>>>>>>>>')
+  console.log('getById MODEL >>>>>>>>>>>>>>>>>>>');
   return connection()
-  .then((db) => db.collection('sales').findOne(ObjectId(id)))
-  .then(db => db);
+    .then((db) => db.collection('sales').findOne(ObjectId(id)))
+    .then(db => db);
 }
 
 module.exports = {
