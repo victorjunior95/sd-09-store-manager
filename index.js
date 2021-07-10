@@ -16,5 +16,5 @@ app.listen(PORT, () => console.log('Rodando na 3000'));
 
 // PRODUCTS
 app.post('/products', rescue(productController.postProduct));
-app.get('/products/:id', rescue(productController.getProductId));
 app.get('/products', rescue(productController.getProducts));
+app.get('/products/:id', rescue(productController.getProductId));

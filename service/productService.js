@@ -3,7 +3,6 @@ const productModel = require('../model/productModel');
 const validateNewProduct = async (name, quantity) => {
   const minNameLength = 5;
   const minQuantity = 0;
-  const product = await productModel.getProductByName(name);
 
   if(name.length < minNameLength) return { 
     err: { 
@@ -12,7 +11,7 @@ const validateNewProduct = async (name, quantity) => {
     } 
   };
 
-  if (product) return {
+  if (await productModel.getProductByName(name)) return {
     err: { 
       message: 'Product already exists',
       code: 'invalid_data'
@@ -33,7 +32,7 @@ const validateNewProduct = async (name, quantity) => {
     }
   };
 
-  return product;
+  return await productModel.createProduct(name, quantity);
 };
 
 const getAllProducts =  async () => {
