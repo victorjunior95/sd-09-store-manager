@@ -49,9 +49,7 @@ const getOne = async (id) => {
 };
 
 const updateSale = async ({ data, id }) => {
-  console.log(data);
   const salesQuantity = validateQuantity(data);
-  console.log(salesQuantity);
   if (salesQuantity.err) {
     return salesQuantity;
   }
@@ -61,9 +59,23 @@ const updateSale = async ({ data, id }) => {
   return sale;
 };
 
+const deleteSale = async (id) => {
+  const sale = await Sales.getOne(id);
+  if (!sale) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'
+    }
+  };
+  await Sales.deleteSale(id);
+
+  return sale;
+};
+
 module.exports = {
   addNewSale,
   getAll,
   getOne,
   updateSale,
+  deleteSale
 };
