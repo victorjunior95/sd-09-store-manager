@@ -69,15 +69,8 @@ const deleteSale = async (id) => {
   if (!ObjectId.isValid(id)) {
     return null;
   }
+
   const connect = await connection();
-  const { itensSold } = await getById(id);
-
-  await itensSold.forEach((item) => {
-    connect.collection('products')
-      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: item.quantity}});
-  });
-
-
   const deletedSale = await connect.collection('sales')
     .findOneAndDelete({ _id: ObjectId(id) });
 

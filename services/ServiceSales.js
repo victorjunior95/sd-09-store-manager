@@ -6,10 +6,9 @@ const UNPROCESSABLE_ENTITY = 422;
 const NOT_FOUND = 404;
 
 const create = async (itensSold) => {
-
+  await ModelProducts.decrementProductFromStock(itensSold);
   
   const createItensSold = await ModelSales.create(itensSold);
-  await ModelProducts.decrementProductFromStock(itensSold);
 
   return createItensSold;
 };
@@ -42,6 +41,8 @@ const deleteSale = async (id) => {
 
   if (!findForDeleteSaleById) throw invalidData
   ('invalid_data', 'Wrong sale ID format', UNPROCESSABLE_ENTITY);
+
+  await ModelProducts.incrementProductFromStock(findForDeleteSaleById.itensSold);
 
   const deletedSale = await ModelSales.deleteSale(id);
 

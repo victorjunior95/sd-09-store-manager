@@ -81,6 +81,15 @@ const decrementProductFromStock = async (itensSold) => {
   });
 };
 
+const incrementProductFromStock = async (itensSold) => {
+  const connect = await connection();
+
+  await itensSold.forEach((item) => {
+    connect.collection('products')
+      .updateOne({ _id: ObjectId(item.productId)}, {$inc: { quantity: item.quantity}});
+  });
+};
+
 module.exports = {
   create,
   getByName,
@@ -89,4 +98,5 @@ module.exports = {
   editProduct,
   deleteProduct,
   decrementProductFromStock,
+  incrementProductFromStock,
 };
