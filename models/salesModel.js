@@ -22,10 +22,14 @@ const getById = async (id) => {
 };
 
 const deleteSale = async (id) => {
+  console.log('DELETE MODEL <<<<<<<<<<<<<<<<');
+
   if (!ObjectId.isValid(id)) return null;
 
+  console.log('DELETE MODEL >>>>>>>>>>>>>>>>>>>');
+
   return connection()
-    .then((db) => db.collection('sales').deleteOne(ObjectId(id)));
+    .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
 };
 
 module.exports = {
