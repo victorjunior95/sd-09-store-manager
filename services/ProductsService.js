@@ -36,9 +36,9 @@ const create = async (name, quantity) => {
 };
 
 const getAll = async () => {
-  const getAll = await ProductsModel.getAll();
+  const products = await ProductsModel.getAll();
 
-  return getAll;
+  return products;
 };
 
 const getById = async (id) => {
@@ -51,8 +51,21 @@ const getById = async (id) => {
   return product;
 };
 
+const update = async (id, name, quantity) => {
+  const product = await ProductsModel.updateProduct(id, name, quantity);
+
+  const { error } = schemaProduct.validate({ name, quantity });
+
+  if(error) {
+    throw errorHandling(unprocessableEntity, 'invalid_data', error.details[0].message);
+  }
+
+  return product;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };
