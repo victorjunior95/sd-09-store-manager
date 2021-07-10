@@ -6,6 +6,7 @@ const {
   createProduct,
   listAllProducts,
   getByIDController,
+  updateOneProductController
 } = require('./controllers/productsController');
 
 const app = express();
@@ -20,6 +21,8 @@ app.post('/products', createProduct);
 
 app.get('/products', listAllProducts);
 app.get('/products/:id', getByIDController);
+
+app.put('/products/:id', updateOneProductController);
 
 app.use(errorMiddleware);
 

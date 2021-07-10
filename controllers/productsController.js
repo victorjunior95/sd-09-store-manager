@@ -18,7 +18,7 @@ const createProduct = async (req, res, next) => {
 const listAllProducts = async (req, res, next) => {
   try {
     const products = await productService.listaAllProductsService();
-    res.status(ok).json({ products });
+    return res.status(ok).json({ products });
   } catch (error) {
     return next(error);
   }
@@ -29,15 +29,28 @@ const getByIDController = async (req, res, next) => {
     const { id } = req.params;
     
     const response = await productService.getByIDService(id);
-    res.status(ok).json(response);
+    return res.status(ok).json(response);
   } catch (error) {
     return next(error);
   }
   
 };
 
+const updateOneProductController = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+    const productUpdated = await productService
+      .updateOneProductService(id, name, quantity);
+    return res.status(ok).json(productUpdated);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   createProduct,
   listAllProducts,
-  getByIDController
+  getByIDController,
+  updateOneProductController
 };

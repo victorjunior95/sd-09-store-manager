@@ -4,6 +4,7 @@ const {
   existsProduct,
   listaAllProductsModel,
   getByID,
+  updateOneProductModel,
 } = require('../models/productsModel');
 
 const { 
@@ -50,8 +51,22 @@ const getByIDService = async (id) => {
   return response;
 };
 
+const updateOneProductService = async (id, name, quantity) => {
+  const { error } = productSchema
+    .validate({name, quantity});
+  if (error) throw invalidProduct(unprocessableEntity, 'invalid_data', error.message);
+
+  const productUpdated = await updateOneProductModel(id, name, quantity);
+  // if (!productUpdated) lança um error aqui mas qual?
+  
+  const response = await getByID(id);
+  console.log(response);
+  return response;
+};
+
 module.exports = {
   registerProductService,
   listaAllProductsService,
-  getByIDService
+  getByIDService,
+  updateOneProductService
 };
