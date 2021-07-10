@@ -11,6 +11,14 @@ const {
   deleteOne
 } = require('./controllers/productsController');
 
+const {
+  getAllSales,
+  createSales,
+  getSaleById,
+  updateSale,
+  deleteOneSale,
+} = require('./controllers/salesController');
+
 app.use(bodyParser.json());
 
 
@@ -29,6 +37,16 @@ app.put('/products/:id', update);
 app.delete('/products/:id', deleteOne);
 
 app.post('/products', create);
+
+app.get('/sales', getAllSales);
+
+app.get('/sales/:id', getSaleById);
+
+app.post('/sales', createSales);
+
+app.put('/sales/:id', updateSale);
+
+app.delete('/sales/:id', deleteOneSale);
 
 app.listen(PORT, () => {
   console.log(`Ouvindo na porta ${PORT}`);
