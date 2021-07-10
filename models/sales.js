@@ -1,15 +1,14 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const create =  async (name, quantity) => {
-  const newProduct =  await connection()
-    .then((db) => db.collection('products').insertOne({ name, quantity }))
+const create =  async (itensSold) => {
+  const newSale =  await connection()
+    .then((db) => db.collection('sales').insertOne({ itensSold }))
     .then((result) => result.ops[0]);
 
   return {
-    _id: newProduct._id,
-    name,
-    quantity,
+    _id: newSale._id,
+    itensSold,
   };
 };
 
@@ -19,19 +18,15 @@ const edit = (id, name, quantity) => {
   }
 
   return connection()
-    .then((db) => db.collection('products').updateOne({ _id: ObjectID(id) },
-      { $set: { name, quantity }}))
-    .then(() => ({ id, name, quantity }));
+    .then((db) => db.collection('sales').updateOne({ _id: ObjectID(id) },
+      { $set: { itensSold }}))
+    .then(() => ({ id, itensSold }));
 };
 
-const getByName = (name) => {
-  return connection()
-    .then((db) => db.collection('products').findOne({ name }));
-};
 
 const getAll = () => {
   return connection()
-    .then((db) => db.collection('products').find().toArray());
+    .then((db) => db.collection('sales').find().toArray());
 };
 
 const getById = (id) => {
@@ -40,7 +35,7 @@ const getById = (id) => {
   }
 
   return connection()
-    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
+    .then((db) => db.collection('sales').findOne({ _id: ObjectId(id) }))
     .catch(() => null);
 };
 
@@ -49,7 +44,7 @@ const remove = async (id) => {
     return null;
   }
 
-  const product = getById(id);
+  const sale = getById(id);
   
   const removed = await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }))
@@ -59,7 +54,7 @@ const remove = async (id) => {
     return null;
   }
 
-  return product;
+  return sale;
 
 };
  
@@ -67,7 +62,6 @@ module.exports = {
   create,
   edit, 
   getAll,
-  getByName,
   getById,
   remove,
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const controllerProducts = require('./controllers/products');
+const controllerSales = require('./controllers/sales');
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,6 +22,12 @@ app.get('/products/:id', controllerProducts.getById);
 app.put('/products/:id', controllerProducts.edit);
 
 app.delete('/products/:id', controllerProducts.remove);
+
+app.post('/sales', controllerSales.create);
+
+app.get('/sales', controllerSales.getAll);
+
+app.get('/sales/:id', controllerSales.getById);
 
 app.listen(PORT, () => {
   console.log('Online');
