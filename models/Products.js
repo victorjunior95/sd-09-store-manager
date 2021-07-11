@@ -1,8 +1,3 @@
-/*
-products
-{ "_id": ObjectId("5f43cbf4c45ff5104986e81d"), "name": "Produto Silva", "quantity": 10 }
-*/
-
 const connection = require('./connections');
 const { ObjectId } = require('mongodb');
 
@@ -41,9 +36,23 @@ const findById = async (id) => {
   return products;
 };
 
+const changeById = async (id, name, quantity) => {
+  if(!ObjectId.isValid(id)) return null;
+
+  const products = await connection().then((db) =>
+    db.collection('products').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } },
+    ),
+  );
+
+  return products.modifiedCount;
+};
+
 module.exports = {
   create,
   findByName,
   getAll,
   findById,
+  changeById,
 };

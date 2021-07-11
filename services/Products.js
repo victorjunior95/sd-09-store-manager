@@ -32,8 +32,24 @@ const findById = async (id) => {
   return products;
 };
 
+const changeById = async (id, name, quantity) => {
+  const products = await Products.changeById(id, name, quantity);
+
+  if (!products) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Data is the same.',
+      },
+    };
+  }
+
+  return products;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
+  changeById,
 };

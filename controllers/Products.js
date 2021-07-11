@@ -43,8 +43,31 @@ const findById = rescue(async (req, res, next) => {
   return res.status(CODE_SELECT).json(findProduct);
 });
 
+const changeById = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const { error } = Joi.object({
+    name: Joi.string().not().empty().min(MIN_NAME).required(),
+    quantity: Joi.number().integer().min(MIN_QUANTITY).required(),
+  }).validate(req.body);
+
+  if (error) {
+    return next(error);
+  }
+
+  const { name, quantity } = req.body;
+
+  const changeProduct = await Products.changeById(id, name, quantity);
+
+  if (changeProduct.err) return next(changeProduct);
+
+  return res.status(CODE_SELECT).json({ _id: id, name, quantity });
+});
+
+
 module.exports = {
   create,
   getAll,
   findById,
+  changeById,
 };
