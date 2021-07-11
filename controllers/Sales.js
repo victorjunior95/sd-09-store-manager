@@ -33,6 +33,24 @@ const create = rescue(async (req, res, next) => {
   return res.status(CODE_VALUE).json(newSale[0]);
 });
 
+const getAll = rescue(async (_req, res) => {
+  const sales = await Sales.getAll();
+
+  return res.status(CODE_VALUE).json({ sales });
+});
+
+const findById = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const findSale = await Sales.findById(id);
+
+  if (findSale.err) return next(findSale);
+
+  return res.status(CODE_VALUE).json(findSale);
+});
+
 module.exports = {
   create,
+  getAll,
+  findById,
 };

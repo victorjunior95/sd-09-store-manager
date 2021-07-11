@@ -28,7 +28,12 @@ app
 const Sales = require('./controllers/Sales');
 app
   .route('/sales')
-  .post(Sales.create);
+  .post(Sales.create)
+  .get(Sales.getAll);
+
+app
+  .route('/sales/:id')
+  .get(Sales.findById);
 
 // Error
 const errorMiddleware = require('./controllers/Error');
