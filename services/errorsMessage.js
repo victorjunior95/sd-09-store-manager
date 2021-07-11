@@ -8,7 +8,7 @@ const errors = {
   saleNotFound: 'Sale not found',
   notFound: 'not_found',
   idSaleFormat: 'Wrong sale ID format',
-  stockProblem: 'stock_problems',
+  stockProblem: 'stock_problem',
   quantityNotPermitted: 'Such amount is not permitted to sell',
 };
 

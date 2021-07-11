@@ -5,7 +5,10 @@ const {
   updateSaleFromDB,
   deleteSaleFromDB,
 } = require('../models/salesModels');
-const { incrementProductQuantity } = require('../models/productsModel');
+const {
+  incrementProductQuantity,
+  findProductByIdFromDB
+} = require('../models/productsModel');
 const { validateSaleQuantity } = require('./validations');
 const errors = require('./errorsMessage');
 const httpStatusCode = require('./httpStatusCode');
@@ -14,6 +17,14 @@ async function createSale(sale) {
   sale.forEach((item) => {
     validateSaleQuantity(item.quantity);
   });
+  const productInStock = await findProductByIdFromDB(sale[0].productId);
+  if (productInStock.quantity < sale[0].quantity) throw {
+    status: httpStatusCode.notFound,
+    err: {
+      code: errors.stockProblem,
+      message: errors.quantityNotPermitted,
+    }
+  };
   await sale.forEach(async ({ productId, quantity }) => {
     await incrementProductQuantity(productId, -quantity);
   });
