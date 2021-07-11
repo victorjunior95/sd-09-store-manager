@@ -33,4 +33,15 @@ module.exports = {
       next(err);
     }
   },
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { body } = req;
+      const response = await productsService.update({ ...body, id });
+
+      res.status(HTTP_200_OK).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
