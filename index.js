@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const product = require('./controllers/productController');
 
 const app = express();
 const PORT = 3000;
@@ -10,9 +11,9 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', );
+app.post('/products', product.createProduct);
 
-app.get('/products/:id', );
+app.get('/products', product.listProduct);
 
 app.put('/products', );
 

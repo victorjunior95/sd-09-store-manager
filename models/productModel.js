@@ -3,12 +3,14 @@ const { ObjectId } = require('mongodb');
 
 // 1 - Crie um endpoint para o cadastro de produtos
 const createProduct = async (name, quantity) => {
-  return connection()
-    .then((db) => db.collection('products').insertOne({ name, quantity }).toArray());
+  const newProduct = await connection()
+    .then((db) => db.collection('products').insertOne({ name, quantity }));
+  return newProduct.ops[0];
 };
 // 2 - Crie um endpoint para listar os produtos
-const listProduct = async () => {
-  return connection().then((db) => db.collection('products').find().toArray());
+const listProduct = async (id) => {
+  return connection()
+    .then((db) => db.collection('products').find({ _id: new ObjectId(id) }).toArray());
 };
 // 3 - Crie um endpoint para atualizar um produto
 const updateProduct = async (id, name, quantity) => {
@@ -32,11 +34,16 @@ const updateProduct = async (id, name, quantity) => {
 // 4 - Crie um endpoint para deletar um produto
 const deleteProduct = async (id) => {
   return connection()
-    .then((db) => db.collection('products').delete({ _id: new ObjectId(id)}))
+    .then((db) => db.collection('products').delete({ _id: new ObjectId(id) }))
     .catch((err) => {
       console.log(err);
       return err;
     });
+};
+
+const getAll = async () => {
+  return listAll = await connection()
+    .then((db) => db.collection('products').find().toArray());
 };
 
 module.exports = {
@@ -44,4 +51,5 @@ module.exports = {
   listProduct,
   updateProduct,
   deleteProduct,
+  getAll
 };
