@@ -9,6 +9,7 @@ const create = async (name, quantity) => {
         code: 'invalid_data',
         message: 'Product already exists',
       },
+      code: 422,
     };
   }
 
@@ -26,6 +27,7 @@ const findById = async (id) => {
         code: 'invalid_data',
         message: 'Wrong id format',
       },
+      code: 422,
     };
   }
 
@@ -41,6 +43,7 @@ const change = async (id, name, quantity) => {
         code: 'invalid_data',
         message: 'Data is the same.',
       },
+      code: 422,
     };
   }
 
@@ -57,6 +60,7 @@ const exclude = async (id) => {
         code: 'invalid_data',
         message: 'Wrong id format',
       },
+      code: 422,
     };
   }
 

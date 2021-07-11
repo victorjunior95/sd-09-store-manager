@@ -14,5 +14,5 @@ module.exports = (err, _req, res, _next) => {
     );
   }
 
-  res.status(ERROR_CODE).json(err);
+  res.status(err.code).json(err);
 };
