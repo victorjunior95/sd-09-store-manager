@@ -5,7 +5,8 @@ const Products = require('../services/Products');
 
 const MIN_NAME = 5;
 const MIN_QUANTITY = 1;
-const CODE_OK = 201;
+const CODE_CREATE = 201;
+const CODE_SELECT = 200;
 
 const create = rescue(async (req, res, next) => {
   const { error } = Joi.object({
@@ -23,9 +24,27 @@ const create = rescue(async (req, res, next) => {
 
   if (newProduct.err) return next(newProduct);
 
-  return res.status(CODE_OK).json(newProduct[0]);
+  return res.status(CODE_CREATE).json(newProduct[0]);
+});
+
+const getAll = rescue(async (_req, res) => {
+  const products = await Products.getAll();
+
+  return res.status(CODE_SELECT).json({ products });
+});
+
+const findById = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const findProduct = await Products.findById(id);
+
+  if (findProduct.err) return next(findProduct);
+
+  return res.status(CODE_SELECT).json(findProduct);
 });
 
 module.exports = {
   create,
+  getAll,
+  findById,
 };

@@ -17,7 +17,12 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', Products.create);
+app
+  .route('/products')
+  .post(Products.create)
+  .get(Products.getAll);
+
+app.get('/products/:id', Products.findById);
 
 app.use(errorMiddleware);
 

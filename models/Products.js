@@ -12,15 +12,29 @@ const create = async (name, quantity) => {
   );
 
   return products.ops;
-  // return connection()
-  //   .then((db) => db.collection('products').insertOne({ name, quantity }))
-  //   .then((result) => result.ops);
 };
 
 const findByName = async (name) => {
+  const products = await connection()
+    .then((db) => db.collection('products').findOne({ name }));
+
+  if (!products) return null;
+
+  return products;
+};
+
+const getAll = async () => {
+  const products = await connection()
+    .then((db) => db.collection('products').find().toArray());
+
+  return products;
+};
+
+const findById = async (id) => {
+  if(!ObjectId.isValid(id)) return null;
+
   const products = await connection().then((db) =>
-    db.collection('products').findOne({ name })
-  );
+    db.collection('products').findOne(new ObjectId(id)));
 
   if (!products) return null;
 
@@ -30,4 +44,6 @@ const findByName = async (name) => {
 module.exports = {
   create,
   findByName,
+  getAll,
+  findById,
 };
