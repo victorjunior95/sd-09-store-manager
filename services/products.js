@@ -38,5 +38,14 @@ module.exports = {
     validations.product.quantity(quantity);
 
     return product.update(payload);
-  }
+  },
+  async remove(id) {
+    const product = new Product();
+
+    const productDB = await product.get(id);
+
+    if(!productDB) throw new NotFoundError('product');
+
+    return await product.remove(id);
+  },
 };

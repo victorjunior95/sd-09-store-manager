@@ -4,3 +4,4 @@ services.product.create();
 services.product.getAll();
 services.product.get();
 services.product.update();
+services.product.remove();

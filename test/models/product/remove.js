@@ -5,6 +5,10 @@ const { Product } = require('../../../models');
 const { MongoClient } = require('mongodb');
 const connect = require('../../mocks/connection');
 
+const DB_NAME = 'StoreManager';
+const COLLECTION_NAME = 'products';
+let connectionMock;
+
 module.exports = () => {
   describe('Remove a product (model)', () => {
     const product = new Product();
@@ -18,6 +22,8 @@ module.exports = () => {
     });
 
     after(async () => {
+      await connectionMock.db(DB_NAME).collection(COLLECTION_NAME).deleteMany({});
+
       MongoClient.connect.restore();
     });
 
