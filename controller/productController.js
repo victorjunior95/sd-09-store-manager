@@ -15,14 +15,14 @@ const postProduct = async (req, res) => {
 };
 
 const getProducts = async (_req, res) => {
-  const products = await getAllProducts();
+  const products = await productService.getAllProducts();
 
   if (products) return res.status(status_ok).json({ products });
 };
 
 const getProductById = async (req, res) => {
   const { id } = req.params;
-  const product = await validateFoundId(id);
+  const product = await productService.validateFoundId(id);
   if(product.err) return res.status(unprocessable).json(product);
   if(product) return res.status(status_ok).json(product);
 };
