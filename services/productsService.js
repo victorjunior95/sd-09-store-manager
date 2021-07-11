@@ -3,13 +3,22 @@ const Joi = require('@hapi/joi');
 const httpStatusCode = require('../httpStatusCodes');
 const ApiError = require('../errors/apiError');
 
-const create = async ({ name, quantity }) => {
+const create = async (name, quantity) => {
 
-  validateCreatePayload({ name, quantity });
+  validateProduct(name, quantity);
 
   await validateUniqueProductName(name);
 
-  return ProductsModel.create({ name, quantity });
+  return await ProductsModel.create({ name, quantity });
+};
+
+const update = async(id, name, quantity) => {
+
+  validateProduct(name, quantity);
+
+  const product = await ProductsModel.update(id, { name, quantity });
+
+  return product;
 };
 
 const findAll = async () => {
@@ -35,7 +44,7 @@ const validateUniqueProductName = async (name) => {
     );
 };
 
-const validateCreatePayload = ({ name, quantity }) => {
+const validateProduct = (name, quantity) => {
   const minNameLength = 5;
   const payloadSchema = Joi.object({
     name: Joi.string().min(minNameLength).required(),
@@ -52,4 +61,5 @@ module.exports = {
   create,
   findAll,
   findById,
+  update,
 };

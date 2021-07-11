@@ -12,6 +12,15 @@ const create = async ({ name, quantity }) => {
   return inserted;
 };
 
+const update = async(id, { name, quantity }) => {
+  const productsCollection = await connection()
+    .then((db) => db.collection('products'));
+
+  await productsCollection
+    .update({_id: ObjectId(id)}, {name, quantity});
+  return {_id: id, name, quantity};
+};
+
 const findAll = async () => connection()
   .then((db) => db.collection('products'))
   .then((collection) => collection.find().toArray())
@@ -45,4 +54,5 @@ module.exports = {
   findOneByName,
   findOneById,
   findAll,
+  update,
 };

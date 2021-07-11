@@ -25,4 +25,6 @@ app.get('/products', ProductsController.listAll);
 
 app.get('/products/:id', ProductsController.findById);
 
+app.put('/products/:id', ProductsController.update);
+
 
