@@ -1,20 +1,6 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
-/*
-const getNewSales = async () => {
-  return await connection()
-    .then((db) => db.collection('sales').find().toArray())
-    .then((products) => {
-      return products.map(({ _id, name, quantity }) => {
-        return ({
-          _id,
-          name,
-          quantity,
-        });
-      });
-    });
-};
-*/
+
 const getAllSales = async () => {
   return await connection()
     .then((db) => db.collection('sales').find().toArray());
@@ -42,19 +28,18 @@ const updateSales = async (id, itensSold) => {
     )
     .then(() => ({ _id: id, itensSold }));
 };
-/*
+
 const deleteSales = async (id) => {
   if (!ObjectId.isValid(id)) return null;
 
   return await connection()
     .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
 };
-*/
+
 module.exports = {
   getAllSales,
   createSales,
-  //getNewSales,
   getById,
   updateSales,
-  //deleteSales,
+  deleteSales,
 };

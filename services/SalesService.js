@@ -1,10 +1,9 @@
 const {
-  //getNewSales,
   createSales,
   getAllSales,
   getById,
   updateSales,
- // deleteSales,
+  deleteSales,
 } = require('../models/SalesModel');
 
 const errors = {
@@ -32,13 +31,10 @@ const validateQuantity = async (itemSold) => {
 };
 
 const createService = async (itemSold) => {
-  //console.log(itemSold);
   const isValid = await validateQuantity(itemSold);
-  //console.log(isValid)
   if (isValid !== true) return isValid;
 
   const sales = await createSales(itemSold);
-  //console.log(sales)
   return sales;
 };
 
@@ -68,7 +64,7 @@ const getByIdService = async (id) => {
 
   return sales;
 };
-/*
+
 const deleteService = async (id) => {
   const sale = await deleteSales(id);
   if (!sale) return {
@@ -82,11 +78,11 @@ const deleteService = async (id) => {
 
   return sale;
 };
-*/
+
 module.exports = {
   createService,
   getAllService,
   getByIdService,
   updateService,
-  //deleteService,
+  deleteService,
 };
