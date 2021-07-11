@@ -9,12 +9,27 @@ async function getProductByName(name) {
 
 async function addProduct(name, quantity) {
   const db = await connection();
-
   const result = await db.collection('products').insertOne({ name, quantity });
   return result.ops[0];
+}
+
+async function getProducts() {
+  const db = await connection();
+  const result = await db.collection('products').find().toArray();
+  console.log('products', result);
+  return { products: result };
+}
+
+async function getProductById(id) {
+  if (!ObjectId.isValid(id)) return null;
+  const db = await connection();
+  const result = await db.collection('products').findOne({ _id: ObjectId(id) });
+  return result;
 }
 
 module.exports = {
   getProductByName,
   addProduct,
+  getProducts,
+  getProductById,
 };

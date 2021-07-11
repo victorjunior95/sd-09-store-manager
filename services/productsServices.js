@@ -53,13 +53,40 @@ function validateQuantity(quantity){
   }
 }
 
-async function addProduct(name, quantity){
+function validateProduct(product) {
+  if (!product) {
+    throw {
+      status: 422,
+      result: {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        },
+      },
+    };
+  }
+}
+
+async function addProduct(name, quantity) {
   await validateName(name);
   validateQuantity(quantity);
   const result = await productsModel.addProduct(name, quantity);
   return { status: 201, result };
 }
 
+async function getProducts() {
+  const result = await productsModel.getProducts();
+  return { status: 200, result };
+}
+
+async function getProductById(id) {
+  const result = await productsModel.getProductById(id);
+  validateProduct(result);
+  return { status: 200, result };
+}
+
 module.exports = {
   addProduct,
+  getProducts,
+  getProductById,
 };
