@@ -10,8 +10,8 @@ const create = async (name, quantity) => {
 };
 
 const findByName = async (name) => {
-  const products = await connection()
-    .then((db) => db.collection('products').findOne({ name }));
+  const products = await connection().then((db) =>
+    db.collection('products').findOne({ name }));
 
   if (!products) return null;
 
@@ -19,25 +19,26 @@ const findByName = async (name) => {
 };
 
 const getAll = async () => {
-  const products = await connection()
-    .then((db) => db.collection('products').find().toArray());
+  const products = await connection().then((db) =>
+    db.collection('products').find().toArray());
 
   return products;
 };
 
 const findById = async (id) => {
-  if(!ObjectId.isValid(id)) return null;
+  if (!ObjectId.isValid(id)) return null;
 
   const products = await connection().then((db) =>
-    db.collection('products').findOne(new ObjectId(id)));
+    db.collection('products').findOne(new ObjectId(id)),
+  );
 
   if (!products) return null;
 
   return products;
 };
 
-const changeById = async (id, name, quantity) => {
-  if(!ObjectId.isValid(id)) return null;
+const change = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) return null;
 
   const products = await connection().then((db) =>
     db.collection('products').updateOne(
@@ -49,10 +50,23 @@ const changeById = async (id, name, quantity) => {
   return products.modifiedCount;
 };
 
+const exclude = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const products = await connection().then((db) =>
+    db.collection('products').deleteOne({ _id: new ObjectId(id) }),
+  );
+
+  if (!products) return null;
+
+  return products;
+};
+
 module.exports = {
   create,
   findByName,
   getAll,
   findById,
-  changeById,
+  change,
+  exclude,
 };

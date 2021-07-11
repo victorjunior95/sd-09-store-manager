@@ -32,8 +32,8 @@ const findById = async (id) => {
   return products;
 };
 
-const changeById = async (id, name, quantity) => {
-  const products = await Products.changeById(id, name, quantity);
+const change = async (id, name, quantity) => {
+  const products = await Products.change(id, name, quantity);
 
   if (!products) {
     return {
@@ -47,9 +47,26 @@ const changeById = async (id, name, quantity) => {
   return products;
 };
 
+const exclude = async (id) => {
+  const products = await Products.findById(id);
+  const excludeProduct = await Products.exclude(id);
+
+  if (!excludeProduct) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+
+  return products;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
-  changeById,
+  change,
+  exclude,
 };

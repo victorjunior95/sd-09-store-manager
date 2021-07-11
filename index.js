@@ -23,7 +23,8 @@ app
 app
   .route('/products/:id')
   .get(Products.findById)
-  .put(Products.changeById);
+  .put(Products.change)
+  .delete(Products.exclude);
 
 app.use(errorMiddleware);
 
