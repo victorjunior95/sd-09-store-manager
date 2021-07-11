@@ -8,7 +8,8 @@ const salesRoute = require('./routes/salesRoute');
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 422;
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT_NUMBER = 3000;
+const PORT = process.env.PORT || PORT_NUMBER;
 
 app.use(bodyParser.json());
 

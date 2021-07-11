@@ -7,8 +7,8 @@ const OPTIONS = {
   useUnifiedTopology: true,
 };
 
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-const DB_NAME = process.env.DB_NAME;
+const MONGO_DB_URL = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017/StoreManager';
+const DB_NAME = process.env.DB_NAME || 'StoreManager';
 
 let db = null;
 
@@ -20,7 +20,6 @@ const connection = async () => {
     return db;
   } catch (err) {
     console.log(err);
-    // process.exit();
   }
 };
 
