@@ -2,6 +2,18 @@ const salesModel = require('../models/salesModel');
 const productModel = require('../models/productModel');
 const throwSaleError = require('../utils/throwSaleError');
 
+const findAll = async () => {
+  const sales = await salesModel.getAll();
+
+  return sales;
+};
+
+const findById = async (id) => {
+  const sales = await salesModel.getById(id);
+
+  return sales;
+};
+
 const create = async (sales) => {
   for (const sale of sales) {
     const result = await productModel.getById(sale.productId);
@@ -17,5 +29,7 @@ const create = async (sales) => {
 };
 
 module.exports = {
+  findAll,
+  findById,
   create,
 };

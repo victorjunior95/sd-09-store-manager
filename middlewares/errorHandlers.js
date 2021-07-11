@@ -1,9 +1,9 @@
-const { INTERNAL_SERVER_ERROR, INVALID_DATA } = require('../utils/httpStatusCodes');
+const httpStatusCode = require('../utils/httpStatusCodes');
 
 const errorHandler = (err, _req, res, next) => {
 
   if (err.isJoi) {
-    return res.status(INVALID_DATA).json({ 
+    return res.status(httpStatusCode.invalid_data).json({ 
       err: { 
         code: 'invalid_data', 
         message: err.message, 
@@ -12,7 +12,8 @@ const errorHandler = (err, _req, res, next) => {
   }
 
   if (err.customError) {
-    return res.status(INVALID_DATA).json(err.customError);
+    const { err: { code } } = err.customError;
+    return res.status(httpStatusCode[code]).json(err.customError);
   }
 
   next(err);
@@ -21,7 +22,7 @@ const errorHandler = (err, _req, res, next) => {
 const serverErrorHandler = (err, _req, res, _next) => {
   console.log(err);
 
-  return res.status(INTERNAL_SERVER_ERROR).json({ 
+  return res.status(httpStatusCode.internal_server_error).json({ 
     err: { 
       code: 'internal_server_error', 
       message: 'Oooops D:', 

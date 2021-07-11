@@ -2,7 +2,7 @@ const express = require('express');
 const rescue = require('express-rescue');
 const validateProduct = require('../middlewares/productValidator');
 
-const { OK, CREATED } = require('../utils/httpStatusCodes');
+const { ok, created } = require('../utils/httpStatusCodes');
 const productServices = require('../services/productServices');
 
 const productController = express.Router();
@@ -10,7 +10,7 @@ const productController = express.Router();
 productController.get('/', rescue(async (_req, res) => {
   const products = await productServices.findAll();
 
-  res.status(OK).json({ products }); 
+  res.status(ok).json({ products }); 
 }));
 
 productController.get('/:id', rescue(async (req, res) => {
@@ -18,7 +18,7 @@ productController.get('/:id', rescue(async (req, res) => {
 
   const product = await productServices.findById(id);
 
-  res.status(OK).json(product); 
+  res.status(ok).json(product); 
 }));
 
 productController.post('/', validateProduct, rescue(async (req, res) => {
@@ -26,7 +26,7 @@ productController.post('/', validateProduct, rescue(async (req, res) => {
 
   const newProduct = await productServices.create(name, quantity);
 
-  return res.status(CREATED).json(newProduct);
+  return res.status(created).json(newProduct);
 }));
 
 productController.put('/:id', validateProduct, rescue(async (req, res) => {
@@ -35,7 +35,7 @@ productController.put('/:id', validateProduct, rescue(async (req, res) => {
 
   const updatedProduct = await productServices.update(id, name, quantity);
 
-  return res.status(OK).json( updatedProduct );
+  return res.status(ok).json( updatedProduct );
 }));
 
 productController.delete('/:id', rescue(async (req, res) => {
@@ -43,7 +43,7 @@ productController.delete('/:id', rescue(async (req, res) => {
 
   const deletedProduct = await productServices.exclude(id);
 
-  return res.status(OK).json( deletedProduct );
+  return res.status(ok).json( deletedProduct );
 }));
 
 module.exports = productController;
