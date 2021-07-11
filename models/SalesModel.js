@@ -14,7 +14,7 @@ const getById = async (id) => {
 
 const createSales = async (sales) => {
   const sale = await connection()
-    .then((db) => db.collection('sales').insertOne({ itensSold: [sales] }));
+    .then((db) => db.collection('sales').insertOne({ itensSold: sales }));
   return sale.ops[0];
 };
 

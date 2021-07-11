@@ -11,22 +11,27 @@ const errors = {
   not_found: 'not_found',
   wrong_id: 'Wrong product ID or invalid quantity',
   invalid_sale: 'Sale not found',
+  wrong_sale_id: 'Wrong sale ID format',
 };
 
 const NOT_FOUND = 404;
 const UNPROCESSABLE = 422;
 const quantity_min = 1;
+const first_index = 0;
 
 const validateQuantity = async (itemSold) => {
-  const quantity = itemSold.quantity;
-  if (quantity < quantity_min || typeof quantity === 'string') return {
-    isError: true,
-    err: {
-      code: errors.invalid,
-      message: errors.wrong_id,
-    },
-    status: UNPROCESSABLE,
-  };
+
+  for (let index = first_index; index < itemSold.length; index++) {
+    const quantity = itemSold[index].quantity;
+    if (quantity < quantity_min || typeof quantity === 'string') return {
+      isError: true,
+      err: {
+        code: errors.invalid,
+        message: errors.wrong_id,
+      },
+      status: UNPROCESSABLE,
+    };
+  }
   return true;
 };
 
@@ -71,7 +76,7 @@ const deleteService = async (id) => {
     isError: true,
     err: {
       code: errors.invalid,
-      message: errors.wrong_id,
+      message: errors.wrong_sale_id,
     },
     status: UNPROCESSABLE,
   };

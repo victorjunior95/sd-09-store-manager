@@ -20,7 +20,7 @@ const createSales = async (req, res) => {
   const products = req.body;
   const sales = await createService(products);
 
-  if (sales.isError === true) return res.status(sales.status).json(sales);
+  if (sales.isError === true) return res.status(sales.status).json({err: sales.err});
 
   res.status(OK).json(sales);
 };
