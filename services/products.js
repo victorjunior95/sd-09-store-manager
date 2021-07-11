@@ -1,30 +1,15 @@
-const { InvalidArgumentError } = require('../errors');
+const { InvalidArgumentError, NotFoundError } = require('../errors');
 const { Product } = require('../models');
-
-const NAME_MIN_LENGTH = 5;
-const QUANT_MIN_AMOUNT = 1;
+const validations = require('../validations');
 
 module.exports = {
   async create(payload) {
-    const { name = '', quantity = '' } = payload;
-    const nameIsValid = name && name.length >= NAME_MIN_LENGTH;
-    const quantityIsValid = quantity >= QUANT_MIN_AMOUNT;
-
-    if (!nameIsValid) {
-      throw new InvalidArgumentError('"name" length must be at least 5 characters long');
-    }
-    if (typeof quantity !== 'number') {
-      throw new InvalidArgumentError('"quantity" must be a number');
-    }
-    if (!quantityIsValid) {
-      throw new InvalidArgumentError('"quantity" must be larger than or equal to 1');
-    }
-
     const product = new Product();
-    const products = await product.getAll();
-    const repeatedName = products.some(({ name: dbName }) => dbName === name);
+    const { name = '', quantity = '' } = payload;
 
-    if (repeatedName) throw new InvalidArgumentError('Product already exists');
+    await validations.product.name(name);
+    validations.product.quantity(quantity);
+
     return product.create(payload);
   },
   async getAll() {
@@ -40,5 +25,18 @@ module.exports = {
     if (!response) throw new InvalidArgumentError('Wrong id format');
 
     return response;
+  },
+  async update(payload) {
+    const product = new Product();
+    const { id, name, quantity } = payload;
+
+    const productDB = await product.get(id);
+
+    if(!productDB) throw new NotFoundError('product');
+
+    await validations.product.name(name, id);
+    validations.product.quantity(quantity);
+
+    return product.update(payload);
   }
 };
