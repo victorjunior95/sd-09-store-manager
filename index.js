@@ -1,13 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const productsController = require('./controllers/productsController');
-// const { productValidation } = require('./services/productsServices'); // remover
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.post('/products', productsController.createProduct);
+app.get('/products', productsController.getProducts);
+app.get('/products/:id', productsController.getProducts);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
