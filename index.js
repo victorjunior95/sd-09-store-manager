@@ -12,11 +12,17 @@ app.post('/sales', saleController.salesCreate);
 
 app.get('/sales', saleController.listAllSales);
 
-app.get('/sales/:id');
+app.get('/sales/:id', saleController.saleIdController);
 
-app.post('/products', productController.productCreate);
+app.put('/sales/:id', saleController.salesUpdateController);
+
+app.delete('/sales/:id', saleController.excludeSaleController);
+
+
 
 // lista todos os produtos
+app.post('/products', productController.productCreate);
+
 app.get('/products', productController.listAllProducts);
 
 // lista por id ou seja, por um único id
