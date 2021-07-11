@@ -12,6 +12,18 @@ const create = async ({ name, quantity }) => {
   return ProductsModel.create({ name, quantity });
 };
 
+const findAll = async () => {
+  const response = await ProductsModel.findAll();
+
+  return response;
+};
+
+const findById = async (id) => {
+  const response = await ProductsModel.findOneById(id);
+
+  return response;
+};
+
 const validateUniqueProductName = async (name) => {
   const response = await ProductsModel.findOneByName(name);
 
@@ -38,4 +50,6 @@ const validateCreatePayload = ({ name, quantity }) => {
 
 module.exports = {
   create,
+  findAll,
+  findById,
 };

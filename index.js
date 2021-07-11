@@ -21,4 +21,8 @@ app.get('/', (_request, response) => {
 
 app.post('/products', ProductsController.create);
 
+app.get('/products', ProductsController.listAll);
+
+app.get('/products/:id', ProductsController.findById);
+
 
