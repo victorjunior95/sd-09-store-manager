@@ -22,11 +22,11 @@ const getAll = async () => {
     .then((db) => db.collection('products').find().toArray());
 };
 
-const getProductById = async (id) => {
+const findProductById = async (id) => {
   if(!ObjectId.isValid(id)) return null;
 
   return await connection()
     .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
 };
 
-module.exports = { createProduct, getProductByName, getAll, getProductById };
+module.exports = { createProduct, getProductByName, getAll, findProductById };

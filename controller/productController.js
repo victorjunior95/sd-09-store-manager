@@ -1,7 +1,4 @@
-const { 
-  validateNewProduct,
-  getAllProducts,
-  findProductById } = require('../service/productService');
+const productService = require('../service/productService');
 
 const unprocessable = 422;
 const created = 201;
@@ -9,9 +6,11 @@ const status_ok = 200;
 
 const postProduct = async (req, res) => {
   const { name, quantity } = req.body;
-  const newProduct = await validateNewProduct(name, quantity);
+  const validation = await productService.validateProduct(name, quantity);
+  
+  if(validation !== null) return res.status(unprocessable).json(validation);
 
-  if(newProduct.err) return res.status(unprocessable).json(newProduct);
+  const newProduct = await productService.createNewProduct(name, quantity);
   return res.status(created).json(newProduct);
 };
 
@@ -21,12 +20,14 @@ const getProducts = async (_req, res) => {
   if (products) return res.status(status_ok).json({ products });
 };
 
-const getProductId = async (req, res) => {
+const getProductById = async (req, res) => {
   const { id } = req.params;
-  const product = await findProductById(id);
+  const product = await validateFoundId(id);
   if(product.err) return res.status(unprocessable).json(product);
   if(product) return res.status(status_ok).json(product);
 };
 
-module.exports = { postProduct, getProducts, getProductId };
+
+
+module.exports = { postProduct, getProducts, getProductById };
 

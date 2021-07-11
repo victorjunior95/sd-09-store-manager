@@ -1,6 +1,6 @@
 const productModel = require('../model/productModel');
 
-const validateNewProduct = async (name, quantity) => {
+const validateProduct = async (name, quantity) => {
   const minNameLength = 5;
   const minQuantity = 0;
 
@@ -32,6 +32,10 @@ const validateNewProduct = async (name, quantity) => {
     }
   };
 
+  return null;
+};
+
+const createNewProduct = async (name, quantity) => {
   return await productModel.createProduct(name, quantity);
 };
 
@@ -39,8 +43,8 @@ const getAllProducts =  async () => {
   return await productModel.getAll();
 };
 
-const findProductById = async (id) => {
-  const product = await productModel.getProductById(id);
+const validateFoundId = async (id) => {
+  const product = await productModel.findProductById(id);
   if (!product) return {
     err: { 
       message: 'Wrong id format',
@@ -51,4 +55,6 @@ const findProductById = async (id) => {
   return product;
 };
 
-module.exports = { validateNewProduct, getAllProducts, findProductById };
+
+
+module.exports = { validateProduct, createNewProduct, getAllProducts, validateFoundId };
