@@ -1,6 +1,5 @@
 const httpCodes = require('../auxiliarFunctions/httpCodes');
 const salesServices = require('../services/salesServices');
-const { ObjectId } = require('mongodb');
 
 // 5 - Crie um endpoint para cadastrar vendas
 const postNewSale = async (req, res, next) => {
@@ -14,6 +13,7 @@ const postNewSale = async (req, res, next) => {
     itensSold: mySaleArray,
   });
 };
+
 // 6 - Crie um endpoint para listar as vendas
 const getSales = async (req, res, next) => {
   const { id } = req.params;

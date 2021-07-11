@@ -12,6 +12,7 @@ const postNewSale = async (array) => {
   await productsModel.updateProductWhenSold(array);
 
   const result = await salesModel.postNewSale(array);
+
   return result;
 };
 

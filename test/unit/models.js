@@ -20,8 +20,6 @@ const VALID_PRODUCT_INPUT_2 = {
 
 const VALID_ID_1 = ObjectId('60e770a1f02f7e8cab42588a');
 const VALID_ID_2 = ObjectId('60e770a1f02f7e8cab42589a');
-const VALID_ID_3 = ObjectId('60e770a1f02f7e8cab42581d');
-const VALID_ID_4 = ObjectId('60e770a1f02f7e8cab42580e');
 
 const VALID_PRODUCT_INPUT_1_FULL = {
   _id: VALID_ID_1,
@@ -71,7 +69,7 @@ const VALID_SALE_INPUT_1_FULL = {
   ],
 };
 
-describe('Testes para os arquivos de model', () => {
+describe('Testes para a camada Model', () => {
   let connectionMock;
   const DBServer = new MongoMemoryServer();
 
@@ -96,7 +94,7 @@ describe('Testes para os arquivos de model', () => {
     await db.collection('sales').deleteMany({});
   });
 
-  describe('Testes para as funções de "products"', () => {
+  describe('Testes para a rota "/products/"', () => {
     describe('Testes para as funções associadas ao método POST', () => {
       describe('Quando um produto é inserido com sucesso', () => {
         it('deve retornar um objeto', async () => {
@@ -244,7 +242,7 @@ describe('Testes para os arquivos de model', () => {
     });
   // fim dos testes de produtos
   });
-  describe('Testes para as funções de "sales"', () => {
+  describe('Testes para a rota "/sales/"', () => {
     describe('Testes para as funções associadas ao método POST', () => {
       describe('Testes para a função postNewSale', () => {
         describe('Quando a sale é cadastrada com sucesso', () => {

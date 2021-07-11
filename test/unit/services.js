@@ -20,16 +20,8 @@ const INVALID_POST_INPUT_1 = {
 const VALID_ID_1 = '60e84a58b6df1e18a10b4f40';
 const VALID_ID_2 = '60e850da6d026823fa3ea8fc';
 
-const VALID_ID_3 = '60e84a58b6df1e18a10b4f40';
-const VALID_ID_4 = '60e84a58b6df1e18a10b4f40';
-
 const VALID_SALE_INPUT_1 = [
   { 'productId': VALID_ID_1, 'quantity': 10 },
-];
-
-const VALID_SALE_INPUT_2 = [
-  { 'productId': VALID_ID_1, 'quantity': 14 },
-  { 'productId': VALID_ID_2, 'quantity': 5 },
 ];
 
 const VALID_PRODUCT_1 = {
@@ -68,7 +60,7 @@ const VALID_SALE_OUTPUT = {
 };
 
 describe('Testes para a camada de Services',() => {
-  describe('Testes para as funções da "products"', () => {
+  describe('Testes para a rota "/products/"', () => {
     describe('Testes para o método POST', () => {
       afterEach(() => {
         productsModel.postNewProduct.restore();
@@ -271,7 +263,7 @@ describe('Testes para a camada de Services',() => {
     });
   // fim dos testes de products
   });
-  describe('Testes para as funções da"sales"', () => {
+  describe('Testes para a rota "/sales/"', () => {
     describe('Testes para o método POST', () => {
 
       describe('Quando o método obtem sucesso', () => {
