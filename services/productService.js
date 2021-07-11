@@ -1,6 +1,7 @@
 const productModel = require('../models/productModel');
 const minLength = 5;
 const minQtd = 1;
+const ZERO = 0;
 
 const validateName = (name) => {
   if (name.length < minLength) return {
@@ -58,9 +59,24 @@ const updateOneProduct = async (id, name, quantity) => {
   return await productModel.findByIdAndUpdate(id, name, quantity);
 };
 
+const deleteOneProduct = async (id) => {
+  const deleteProduct = await productModel.findByIdAndRemove(id);
+  const deleteCount = deleteProduct.deletedCount;
+  if ( deleteCount === ZERO) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  };
+  return deleteProduct;
+};
+
 module.exports = {
   addProduct,
   getAllProducts,
   getOneProductById,
-  updateOneProduct
+  updateOneProduct,
+  deleteOneProduct,
 };

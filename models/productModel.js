@@ -49,10 +49,25 @@ const findByIdAndUpdate = async (id, name, quantity) => {
   return {_id: id, name, quantity};
 };
 
+const findByIdAndRemove = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  };
+  const removed = await connection()
+    .then(db => db.collection('products').deleteOne({_id: ObjectId(id)}));
+  return removed;
+};
+
 module.exports = {
   create,
   findOne,
   findAll,
   findById,
-  findByIdAndUpdate
+  findByIdAndUpdate,
+  findByIdAndRemove,
 };
