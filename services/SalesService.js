@@ -20,7 +20,6 @@ const quantity_min = 1;
 const first_index = 0;
 
 const validateQuantity = async (itemSold) => {
-
   for (let index = first_index; index < itemSold.length; index++) {
     const quantity = itemSold[index].quantity;
     if (quantity < quantity_min || typeof quantity === 'string') return {
