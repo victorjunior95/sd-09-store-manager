@@ -8,6 +8,8 @@ const errors = {
   saleNotFound: 'Sale not found',
   notFound: 'not_found',
   idSaleFormat: 'Wrong sale ID format',
+  stockProblem: 'stock_problems',
+  quantityNotPermitted: 'Such amount is not permitted to sell',
 };
 
 module.exports = errors;
