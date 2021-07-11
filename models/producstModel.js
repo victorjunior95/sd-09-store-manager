@@ -21,6 +21,22 @@ const update = async(id, { name, quantity }) => {
   return {_id: id, name, quantity};
 };
 
+const deleteOne = async(id) => {
+  const productsCollection = await connection()
+    .then((db) => db.collection('products'));
+
+  if(!ObjectId.isValid(id)) throw new ApiError('invalid_data',
+    'Wrong id format', httpStatusCode.unprocessableEntity);
+
+  const {value} = await productsCollection.findOneAndDelete({_id: ObjectId(id)});
+
+  if (!value) throw new ApiError('invalid_data',
+    'Wrong id format', httpStatusCode.unprocessableEntity);
+
+  return value;
+
+};
+
 const findAll = async () => connection()
   .then((db) => db.collection('products'))
   .then((collection) => collection.find().toArray())
@@ -44,7 +60,6 @@ const findOneById = async (id) => {
     .then((db) => db.collection('products'));
 
   const response = await productsCollection.findOne({_id: ObjectId(id)});
-  console.log(response);
   return response;
 };
 
@@ -55,4 +70,5 @@ module.exports = {
   findOneById,
   findAll,
   update,
+  deleteOne,
 };

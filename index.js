@@ -27,4 +27,6 @@ app.get('/products/:id', ProductsController.findById);
 
 app.put('/products/:id', ProductsController.update);
 
+app.delete('/products/:id', ProductsController.deleteOne);
+
 

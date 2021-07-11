@@ -17,7 +17,18 @@ const update = async(req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   try {
-    product = await ProductsService.update(id, name, quantity);
+    const product = await ProductsService.update(id, name, quantity);
+    return res.status(httpStatusCode.ok).json(product);
+  } catch (err) {
+    const {code, message, statusCode} = err;
+    return res.status(statusCode).json({err:{code, message}});
+  }
+};
+
+const deleteOne = async(req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await ProductsService.deleteOne(id);
     return res.status(httpStatusCode.ok).json(product);
   } catch (err) {
     const {code, message, statusCode} = err;
@@ -47,5 +58,6 @@ module.exports = {
   create,
   listAll,
   findById,
-  update
+  update,
+  deleteOne
 };

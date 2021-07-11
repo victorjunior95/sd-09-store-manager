@@ -21,6 +21,12 @@ const update = async(id, name, quantity) => {
   return product;
 };
 
+const deleteOne = async(id) => {
+  const product = await ProductsModel.deleteOne(id);
+
+  return product;
+};
+
 const findAll = async () => {
   const response = await ProductsModel.findAll();
 
@@ -62,4 +68,5 @@ module.exports = {
   findAll,
   findById,
   update,
+  deleteOne
 };
