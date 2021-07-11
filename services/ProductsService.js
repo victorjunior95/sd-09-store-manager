@@ -1,4 +1,4 @@
-const productsModel = require('../models/ProductsModel');
+const productsModel = require('../models/productsModel');
 
 const HTTP_NOTPROCESS_STATUS = 422;
 const HTTP_CREATED_STATUS = 201;
@@ -7,7 +7,7 @@ const HTTP_OK_STATUS = 200;
 const productMaxLength = 5;
 const productMinQuantity = 0;
 
-const ValidateCreateUpdate = async (name, quantity) => {
+const ValidateCreateUpdate = (name, quantity) => {
   if (name.length < productMaxLength)
     return {
       status: HTTP_NOTPROCESS_STATUS,
@@ -34,7 +34,7 @@ const ValidateCreateUpdate = async (name, quantity) => {
 };
 
 const create = async (name, quantity) => {
-  const existsError = await ValidateCreateUpdate(name, quantity);
+  const existsError = ValidateCreateUpdate(name, quantity);
   if (existsError) {
     return existsError;
   }

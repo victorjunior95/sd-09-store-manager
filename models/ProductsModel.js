@@ -1,7 +1,5 @@
 const { ObjectId } = require('mongodb');
-
 const connection = require('./connection');
-
 const collectionProduct = 'products';
 
 const create = async (name, quantity) => {
@@ -14,17 +12,13 @@ const create = async (name, quantity) => {
 const update = async (id, name, quantity) => {
   const productId = new ObjectId(id);
 
-  const updateProduct = await connection()
-    .then((db) =>
-      db
-        .collection(collectionProduct)
-        .findOneAndUpdate(
-          { _id: productId },
-          { $set: { name, quantity } },
-          { returnOriginal: false },
-        ),
-    )
-    .then((result) => result.value);
+  const updateProduct = await connection().then((db) =>
+    db.collection(collectionProduct)
+      .findOneAndUpdate(
+        {_id: productId },
+        { $set: { name, quantity } },
+        { returnOriginal: false }),
+  ).then((result) => result.value);
 
   return updateProduct;
 };
@@ -68,7 +62,6 @@ const exclude = async (id) => {
 
   return deleteProduct.value;
 };
-
 module.exports = {
   create,
   findName,
