@@ -44,6 +44,15 @@ class Product {
         )
       ).then((result) => !result.value ? {} : result.value );
   }
+
+  async remove(id) {
+    if (!ObjectId.isValid(id)) return null;
+
+    return connection()
+      .then((db) => db.collection(this.collection))
+      .then((collection) => collection.findOneAndDelete({ _id: ObjectId(id) }))
+      .then((result) => !result.value ? {} : result.value);
+  }
 }
 
 module.exports = Product;
