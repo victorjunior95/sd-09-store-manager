@@ -1,56 +1,102 @@
+const SaleModel = require('../models/saleModel');
 const ProductModel = require('../models/productModel');
+const { ObjectId } = require('mongodb');
 
-const MIN_LENGTH_NAME = 5;
 const MIN_QTY = 0;
 
-const findByName = async (name) => {
-  let product = await ProductModel.findByName(name);
-  return product;
+const getAll = async () => {
+  let sales = await SaleModel.getAll();
+  return { sales };
 };
 
-const create = async (name, quantity) => {
-  let alreadyExists = await ProductModel.findByName(name);
+const findById = async (id) => {
+  let sale = await SaleModel.findById(id);
 
-  if (alreadyExists) {
+  if (!sale) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
+  };
+  return sale;
+};
+
+const validateData = ({ productId, quantity }, listProducts ) => {
+  if (quantity <= MIN_QTY) {
+    return false;
+  };
+
+  if (typeof quantity !== 'number') {
+    return false;
+  };
+
+  if (!listProducts.includes(productId)) {
+    return false;
+  };
+
+  return true;
+};
+
+const create = async (sales) => {
+  let listProducts = await ProductModel.getAll()
+    .then((products) => products.map((item) => ObjectId(item['_id']).toString()));
+
+  const result = sales.every((item) => validateData(item, listProducts));
+  
+  if (!result) {
     return {
       err: {
         code: 'invalid_data',
-        message: 'product already exists',
+        message: 'Wrong product ID or invalid quantity',
+      },
+    };
+  };
+  return SaleModel.create(sales);
+};
+
+const update = async (id, sale) => {
+  
+  let listProducts = await ProductModel.getAll()
+    .then((products) => products.map((item) => ObjectId(item['_id']).toString()));
+
+  const result = sale.every((item) => validateData(item, listProducts));
+  console.log('update ' + result);
+    
+  if (!result) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
       }
     };
   };
 
-  if (name.length <= MIN_LENGTH_NAME) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"name" length must be at least 5 characters long',
-      }
-    };
-  }
-  
-  if (quantity <= MIN_QTY) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"quantity" must be larger than or equal to 1',
-      }
-    };
-  }
+  await SaleModel.update(id, sale);
 
-  if (typeof quantity !== 'number') {
+  return { _id: id, itensSold: [...sale] };
+};
+
+const exclude = async (id) => {
+  let sale = await SaleModel.exclude(id);
+
+  if (!sale) {
     return {
       err: {
         code: 'invalid_data',
-        message: '"quantity" must be a number',
+        message: 'Wrong sale ID format',
       }
     };
-  }
+  };
 
-  return ProductModel.create(name, quantity);
+  return { _id: id };
 };
 
 module.exports = {
-  findByName,
+  getAll,
+  findById,
   create,
+  update,
+  exclude,
 };
