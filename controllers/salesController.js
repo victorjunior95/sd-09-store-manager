@@ -3,7 +3,7 @@ const {
   getAllService,
   getByIdService,
   updateService,
-  deleteService,
+  //deleteService,
 } = require('../services/SalesService');
 
 // response status code
@@ -18,13 +18,13 @@ const getAllSales = async (_req, res) => {
 };
 
 const createSales = async (req, res) => {
-  const requestedSales = req.body;
+  const products = req.body;
+  const sales = await createService(products);
+  //console.log(sales.status)
 
-  const sales = await createService(requestedSales);
+  if (sales.isError === true) return res.status(sales.status).json(sales);
 
-  if (sales.isError) return res.status(sales.status).json(sales);
-
-  res.status(CREATED).json(sales);
+  res.status(OK).json(sales);
 };
 
 const getSaleById = async (req, res) => {
@@ -47,7 +47,7 @@ const updateSale = async (req, res) => {
 
   res.status(OK).json(sales);
 };
-
+/*
 const deleteOneSale = async (req, res) => {
   const { id } = req.params;
 
@@ -57,11 +57,11 @@ const deleteOneSale = async (req, res) => {
 
   res.status(OK).json(sale);
 };
-
+*/
 module.exports = {
   getAllSales,
   createSales,
   getSaleById,
   updateSale,
-  deleteOneSale,
+  //deleteOneSale,
 };

@@ -1,10 +1,10 @@
 const {
-  getNewSales,
+  //getNewSales,
   createSales,
   getAllSales,
   getById,
   updateSales,
-  deleteSales,
+ // deleteSales,
 } = require('../models/SalesModel');
 
 const errors = {
@@ -18,8 +18,8 @@ const NOT_FOUND = 404;
 const UNPROCESSABLE = 422;
 const quantity_min = 1;
 
-const validateQuantity = async (requestedSales) => {
-  const quantity = requestedSales[0].quantity;
+const validateQuantity = async (itemSold) => {
+  const quantity = itemSold.quantity;
   if (quantity < quantity_min || typeof quantity === 'string') return {
     isError: true,
     err: {
@@ -28,15 +28,17 @@ const validateQuantity = async (requestedSales) => {
     },
     status: UNPROCESSABLE,
   };
+  return true;
 };
 
-const createService = async (requestedSales) => {
-  const isValid = await validateQuantity(requestedSales);
-  
+const createService = async (itemSold) => {
+  //console.log(itemSold);
+  const isValid = await validateQuantity(itemSold);
+  //console.log(isValid)
   if (isValid !== true) return isValid;
 
-  const sales = await createSales(requestedSales);
-
+  const sales = await createSales(itemSold);
+  //console.log(sales)
   return sales;
 };
 
@@ -66,7 +68,7 @@ const getByIdService = async (id) => {
 
   return sales;
 };
-
+/*
 const deleteService = async (id) => {
   const sale = await deleteSales(id);
   if (!sale) return {
@@ -80,11 +82,11 @@ const deleteService = async (id) => {
 
   return sale;
 };
-
+*/
 module.exports = {
   createService,
   getAllService,
   getByIdService,
   updateService,
-  deleteService,
+  //deleteService,
 };
