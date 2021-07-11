@@ -30,22 +30,30 @@ module.exports = {
     const product = new Product();
     const { id, name, quantity } = payload;
 
-    const productDB = await product.get(id);
-
-    if(!productDB) throw new NotFoundError('product');
-
     await validations.product.name(name, id);
     validations.product.quantity(quantity);
 
-    return product.update(payload);
+    const response = await product.update(payload);
+
+    if(!response) {
+      throw new InvalidArgumentError('Wrong id format');
+    } else if (!Object.keys(response).length) {
+      throw new NotFoundError('product');
+    };
+
+    return response;
   },
   async remove(id) {
     const product = new Product();
 
-    const productDB = await product.get(id);
+    const response = await product.remove(id);
 
-    if(!productDB) throw new NotFoundError('product');
+    if(!response) {
+      throw new InvalidArgumentError('Wrong id format');
+    } else if (!Object.keys(response).length) {
+      throw new NotFoundError('product');
+    };
 
-    return await product.remove(id);
+    return response;
   },
 };
