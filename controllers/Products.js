@@ -74,7 +74,6 @@ const exclude = rescue(async (req, res, next) => {
   return res.status(CODE_VALUE).json(excludeProduct);
 });
 
-
 module.exports = {
   create,
   getAll,

@@ -40,9 +40,22 @@ const change = async (id, array) => {
   return sales.modifiedCount;
 };
 
+const exclude = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const sales = await connection().then((db) =>
+    db.collection('sales').deleteOne({ _id: new ObjectId(id) }),
+  );
+
+  if (!sales) return null;
+
+  return sales;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
   change,
+  exclude,
 };

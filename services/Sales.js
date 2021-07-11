@@ -39,9 +39,27 @@ const change = async (id, array) => {
   return sales;
 };
 
+const exclude = async (id) => {
+  const sales = await Sales.findById(id);
+  const excludeSale = await Sales.exclude(id);
+
+  if (!excludeSale) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+      code: 422,
+    };
+  }
+
+  return sales;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
   change,
+  exclude,
 };

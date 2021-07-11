@@ -72,9 +72,21 @@ const change = rescue(async (req, res, next) => {
   return res.status(CODE_VALUE).json({ _id: id, itensSold: req.body });
 });
 
+const exclude = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const excludeSale = await Sales.exclude(id);
+
+  if (excludeSale.err) return next(excludeSale);
+
+  return res.status(CODE_VALUE).json(excludeSale);
+});
+
+
 module.exports = {
   create,
   getAll,
   findById,
   change,
+  exclude,
 };

@@ -34,7 +34,8 @@ app
 app
   .route('/sales/:id')
   .get(Sales.findById)
-  .put(Sales.change);
+  .put(Sales.change)
+  .delete(Sales.exclude);
 
 // Error
 const errorMiddleware = require('./controllers/Error');
