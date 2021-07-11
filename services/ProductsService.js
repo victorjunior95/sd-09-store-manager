@@ -7,7 +7,7 @@ const HTTP_OK_STATUS = 200;
 const productMaxLength = 5;
 const productMinQuantity = 0;
 
-const create = async (name, quantity) => {
+const ValidateCreateUpdate = async (name, quantity) => {
   if (name.length < productMaxLength)
     return {
       status: HTTP_NOTPROCESS_STATUS,
@@ -17,27 +17,7 @@ const create = async (name, quantity) => {
       },
     };
 
-  const existsName = await productsModel.findName(name);
-  if (existsName) {
-    return {
-      status: HTTP_NOTPROCESS_STATUS,
-      err: {
-        message: 'Product already exists',
-        code: 'invalid_data',
-      },
-    };
-  }
-
-  if (quantity < productMinQuantity)
-    return {
-      status: HTTP_NOTPROCESS_STATUS,
-      err: {
-        message: '"quantity" must be larger than or equal to 1',
-        code: 'invalid_data',
-      },
-    };
-
-  if (quantity === productMinQuantity)
+  if (quantity < productMinQuantity || quantity === productMinQuantity)
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: {
@@ -51,9 +31,24 @@ const create = async (name, quantity) => {
       status: HTTP_NOTPROCESS_STATUS,
       err: { message: '"quantity" must be a number', code: 'invalid_data' },
     };
+};
 
+const create = async (name, quantity) => {
+  const validateReturn = await ValidateCreateUpdate(name, quantity);
+  if (validateReturn) {
+    return validateReturn;
+  }
+  const existsName = await productsModel.findName(name);
+  if (existsName) {
+    return {
+      status: HTTP_NOTPROCESS_STATUS,
+      err: {
+        message: 'Product already exists',
+        code: 'invalid_data',
+      },
+    };
+  }
   const product = await productsModel.create(name, quantity);
-
   return { product, status: HTTP_CREATED_STATUS };
 };
 
@@ -76,9 +71,26 @@ const getProductById = async (id) => {
   return { product, status: HTTP_OK_STATUS };
 };
 
+const update = async (id, name, quantity) => {
+
+  const validateReturn = await ValidateCreateUpdate(name, quantity);
+  if (validateReturn) {
+    return validateReturn;
+  }
+
+  const productById = await getProductById(id);
+  if (productById.err) {
+    return productById;
+  }
+  
+  const product = await productsModel.update(id, name, quantity);
+  return { product, status: HTTP_OK_STATUS };
+};
+
 module.exports = {
   create,
   listAll,
-  getProductById
+  getProductById,
+  update,
 
 };

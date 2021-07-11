@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./routers/router');
+const middlewareError = require('./midlewares/middlewareError');
 
 const app = express();
 const port = 3000;
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.get('/', (_request, response) => {
   response.send();
 });
-
+app.use(middlewareError);
 app.use(router);
 
 app.listen(port, () => {

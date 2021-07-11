@@ -5,15 +5,13 @@ const ProductsRouter = express.Router();
 
 const HTTP_SERVERERROR_STATUS = 500;
 
-ProductsRouter.post('/', async (req, res) => {
+ProductsRouter.post('/', async (req, res, _next) => {
   try {
     const { name, quantity } = req.body;
-
     const newProduct = await productsService.create(name, quantity);
 
     if (newProduct.err)
-      return res.status(newProduct.status).json({ err: newProduct.err});
-
+      return res.status(newProduct.status).json({ err: newProduct.err });
     return res.status(newProduct.status).json(newProduct.product);
   } catch (err) {
     return res.status(HTTP_SERVERERROR_STATUS).json(err);
@@ -31,7 +29,7 @@ ProductsRouter.get('/', async (_req, res) => {
   }
 });
 
-ProductsRouter.get('/:id', async (req, res) => {
+ProductsRouter.get('/:id', async (req, res, _next) => {
   const { id } = req.params;
   try {
     const productReturn = await productsService.getProductById(id);
@@ -40,6 +38,21 @@ ProductsRouter.get('/:id', async (req, res) => {
     return res.status(productReturn.status).json(productReturn.product); 
   } catch (err) {
     return res.status(HTTP_SERVERERROR_STATUS).json(err);
+  }
+});
+
+ProductsRouter.put('/:id', async (req, res, _next) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  
+  const product = await productsService.update(id, name, quantity);
+  try {
+    if(product.err) {
+      return res.status(product.status).json({ err: product.err });
+    }
+    return res.status(product.status).json(product.product);
+  } catch (error) {
+    return res.status(HTTP_SERVERERROR_STATUS).json(error);
   }
 });
 
