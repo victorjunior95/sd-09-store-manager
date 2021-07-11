@@ -4,10 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-const Products = require('./controllers/Products');
-const salesController = require('./controllers/Sales');
-const errorMiddleware = require('./controllers/Error');
-
 app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -15,6 +11,8 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
+// Products
+const Products = require('./controllers/Products');
 app
   .route('/products')
   .post(Products.create)
@@ -26,6 +24,14 @@ app
   .put(Products.change)
   .delete(Products.exclude);
 
+// Sales
+const Sales = require('./controllers/Sales');
+app
+  .route('/sales')
+  .post(Sales.create);
+
+// Error
+const errorMiddleware = require('./controllers/Error');
 app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
