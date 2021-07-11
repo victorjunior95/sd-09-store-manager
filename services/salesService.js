@@ -37,8 +37,16 @@ const getSale = async (id) => {
   return sale;
 };
 
+const update = async (id, sales) => {
+  const validate = quantityValidate(sales);
+  if (validate.err) return validate;
+  const update = await salesModel.update(id, sales);
+  return update;
+};
+
 module.exports = {
   create,
   getAll,
   getSale,
+  update
 };
