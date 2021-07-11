@@ -11,6 +11,7 @@ router.route('/')
 
 router.route('/:id')
   .get(productsController.findOne)
-  .put(validateProducts, productsController.updateProduct);
+  .put(validateProducts, productsController.updateProduct)
+  .delete(productsController.deleteProduct);
 
 module.exports = router;
