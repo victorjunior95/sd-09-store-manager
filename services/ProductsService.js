@@ -34,9 +34,9 @@ const ValidateCreateUpdate = async (name, quantity) => {
 };
 
 const create = async (name, quantity) => {
-  const validateReturn = await ValidateCreateUpdate(name, quantity);
-  if (validateReturn) {
-    return validateReturn;
+  const existsError = await ValidateCreateUpdate(name, quantity);
+  if (existsError) {
+    return existsError;
   }
   const existsName = await productsModel.findName(name);
   if (existsName) {
@@ -87,10 +87,21 @@ const update = async (id, name, quantity) => {
   return { product, status: HTTP_OK_STATUS };
 };
 
+const exclude = async (id) => {
+  const productNotExists = await getProductById(id);
+  if (productNotExists.err) {
+    return productNotExists;
+  }
+
+  const product = await productsModel.exclude(id);
+ 
+  return { product, status: HTTP_OK_STATUS };
+};
+
 module.exports = {
   create,
   listAll,
   getProductById,
   update,
-
+  exclude,
 };

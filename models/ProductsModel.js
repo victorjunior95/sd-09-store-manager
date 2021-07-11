@@ -14,13 +14,17 @@ const create = async (name, quantity) => {
 const update = async (id, name, quantity) => {
   const productId = new ObjectId(id);
 
-  const updateProduct = await connection().then((db) =>
-    db.collection(collectionProduct)
-      .findOneAndUpdate(
-        {_id: productId },
-        { $set: { name, quantity } },
-        { returnOriginal: false }),
-  ).then((result) => result.value);
+  const updateProduct = await connection()
+    .then((db) =>
+      db
+        .collection(collectionProduct)
+        .findOneAndUpdate(
+          { _id: productId },
+          { $set: { name, quantity } },
+          { returnOriginal: false },
+        ),
+    )
+    .then((result) => result.value);
 
   return updateProduct;
 };
@@ -53,10 +57,23 @@ const findProductById = async (id) => {
   return product;
 };
 
+const exclude = async (id) => {
+  const productId = new ObjectId(id);
+
+  const deleteProduct = await connection().then((db) =>
+    db
+      .collection(collectionProduct)
+      .findOneAndDelete({ _id: productId }, { project: { name: 1, quantity: 1 } }),
+  );
+
+  return deleteProduct.value;
+};
+
 module.exports = {
   create,
   findName,
   listAll,
   findProductById,
   update,
+  exclude,
 };
