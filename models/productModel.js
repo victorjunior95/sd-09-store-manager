@@ -13,7 +13,27 @@ const findOne = async (name) => {
     .then(db => db.collection('products').findOne({name}));
 };
 
+const findAll = async () => {
+  return connection()
+    .then(db => db.collection('products').find().toArray());
+};
+
+const findById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  };
+  return connection()
+    .then(db => db.collection('products').findOne(ObjectId(id)));
+};
+
 module.exports = {
   create,
-  findOne
+  findOne,
+  findAll,
+  findById,
 };
