@@ -11,25 +11,27 @@ const getAll = async () => connection()
   .then((salesArray) => salesArray.map(({ _id, itensSold }) => ({ _id, itensSold })));
 
 const getById = async (id) => {
-  console.log('getById MODEL <<<<<<<<<<<<<<<<');
-
   if (!ObjectId.isValid(id)) return null;
 
-  console.log('getById MODEL >>>>>>>>>>>>>>>>>>>');
   return connection()
     .then((db) => db.collection('sales').findOne(ObjectId(id)))
-    .then(db => db);
+    .then(sale => sale);
 };
 
 const deleteSale = async (id) => {
-  console.log('DELETE MODEL <<<<<<<<<<<<<<<<');
-
   if (!ObjectId.isValid(id)) return null;
-
-  console.log('DELETE MODEL >>>>>>>>>>>>>>>>>>>');
 
   return connection()
     .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+};
+
+const update = async (id, sale) => {
+
+  if (!ObjectId.isValid(id)) return null;
+  return connection()
+    .then((db) => db.collection('sales')
+      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: sale } }))
+    .then(() => ({ _id: id, itensSold: sale }));
 };
 
 module.exports = {
@@ -37,4 +39,5 @@ module.exports = {
   getAll,
   getById,
   deleteSale,
+  update,
 };

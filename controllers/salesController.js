@@ -22,8 +22,6 @@ salesRouter.get('/', async (_req, res) => {
 salesRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
   const sale = await salesService.getById(id);
-  console.log('################ saleController', sale);
-
 
   if (sale.err) return res.status(not_found).json(sale);
   return res.status(OK).json(sale);
@@ -35,6 +33,16 @@ salesRouter.delete('/:id', async (req, res) => {
 
   if (saleDeleted.err) return res.status(unprocessable_entity).json(saleDeleted);
   return res.status(OK).json(saleDeleted);
+});
+
+salesRouter.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const saleToUpdate = req.body;
+
+  const saleUpdated = await salesService.update(id, saleToUpdate);
+
+  if (saleUpdated.err) return res.status(unprocessable_entity).json(saleUpdated);
+  return res.status(OK).json(saleUpdated);
 });
 
 module.exports = salesRouter;

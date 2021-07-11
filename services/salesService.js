@@ -11,21 +11,11 @@ const create = async (productsArray) => {
 const getAll = async () => {
   const allSales = await salesModel.getAll();
 
-  // console.log('getAll =======================================================Inicio')
-  // console.log('##### allSales')
-  // console.log('#####', allSales)
-  // console.log('##### allSales[0]')
-  // console.log('#####', allSales[0])
-  // console.log('##### allSales[0].itensSold')
-  // console.log('#####', allSales[0].itensSold)
-  // console.log('getAll =======================================================Fim')
-
   return { sales: allSales };
 };
 
 const getById = async (id) => {
   const sale = await salesModel.getById(id);
-  console.log('getById =================================================', sale);
   if (sale) return sale;
 
   return {
@@ -49,6 +39,13 @@ const deleteSale = async (id) => {
   };
 };
 
+const update = async (id, saleToUpdate) => {
+  if (await salesValidator(saleToUpdate))
+    return salesValidator(saleToUpdate);
+
+  return salesModel.update(id, saleToUpdate);
+};
+
 
 
 module.exports = {
@@ -56,4 +53,5 @@ module.exports = {
   getAll,
   getById,
   deleteSale,
+  update,
 };

@@ -14,19 +14,7 @@ const create = async (name, quantity) => {
 const getAll = async () => {
   const allProducts = await ProductModel.getAll();
 
-  return { 'products': allProducts }; // Coloquei esse return sem a verificação abaixo
-  // pra passar no requisito.
-  // Verificação abaixo seria idela pra não retornar um array vazio.
-
-  //============================================================
-
-  // if (allProducts.length) return { 'products': allProducts };
-
-  // return { err: {
-  //   code: "not_found",
-  //   message: "Product not found",
-  //   }
-  // }
+  return { 'products': allProducts };
 };
 
 const getById = async (id) => {
