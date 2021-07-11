@@ -62,9 +62,21 @@ const updateOne = rescue(async(req, res, next) => {
   return res.status(STATUS_OK).json(updateProduct);  
 });
 
+const deleteProduct = rescue(async (req, res, next) => {
+  const {id} = req.params;
+  const deletedProduct = await ProductsServices.deleteProduct(id);
+
+  if (deletedProduct.error) {
+    return next(deletedProduct.error);
+  }
+
+  return res.status(STATUS_OK).json(deletedProduct);
+});
+
 module.exports = {
   getAll,
   create,
   getById,
-  updateOne
+  updateOne,
+  deleteProduct
 };

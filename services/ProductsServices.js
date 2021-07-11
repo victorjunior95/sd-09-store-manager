@@ -1,4 +1,5 @@
 const ProductsModels = require('../models/ProductsModels');
+const DELETED_COUNT = 0;
 
 const create = async (name, quantity) => {
   const hasAuthor = await ProductsModels.findByName(name);
@@ -45,9 +46,25 @@ const updateOne = async (id, name, quantity) => {
   return updateProduct;
 };
 
+const deleteProduct = async (id) => {
+  const deleted = await ProductsModels.deleteProduct(id);
+  
+  if (!deleted) {
+    return {
+      error: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+
+  return deleted;
+};
+
 module.exports = {
   getAll,
   create,
   getById,
-  updateOne
+  updateOne,
+  deleteProduct
 };
