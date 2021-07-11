@@ -33,7 +33,8 @@ app
 
 app
   .route('/sales/:id')
-  .get(Sales.findById);
+  .get(Sales.findById)
+  .put(Sales.change);
 
 // Error
 const errorMiddleware = require('./controllers/Error');

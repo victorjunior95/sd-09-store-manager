@@ -27,8 +27,22 @@ const findById = async (id) => {
   return sales;
 };
 
+const change = async (id, array) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const sales = await connection().then((db) =>
+    db.collection('sales').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { itensSold: array } },
+    ),
+  );
+
+  return sales.modifiedCount;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
+  change,
 };

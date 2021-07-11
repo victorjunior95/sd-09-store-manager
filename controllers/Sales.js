@@ -6,7 +6,6 @@ const Sales = require('../services/Sales');
 const MIN_NAME = 5;
 const MIN_QUANTITY = 1;
 
-const CODE_CREATE = 201;
 const CODE_VALUE = 200;
 
 const create = rescue(async (req, res, next) => {
@@ -49,8 +48,33 @@ const findById = rescue(async (req, res, next) => {
   return res.status(CODE_VALUE).json(findSale);
 });
 
+const change = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const { error } = Joi.array()
+    .items(
+      Joi.object().keys({
+        productId: Joi.string().not().empty().min(MIN_NAME).required(),
+        quantity: Joi.number().integer().min(MIN_QUANTITY).required(),
+      }),
+    )
+    .validate(req.body);
+
+  if (error) {
+    error.details[0].message = 'Wrong product ID or invalid quantity';
+    return next(error);
+  }
+
+  const changeProduct = await Sales.change(id, req.body);
+
+  if (changeProduct.err) return next(changeProduct);
+
+  return res.status(CODE_VALUE).json({ _id: id, itensSold: req.body });
+});
+
 module.exports = {
   create,
   getAll,
   findById,
+  change,
 };
