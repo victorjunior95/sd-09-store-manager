@@ -15,7 +15,7 @@ function validateName(name){
   }
 }
 
-async function validateProductAlreadyExists(name) {
+async function validateNameExists(name) {
   const product = await productsModel.getProductByName(name);
   if (product) {
     throw {
@@ -70,9 +70,24 @@ function validateProduct(product) {
   }
 }
 
+async function validateIdExists(id) {
+  const product = await productsModel.getProductById(id);
+  if (!product) {
+    throw {
+      status: 422,
+      result: {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        },
+      },
+    };
+  }
+}
+
 async function addProduct(name, quantity) {
   validateName(name);
-  await validateProductAlreadyExists(name);
+  await validateNameExists(name);
   validateQuantity(quantity);
   const result = await productsModel.addProduct(name, quantity);
   return { status: 201, result };
@@ -96,9 +111,16 @@ async function updateProduct(id, name, quantity) {
   return { status: 200, result: { _id: id, name, quantity } };
 }
 
+async function deleteProduct(id) {
+  await validateIdExists(id);
+  const result = await productsModel.deleteProduct(id);
+  return { status: 200, result };
+}
+
 module.exports = {
   addProduct,
   getProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };

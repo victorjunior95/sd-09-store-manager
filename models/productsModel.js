@@ -16,7 +16,6 @@ async function addProduct(name, quantity) {
 async function getProducts() {
   const db = await connection();
   const result = await db.collection('products').find().toArray();
-  console.log('products', result);
   return { products: result };
 }
 
@@ -36,10 +35,17 @@ async function updateProduct(id, name, quantity) {
   return result;
 }
 
+async function deleteProduct(id) {
+  const db = await connection();
+  const result = await db.collection('products').deleteOne({ _id: ObjectId(id) });
+  return result;
+}
+
 module.exports = {
   getProductByName,
   addProduct,
   getProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };
