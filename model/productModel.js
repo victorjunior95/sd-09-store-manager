@@ -37,9 +37,15 @@ const updateProduct = async (id, name, quantity) => {
       {upsert: true}));
 };
 
+const deleteOne = async (id) => {
+  return await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: id }));
+};
+
 module.exports = {
   createProduct,
   getProductByName,
   getAll,
   findProductById,
-  updateProduct };
+  updateProduct,
+  deleteOne };

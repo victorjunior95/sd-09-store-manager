@@ -19,3 +19,4 @@ app.post('/products', rescue(productController.postProduct));
 app.get('/products', rescue(productController.getProducts));
 app.get('/products/:id', rescue(productController.getProductById));
 app.put('/products/:id', rescue(productController.editProduct));
+app.delete('/products/:id', rescue(productController.deleteProduct));

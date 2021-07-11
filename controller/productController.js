@@ -40,5 +40,13 @@ const editProduct = async (req, res) => {
   return res.status(status_ok).json(product);
 };
 
-module.exports = { postProduct, getProducts, getProductById, editProduct };
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await productService.validateFoundId(id);
+  if(product.err) return res.status(unprocessable).json(product);
 
+  const deletedProduct = await productService.deleteProductById(id);
+  if(deletedProduct) return res.status(status_ok).json(deletedProduct);
+};
+
+module.exports = { postProduct, getProducts, getProductById, editProduct, deleteProduct };
