@@ -11,4 +11,6 @@ productsRouter.get('/', rescue(productsController.getProducts));
 
 productsRouter.get('/:id', rescue(productsController.getProductById));
 
+productsRouter.put('/:id', rescue(productsController.updateProduct));
+
 module.exports = productsRouter;

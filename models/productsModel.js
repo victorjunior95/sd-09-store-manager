@@ -27,9 +27,19 @@ async function getProductById(id) {
   return result;
 }
 
+async function updateProduct(id, name, quantity) {
+  const db = await connection();
+  const result = await db.collection('products').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { name, quantity }},
+  );
+  return result;
+}
+
 module.exports = {
   getProductByName,
   addProduct,
   getProducts,
   getProductById,
+  updateProduct,
 };
