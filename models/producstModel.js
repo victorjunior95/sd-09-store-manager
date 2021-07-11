@@ -15,7 +15,7 @@ const findOneByName = async (name) => {
 
   const response = await productsCollection.findOne({name});
 
-  if (response) return response.ops[0];
+  if (response) return response;
 
   return response;
 };

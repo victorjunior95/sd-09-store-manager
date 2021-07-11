@@ -4,6 +4,7 @@ const httpStatusCode = require('../httpStatusCodes');
 const ApiError = require('../errors/apiError');
 
 const create = async ({ name, quantity }) => {
+
   validateCreatePayload({ name, quantity });
 
   await validateUniqueProductName(name);
@@ -26,7 +27,7 @@ const validateCreatePayload = ({ name, quantity }) => {
   const minNameLength = 5;
   const payloadSchema = Joi.object({
     name: Joi.string().min(minNameLength).required(),
-    quantity: Joi.number().integer().positive().required(),
+    quantity: Joi.number().integer().min(1).required(),
   });
 
   const { error } = payloadSchema.validate({ name, quantity });
