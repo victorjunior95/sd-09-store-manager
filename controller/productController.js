@@ -6,6 +6,9 @@ const status_ok = 200;
 
 const postProduct = async (req, res) => {
   const { name, quantity } = req.body;
+  const checkProduct = await productService.checkIfProductExists(name);
+  if(checkProduct !== null) return res.status(unprocessable).json(checkProduct);
+
   const validation = await productService.validateProduct(name, quantity);
   if(validation !== null) return res.status(unprocessable).json(validation);
 

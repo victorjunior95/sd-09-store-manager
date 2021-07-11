@@ -33,7 +33,7 @@ const updateProduct = async (id, name, quantity) => {
   return await connection()
     .then((db) => db.collection('products').updateOne(
       {_id: id},
-      {$set: { name: name, quantity: quantity }},
+      {$set: { name, quantity }},
       {upsert: true}));
 };
 

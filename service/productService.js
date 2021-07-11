@@ -1,5 +1,15 @@
 const productModel = require('../model/productModel');
 
+const checkIfProductExists = async (name) => {
+  if (await productModel.getProductByName(name)) return {
+    err: { 
+      message: 'Product already exists',
+      code: 'invalid_data'
+    } 
+  };
+  return null;
+};
+
 const validateProduct = async (name, quantity) => {
   const minNameLength = 5;
   const minQuantity = 0;
@@ -7,13 +17,6 @@ const validateProduct = async (name, quantity) => {
   if(name.length < minNameLength) return { 
     err: { 
       message: '"name" length must be at least 5 characters long',
-      code: 'invalid_data'
-    } 
-  };
-
-  if (await productModel.getProductByName(name)) return {
-    err: { 
-      message: 'Product already exists',
       code: 'invalid_data'
     } 
   };
@@ -60,6 +63,7 @@ const update = async (id, name, quantity) => {
 };
 
 module.exports = {
+  checkIfProductExists,
   validateProduct,
   createNewProduct,
   getAllProducts,
