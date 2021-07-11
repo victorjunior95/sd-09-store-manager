@@ -6,5 +6,6 @@ salesRoute.post('/', salesController.create);
 salesRoute.get('/', salesController.getAll);
 salesRoute.get('/:id', salesController.getSale);
 salesRoute.put('/:id', salesController.update);
+salesRoute.delete('/:id', salesController.deleteSale);
 
 module.exports = salesRoute;

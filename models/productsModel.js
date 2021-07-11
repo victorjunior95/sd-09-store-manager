@@ -49,6 +49,7 @@ const updateProduct = async (id, name, quantity) => {
 };
 
 const deleteProductFromDb = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
   const db = await connection();
   const collection = await db.collection('products');
   const product = await collection.deleteOne({ _id: ObjectId(id) });
