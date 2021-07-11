@@ -44,8 +44,27 @@ const getById = rescue(async(req, res, next) => {
   return res.status(STATUS_OK).json(product);
 });
 
+const updateOne = rescue(async(req, res, next) => {
+  const { error } = Joi.object({
+    name: Joi.string().min(MIN_LENGTH).not().empty().required(),
+    quantity: Joi.number().integer().min(1).not().empty().required(),
+  }).validate(req.body);
+
+  if (error) {
+    return next(error);
+  }
+
+  const {id} = req.params;
+  const {name, quantity} = req.body;
+
+  const updateProduct = await ProductsServices.updateOne(id, name, quantity);
+
+  return res.status(STATUS_OK).json(updateProduct);  
+});
+
 module.exports = {
   getAll,
   create,
-  getById
+  getById,
+  updateOne
 };
