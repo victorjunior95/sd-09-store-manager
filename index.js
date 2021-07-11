@@ -18,4 +18,4 @@ app.listen(PORT, () => console.log('Rodando na 3000'));
 app.post('/products', rescue(productController.postProduct));
 app.get('/products', rescue(productController.getProducts));
 app.get('/products/:id', rescue(productController.getProductById));
-app.put('/products/:id', rescue(productController.updateProduct));
+app.put('/products/:id', rescue(productController.editProduct));

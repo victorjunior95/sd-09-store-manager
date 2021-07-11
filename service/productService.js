@@ -55,6 +55,13 @@ const validateFoundId = async (id) => {
   return product;
 };
 
+const update = async (id, name, quantity) => {
+  return await productModel.updateProduct(id, name, quantity);
+};
 
-
-module.exports = { validateProduct, createNewProduct, getAllProducts, validateFoundId };
+module.exports = {
+  validateProduct,
+  createNewProduct,
+  getAllProducts,
+  validateFoundId,
+  update };
