@@ -1,7 +1,6 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const productsController = require('../controllers/productsController');
-const { addProduct } = require('../models/productsModel');
 
 const productsRouter = express.Router();
 
