@@ -30,4 +30,12 @@ async function updateById(id, data) {
     .catch((err) => err);
 }
 
-module.exports = { create, getAll, getById, updateById };
+async function deleteById(id) {
+  const salesData = await getById(id);
+  return connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: id }))
+    .then(() => salesData)
+    .catch((err) => err);
+}
+
+module.exports = { create, getAll, getById, updateById, deleteById };

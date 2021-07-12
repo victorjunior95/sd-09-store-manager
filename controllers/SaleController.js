@@ -38,4 +38,13 @@ SaleRouter.put('/:id', async (req, res, next) => {
   return res.status(HTTP_OK).json(response);
 });
 
+SaleRouter.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const response = await SaleService.deleteById(id);
+  if (response.err) {
+    return next(response);
+  }
+  return res.status(HTTP_OK).json(response);
+});
+
 module.exports = SaleRouter;

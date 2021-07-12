@@ -106,4 +106,22 @@ async function updateById(id, salesData) {
   return response;
 }
 
-module.exports = { create, getAll, getById, updateById };
+async function deleteById(id) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    idValidation.err.message = 'Wrong sale ID format';
+    return idValidation;
+  }
+  const response = await SaleModel.deleteById(new ObjectId(id));
+  if (!response) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    };
+  }
+  return response;
+}
+
+module.exports = { create, getAll, getById, updateById, deleteById };
