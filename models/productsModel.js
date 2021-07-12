@@ -21,9 +21,29 @@ const productNameCheck = (name) => {
   return connection().then((db) => db.collection('products').findOne({ name }));
 };
 
+const updateProduct = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) return false;
+  const updatedProduct = await connection()
+    .then((db) => db.collection('products')
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } },
+        { returnOriginal: false }));
+  return updatedProduct.value;
+};
+
+const deleteProduct = async (id) => {
+  if (!ObjectId.isValid(id)) return false;
+  const deletedProduct = await connection()
+    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
+  await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+  return deletedProduct;
+};
+
 module.exports = {
   createProduct,
+  productNameCheck,
   getAllProducts,
   getProductById,
-  productNameCheck,
+  updateProduct,
+  deleteProduct,
 };

@@ -24,7 +24,6 @@ const createProduct = async (name, quantity) => {
   const validationResult = productValidationSchema
     .validate({ name, quantity }, { abortEarly: true });
   if (validationResult.error) {
-    console.log(validationResult.error.details[0].message);
     return { err: {
       code: 'invalid_data',
       message: validationResult.error.details[0].message
@@ -40,6 +39,24 @@ const createProduct = async (name, quantity) => {
   return await productsModel.createProduct(name, quantity);
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const validationResult = productValidationSchema
+    .validate({ name, quantity }, { abortEarly: true });
+  if (validationResult.error) {
+    return { err: {
+      code: 'invalid_data',
+      message: validationResult.error.details[0].message
+    } };
+  }
+  const updatedProduct = await productsModel.updateProduct(id, name, quantity);
+  if (!updatedProduct) return { err: {
+    code: 'invalid_data',
+    message: 'Product not found'
+  } };
+  return updatedProduct;
+};
+
 module.exports = {
   createProduct,
+  updateProduct,
 };
