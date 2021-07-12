@@ -49,7 +49,6 @@ const updateProduct = async (id, name, quantity) => {
   /* findOneAndUpdateretorna um documento, updateOnenão (retorna apenas o id se tiver criado um novo documento).
   https://stackoverflow.com/questions/36209434/mongodb-3-2-use-cases-for-updateone-over-findoneandupdate*/
   return product;
-
 };
 
 const deleteProduct = async(id) => {

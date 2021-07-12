@@ -23,8 +23,27 @@ const getById = rescue(async (req, res) => {
   return res.status(STATUS_OK).json(saleId);
 });
 
+const update = rescue(async(req, res) => {
+  const { id } = req.params;
+  const sales = req.body;
+
+  const sale = await SalesService.update(id, sales);
+
+  return res.status(STATUS_OK).json(sale);
+});
+
+const deleteSale = rescue(async(req, res) => {
+  const { id } = req.params;
+
+  const sale = await SalesService.deleteSale(id);
+
+  return res.status(STATUS_OK).json(sale);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
+  deleteSale,
 };

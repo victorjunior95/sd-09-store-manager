@@ -1,6 +1,5 @@
 const salesModel = require('../models/SalesModel');
 const Joi = require('@hapi/joi');
-const MINIMUM_CHARACTER = 5;
 const MINIMUM_AMOUNT = 1;
 const unprocessableEntity = 422;
 const STATUS_NOT_FOUND = 404;
@@ -61,8 +60,32 @@ const getById = async (id) => {
   return saleId;
 };
 
+const update = async (id, sales) => {
+  const sale = await salesModel.updateSale(id, sales);
+  console.log(sale);
+  const { error } = schemaSale.validate(sale.itensSold);
+
+  if(error) {
+    throw errorHandling(unprocessableEntity, 'invalid_data', error.details[0].message);
+  }
+
+  return sale;
+};
+
+const deleteSale = async(id) => {
+  const sale = await salesModel.deleteSale(id);
+
+  if (!sale) {
+    throw errorHandling(unprocessableEntity, 'invalid_data', 'Wrong sale ID format');
+  }
+
+  return sale;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
+  deleteSale,
 };
