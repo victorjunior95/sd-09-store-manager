@@ -31,6 +31,20 @@ function validateSale(sale) {
   }
 }
 
+function validateDelete(sale) {
+  if(!sale) {
+    throw {
+      status: 422,
+      result: {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong sale ID format',
+        },
+      },
+    };
+  }
+}
+
 async function addSale(sale) {
   validateQuantities(sale);
   const result = await salesModel.addSale(sale);
@@ -54,9 +68,16 @@ async function updateSale(id, sale) {
   return { status: 200, result };
 }
 
+async function deleteSale(id) {
+  const result = await salesModel.deleteSale(id);
+  validateDelete(result);
+  return { status: 200, result };
+}
+
 module.exports = {
   addSale,
   getSaleById,
   getSales,
   updateSale,
+  deleteSale,
 };
