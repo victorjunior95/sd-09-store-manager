@@ -7,3 +7,4 @@ controllers.product.update();
 controllers.product.remove();
 
 controllers.sale.create();
+controllers.sale.getAll();

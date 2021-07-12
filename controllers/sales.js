@@ -13,4 +13,13 @@ module.exports = {
       next(err);
     }
   },
+  async getAll(_req, res, next) {
+    try {
+      const response = await salesService.getAll();
+
+      res.status(HTTP_200_OK).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
