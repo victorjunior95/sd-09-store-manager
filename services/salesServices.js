@@ -1,4 +1,5 @@
 const salesModel = require('../models/salesModel');
+const productServices = require('../services/productsServices');
 
 function validateQuantities(sale) {
   const minimunQuantity = 1;
@@ -45,10 +46,16 @@ function validateDelete(sale) {
   }
 }
 
-async function addSale(sale) {
-  validateQuantities(sale);
-  const result = await salesModel.addSale(sale);
-  return { status: 200, result };
+async function decreaseQuantities(sale) {
+  for (const product of sale) {
+    await productServices.decreaseQuantity(product.productId, product.quantity);
+  }
+}
+
+async function increaseQuantities(sale) {
+  for (const product of sale) {
+    await productServices.increaseQuantity(product.productId, product.quantity);
+  }
 }
 
 async function getSaleById(id) {
@@ -62,15 +69,23 @@ async function getSales() {
   return { status: 200, result };
 }
 
-async function updateSale(id, sale) {
+async function addSale(sale) {
   validateQuantities(sale);
-  const result = await salesModel.updateSale(id, sale);
+  const result = await salesModel.addSale(sale);
+  await decreaseQuantities(sale);
   return { status: 200, result };
 }
 
 async function deleteSale(id) {
   const result = await salesModel.deleteSale(id);
   validateDelete(result);
+  await increaseQuantities(result.itensSold);
+  return { status: 200, result };
+}
+
+async function updateSale(id, sale) {
+  validateQuantities(sale);
+  const result = await salesModel.updateSale(id, sale);
   return { status: 200, result };
 }
 

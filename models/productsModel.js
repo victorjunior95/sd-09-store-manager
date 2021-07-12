@@ -41,6 +41,14 @@ async function deleteProduct(id) {
   return result;
 }
 
+async function updateQuantity(id, quantity) {
+  const db = await connection();
+  await db.collection('products').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { quantity } },
+  );
+}
+
 module.exports = {
   getProductByName,
   addProduct,
@@ -48,4 +56,5 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
+  updateQuantity,
 };

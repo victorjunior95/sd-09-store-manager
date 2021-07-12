@@ -117,10 +117,24 @@ async function deleteProduct(id) {
   return { status: 200, result };
 }
 
+async function decreaseQuantity(id, quantity) {
+  const product = await productsModel.getProductById(id);
+  const newQuantity = product.quantity - quantity;
+  await productsModel.updateQuantity(id, newQuantity);
+}
+
+async function increaseQuantity(id, quantity) {
+  const product = await productsModel.getProductById(id);
+  const newQuantity = product.quantity + quantity;
+  await productsModel.updateQuantity(id, newQuantity);
+}
+
 module.exports = {
   addProduct,
   getProducts,
   getProductById,
   updateProduct,
   deleteProduct,
+  decreaseQuantity,
+  increaseQuantity,
 };
