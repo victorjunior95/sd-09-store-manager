@@ -19,5 +19,5 @@ app.listen(PORT, () => {
 });
 
 app.use((error, _req, res, _next) => {
-  return res.status(error.error).json(error.message);
+  return res.status(error.err).json(error.mes);
 });

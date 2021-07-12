@@ -29,12 +29,16 @@ ProductsRouter.post('/',
   });
 
 ProductsRouter.put('/:id',
-  async (req, res) => {
-    const { name, quantity } = req.body;
-    const id = req.params.id;
-    const updatedProduct = await productsServices.updateProduct(name, quantity, id);
-    if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
-    return res.status(response.STATUS_OK).json(updatedProduct);
+  async (req, res, next) => {
+    try {
+      const { name, quantity } = req.body;
+      const id = req.params.id;
+      const updatedProduct = await productsServices.updateProduct(name, quantity, id);
+      return res.status(response.STATUS_OK).json(updatedProduct);
+    } catch (error) {
+      return next(error);
+    }
+    // if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
   });
 
 ProductsRouter.delete('/:id',

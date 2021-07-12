@@ -29,7 +29,6 @@ const createNewProduct = async (newProduct) => {
     });
   }
   const addedProduct = await productsModel.createNewProduct(newProduct);
-  console.log(addedProduct);
   if(addedProduct.err) throw(addedProduct);
   return addedProduct;
 };
@@ -48,35 +47,48 @@ const getProductById = async (id) => {
 };
 
 const updateProduct = async (name, quantity, id) => {
-  const minNameLength = 5;
-  const minQuantityLength = 1;
-  if (name.length < minNameLength) {
-    const errorObj = {
+  const validateUpdate = PRODUCT_SCHEMA.validate({ name, quantity });
+  // console.log(validateNewProduct.error.details);
+  if (validateUpdate.error) {
+    throw ({
       err: {
-        code:'invalid_data',
-        message: '"name" length must be at least 5 characters long'
-      }
-    };
-    return errorObj;
+        err: {
+          code: 'invalid_data',
+          message: validateUpdate.error.details[0].message
+        },
+      },
+      code: response.INVALID_DATA,
+    });
   }
-  if (quantity < minQuantityLength) {
-    const errorObj = {
-      err: {
-        code:'invalid_data',
-        message: '"quantity" must be larger than or equal to 1'
-      }
-    };
-    return errorObj;
-  }
-  if (typeof quantity !== 'number') {
-    const errorObj = {
-      err: {
-        code:'invalid_data',
-        message: '"quantity" must be a number'
-      }
-    };
-    return errorObj;
-  }
+  // const minNameLength = 5;
+  // const minQuantityLength = 1;
+  // if (name.length < minNameLength) {
+  //   const errorObj = {
+  //     err: {
+  //       code:'invalid_data',
+  //       message: '"name" length must be at least 5 characters long'
+  //     }
+  //   };
+  //   return errorObj;
+  // }
+  // if (quantity < minQuantityLength) {
+  //   const errorObj = {
+  //     err: {
+  //       code:'invalid_data',
+  //       message: '"quantity" must be larger than or equal to 1'
+  //     }
+  //   };
+  //   return errorObj;
+  // }
+  // if (typeof quantity !== 'number') {
+  //   const errorObj = {
+  //     err: {
+  //       code:'invalid_data',
+  //       message: '"quantity" must be a number'
+  //     }
+  //   };
+  //   return errorObj;
+  // }
   return productsModel.updateProduct(name, quantity, id);
 };
 
