@@ -7,11 +7,13 @@ const CREATE = 201;
 const MIN_LENGTH = 5;
 // const HIGHER_THAN = 0;
 
+const productSchema = Joi.object({
+  name: Joi.string().min(MIN_LENGTH).not().empty().required(),
+  quantity: Joi.number().integer().min(1).not().empty().required(),
+});
+
 const create = rescue(async (req, res, next) => {
-  const { error } = Joi.object({
-    name: Joi.string().min(MIN_LENGTH).not().empty().required(),
-    quantity: Joi.number().integer().min(1).not().empty().required(),
-  }).validate(req.body);
+  const { error } = productSchema.validate(req.body);
 
   if (error) {
     return next(error);
@@ -45,10 +47,7 @@ const getById = rescue(async(req, res, next) => {
 });
 
 const updateOne = rescue(async(req, res, next) => {
-  const { error } = Joi.object({
-    name: Joi.string().min(MIN_LENGTH).not().empty().required(),
-    quantity: Joi.number().integer().min(1).not().empty().required(),
-  }).validate(req.body);
+  const { error } = productSchema.validate(req.body);
 
   if (error) {
     return next(error);

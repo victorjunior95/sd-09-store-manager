@@ -2,8 +2,12 @@ const express = require('express');
 
 const app = express();
 const bodyParser = require('body-parser').json();
+
 const products = require('./routes/productRouter');
-const error = require('./middlewares/error');
+const sales = require('./routes/salesRouter');
+
+const Producterror = require('./middlewares/productError');
+const SaleError = require('./middlewares/saleError');
 
 const PORT = 3000;
 
@@ -16,7 +20,11 @@ app.get('/', (_request, response) => {
 
 app.use('/products', products);
 
-app.use(error);
+app.use(Producterror);
+
+app.use('/sales', sales);
+
+app.use(SaleError);
 
 app.listen(PORT, () => {
   console.log(`App listening on PORT ${PORT}`);
