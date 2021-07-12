@@ -17,6 +17,12 @@ app.get('/', (_request, response) => {
 
 app.post('/products', Product.createProduct);
 
+app.get('/products', Product.listProducts);
+
+app.get('/products/:id', Product.getProductById);
+
+app.put('/products/:id', Product.updateProduct);
+
 app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

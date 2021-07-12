@@ -1,28 +1,55 @@
-const Joi = require('joi');
 const rescue = require('express-rescue');
 const service = require('../services/Products');
 
 const CREATED = 201;
+const OK = 200;
 
 const createProduct = rescue(async (req, res, next) => {
-  // const { error } = Joi.object({
-  //   name: Joi.string().min(5).required(),
-  //   quantity: Joi.number().min(5).required(),
-  // }).validate(req.body);
-
-  // if (error) {
-  //   return next(error);
-  // }
 
   const { name, quantity } = req.body;
 
   const newProduct = await service.create(name, quantity);
 
-  if (newProduct.error) return next(newProduct.error);
+  if (newProduct.err) return next(newProduct.err);
 
   return res.status(CREATED).json(newProduct);
 });
 
+const listProducts = rescue(async (_req, res, next) => {
+  const productsList = await service.listProducts();
+
+  return res.status(OK).json(productsList);
+
+});
+
+const getProductById = rescue(async (req, res, next) => {
+
+  const { id } = req.params;
+
+  const foundProduct = await service.getProductById(id);
+
+  if (foundProduct.err) return next(foundProduct.err);
+
+  return res.status(OK).json(foundProduct);
+});
+
+const updateProduct = rescue(async (req, res, next) => {
+
+  const { id } = req.params;
+
+  const { name, quantity } = req.body;
+
+  const updateData = await service.updateProduct(id, name, quantity);
+
+  if (updateData.err) return next(updateData.err);
+
+  return res.status(OK).json(updateData);
+
+});
+
 module.exports = {
   createProduct,
+  listProducts,
+  getProductById,
+  updateProduct,
 };
