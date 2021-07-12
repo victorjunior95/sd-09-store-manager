@@ -4,7 +4,7 @@ const connection = require('./connection');
 class Sale {
   constructor(items) {
     this.collection = 'sales';
-    this.items = this._validateItemsID(items);
+    this.items = items ? this._validateItemsID(items) : [];
   }
 
   _validateItemsID(items) {

@@ -7,3 +7,4 @@ services.product.update();
 services.product.remove();
 
 services.sale.create();
+services.sale.getAll();

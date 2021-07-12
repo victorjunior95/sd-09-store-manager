@@ -24,4 +24,10 @@ module.exports = {
 
     return response;
   },
+  async getAll() {
+    const sale = new Sale();
+    const sales = await sale.getAll();
+
+    return { sales };
+  },
 };
