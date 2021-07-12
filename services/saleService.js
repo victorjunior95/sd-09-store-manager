@@ -81,9 +81,31 @@ const update = async (saleId, itensSold) => {
   return await saleModel.update(saleId,itensSold);
 };
 
+const deleteSale = async (id) => {
+  const { itensSold } = await getById(id);
+
+  if (!itensSold) {
+    return {
+      code: 'invalid_data',
+      error: { message: 'Wrong sale ID format' },
+      status: 422,
+    };
+  }
+  
+  const verifyStock = itensSold.map(async (item) => {
+  
+    return await productModel.addQuantity(item.productId, item.quantity);
+  });
+  
+  await Promise.all(verifyStock);
+  
+  return await saleModel.deleteSale(id);
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  deleteSale
 };

@@ -55,6 +55,15 @@ const subtractQuantity = async (id, quantity) => await connection()
       { $inc: { quantity: - quantity } }
     ));
 
+
+const addQuantity = async (id, quantity) => await connection()
+  .then((db) => db.collection('products')
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: + quantity } }
+    ));
+
+
 module.exports = {
   create,
   findProductbyName,
@@ -63,4 +72,5 @@ module.exports = {
   update,
   deleteProduct,
   subtractQuantity,
+  addQuantity
 };

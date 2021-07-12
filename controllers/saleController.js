@@ -40,5 +40,14 @@ router.put('/:id', async (req, res, next) => {
   res.status(statusSucess).json(product);
   
 });
+
+router.delete('/:id', async (req, res, next) => {
+
+  const sale = await saleService.deleteSale(req.params.id);
+
+  if (sale.error) return next(sale);
+
+  res.status(statusSucess).json(sale);
+});
   
 module.exports = router;
