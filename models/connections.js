@@ -12,10 +12,7 @@ const DB_NAME = 'StoreManager';
 const connection = () => {
   return MongoClient
     .connect(MONGO_DB_URL, OPTIONS)
-    .then((conn) => {
-      conn.db(DB_NAME);
-      console.log('connection ok');
-    })
+    .then((conn) => conn.db(DB_NAME))
     .catch((err) => {
       console.error(err);
       process.exit();

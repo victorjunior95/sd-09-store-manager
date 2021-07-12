@@ -1,8 +1,8 @@
 const { createProduct } = require('../models/products');
 
 const productCreate = async (name, quantity) =>{
-  await createProduct(name, quantity).then(result => result);
-  console.log('productCreate ok');
+  const data = await createProduct(name, quantity).then(result => result);
+  return data;
 };
 
 module.exports = {
