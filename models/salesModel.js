@@ -1,6 +1,7 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 const throwSaleNotFound = require('../utils/throwSaleNotFound');
+const throwWrongIdFormat = require('../utils/throwIdError');
 
 const getAll = async () => {
   const sales = await connection()
@@ -28,9 +29,19 @@ const create = async (sale) => {
   return newSale.ops[0];
 };
 
+const update = async (id, sales) => {
+  if (!ObjectId.isValid(id)) throwSaleNotFound();
+
+  const result = await connection()
+    .then((db) => db.collection('sales')
+      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold: sales } }));
+
+  return result.modifiedCount;
+};
 
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };

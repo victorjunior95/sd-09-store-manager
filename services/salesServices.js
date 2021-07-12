@@ -28,8 +28,17 @@ const create = async (sales) => {
   return newSales;
 };
 
+const update = async (id, sale) => {
+  const updatedSale = await salesModel.update(id, sale);
+
+  if (updatedSale) {
+    return findById(id);
+  }
+};
+
 module.exports = {
   findAll,
   findById,
   create,
+  update
 };

@@ -29,4 +29,13 @@ salesController.post('/', validateSales, rescue(async (req, res) => {
   return res.status(ok).json(newSale);
 }));
 
+salesController.put('/:id', validateSales, rescue(async (req, res) => {
+  const { id } = req.params;
+  const sale = req.body;
+
+  const updatedSale = await salesServices.update(id, sale);
+
+  return res.status(ok).json(updatedSale);
+}));
+
 module.exports = salesController;
