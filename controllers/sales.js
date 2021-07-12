@@ -92,28 +92,3 @@ module.exports = {
   getAll,
   remove,
 };
-
-// {
-//   "name": "product_name",
-//   "quantity": "product_quantity"
-// }
-
-// [
-//   {
-//   "productId": "product_id",
-//   "quantity": "product_quantity",
-//   },
-
-// ]
-// 60ec757ab0c0342f37df571b
-
-// [
-//   {
-//   "productId": "60ec755cb0c0342f37df5718",
-//   "quantity": "2"
-//   },
-//   {
-//   "productId": "60ec757ab0c0342f37df571b",
-//   "quantity": "1"
-//   }
-// ]

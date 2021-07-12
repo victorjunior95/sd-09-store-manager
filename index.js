@@ -31,7 +31,7 @@ app.get('/sales/:id', controllerSales.getById);
 
 app.put('/sales/:id', controllerSales.edit);
 
-app.delete('/sales/:id', controllerSales.remove);
+// app.delete('/sales/:id', controllerSales.remove);
 
 
 
