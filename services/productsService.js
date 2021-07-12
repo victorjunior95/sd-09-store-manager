@@ -6,7 +6,7 @@ const HTTP_OK_STATUS = 200;
 
 const productMaxLength = 5;
 const productMinQuantity = 0;
-
+// testando alteração do nome
 const ValidateCreateUpdate = (name, quantity) => {
   if (name.length < productMaxLength)
     return {
