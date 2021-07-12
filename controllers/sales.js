@@ -5,61 +5,71 @@ const CREATED_STATUS = 201;
 const NOT_FOUND_STATUS = 404;
 const UNPROCESSEBLEENTRY_STATUS = 422;
 
+const messageError = (status, code, message) => 
+  ({ status, code, message });
+
 
 const saleQuantityIsValid = (res, itensSold) => {
   const minNumber = 0;
 
   itensSold.forEach((sale) => {
     if (sale.quantity <= minNumber || isNaN(sale.quantity)) {
-      return res.status(UNPROCESSEBLEENTRY_STATUS)
-        .json({
-          err: {
-            code: 'invalid_data',
-            message: 'Wrong product ID or invalid quantity',
-          }
-        });
+      throw messageError (UNPROCESSEBLEENTRY_STATUS, 'invalid_data',
+        'Wrong product ID or invalid quantity');
     }
   });
 };
 
-const create = async (req, res, _next) => {
-  const [...itensSold] = req.body;
+const create = async (req, res, next) => {
+  try {
+    const [...itensSold] = req.body;
 
-  saleQuantityIsValid (res, itensSold);
-
-  const sale = await servicesSales.create(itensSold);
-
-  return res.status(OK_STATUS).json(sale);
+    saleQuantityIsValid (res, itensSold);
   
-};
-
-const edit = async (req, res, _next) => {
-  const { id } = req.params;
-  const [...itensSold] = req.body;
-
-  saleQuantityIsValid (res, itensSold);
-
-  const sale = await servicesSales.edit(id, itensSold);
-
-  return res.status(OK_STATUS).json(sale);
+    const sale = await servicesSales.create(itensSold);
   
-};
-
-const getById = async (req, res, _next) => {
-  const { id } = req.params;
-  const sale = await servicesSales.getById(id);
-
-  if (!sale) {
-    return res.status(NOT_FOUND_STATUS)
-      .json({
-        err: {
-          code: 'not_found',
-          message: 'Sale not found',
-        }
-      });
+    return res.status(OK_STATUS).json(sale);
   }
 
-  return res.status(OK_STATUS).json(sale);
+  catch(err) {
+    next(err);
+  }
+};
+
+const edit = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const [...itensSold] = req.body;
+  
+    saleQuantityIsValid (res, itensSold);
+  
+    const sale = await servicesSales.edit(id, itensSold);
+  
+    return res.status(OK_STATUS).json(sale);
+  }
+  
+  catch(err) {
+    next(err);
+  }
+  
+};
+
+const getById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const sale = await servicesSales.getById(id);
+
+    if (!sale) {
+      throw messageError (NOT_FOUND_STATUS, 'not_found', 'Sale not found');
+    }
+
+    return res.status(OK_STATUS).json(sale);
+  }
+
+  catch(err) {
+    next(err);
+  }
+  
 };
 
 const getAll = async (_req, res, _next) => {
@@ -68,21 +78,23 @@ const getAll = async (_req, res, _next) => {
   return res.status(OK_STATUS).json({ sales: allSales});
 };
 
-const remove = async (req, res, _next) => {
-  const { id } = req.params;
-  const sale = await servicesSales.remove(id);
-
-  if (!sale) {
-    return res.status(UNPROCESSEBLEENTRY_STATUS)
-      .json({
-        err: {
-          code: 'invalid_data',
-          message: 'Wrong sale ID format',
-        }
-      });
+const remove = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const sale = await servicesSales.remove(id);
+  
+    if (!sale) {
+      throw messageError (UNPROCESSEBLEENTRY_STATUS, 'invalid_data',
+        'Wrong sale ID format');
+    }
+  
+    return res.status(OK_STATUS).json(sale);
   }
 
-  return res.status(OK_STATUS).json(sale);
+  catch(err) {
+    next(err);
+  }
+
 };
 
 module.exports = {
