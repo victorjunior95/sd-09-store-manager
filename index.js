@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Controller = require('./controllers/Product');
+const ControllerProduct = require('./controllers/Product');
+const ControllerSales = require('./controllers/Sales');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,25 +15,25 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', Controller.createProduct);
+app.post('/products', ControllerProduct.createProduct);
 
-app.get('/products', Controller.getAll);
+app.post('/sales', ControllerSales.createSale);
 
-app.get('/products/:id', Controller.findProductById);
+app.get('/products', ControllerProduct.getAll);
 
-app.put('/products/:id', Controller.editProducts);
+app.get('/products/:id', ControllerProduct.findProductById);
 
-app.delete('/products/:id', Controller.removeProduct);
+app.get('/sales', ControllerSales.getAll);
 
-// app.post('/sales', ControllerSales.createSale);
+app.get('/sales/:id', ControllerSales.findById);
 
-// app.get('/sales', ControllerSales.getAll);
+app.put('/products/:id', ControllerProduct.editProducts);
 
-// app.get('/sales/:id', ControllerSales);
+app.put('/sales/:id', ControllerSales.editSale);
 
-// app.put('/sales/:id', ControllerSales.editProducts);
+app.delete('/products/:id', ControllerProduct.removeProduct);
 
-// app.delete('/sales/:id', ControllerSales.removeProduct);
+app.delete('/sales/:id', ControllerSales.removeSale);
 
 
 app.listen(PORT, () => {
