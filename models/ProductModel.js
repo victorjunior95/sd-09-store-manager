@@ -43,6 +43,22 @@ async function deleteById(id) {
     .then((db) => db.collection('products').deleteOne({ _id: id }))
     .then(() => productData)
     .catch((err) => err);
-} 
+}
 
-module.exports = { create, getAll, getById, getByName, updateById, deleteById };
+async function updateQuantity(id, quantity) {
+  return connection()
+    .then((db) => db.collection('products'). updateOne({_id: id}, {
+      $set: { quantity }
+    }))
+    .catch((err) => err);
+}
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  getByName,
+  updateById,
+  deleteById,
+  updateQuantity,
+};

@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const SaleModel = require('../models/SaleModel');
 const ProductModel = require('../models/ProductModel');
+const ProductService = require('../services/ProductService');
 const { validateId, ObjectId } = require('./validateId');
 
 function validateData(data) {
@@ -21,9 +22,9 @@ function validateData(data) {
   return {};
 }
 
-function validateSaleProductId(salesData) {
+async function validateSaleProductId(salesData) {
   let err = {};
-  salesData.forEach(async ({ productId }) => {
+  for (const { productId } of salesData) {
     const idValidation = validateId(productId);
     if (idValidation.err) {
       err = idValidation;
@@ -37,7 +38,7 @@ function validateSaleProductId(salesData) {
         },
       };
     }
-  });
+  }
   return err;
 }
 
@@ -46,11 +47,14 @@ async function create(salesData) {
   if (dataValidation.err) {
     return dataValidation;
   }
-  const idValidation = validateSaleProductId(salesData);
+  const idValidation = await validateSaleProductId(salesData);
   if (idValidation.err) {
     return idValidation;
   }
   const response = await SaleModel.create(salesData);
+  for (const { productId, quantity } of salesData) {
+    await ProductService.deacreaseQuantity(productId, quantity);
+  }
   return response;
 }
 
@@ -120,6 +124,9 @@ async function deleteById(id) {
         message: 'Sale not found',
       },
     };
+  }
+  for (const { productId, quantity } of response.itensSold) {
+    await ProductService.increaseQuantity(productId, quantity);
   }
   return response;
 }

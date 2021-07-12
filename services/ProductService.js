@@ -106,4 +106,25 @@ async function deleteById(id) {
   return response;
 }
 
-module.exports = { create, getAll, getById, updateById, deleteById };
+async function increaseQuantity(id, saleQuantity) {
+  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  const newQuantity = Number(quantity) + Number(saleQuantity);
+  await ProductModel.updateQuantity(new ObjectId(id), newQuantity);
+}
+
+async function deacreaseQuantity(id, saleQuantity) {
+  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  const newQuantity = Number(quantity) - Number(saleQuantity);
+  await ProductModel.updateQuantity(new ObjectId(id), newQuantity);
+}
+
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  updateById,
+  deleteById,
+  increaseQuantity,
+  deacreaseQuantity,
+};
