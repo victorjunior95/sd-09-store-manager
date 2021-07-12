@@ -48,8 +48,15 @@ async function getSales() {
   return { status: 200, result };
 }
 
+async function updateSale(id, sale) {
+  validateQuantities(sale);
+  const result = await salesModel.updateSale(id, sale);
+  return { status: 200, result };
+}
+
 module.exports = {
   addSale,
   getSaleById,
   getSales,
+  updateSale,
 };
