@@ -21,4 +21,13 @@ async function getById(id) {
     .catch((err) => err);
 }
 
-module.exports = { create, getAll, getById };
+async function updateById(id, data) {
+  return connection()
+    .then((db) => db.collection('sales').updateOne({_id: id }, {
+      $set: { itensSold: data },
+    }))
+    .then(({ result }) => (!result.nModified) ? null : ({ _id: id, itensSold: data }))
+    .catch((err) => err);
+}
+
+module.exports = { create, getAll, getById, updateById };

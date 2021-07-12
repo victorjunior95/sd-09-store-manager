@@ -81,4 +81,29 @@ async function getById(id) {
   return response;
 }
 
-module.exports = { create, getAll, getById };
+async function updateById(id, salesData) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    return idValidation;
+  }
+  const dataValidation = validateData(salesData);
+  if (dataValidation.err) {
+    return dataValidation;
+  }
+  const productIdValidation = validateSaleProductId(salesData);
+  if (productIdValidation.err) {
+    return productIdValidation;
+  }
+  const response = await SaleModel.updateById(new ObjectId(id), salesData);
+  if (!response) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    };
+  }
+  return response;
+}
+
+module.exports = { create, getAll, getById, updateById };

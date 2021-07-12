@@ -28,4 +28,14 @@ SaleRouter.get('/:id', async (req, res, next) => {
   return res.status(HTTP_OK).json(response);
 });
 
+SaleRouter.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const salesData = req.body;
+  const response = await SaleService.updateById(id, salesData);
+  if (response.err) {
+    return next(response);
+  }
+  return res.status(HTTP_OK).json(response);
+});
+
 module.exports = SaleRouter;
