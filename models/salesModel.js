@@ -47,7 +47,6 @@ const exclude = async (id) => {
       .collection(collectionSales)
       .findOneAndDelete({ _id: saleId }, { project: { itensSold: 1 } }),
   );
-  console.log(saleId);
   return deleteSale.value;
 };
 
