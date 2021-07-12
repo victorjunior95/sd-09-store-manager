@@ -39,4 +39,10 @@ router.put('/:id', validateProductData, async (req, res) => {
   res.status(responseCodes.success).json(product);
 });
 
+router.delete('/:id', validateProductId, async (req, res) => {
+  const { id } = req.params;
+  const product = await productsService.deleteProduct(id);
+  res.status(responseCodes.success).json(product);
+});
+
 module.exports = router;

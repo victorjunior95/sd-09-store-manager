@@ -24,4 +24,14 @@ const updateProduct = async (id, name, quantity) => {
   return {err: {code: 'bd_acess_error', message: 'Erro ao atualizar produto'}};
 };
 
-module.exports = { findById, getAll, createProduct, updateProduct };
+const deleteProduct = async (id) => {
+  const product = await products.findById(id);
+  if (!product) {
+    return { err: {code: 'invalid_data', message: 'Wrong id format'} };
+  }
+  await products.remove(id);
+  const { name, quantity } = product;
+  return { _id: id, name, quantity };
+};
+
+module.exports = { findById, getAll, createProduct, updateProduct, deleteProduct };

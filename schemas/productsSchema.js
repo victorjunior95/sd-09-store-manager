@@ -67,4 +67,11 @@ const idIsNotValid = (id) => {
 
 const isProductObject = (product) => (!product);
 
-module.exports = { validateProduct, idIsNotValid, isProductObject, responseCodes };
+module.exports = {
+  validateProduct,
+  idIsNotValid,
+  isProductObject,
+  responseCodes,
+  errorsMessages,
+  errorsCodes
+};
