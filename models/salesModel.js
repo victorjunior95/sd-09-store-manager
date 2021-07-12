@@ -30,19 +30,9 @@ const getSaleById = async (id) => {
     return errorObj;
   }
 };
+
 const createNewSale = async (sales) => {
   try {
-    // const newSale = {
-    //   _id: ObjectId(),
-    //   itensSold: [
-    //     sales.map(({ productId, quantity}) => {
-    //       return {
-    //         productId,
-    //         quantity,
-    //       };
-    //     })
-    //   ]
-    // };
     const newSale = await connection()
       .then((db) => db.collection('sales').insertOne({ itensSold: sales }));
     return newSale.ops[0];
@@ -57,8 +47,28 @@ const createNewSale = async (sales) => {
   };
 };
 
+const deleteSale = async (id) => {
+  try {
+    const deletedSale = await getSaleById(id);
+    await connection().then((db) => db.collection('sales').deleteOne(
+      { _id: ObjectId(id)}
+    ));
+    if(deletedSale === null) throw new Error();
+    return deletedSale;
+  } catch (error) {
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+    return errorObj;
+  }
+};
+
 module.exports = {
   getAllSales,
   getSaleById,  
   createNewSale,
+  deleteSale,
 };

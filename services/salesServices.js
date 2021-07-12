@@ -15,15 +15,15 @@ const getAllSales = async () => {
 };
 
 const getSaleById = async (id) => {
-  if (!ObjectId.isValid(id)) {
-    const errorObj = {
-      err: {
-        code:'invalid_data',
-        message: 'Wrong id format'
-      }
-    };
-    return errorObj;
-  }
+  // if (!ObjectId.isValid(id)) {
+  //   const errorObj = {
+  //     err: {
+  //       code:'invalid_data',
+  //       message: 'Wrong id format'
+  //     }
+  //   };
+  //   return errorObj;
+  // }
   return salesModel.getSaleById(id);
 };
 
@@ -53,8 +53,22 @@ const createNewSale = async (sales) => {
   if(isSaleValid) return salesModel.createNewSale(sales);
 };
 
+const deleteSale = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Wrong sale ID format'
+      }
+    };
+    return errorObj;
+  }
+  return salesModel.deleteSale(id);
+};
+
 module.exports = {
   getAllSales,
   getSaleById,
   createNewSale,
+  deleteSale,
 };

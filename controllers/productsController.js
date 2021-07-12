@@ -38,7 +38,6 @@ ProductsRouter.put('/:id',
     } catch (error) {
       return next(error);
     }
-    // if(updatedProduct.err) return res.status(response.INVALID_DATA).json(updatedProduct);
   });
 
 ProductsRouter.delete('/:id',
