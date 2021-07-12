@@ -4,24 +4,29 @@ const HTTP_NOTPROCESS_STATUS = 422;
 const HTTP_OK_STATUS = 200;
 const productMinQuantity = 0;
 
-const validateCreate =  (itensSold) => {
-  return itensSold.reduce((accumulator, item) => {
+const validateCreateUpdate =  (itensSold) => {
+  const isError = itensSold.reduce((accumulator, item) => {
     return (accumulator ?
       accumulator :
+      (!Number.isInteger(item.quantity)) ||
       typeof item.quantity !== 'number' ||
       item.quantity < productMinQuantity ||
       item.quantity === productMinQuantity
     );
   }, false);
-};
-
-const create = async (itensSold) => {
-  if (validateCreate(itensSold))
+  if (isError) {
     return {
       status: HTTP_NOTPROCESS_STATUS,
       err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' },
     };
+  }
+};
 
+const create = async (itensSold) => {
+  const isError = await validateCreateUpdate(itensSold);
+  if (isError){
+    return isError;
+  }
   const soldsCreate = await salesModel.create(itensSold);
   return {
     status: HTTP_OK_STATUS,
@@ -51,8 +56,21 @@ listById = async (id) => {
   };
 };
 
+const update = async (id, itensSold) => {
+  const isError = await validateCreateUpdate(itensSold);
+  if (isError) {
+    return isError;
+  }
+  const soldUpdate = await salesModel.update(id, itensSold);
+  return {
+    status: HTTP_OK_STATUS,
+    soldUpdate,
+  };
+};
+
 module.exports = {
   create,
   listAll,
   listById,
+  update,
 };
