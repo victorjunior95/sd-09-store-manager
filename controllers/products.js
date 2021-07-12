@@ -60,7 +60,7 @@ const create = async (req, res, _next) => {
       });
   };
 
-  res.status(CREATED_STATUS).json(product);
+  return res.status(CREATED_STATUS).json(product);
   
 };
 
@@ -73,7 +73,7 @@ const edit = async (req, res, _next) => {
 
   const product = await servicesProducts.edit(id, name, quantity);
 
-  res.status(OK_STATUS).json(product);
+  return res.status(OK_STATUS).json(product);
   
 };
 
@@ -91,13 +91,13 @@ const getById = async (req, res, _next) => {
       });
   }
 
-  res.status(OK_STATUS).json(product);
+  return res.status(OK_STATUS).json(product);
 };
 
 const getAll = async (_req, res, _next) => {
   const allProducts = await servicesProducts.getAll();
 
-  res.status(OK_STATUS).json({ products: allProducts});
+  return res.status(OK_STATUS).json({ products: allProducts});
 };
 
 const remove = async (req, res, _next) => {
@@ -114,7 +114,7 @@ const remove = async (req, res, _next) => {
       });
   }
 
-  res.status(OK_STATUS).json(product);
+  return res.status(OK_STATUS).json(product);
 };
 
 module.exports = {
