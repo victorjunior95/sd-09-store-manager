@@ -40,7 +40,7 @@ const edit = async (req, res, _next) => {
   saleQuantityIsValid (res, itensSold);
 
   const sale = await servicesSales.edit(id, itensSold);
-  console.log(sale, sale.itensSold)
+
   return res.status(OK_STATUS).json(sale);
   
 };
