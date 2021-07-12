@@ -1,7 +1,7 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 const throwSaleNotFound = require('../utils/throwSaleNotFound');
-const throwWrongIdFormat = require('../utils/throwIdError');
+const throwWrongSaleIdFormat = require('../utils/thowSaleIdError');
 
 const getAll = async () => {
   const sales = await connection()
@@ -17,6 +17,8 @@ const getById = async (id) => {
   const sales = await connection()
     .then((db) => db.collection('sales')
       .findOne({ _id: ObjectId(id) }));
+
+  if (!sales) throwSaleNotFound();
 
   return sales;
 };
@@ -39,9 +41,23 @@ const update = async (id, sales) => {
   return result.modifiedCount;
 };
 
+const exclude = async (id) => {
+  if (!ObjectId.isValid(id)) throwWrongSaleIdFormat();
+
+  const deletedSale = await getById(id);
+
+  const result = await connection().then((db) => db.collection('sales')
+    .removeOne({ _id: ObjectId(id) }));
+
+  if (result.deletedCount) {
+    return deletedSale;
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  exclude,
 };

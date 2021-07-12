@@ -38,4 +38,12 @@ salesController.put('/:id', validateSales, rescue(async (req, res) => {
   return res.status(ok).json(updatedSale);
 }));
 
+salesController.delete('/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedSale = await salesServices.exclude(id);
+
+  return res.status(ok).json( deletedSale );
+}));
+
 module.exports = salesController;
