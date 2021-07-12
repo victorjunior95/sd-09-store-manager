@@ -40,9 +40,21 @@ const update = async (id, itensSold) => {
   return updateSale;
 };
 
+const exclude = async (id) => {
+  const saleId = new ObjectId(id);
+  const deleteSale = await connection().then((db) =>
+    db
+      .collection(collectionSales)
+      .findOneAndDelete({ _id: saleId }, { project: { itensSold: 1 } }),
+  );
+  console.log(saleId);
+  return deleteSale.value;
+};
+
 module.exports = { 
   create,
   listAll,
   listSaleById,
-  update
+  update,
+  exclude,
 };

@@ -62,6 +62,7 @@ const exclude = async (id) => {
 
   return deleteProduct.value;
 };
+
 module.exports = {
   create,
   findName,

@@ -1,4 +1,6 @@
 const salesModel = require('../models/salesModel');
+const { ObjectId } = require('mongodb');
+
 const HTTP_NOTFOUND_STATUS = 404;
 const HTTP_NOTPROCESS_STATUS = 422;
 const HTTP_OK_STATUS = 200;
@@ -68,9 +70,32 @@ const update = async (id, itensSold) => {
   };
 };
 
+const exclude = async (id) => {
+
+  if (!ObjectId.isValid(id)) {
+    return { status: HTTP_NOTPROCESS_STATUS,
+      err: { code: 'invalid_data', message: 'Wrong sale ID format'}
+    };}
+
+  const saleExists = await salesModel.listSaleById(id);
+  if (!saleExists) {
+    return {
+      status: HTTP_NOTFOUND_STATUS,
+      err: { code: 'invalid_data', message: 'Wrong sale ID format'}
+    };
+  }
+  const sale = await salesModel.exclude(id);
+  return {
+    status: HTTP_OK_STATUS,
+    sale
+  };
+
+};
+
 module.exports = {
   create,
   listAll,
   listById,
   update,
+  exclude,
 };
