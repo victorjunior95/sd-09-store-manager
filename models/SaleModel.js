@@ -7,4 +7,18 @@ async function create(data) {
     .catch((err) => err);
 }
 
-module.exports = { create };
+async function getAll() {
+  return connection()
+    .then((db) => db.collection('sales').find().toArray())
+    .then((sales) => sales)
+    .catch((err) => err);
+}
+
+async function getById(id) {
+  return connection()
+    .then((db) => db.collection('sales').findOne({ _id: id }))
+    .then((sales) => sales)
+    .catch((err) => err);
+}
+
+module.exports = { create, getAll, getById };

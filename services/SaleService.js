@@ -29,7 +29,6 @@ function validateSaleProductId(salesData) {
       err = idValidation;
     }
     const response = await ProductModel.getById(new ObjectId(productId));
-    console.log(response);
     if (!response) {
       err = {
         err: {
@@ -55,4 +54,31 @@ async function create(salesData) {
   return response;
 }
 
-module.exports = { create };
+async function getAll() {
+  const response = await SaleModel.getAll();
+  return response;
+}
+
+async function getById(id) {
+  const idValidation = validateId(id);
+  if (idValidation.err) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    };
+  }
+  const response = await SaleModel.getById( new ObjectId(id));
+  if (!response) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    };
+  }
+  return response;
+}
+
+module.exports = { create, getAll, getById };

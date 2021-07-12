@@ -14,4 +14,18 @@ SaleRouter.post('/', async (req, res, next) => {
   return res.status(HTTP_OK).json(response);
 });
 
+SaleRouter.get('/', async (_req, res) => {
+  const response = await SaleService.getAll();
+  return res.status(HTTP_OK).json({ sales: response });
+});
+
+SaleRouter.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const response = await SaleService.getById(id);
+  if (response.err) {
+    return next(response);
+  }
+  return res.status(HTTP_OK).json(response);
+});
+
 module.exports = SaleRouter;
