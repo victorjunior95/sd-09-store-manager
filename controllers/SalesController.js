@@ -23,6 +23,25 @@ const create = rescue(async (req, res, next) => {
   return res.status(STATUS_OK).json(newSale);
 });
 
+const getAll = rescue(async (req, res, next) => {
+  const sales = await SalesServices.getAll();  
+  return res.status(STATUS_OK).json(sales);
+});
+
+const findById = rescue(async (req, res, next) => {
+  const {id} = req.params;
+
+  const sale = await SalesServices.findById(id);
+
+  if (sale.error) {
+    return next(sale.error);
+  }
+  
+  return res.status(STATUS_OK).json(sale);
+});
+
 module.exports = {
-  create
+  create,
+  getAll,
+  findById
 };

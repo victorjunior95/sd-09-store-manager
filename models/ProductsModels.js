@@ -32,7 +32,6 @@ async function findById(id) {
 
   const db = await connection();
   const product = await db.collection('products').findOne( ObjectId(id));
-  // console.log(product);
   return product;
 }
 

@@ -1,6 +1,6 @@
 module.exports = (err, _req, res, _next) => { 
   const UNPROCESSABLE = 422;
-  const INTERNAL_SERVER_ERROR = 500;
+  const INTERNAL_SERVER_ERROR = 404;
 
   if (err.isJoi) {
     return res.status(UNPROCESSABLE)
