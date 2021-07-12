@@ -5,6 +5,7 @@ const {
   validateProductData,
   validateProductId
 } = require('../middlewares/productsMiddleware');
+const { validateProduct } = require('../schemas/productsSchema');
 
 const responseCodes = {
   success: 200,
@@ -30,4 +31,12 @@ router.post('/', validateProductData, async (req, res) => {
   const product = await productsService.createProduct(name, quantity);
   res.status(responseCodes.created).json(product);
 });
+
+router.put('/:id', validateProductData, async (req, res) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  const product = await productsService.updateProduct(id, name, quantity);
+  res.status(responseCodes.success).json(product);
+});
+
 module.exports = router;

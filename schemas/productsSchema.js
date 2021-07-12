@@ -29,18 +29,21 @@ const fieldMinValues = {
 const isBlank = (value) => (!value);
 const isString = (value) => (typeof value === 'string');
 const isLowerthanMinValue = (value, min) => (value < min);
-const isNotUnique = async (name) => {
+const isNotUnique = async (name, id) => {
+  if (id) {
+    return false;
+  }
   const product = await products.findByName(name);
   if (!product) return false;
   return true;
 };
 
-const validateProduct = async (name, quantity) => {
+const validateProduct = async (id, name, quantity) => {
   switch (true) {
   case isBlank(name) || isLowerthanMinValue(name.length, fieldMinValues.nameLength):
     return { response: responseCodes.unprocessableEntity,
       err: { code: errorsCodes.invalid_data, message: errorsMessages.nameTooShort } };
-  case await isNotUnique(name):
+  case await isNotUnique(name, id):
     return { response: responseCodes.unprocessableEntity,
       err: { code: errorsCodes.invalid_data, message: errorsMessages.productExists } };
   case isString(quantity):
