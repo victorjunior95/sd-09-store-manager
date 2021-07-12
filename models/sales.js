@@ -20,7 +20,10 @@ const edit = (id, itensSold) => {
   return connection()
     .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) },
       { $set: { itensSold }}))
-    .then(() => ({ id, itensSold }));
+    .then(() => ({ 
+      _id: id,
+      itensSold
+    }));
 };
 
 

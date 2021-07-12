@@ -13,6 +13,7 @@ const create = async (itensSold) => {
 };
 
 const edit = async (id, itensSold) => {
+
   const sale = await modelSales.edit(id, itensSold);
 
   return sale;

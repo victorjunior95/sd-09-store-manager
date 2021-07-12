@@ -23,23 +23,3 @@ connection = () =>
 
 
 module.exports = connection;
-
-// const OPTIONS = {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// };
-
-
-// const DB_NAME = 'StoreManager';
-
-// let db = null;
-
-// const connection = () => {
-//   return db
-//     ? Promise.resolve(db)
-//     : MongoClient.connect(MONGO_DB_URL, OPTIONS)
-//       .then((conn) => {
-//         db = conn.db(DB_NAME);
-//         return db;
-//       });
-// };

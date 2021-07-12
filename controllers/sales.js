@@ -40,6 +40,7 @@ const edit = async (req, res, _next) => {
   saleQuantityIsValid (res, itensSold);
 
   const sale = await servicesSales.edit(id, itensSold);
+  console.log(sale, sale.itensSold)
   return res.status(OK_STATUS).json(sale);
   
 };
@@ -92,11 +93,27 @@ module.exports = {
   remove,
 };
 
-// "_id": "60ea06cb97b6571b2da9aa8f",
-//             "name": "LX-200 GPS 400mm",
-//             "quantity": 6
+// {
+//   "name": "product_name",
+//   "quantity": "product_quantity"
+// }
 
-//             {
-//                 "name": "LX-200 GPS 500mm",
-//                 "quantity": 6
-//                }
+// [
+//   {
+//   "productId": "product_id",
+//   "quantity": "product_quantity",
+//   },
+
+// ]
+// 60ec757ab0c0342f37df571b
+
+// [
+//   {
+//   "productId": "60ec755cb0c0342f37df5718",
+//   "quantity": "2"
+//   },
+//   {
+//   "productId": "60ec757ab0c0342f37df571b",
+//   "quantity": "1"
+//   }
+// ]
