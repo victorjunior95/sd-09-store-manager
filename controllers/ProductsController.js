@@ -12,6 +12,19 @@ const create = rescue(async (req, res, next) => {
   return res.status(statusCode.created).json(newProduct);
 });
 
+const getAll = rescue(async (_req, res) => {
+  const allProducts = await ProductsServices.getAll();
+  return res.status(statusCode.ok).json(allProducts);
+});
+
+const getById = rescue(async (req, res) => {
+  const { id } = req.params;
+  const product = await ProductsServices.getById(id);
+  return res.status(statusCode.ok).json(product);
+});
+
 module.exports = {
   create,
+  getAll,
+  getById,
 };

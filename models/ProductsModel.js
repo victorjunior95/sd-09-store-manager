@@ -5,20 +5,23 @@ const collection = async () => connection()
 
 // const create = async (name, quantity) => collection()
 //   .then((products) => products.insertOne({ name, quantity }));
-const create = async (name, quantity) => connection()
-  .then((db) => db.collection('products').insertOne({ name, quantity }));
+const create = async (name, quantity) => collection()
+  .then((coll) => coll.insertOne({ name, quantity }));
 
-const findByName = async (name) => {
+const findByQuery = async (query) => {
   const product = await collection()
-    .then((products) => products.findOne({ name }));
+    .then((coll) => coll.findOne(query));
 
   if (!product) return null;
 
   return product;
 };
-  
+
+const getAll = async () => collection()
+  .then((coll) => coll.find().toArray());
 
 module.exports = {
   create,
-  findByName,
+  findByQuery,
+  getAll,
 };

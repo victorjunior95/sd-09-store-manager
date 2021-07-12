@@ -1,4 +1,5 @@
 module.exports = {
-  invalid_data: 422,
+  ok: 200,
   created: 201,
+  invalid_data: 422,
 };

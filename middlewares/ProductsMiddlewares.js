@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { ObjectId } = require('mongodb');
 const errorObject = require('../utils/errorObject');
 
 const NAME_MIN_LENGTH = 5;
@@ -14,6 +15,15 @@ const validateProduct = (req, _res, next) => {
   return next();
 };
 
+const validateProductId = (req, _res, next) => {
+  const { id } = req.params;
+
+  if (!ObjectId.isValid(id)) return next(errorObject('invalid_data', 'Wrong id format'));
+
+  return next();
+};
+
 module.exports = {
   validateProduct,
+  validateProductId,
 };
