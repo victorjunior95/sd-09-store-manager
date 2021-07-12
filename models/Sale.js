@@ -22,6 +22,12 @@ class Sale {
         .then((collection) => collection.insertOne({ itensSold: this.items }))
         .then((result) => result.ops[0]);
   }
+
+  getAll() {
+    return connection()
+      .then((db) => db.collection(this.collection))
+      .then((collection) => collection.find().toArray());
+  }
 }
 
 module.exports = Sale;

@@ -7,3 +7,4 @@ models.product.update();
 models.product.remove();
 
 models.sale.create();
+models.sale.getAll();
