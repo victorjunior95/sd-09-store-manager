@@ -33,7 +33,7 @@ const change = async (id, array) => {
   const sales = await connection().then((db) =>
     db.collection('sales').updateOne(
       { _id: ObjectId(id) },
-      { $set: { itensSold: array } },
+      { $set: { itensSold: array } }
     ),
   );
 

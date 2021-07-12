@@ -1,13 +1,41 @@
 const Products = require('../models/Products');
 const Sales = require('../models/Sales');
 
-const ZERO = 0;
-const ONE = 1;
-
 const CODE_NOT_FOUND = 404;
 const CODE_UNPROCESSABLE = 422;
 
+const ZERO = 0;
+const ONE = 1;
+
 const create = async (array) => {
+  let i = ZERO;
+  let code = '';
+
+  for (i; i < array.length; i += ONE) {
+    const { productId, quantity } = array[i];
+
+    const sales = await Products.findById(productId);
+
+    if (!sales) {
+      code = 'not found';
+      break;
+    }
+
+    if (sales.quantity - quantity <= ZERO) {
+      code = 'quantity';
+      break;
+    }
+  }
+
+  if (i < array.length) {
+    if (code === 'not found') {
+      return err('not_found', 'Product not found', CODE_NOT_FOUND);
+    }
+    if (code === 'quantity') {
+      return err('stock_problem', 'Such amount is not permitted to sell', CODE_NOT_FOUND);
+    }
+  }
+
   changeProduct(array, 'sub');
   return Sales.create(array);
 };
