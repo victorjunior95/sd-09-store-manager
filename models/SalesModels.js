@@ -7,7 +7,11 @@ async function create(itenSold) {
   const db = await connection();
   const sales = await db.collection('sales').insertOne({itenSold});
 
-  return sales.ops[0];
+  const result = await sales.ops[0];
+  return {
+    _id: result._id,
+    itensSold: result.itenSold
+  };
 }
 
 
