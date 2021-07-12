@@ -1,9 +1,9 @@
 const connection = require('./connection');
 
-async function create(data) {
+async function create({ name, quantity }) {
   return connection()
-    .then((db) => db.collection('products').insertOne(data))
-    .then(({ insertedId }) => ({ _id: insertedId, ...data }))
+    .then((db) => db.collection('products').insertOne({ name, quantity }))
+    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }))
     .catch((err) => err);
 }
 
@@ -28,10 +28,12 @@ async function getByName(name) {
     .catch((err) => err);
 }
 
-async function updateById(id, data) {
+async function updateById(id, { name, quantity }) {
   return connection()
-    .then((db) => db.collection('products').update({ _id: id }, data))
-    .then(({ result }) => (!result.nModified) ? null : ({ _id: id, ...data }))
+    .then((db) => db.collection('products').updateOne({_id: id }, {
+      $set: { name, quantity }
+    }))
+    .then(({ result }) => (!result.nModified) ? null : ({ _id: id, name, quantity }))
     .catch((err) => err);
 }
 

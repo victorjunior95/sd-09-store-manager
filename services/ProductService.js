@@ -1,5 +1,24 @@
+const Joi = require('joi');
 const ProductModel = require('../models/ProductModel');
-const { ObjectId } = require('mongodb'); 
+const { validateId, ObjectId } = require('./validateId');
+
+const STRING_LENGTH = 5;
+
+function validateData(data) {
+  const { error } = Joi.object({
+    name: Joi.string().not().empty().min(STRING_LENGTH).required(),
+    quantity: Joi.number().integer().min(1).required(),
+  }).validate(data);
+  if (error) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: error.details[0].message,
+      },
+    };
+  }
+  return {};
+}
 
 async function validateNameAvailability(name) {
   const getByNameResp = await ProductModel.getByName(name);
@@ -14,22 +33,14 @@ async function validateNameAvailability(name) {
   return {};
 }
 
-function validateId(id) {
-  if (!ObjectId.isValid(id)) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
-  return {};
-}
-
 async function create(data) {
-  const dataValidation = await validateNameAvailability(data.name);
+  const dataValidation = validateData(data);
   if (dataValidation.err) {
     return dataValidation;
+  }
+  const nameValidation = await validateNameAvailability(data.name);
+  if (nameValidation.err) {
+    return nameValidation;
   }
   const response = await ProductModel.create(data);
   return response;
@@ -61,6 +72,10 @@ async function updateById(id, data) {
   const idValidation = validateId(id);
   if (idValidation.err) {
     return idValidation;
+  }
+  const dataValidation = validateData(data);
+  if (dataValidation.err) {
+    return dataValidation;
   }
   const response = await ProductModel.updateById(new ObjectId(id), data);
   if (!response) {
