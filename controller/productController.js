@@ -42,11 +42,12 @@ const editProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
-  const product = await productService.validateFoundId(id);
-  if(product.err) return res.status(unprocessable).json(product);
-
-  const deletedProduct = await productService.deleteProductById(id);
-  if(deletedProduct) return res.status(status_ok).json(deletedProduct);
+  
+  const foundId = await productService.validateFoundId(id);
+  if(foundId.err) return res.status(unprocessable).json(foundId);
+  
+  await productService.deleteProductById(id);
+  return res.status(status_ok).json(foundId);
 };
 
 module.exports = { postProduct, getProducts, getProductById, editProduct, deleteProduct };
