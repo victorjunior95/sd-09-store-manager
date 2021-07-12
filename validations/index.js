@@ -1,5 +1,7 @@
-const product = require('./produtc');
+const name = require('./name');
+const quantity = require('./quantity');
 
 module.exports = {
-  product,
+  name,
+  quantity,
 };

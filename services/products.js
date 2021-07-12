@@ -7,8 +7,8 @@ module.exports = {
     const product = new Product();
     const { name = '', quantity = '' } = payload;
 
-    await validations.product.name(name);
-    validations.product.quantity(quantity);
+    await validations.name(name);
+    validations.quantity(quantity);
 
     return product.create(payload);
   },
@@ -30,8 +30,8 @@ module.exports = {
     const product = new Product();
     const { id, name, quantity } = payload;
 
-    await validations.product.name(name, id);
-    validations.product.quantity(quantity);
+    await validations.name(name, id);
+    validations.quantity(quantity);
 
     const response = await product.update(payload);
 
