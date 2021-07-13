@@ -9,6 +9,6 @@ const productsRouter = express.Router();
 productsRouter.post('/', rescue(productsController.createProduct));
 productsRouter.get('/', rescue(productsController.getAllProducts));
 productsRouter.get('/:id', rescue(productsController.getProductById));
-
+productsRouter.put('/:id', rescue(productsController.editProduct));
 
 module.exports = productsRouter;

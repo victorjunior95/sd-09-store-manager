@@ -3,7 +3,7 @@
 const { ObjectId } = require('mongodb');
 const productsModel = require('../models/productsModel');
 
-const validateName = async (name) => {
+const validateNameLength = async (name) => {
   const minLength = 5;
   if (name.length < minLength) {
     throw {
@@ -14,6 +14,9 @@ const validateName = async (name) => {
       },
     };
   }
+}
+
+const validateIfNameExists = async (name) => {
   const nameExists = await productsModel.getProductByName(name);
   if (nameExists) {
     throw {
@@ -50,7 +53,8 @@ const validateQuantity = (quantity) => {
 
 const createProduct = async (product) => {
   const { name, quantity } = product;
-  await validateName(name);
+  await validateNameLength(name);
+  await validateIfNameExists(name);
   await validateQuantity(quantity);
   const createdProduct = await productsModel.createProduct(product);
   return {
@@ -96,8 +100,29 @@ const getProductById = async (id) => {
   };
 };
 
+const editProduct = async (id, product) => {
+  const { name, quantity } = product;
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    };
+  }
+  await validateNameLength(name);
+  await validateQuantity(quantity);
+  const editedProduct = await productsModel.editProduct(id, product);
+  return {
+    status: 200,
+    editedProduct,
+  };
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
+  editProduct,
 };
