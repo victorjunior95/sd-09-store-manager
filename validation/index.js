@@ -32,6 +32,7 @@ module.exports = {
 
     if (quantity <= zero) return false;
     return true;
-  }
+  },
+
 };
 

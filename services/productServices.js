@@ -2,7 +2,6 @@ const product = require('../models/productModel');
 const validation = require('../validation');
 
 const createProduct = async (name, quantity) => {
-  const unique = await validation.isUnique(name);
 
   if (!validation.isValidName(name)) {
     return {
@@ -40,14 +39,14 @@ const createProduct = async (name, quantity) => {
     };
   }
 
-  if (!unique) {
-    return {
-      'err': {
-        'code': 'invalid_data',
-        'message': 'Product already exists'
-      }
-    };
-  }
+  // if (!unique) {
+  //   return {
+  //     'err': {
+  //       'code': 'invalid_data',
+  //       'message': 'Product already exists'
+  //     }
+  //   };
+  // }
 
   const newProduct = await product.createProduct(name, quantity);
   return newProduct;
@@ -59,6 +58,24 @@ const updateProduct = async (id, name, quantity) => {
       'err': {
         'code': 'invalid_data',
         'message': '"name" length must be at least 5 characters long'
+      }
+    };
+  };
+
+  if (!validation.isMustBeZero) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"quantity" must be larger than or equal to 1'
+      }
+    };
+  }
+
+  if (!validation.isNumber(quantity)) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"quantity" must be a number'
       }
     };
   };
