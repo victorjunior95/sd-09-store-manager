@@ -45,11 +45,15 @@ const getAll = async () => {
 
 const getById = async (id) => SalesModel.findByQuery(ObjectId(id));
 
-// const remove = async (id) => {
-//   const removedProduct = await getById(id);
-//   await ProductsModel.remove(id);
-//   return removedProduct;
-// };
+const remove = async (id) => {
+  const removedSale = await getById(id);
+  await SalesModel.remove(id);
+  removedSale.itensSold.forEach(async (product) => {
+    const { _id, name, quantity } = await ProductsServices.getById(product.productId);
+    await ProductsModel.update(_id, name, quantity + product.quantity);
+  });
+  return removedSale;
+};
 
 const update = async (id, itensSold) => {
   await SalesModel.update(id, itensSold);
@@ -61,6 +65,6 @@ module.exports = {
   create,
   getAll,
   getById,
-  // remove,
+  remove,
   update,
 };

@@ -24,8 +24,14 @@ const validateSale = async (req, _res, next) => {
 
 const validateSaleId = (req, _res, next) => {
   const { id } = req.params;
-
-  if (!ObjectId.isValid(id)) return next(errorObject('not_found', 'Sale not found'));
+  
+  if (!ObjectId.isValid(id)) {
+    if (req.method === 'DELETE') return next(
+      errorObject('invalid_data', 'Wrong sale ID format')
+    );
+    
+    return next(errorObject('not_found', 'Sale not found'));
+  }
 
   return next();
 };

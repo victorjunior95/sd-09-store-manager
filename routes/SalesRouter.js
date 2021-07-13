@@ -28,10 +28,10 @@ SalesRouter.put(
   rescue(validateSale),
   rescue(SalesController.update),
 );
-// SalesRouter.delete(
-//   '/:id',
-//   rescue(validateProductId),
-//   rescue(ProductsController.remove),
-// );
+SalesRouter.delete(
+  '/:id',
+  rescue(validateSaleId),
+  rescue(SalesController.remove),
+);
 
 module.exports = SalesRouter;

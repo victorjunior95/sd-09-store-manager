@@ -1,5 +1,6 @@
 const SalesServices = require('../services/SalesServices');
 const statusCode = require('../utils/statusCode');
+const errorObject = require('../utils/errorObject');
 
 const create = async (req, res, next) => {
   const itensSold = req.body;
@@ -16,17 +17,19 @@ const getAll = async (_req, res) => {
   return res.status(statusCode.ok).json(allProducts);
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
   const { id } = req.params;
-  const product = await SalesServices.getById(id);
-  return res.status(statusCode.ok).json(product);
+  const sale = await SalesServices.getById(id);
+  if (!sale) return next(errorObject('not_found', 'Sale not found'));
+  return res.status(statusCode.ok).json(sale);
 };
 
-// const remove = async (req, res) => {
-//   const { id } = req.params;
-//   const product = await SalesServices.remove(id);
-//   return res.status(statusCode.ok).json(product);
-// };
+const remove = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const removedSale = await SalesServices.remove(id);
+  return res.status(statusCode.ok).json(removedSale);
+};
 
 const update = async (req, res) => {
   const { id } = req.params;
@@ -39,6 +42,6 @@ module.exports = {
   create,
   getAll,
   getById,
-  // remove,
+  remove,
   update,
 };
