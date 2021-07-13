@@ -34,16 +34,16 @@ const updateSaleById = async (id, body) => {
   const checkQuant = validateSaleQuantity(body);
   if (checkQuant.err) return checkQuant;
 
-  const result = await salesModel.updateSaleById(id, productId, quantity);
+  const data = await salesModel.updateSaleById(id, productId, quantity);
 
-  if (!result) return {
+  if (!data) return {
     err: {
       code: 'not_found',
       message: 'Sale not found'
     }
   };
 
-  return response;
+  return data;
 };
 
 module.exports = {

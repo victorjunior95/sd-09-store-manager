@@ -5,7 +5,7 @@ const addSales = async (body) => {
 
   const { ops } = await connection()
     .then((db) => db.collection('sales').insertOne({ itensSold: body }));
-
+  console.log(ops);
   return ops[0];
 };
 
@@ -33,11 +33,11 @@ const updateSaleById = async (id, productId, quantity) => {
   const result = await connection()
     .then((db) => {
       const saleId = new ObjectId(id);
-      const newData = { productId, quantity};
+      const newData = [{ productId, quantity}];
       return db.collection('sales').findOneAndUpdate(
         { '_id': saleId }, { $set: { itensSold: newData } }, { returnOriginal: false });
     }).then((result) => result.value);
-
+  console.log(result);
   return result;
 };
 
