@@ -29,6 +29,8 @@ app.get('/sales/:id', salesController.getSalesById);
 
 app.put('/sales/:id', salesController.updateSaleById);
 
+app.delete('/sales/:id', salesController.deleteSaleById);
+
 app.use((err, req, res, next) => {
   const errStatus = 422;
   const codeNotFound = 404;
