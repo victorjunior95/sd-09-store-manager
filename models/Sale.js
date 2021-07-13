@@ -28,6 +28,15 @@ class Sale {
       .then((db) => db.collection(this.collection))
       .then((collection) => collection.find().toArray());
   }
+
+  get(id) {
+    return !ObjectID.isValid(id)
+      ? null
+      : connection()
+        .then((db) => db.collection(this.collection))
+        .then((collection) => collection.findOne({ _id: ObjectID(id) }))
+        .then((result) => result ? result : {});
+  }
 }
 
 module.exports = Sale;
