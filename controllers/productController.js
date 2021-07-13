@@ -26,7 +26,14 @@ const findProductController = async (req, res) => {
 };
 
 const editProductController = async (req, res) => {
-  const { id } = req.params;  
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const products = await productService.editProductService(id, name, quantity);
+  console.log('chegou no controler');
+  if (products.err) {
+    return res.status(status.UNPROCESSABLE_ENTITY).json(products);
+  }
+  res.status(status.OK).json(products);
 };
 
 module.exports = {

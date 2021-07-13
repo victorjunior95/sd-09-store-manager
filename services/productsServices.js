@@ -28,8 +28,16 @@ const findProductService = async (id) => {
   return data;
 };
 
+const editProductService = async (id, name, quantity) => {
+  const products = await productModel.editProduct(id, name, quantity);
+  if (assistent.verifyName(name)) return assistent.verifyName(name);
+  if (assistent.verifyQuantity(quantity)) return assistent.verifyQuantity(quantity);
+  return products;
+};
+
 module.exports = {
   createProduct,
   getAll,
   findProductService,
+  editProductService,
 };
