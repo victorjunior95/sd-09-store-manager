@@ -6,7 +6,7 @@ const CREATED_STATUS = 201;
 const NOT_FOUND_STATUS = 404;
 const UNPROCESSEBLEENTRY_STATUS = 422;
 
-const saleQuantityIsValid = (res, itensSold) => {
+const saleQuantityIsValid = (itensSold) => {
   const minNumber = 0;
 
   itensSold.forEach((sale) => {
@@ -21,7 +21,7 @@ const create = async (req, res, next) => {
   try {
     const [...itensSold] = req.body;
 
-    saleQuantityIsValid (res, itensSold);
+    saleQuantityIsValid (itensSold);
   
     const sale = await servicesSales.create(itensSold);
   
@@ -38,7 +38,7 @@ const edit = async (req, res, next) => {
     const { id } = req.params;
     const [...itensSold] = req.body;
   
-    saleQuantityIsValid (res, itensSold);
+    saleQuantityIsValid (itensSold);
   
     const sale = await servicesSales.edit(id, itensSold);
   

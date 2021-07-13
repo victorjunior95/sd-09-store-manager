@@ -1,7 +1,16 @@
 const connection = require('./connection');
+const modelPoducts = require('../models/products');
 const { ObjectId, ObjectID } = require('mongodb');
 
 const create =  async (itensSold) => {
+  itensSold.forEach((item) => {
+    const product = modelPoducts.getById(item.productId)
+      .then((data) => {
+        modelPoducts.edit(item.productId, data.name, data.quantity - item.quantity)
+          .then((result) => result);
+      });
+    
+  });
   const newSale =  await connection()
     .then((db) => db.collection('sales').insertOne({ itensSold }))
     .then((result) => result.ops[0]);
@@ -47,7 +56,17 @@ const remove = async (id) => {
     return null;
   }
 
-  const sale = getById(id);
+  const sale = await getById(id);
+
+
+  sale.itensSold.forEach((item) => {
+    const product = modelPoducts.getById(item.productId)
+      .then((data) => {
+        modelPoducts.edit(item.productId, data.name, data.quantity + item.quantity)
+          .then((result) => result);
+      });
+    
+  });
 
   const removed = await connection()
     .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }))
