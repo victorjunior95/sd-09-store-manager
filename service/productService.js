@@ -1,4 +1,5 @@
 const productModel = require('../model/productModel');
+const util = require('../model/util');
 
 const checkIfProductExists = async (name) => {
   if (await productModel.getProductByName(name)) return {
@@ -43,7 +44,7 @@ const createNewProduct = async (name, quantity) => {
 };
 
 const getAllProducts =  async () => {
-  return await productModel.getAll();
+  return await util.getAll('products');
 };
 
 const validateFoundId = async (id) => {

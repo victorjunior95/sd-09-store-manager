@@ -5,6 +5,7 @@ const bodyParser = require('body-parser').json();
 const rescue = require('express-rescue');
 
 const productController = require('./controller/productController');
+const salesController = require('./controller/salesController');
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -20,3 +21,6 @@ app.get('/products', rescue(productController.getProducts));
 app.get('/products/:id', rescue(productController.getProductById));
 app.put('/products/:id', rescue(productController.editProduct));
 app.delete('/products/:id', rescue(productController.deleteProduct));
+
+// SALES
+app.post('/sales', rescue(salesController.postSale));
