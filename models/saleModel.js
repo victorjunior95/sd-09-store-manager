@@ -46,12 +46,14 @@ const updateSales = async (id, productId, quantity) => {
 const excludeSaleModel = async (id) => {
   if (!ObjectId.isValid(id)) return null;
 
-  return connections()
+  const deleteSaleModel = await connections()
     .then((db) =>
       ObjectId.isValid(id)
         ? db.collection('sales')
           .deleteOne({ _id: ObjectId(id) })
         : null);
+  console.log(deleteSaleModel);
+  return deleteSaleModel;
 };
 
 module.exports = {

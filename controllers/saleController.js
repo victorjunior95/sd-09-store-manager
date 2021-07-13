@@ -50,10 +50,6 @@ const excludeSaleController = async (req, res) => {
     return res.status(UNPROCESSABLE).json(excludeSale);
   }
 
-  if (!excludeSale.err) {
-    return res.status(notFound).json(excludeSale);
-
-  }
   return res.status(OK).json(excludeSale);
 };
 

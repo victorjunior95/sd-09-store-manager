@@ -69,6 +69,7 @@ const deleteSales = async (id) => {
       }
     };
   }
+  return sale;
 };
 
 module.exports = {
