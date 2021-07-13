@@ -2,9 +2,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const productsController = require('./controllers/productsController');
-const errorMiddleware = require('./middlewares/error.js');
+const salesController = require('./controllers/salesController');
 const { validationName, validationQuantity } = require('./middlewares/products');
 const app = express();
+const {validationSalesQuantity} =require('./middlewares/sales');
+
 
 app.use(bodyParser.json());
 
@@ -19,13 +21,12 @@ app.post('/products',validationName, validationQuantity, productsController.crea
 app.put('/products/:id', validationName, validationQuantity, productsController.change);
 app.delete('/products/:id', productsController.del);
 
-// app.get('/books', Book.getAll);
-// app.get('/books/author/:id', Book.findByAuthorId);
+app.post('/sales', validationSalesQuantity, salesController.create);
+app.get('/sales', salesController.getAll);
 // app.get('/books/title/:title', Book.findByTitle);
 // app.get('/books/:id', Book.findById);
 // app.post('/books', Book.create);
 
-app.use(errorMiddleware);
 
 const PORT = 3000;
 

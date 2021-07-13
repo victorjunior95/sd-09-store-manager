@@ -21,7 +21,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   const products = await productsServices.getAll();
-  let obj = { products } ;
+  let obj = { products };
   res.status(STATUS_200).json(obj);
 };
 
@@ -56,13 +56,14 @@ const del = async (req, res) => {
 };
 
 const change = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, quantity } = req.body;
-    const product = await productsServices.change(id, name, quantity);
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const product = await productsServices.change(id, name, quantity);
+  if (product !== null) {
     res.status(STATUS_200).send(product);
-  } catch (err) {
-    console.error(err);
+
+  } else {
+    console.error();
   }
 };
 
