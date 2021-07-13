@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const ProductsModel = require('../models/ProductsModel');
 const SalesModel = require('../models/SalesModel');
 const ProductsServices = require('./ProductsServices');
@@ -28,21 +28,22 @@ const create = async (sale) => {
     'Such amount is not permitted to sell',
   );
   
+  const { ops: [createdSale] } = await SalesModel.create(sale);
+
   sale.forEach(async (product) => {
     const { _id, name, quantity } = await ProductsServices.getById(product.productId);
     await ProductsModel.update(_id, name, quantity - product.quantity);
   });
 
-  const { ops: [createdSale] } = await SalesModel.create(sale);
   return createdSale;
 };
 
-// const getAll = async () => {
-//   const products = await ProductsModel.getAll();
-//   return { products };
-// };
+const getAll = async () => {
+  const sales = await SalesModel.getAll();
+  return { sales };
+};
 
-// const getById = async (id) => ProductsModel.findByQuery(ObjectId(id));
+const getById = async (id) => SalesModel.findByQuery(ObjectId(id));
 
 // const remove = async (id) => {
 //   const removedProduct = await getById(id);
@@ -58,8 +59,8 @@ const create = async (sale) => {
 
 module.exports = {
   create,
-  // getAll,
-  // getById,
+  getAll,
+  getById,
   // remove,
   // update,
 };

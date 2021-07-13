@@ -22,15 +22,15 @@ const validateSale = async (req, _res, next) => {
   return next();
 };
 
-// const validateProductId = (req, _res, next) => {
-//   const { id } = req.params;
+const validateSaleId = (req, _res, next) => {
+  const { id } = req.params;
 
-//   if (!ObjectId.isValid(id)) return next(errorObject('invalid_data', 'Wrong id format'));
+  if (!ObjectId.isValid(id)) return next(errorObject('not_found', 'Sale not found'));
 
-//   return next();
-// };
+  return next();
+};
 
 module.exports = {
   validateSale,
-  // validateProductId,
+  validateSaleId,
 };

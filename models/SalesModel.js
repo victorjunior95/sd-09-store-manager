@@ -7,17 +7,17 @@ const collection = async () => connection()
 const create = async (itensSold) => collection()
   .then((coll) => coll.insertOne({ itensSold }));
 
-// const findByQuery = async (query) => {
-//   const product = await collection()
-//     .then((coll) => coll.findOne(query));
+const findByQuery = async (query) => {
+  const product = await collection()
+    .then((coll) => coll.findOne(query));
 
-//   if (!product) return null;
+  if (!product) return null;
 
-//   return product;
-// };
+  return product;
+};
 
-// const getAll = async () => collection()
-//   .then((coll) => coll.find().toArray());
+const getAll = async () => collection()
+  .then((coll) => coll.find().toArray());
 
 // const remove = async (id) => collection()
 //   .then((coll) => coll.deleteOne({ _id: ObjectId(id) }));
@@ -27,8 +27,8 @@ const create = async (itensSold) => collection()
 
 module.exports = {
   create,
-  // findByQuery,
-  // getAll,
+  findByQuery,
+  getAll,
   // remove,
   // update,
 };

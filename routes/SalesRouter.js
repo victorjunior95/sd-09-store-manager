@@ -2,7 +2,7 @@ const express = require('express');
 const rescue = require('express-rescue');
 const {
   validateSale,
-  // validateProductId,
+  validateSaleId,
 } = require('../middlewares/SalesMiddlewares');
 const SalesController = require('../controllers/SalesController');
 
@@ -13,15 +13,15 @@ SalesRouter.post(
   rescue(validateSale),
   rescue(SalesController.create),
 );
-// SalesRouter.get(
-//   '/',
-//   rescue(ProductsController.getAll),
-// );
-// SalesRouter.get(
-//   '/:id',
-//   rescue(validateProductId),
-//   rescue(ProductsController.getById),
-// );
+SalesRouter.get(
+  '/',
+  rescue(SalesController.getAll),
+);
+SalesRouter.get(
+  '/:id',
+  rescue(validateSaleId),
+  rescue(SalesController.getById),
+);
 // SalesRouter.put(
 //   '/:id',
 //   rescue(validateProductId),

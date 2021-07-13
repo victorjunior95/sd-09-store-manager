@@ -11,16 +11,16 @@ const create = async (req, res, next) => {
   return res.status(statusCode.ok).json(newSale);
 };
 
-// const getAll = async (_req, res) => {
-//   const allProducts = await SalesServices.getAll();
-//   return res.status(statusCode.ok).json(allProducts);
-// };
+const getAll = async (_req, res) => {
+  const allProducts = await SalesServices.getAll();
+  return res.status(statusCode.ok).json(allProducts);
+};
 
-// const getById = async (req, res) => {
-//   const { id } = req.params;
-//   const product = await SalesServices.getById(id);
-//   return res.status(statusCode.ok).json(product);
-// };
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const product = await SalesServices.getById(id);
+  return res.status(statusCode.ok).json(product);
+};
 
 // const remove = async (req, res) => {
 //   const { id } = req.params;
@@ -37,8 +37,8 @@ const create = async (req, res, next) => {
 
 module.exports = {
   create,
-  // getAll,
-  // getById,
+  getAll,
+  getById,
   // remove,
   // update,
 };
