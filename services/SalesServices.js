@@ -1,7 +1,13 @@
 const SalesModels = require('../models/SalesModels');
 
 const create = async (sale) => {
-  return await SalesModels.create(sale);
+  const newSale = await SalesModels.create(sale);
+
+  if (!newSale) return {
+    error: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' }
+  };
+
+  return newSale;
 };
 
 const getAll = async () => {
@@ -23,8 +29,15 @@ const findById = async (id) => {
   return sale;
 };
 
+const updateOne = async (id, body) => {
+  const sale = await SalesModels.updateOne(id, body);
+
+  return sale;
+};
+
 module.exports = {
   create,
   getAll,
-  findById
+  findById,
+  updateOne
 };

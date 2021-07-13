@@ -38,7 +38,7 @@ const updateOne = async (id, name, quantity) => {
     return {
       error: {
         code: 'invalid_data',
-        message: 'Wrong id format'
+        message: 'Product already exists' 
       }
     };
   }

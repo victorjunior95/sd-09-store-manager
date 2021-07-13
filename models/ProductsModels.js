@@ -50,7 +50,7 @@ async function updateOne(id, name, quantity) {
 
   const db = await connection();
   const product = await db.collection('products')
-    .updateOne({_id: ObjectId(id)}, {$set: { name, quantity}});
+    .updateOne({_id: ObjectId(id)}, {$set: { name, quantity }});
   return {
     _id: product._id,
     name,

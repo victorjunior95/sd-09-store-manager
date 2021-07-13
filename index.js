@@ -19,11 +19,9 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', products);
-
 app.use(Producterror);
 
 app.use('/sales', sales);
-
 app.use(SaleError);
 
 app.listen(PORT, () => {
