@@ -1,10 +1,10 @@
 const connections = require('./connections');
 const { ObjectId } = require('mongodb');
 
-const create = async(sales) => {
+const create = async(itemSold) => {
   const newSales = await connections()
     .then((db) => db.collection('sales')
-      .insertOne({ sales }))
+      .insertMany([{ itensSold: [...itemSold ] }]))
     .then((result) => result.ops[0]);
 
   return newSales;
@@ -31,13 +31,13 @@ const saleAllModel = async (id) => {
   return saleId;
 };
 
-const updateSales = async (productId, quantity) => {
-  if (!ObjectId.isValid(productId)) return null;
-  const editedSales = connection().then((db) =>
+const updateSales = async (id, productId, quantity) => {
+  if (!ObjectId.isValid(id)) return null;
+  const editedSales = await connections().then((db) =>
     db
       .collection('sales')
-      .updateOne({ productId: ObjectId(productId) }, { $set: { quantity } })
-      .then(() => ({ _productId: productId, quantity}))
+      .updateOne({ _id: ObjectId(id) }, { $set: { productId, quantity } })
+      .then(() => ({ _id: id, productId, quantity}))
   );
 
   return editedSales;

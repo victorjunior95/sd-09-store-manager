@@ -19,7 +19,6 @@ app.put('/sales/:id', saleController.salesUpdateController);
 app.delete('/sales/:id', saleController.excludeSaleController);
 
 
-
 // lista todos os produtos
 app.post('/products', productController.productCreate);
 

@@ -4,15 +4,13 @@ const UNPROCESSABLE = 422;
 const notFound = 404;
 
 const salesCreate = async (req, res) => {
-  const sales = req.body;
-  console.log(sales);
+  const itemSold = req.body;
 
-  const newSales = await saleService.quantityIsValid(sales);
-  if (newSales.err) {
-    return res.status(UNPROCESSABLE).json(newSales);
+  const newSold = await saleService.createSales(itemSold);
+  if (newSold.err) {
+    return res.status(UNPROCESSABLE).json(newSold);
   }
-
-  return res.status(OK).json(newSales);
+  return res.status(OK).json(newSold);
 };
 
 const listAllSales = async (_req,res) => {
@@ -33,12 +31,14 @@ const saleIdController = async (req, res) => {
 };
 
 const salesUpdateController = async (req, res) => {
-  const { productId, quantity } = req.body;
-
-  const saleUpdate = await saleService.salesUpdateValidate(productId, quantity);
+  const { productId, quantity } = req.body[0];
+  const { id } = req.params;
+  const saleUpdate = await saleService.salesUpdate(id, productId, quantity);
+  console.log(saleUpdate);
   if (saleUpdate.err) {
     return res.status(UNPROCESSABLE).json(saleUpdate);
   }
+
   return res.status(OK).json(saleUpdate);
 };
 
