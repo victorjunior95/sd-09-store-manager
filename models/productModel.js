@@ -39,7 +39,7 @@ const updateProduct = async (id, name, quantity) => {
 // 4 - Crie um endpoint para deletar um produto
 const deleteProduct = async (id) => {
   return connection()
-    .then((db) => db.collection('products').delete({ _id: new ObjectId(id) }))
+    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id) }))
     .catch((err) => {
       console.log(err);
       return err;

@@ -85,6 +85,13 @@ const updateProduct = async (id, name, quantity) => {
 };
 
 const deleteProduct = async (id) => {
+  const minLength = 24;
+  if (id.length < minLength) return {
+    'err': {
+      'code': 'invalid_data', 'message': 'Wrong id format'
+    }
+  };
+
   const item = await product.deleteProduct(id);
   return item;
 };
