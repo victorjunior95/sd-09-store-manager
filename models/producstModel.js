@@ -63,7 +63,6 @@ const findOneById = async (id) => {
   return response;
 };
 
-
 module.exports = {
   create,
   findOneByName,
