@@ -12,7 +12,7 @@ const createProduct = async (req, res) => {
 
 const listProduct = async (_req, res) => {
   const list = await products.getAll();
-  res.status(200).json(list);
+  res.status(200).json({ products: list });
 };
 
 const listProductById = async (req, res) => {
@@ -21,7 +21,7 @@ const listProductById = async (req, res) => {
   const list = await product.listProductById(id);
   if (list.err) return res.status(422).json(list);
 
-  res.status(200).json(list);
+  res.status(200).json(list[0]);
 };
 
 const updateProduct = async (req, res) => {
@@ -30,7 +30,7 @@ const updateProduct = async (req, res) => {
   const newProduct = await product.updateProduct(id, name, quantity);
 
   if (newProduct.err) return res.status(422).json(newProduct);
-  res.status(200).json({ message: 'Product updated successfully' });
+  res.status(200).json({id, name, quantity});
 };
 
 const deleteProduct = async (req, res) => {

@@ -12,15 +12,6 @@ const createProduct = async (name, quantity) => {
     };
   };
 
-  if (!validation.isInteger(quantity)) {
-    return {
-      'err': {
-        'code': 'invalid_data',
-        'message': '"quantity" must be larger than or equal to 1'
-      }
-    };
-  };
-
   if (!validation.isNumber(quantity)) {
     return {
       'err': {
@@ -30,7 +21,16 @@ const createProduct = async (name, quantity) => {
     };
   };
 
-  if (!validation.isMustBeZero) {
+  if (!validation.isInteger(quantity)) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"quantity" must be larger than or equal to 1'
+      }
+    };
+  };
+
+  if (!validation.isMustBeZero(quantity)) {
     return {
       'err': {
         'code': 'invalid_data',
@@ -39,14 +39,14 @@ const createProduct = async (name, quantity) => {
     };
   }
 
-  // if (!unique) {
-  //   return {
-  //     'err': {
-  //       'code': 'invalid_data',
-  //       'message': 'Product already exists'
-  //     }
-  //   };
-  // }
+  if (!(await validation.isUniqueName(name))) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': 'Product already exists'
+      }
+    };
+  }
 
   const newProduct = await product.createProduct(name, quantity);
   return newProduct;
@@ -62,15 +62,6 @@ const updateProduct = async (id, name, quantity) => {
     };
   };
 
-  if (!validation.isMustBeZero) {
-    return {
-      'err': {
-        'code': 'invalid_data',
-        'message': '"quantity" must be larger than or equal to 1'
-      }
-    };
-  }
-
   if (!validation.isNumber(quantity)) {
     return {
       'err': {
@@ -79,6 +70,15 @@ const updateProduct = async (id, name, quantity) => {
       }
     };
   };
+
+  if (!validation.isMustBeZero(quantity)) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"quantity" must be larger than or equal to 1'
+      }
+    };
+  }
 
   const item = await product.updateProduct(id, name, quantity);
   return item;

@@ -23,7 +23,7 @@ module.exports = {
   },
 
   isNumber: (quantity) => {
-    if (typeof quantity === 'string') return false;
+    if (typeof quantity !== 'number') return false;
     return true;
   },
 
@@ -33,6 +33,8 @@ module.exports = {
     if (quantity <= zero) return false;
     return true;
   },
+
+
 
 };
 
