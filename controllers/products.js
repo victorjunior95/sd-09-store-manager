@@ -52,9 +52,21 @@ const update = rescue(async (request, response, next) => {
   response.status(OK).json(product);
 });
 
+const del = rescue(async (request, response, next) => {
+
+  const { id } = request.params;
+
+  const deleted = await services.del(id);
+
+  if (deleted.err) return next(product);
+
+  response.status(OK).json(deleted);
+});
+
 module.exports = {
   create,
   getAll,
   findById,
   update,
+  del,
 };
