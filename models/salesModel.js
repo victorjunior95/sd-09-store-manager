@@ -53,9 +53,25 @@ const updateSaleModel = async (id, productId, quantity) => {
   return {alo: 'oi'};
 };
 
+const deleteSaleModel = async (id) => {
+  const empty = 0;
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+
+  if (!ObjectId.isValid(id)) return null;
+
+  const { deletedCount } = await salesCollection.deleteOne({ _id: ObjectId(id)});
+  console.log(deletedCount);
+
+  if (deletedCount === empty) return false;
+  
+  return true;
+};
+
 module.exports = {
   createSaleModel,
   readSaleByIdModel,
   readAllSalesModel,
-  updateSaleModel
+  updateSaleModel,
+  deleteSaleModel
 };

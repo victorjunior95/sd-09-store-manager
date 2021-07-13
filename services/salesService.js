@@ -4,7 +4,8 @@ const {
   createSaleModel,
   readSaleByIdModel,
   readAllSalesModel,
-  updateSaleModel
+  updateSaleModel,
+  deleteSaleModel
 } = require('../models/salesModel');
 
 const { getByID } = require('../models/productsModel');
@@ -68,7 +69,19 @@ const updateSaleService = async (id, productId, quantity) => {
   const response = await readSaleByIdModel(id);
   
   return response;
+};
 
+const deleteSaleService = async (id) => {
+  const response = await readSaleByIdModel(id);
+  const isDeleted = await deleteSaleModel(id);
+
+  if (!isDeleted || !response) throw {
+    status: unprocessableEntity,
+    code: 'invalid_data',
+    message: 'Wrong sale ID format'
+  };
+
+  return response;
 };
 
 
@@ -76,5 +89,6 @@ module.exports = {
   createSaleService,
   readSaleByIdService,
   readAllSalesService,
-  updateSaleService
+  updateSaleService,
+  deleteSaleService
 };

@@ -13,7 +13,8 @@ const {
   createSaleController,
   readSaleByIdController,
   readAllSalesController,
-  updateSaleController
+  updateSaleController,
+  deleteSaleController
 } = require('./controllers/salesController');
 
 const app = express();
@@ -42,6 +43,9 @@ app.get('/sales/', readAllSalesController);
 app.get('/sales/:id', readSaleByIdController);
 
 app.put('/sales/:id', updateSaleController);
+
+app.delete('/sales/:id', deleteSaleController);
+// Daqui pra cima rotas do sale -----------------------
 
 app.use(errorMiddleware);
 

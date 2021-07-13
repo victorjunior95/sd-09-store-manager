@@ -2,7 +2,8 @@ const {
   createSaleService,
   readSaleByIdService,
   readAllSalesService,
-  updateSaleService
+  updateSaleService,
+  deleteSaleService
 } = require('../services/salesService');
 const { httpStatusCode: { ok } } = require('../utils');
 
@@ -47,9 +48,20 @@ const updateSaleController = async (req, res, next) => {
   }
 };
 
+const deleteSaleController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const saleDeleted = await deleteSaleService(id);
+    return res.status(ok).json(saleDeleted);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = { 
   createSaleController,
   readSaleByIdController,
   readAllSalesController,
-  updateSaleController
+  updateSaleController,
+  deleteSaleController
 };
