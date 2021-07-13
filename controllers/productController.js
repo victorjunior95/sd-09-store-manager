@@ -12,7 +12,16 @@ const createProduct = async (req, res) => {
 
 const listProduct = async (_req, res) => {
   const list = await products.getAll();
-  res.status(201).json(list);
+  res.status(200).json(list);
+};
+
+const listProductById = async (req, res) => {
+  const {id} = req.params;
+
+  const list = await product.listProductById(id);
+  if (list.err) return res.status(422).json(list);
+
+  res.status(200).json(list);
 };
 
 const updateProduct = async (req, res) => {
@@ -28,6 +37,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
   createProduct,
   listProduct,
+  listProductById,
   updateProduct,
   deleteProduct
 };

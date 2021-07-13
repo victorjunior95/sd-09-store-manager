@@ -12,9 +12,8 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', product.createProduct);
-
 app.get('/products', product.listProduct);
-
+app.get('/products/:id', product.listProductById);
 app.put('/products', );
 
 app.listen(PORT, () => console.log(`> Server is up and running on PORT : ${PORT}`));

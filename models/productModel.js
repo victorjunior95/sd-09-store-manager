@@ -8,7 +8,12 @@ const createProduct = async (name, quantity) => {
   return newProduct.ops[0];
 };
 // 2 - Crie um endpoint para listar os produtos
-const listProduct = async (id) => {
+const getAll = async () => {
+  return listAll = await connection()
+    .then((db) => db.collection('products').find().toArray());
+};
+
+const listProductById = async (id) => {
   return connection()
     .then((db) => db.collection('products').find({ _id: new ObjectId(id) }).toArray());
 };
@@ -41,14 +46,9 @@ const deleteProduct = async (id) => {
     });
 };
 
-const getAll = async () => {
-  return listAll = await connection()
-    .then((db) => db.collection('products').find().toArray());
-};
-
 module.exports = {
   createProduct,
-  listProduct,
+  listProductById,
   updateProduct,
   deleteProduct,
   getAll

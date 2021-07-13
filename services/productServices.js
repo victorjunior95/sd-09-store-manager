@@ -31,7 +31,15 @@ const createProduct = async (name, quantity) => {
     };
   };
 
-  console.log(unique);
+  if (!validation.isMustBeZero) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"quantity" must be larger than or equal to 1'
+      }
+    };
+  }
+
   if (!unique) {
     return {
       'err': {
@@ -46,6 +54,15 @@ const createProduct = async (name, quantity) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
+  if (!validation.isValidName(name)) {
+    return {
+      'err': {
+        'code': 'invalid_data',
+        'message': '"name" length must be at least 5 characters long'
+      }
+    };
+  };
+
   const item = await product.updateProduct(id, name, quantity);
   return item;
 };
@@ -55,8 +72,15 @@ const deleteProduct = async (id) => {
   return item;
 };
 
-const listProduct = async (id) => {
-  const list = await product.listProduct(id);
+const listProductById = async (id) => {
+  const minLength = 24;
+
+  if (id.length < minLength) return {
+    'err': {
+      'code': 'invalid_data', 'message': 'Wrong id format'
+    }
+  };
+  const list = await product.listProductById(id);
   return list;
 };
 
@@ -64,5 +88,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  listProduct
+  listProductById
 };

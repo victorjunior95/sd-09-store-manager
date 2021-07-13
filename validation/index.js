@@ -8,7 +8,7 @@ module.exports = {
     return true;
   },
 
-  isUnique: async (name) => {
+  isUniqueName: async (name) => {
     const list = await product.getAll();
     const checkName = list.find((products) => products.name === name);
 
@@ -18,14 +18,19 @@ module.exports = {
 
   isInteger: (quantity) => {
     // quantity deve ser um número inteiro maior que 0;
-    const zero = 0;
-    if (!Number.isInteger(quantity) || quantity <= zero) return false;
+    if (!Number.isInteger(quantity)) return false;
     return true;
   },
 
   isNumber: (quantity) => {
     if (typeof quantity === 'string') return false;
+    return true;
+  },
 
+  isMustBeZero: (quantity) => {
+    const zero = 0;
+
+    if (quantity <= zero) return false;
     return true;
   }
 };
