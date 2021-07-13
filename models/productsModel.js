@@ -1,6 +1,6 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
-// valida o "_id" do mongoDB
+// função que valida o "_id" do mongoDB
 
 const getProductByName = async (name) => {
   const db = await connection();
@@ -15,7 +15,22 @@ const createProduct = async (product) => {
   return insertProduct.ops[0];
 };
 
+const getAllProducts = async () => {
+  const db = await connection();
+  const products = await db.collection('products').find({}).toArray();
+  return products;
+};
+
+const getProductById = async (id) => {
+  const db = await connection();
+  const product = await db.collection('products').findOne(ObjectId(id));
+  console.log(product);
+  return product;
+};
+
 module.exports = {
   getProductByName,
   createProduct,
+  getAllProducts,
+  getProductById,
 };

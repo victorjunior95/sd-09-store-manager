@@ -1,5 +1,6 @@
 // todas as funções que dependerem de acesso ao bd precisam ser assíncronas
 
+const { ObjectId } = require('mongodb');
 const productsModel = require('../models/productsModel');
 
 const validateName = async (name) => {
@@ -58,6 +59,45 @@ const createProduct = async (product) => {
   };
 };
 
+const getAllProducts = async () => {
+  const products = await productsModel.getAllProducts();
+  return {
+    status: 200,
+    products,
+  };
+};
+
+const validateId = (id) => (ObjectId.isValid(id));
+// valida se a id que está sendo passada é válida!
+
+const getProductById = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    };
+  }
+  const product = await productsModel.getProductById(id);
+  if (!product) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    };
+  }
+  return {
+    status: 200,
+    product,
+  };
+};
+
 module.exports = {
   createProduct,
+  getAllProducts,
+  getProductById,
 };

@@ -7,5 +7,8 @@ const rescue = require('express-rescue');
 const productsRouter = express.Router();
 
 productsRouter.post('/', rescue(productsController.createProduct));
+productsRouter.get('/', rescue(productsController.getAllProducts));
+productsRouter.get('/:id', rescue(productsController.getProductById));
+
 
 module.exports = productsRouter;
