@@ -4,17 +4,13 @@ const { CREATED, OK } = require('../constants/httpCodes.json');
 
 const create = rescue(async (request, response, next) => {
 
-  const sales = request.body;
+  const sale = request.body;
 
-  const newProduct = await services.create({ name, quantity });
+  const newSale = await services.create(sale);
 
-  if (newProduct.err) return next(newProduct);
+  if (newSale.err) return next(newSale);
 
-  response.status(CREATED).json({
-    _id: newProduct,
-    name,
-    quantity,
-  });
+  response.status(CREATED).json(newSale);
 });
 
 module.exports = { create };
