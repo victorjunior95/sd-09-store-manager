@@ -1,5 +1,5 @@
 const { Sale } = require('../models');
-const { InvalidArgumentError } = require('../errors');
+const { InvalidArgumentError, NotFoundError } = require('../errors');
 const validations = require('../validations');
 
 module.exports = {
@@ -29,5 +29,13 @@ module.exports = {
     const sales = await sale.getAll();
 
     return { sales };
+  },
+  async get(id) {
+    const sale = new Sale();
+    const response = await sale.get(id);
+
+    if(!Object.keys(response).length) throw new NotFoundError('Sale');
+
+    return response;
   },
 };

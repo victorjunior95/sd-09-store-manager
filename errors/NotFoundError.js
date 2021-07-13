@@ -8,7 +8,7 @@ class NotFoundError extends Error {
     super();
     this.name = 'NotFoundError';
     this.code = 'not_found';
-    this.message = `Entity "${entity}" not found`;
+    this.message = `${entity} not found`;
   }
 };
 

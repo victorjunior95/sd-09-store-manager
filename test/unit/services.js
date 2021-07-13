@@ -8,3 +8,4 @@ services.product.remove();
 
 services.sale.create();
 services.sale.getAll();
+services.sale.get();
