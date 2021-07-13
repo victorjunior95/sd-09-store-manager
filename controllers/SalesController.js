@@ -26,7 +26,6 @@ const getById = async (req, res, next) => {
 
 const remove = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const removedSale = await SalesServices.remove(id);
   return res.status(statusCode.ok).json(removedSale);
 };

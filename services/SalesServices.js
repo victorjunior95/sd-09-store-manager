@@ -16,7 +16,7 @@ const validateProductSale = async (product) => {
 };
 
 const create = async (itensSold) => {
-  const saleValidation = await itensSold.map(validateProductSale);
+  const saleValidation = await Promise.all(itensSold.map(validateProductSale));
   const productNotExist = saleValidation.some(({ productNotFound }) => productNotFound);
   const outOfStock = saleValidation.some(
     ({ insufficientQuantity }) => insufficientQuantity
