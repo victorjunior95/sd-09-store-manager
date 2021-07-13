@@ -87,13 +87,9 @@ const findProductById = async (id) => {
 
   const validId = idValidation(id);
 
-  console.log(validId, 'id valido');
-
   if (validId) return invalidData;
 
   const product = await Product.getProductById(id);
-
-  console.log(product, 'produto');
 
   if (!product) {
     return invalidData;
@@ -116,7 +112,7 @@ const updateProduct = async (id, name, quantity) => {
 
 const deleteProduct = async (id) => {
   const validId = await idValidation(id);
-  console.log('services');
+
   if (validId) return validId;
   const productDeleted = await Product.deleteProduct(id);
 

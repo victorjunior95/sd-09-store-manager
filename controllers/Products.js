@@ -50,7 +50,6 @@ const updateProduct = rescue(async (req, res, next) => {
 const deleteProduct = rescue(async (req, res, next) => {
 
   const { id } = req.params;
-  console.log('controller');
   const productToDelete = await service.deleteProduct(id);
 
   if (productToDelete.err) return next(productToDelete.err);
