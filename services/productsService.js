@@ -2,6 +2,7 @@
 
 const { ObjectId } = require('mongodb');
 const productsModel = require('../models/productsModel');
+const WRONG_ID_FORMAT = 'Wrong id format';
 
 const validateNameLength = async (name) => {
   const minLength = 5;
@@ -14,7 +15,7 @@ const validateNameLength = async (name) => {
       },
     };
   }
-}
+};
 
 const validateIfNameExists = async (name) => {
   const nameExists = await productsModel.getProductByName(name);
@@ -80,7 +81,7 @@ const getProductById = async (id) => {
       status: 422,
       err: {
         code: 'invalid_data',
-        message: 'Wrong id format',
+        message: WRONG_ID_FORMAT,
       }
     };
   }
@@ -90,7 +91,7 @@ const getProductById = async (id) => {
       status: 422,
       err: {
         code: 'invalid_data',
-        message: 'Wrong id format',
+        message: WRONG_ID_FORMAT,
       }
     };
   }
@@ -107,7 +108,7 @@ const editProduct = async (id, product) => {
       status: 422,
       err: {
         code: 'invalid_data',
-        message: 'Wrong id format',
+        message: WRONG_ID_FORMAT,
       }
     };
   }
@@ -120,9 +121,44 @@ const editProduct = async (id, product) => {
   };
 };
 
+const validateIfProductExists = async (id) => {
+  const productExists = await productsModel.getProductById(id);
+  if (!productExists) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
+  }
+  return productExists;
+};
+
+const deleteProduct = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
+  }
+  const deletedProduct = validateIfProductExists(id);
+  const checkDelete = await productsModel.deleteProduct(id);
+  if (!checkDelete) {
+    return {
+      status: 200,
+      deletedProduct,
+    };
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
   editProduct,
+  deleteProduct,
 };

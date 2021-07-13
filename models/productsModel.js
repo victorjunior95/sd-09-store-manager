@@ -30,12 +30,19 @@ const getProductById = async (id) => {
 const editProduct = async (id, product) => {
   const { name, quantity } = product;
   const db = await connection();
-  const newProduct = await db.collection('products').updateOne(
+  const newProd = await db.collection('products').updateOne(
     { _id: ObjectId(id) },
     { $set: { name, quantity }},
   );
   const editedProduct = await db.collection('products').findOne({_id: ObjectId(id)});
   return editedProduct;
+};
+
+const deleteProduct = async (id) => {
+  const db = await connection();
+  const deletedProduct = await db.collection('products').deleteOne({ _id: ObjectId(id) });
+  const checkDelete = await db.collection('products').findOne({_id: ObjectId(id)});
+  return checkDelete;
 };
 
 module.exports = {
@@ -44,4 +51,5 @@ module.exports = {
   getAllProducts,
   getProductById,
   editProduct,
+  deleteProduct,
 };
