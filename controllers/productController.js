@@ -29,7 +29,15 @@ const editProductController = async (req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   const products = await productService.editProductService(id, name, quantity);
-  console.log('chegou no controler');
+  if (products.err) {
+    return res.status(status.UNPROCESSABLE_ENTITY).json(products);
+  }
+  res.status(status.OK).json(products);
+};
+
+const deleteProductController = async (req, res) => {
+  const { id } = req.params;
+  const products = await productService.deleteProductService(id);
   if (products.err) {
     return res.status(status.UNPROCESSABLE_ENTITY).json(products);
   }
@@ -41,4 +49,5 @@ module.exports = {
   getAll,
   findProductController,
   editProductController,
+  deleteProductController,
 };
