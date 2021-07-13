@@ -48,7 +48,7 @@ const remove = async (id) => {
   }
 
   const sale = getById(id);
-  
+
   const removed = await connection()
     .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }))
     .catch(() => null);
