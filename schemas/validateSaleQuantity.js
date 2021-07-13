@@ -1,5 +1,7 @@
+const { getProductById } = require('../models/productModel');
+
 const validateSaleQuantity = (body) => {
-  const result = body.find(({ quantity }) => {
+  const result = body.find(({ quantity}) => {
     if (typeof quantity === 'string') {
       return {err: {
         message: 'Wrong product id or invalid quantity',

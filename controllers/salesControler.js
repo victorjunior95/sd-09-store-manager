@@ -5,11 +5,11 @@ const badRequest = 422;
 
 const addSales = async (req, res, next) => {
   const { body } = req;
-  const result = await salesServices.addSales(body);
+  const data = await salesServices.addSales(body);
 
-  if (result.err) return next(result);
+  if (data.err) return next(data);
 
-  res.status(ok).json(result);
+  res.status(ok).json(data);
 };
 
 const getSales = async (req, res, next) => {

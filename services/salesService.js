@@ -1,13 +1,19 @@
 const salesModel = require('../models/salesModel');
 const validateSaleQuantity = require('../schemas/validateSaleQuantity');
+const validateStock = require('../schemas/validateStock');
 
 const addSales = async (body) => {
   const validate = validateSaleQuantity(body);
   if (validate.err) return validate;
 
-  const result = await salesModel.addSales(body);
+  const data = await salesModel.addSales(body);
 
-  return result;
+  if (!data) return { err: {
+    code: 'not_found',
+    message: 'no itens in stock'
+  }};
+
+  return data;
 };
 
 const getSales = async () => {
