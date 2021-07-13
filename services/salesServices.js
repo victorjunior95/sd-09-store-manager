@@ -29,6 +29,25 @@ const createSale = async (soldItems) => {
   return newSale;
 };
 
+const updateSale = async (id, soldItems) => {
+  const validationResult = soldItems
+    .map(({ quantity }) => saleItemsValidationSchema.validate({ quantity }))
+    .find((validations) => Object.keys(validations).includes('error'));
+  if (validationResult) {
+    return { err: {
+      code: 'invalid_data',
+      message: validationResult.error.details[0].message
+    } };
+  }
+  const updatedSale = await salesModel.updateSale(id, soldItems);
+  if (!updatedSale) return { err: {
+    code: 'invalid_data',
+    message: 'Wrong product ID or invalid quantity'
+  } };
+  return updatedSale;
+};
+
 module.exports = {
   createSale,
+  updateSale,
 };
