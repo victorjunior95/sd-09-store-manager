@@ -1,7 +1,6 @@
 const Product = require('../models/Products');
 const { ObjectId } = require('mongodb');
 
-
 const nameLength = 5;
 const quantitySize = 0;
 const invalidData = {
@@ -9,7 +8,7 @@ const invalidData = {
     code: 'invalid_data',
     message: 'Wrong id format',
   }
-}
+};
 
 const validateData = async (name, quantity) => {
 
