@@ -1,6 +1,7 @@
 const Products = require('../models/products');
 const Joi = require('@hapi/joi');
 const { MIN_STRING, MIN_NUMBER } = require('../constants/magicNumbers.json');
+const { ObjectId } = require('mongodb');
 
 const create = async (product) => {
 
@@ -63,9 +64,26 @@ const update = async (product) => {
   return await Products.update(product);
 };
 
+const del = async (id) => {
+
+  if (!ObjectId.isValid(id)) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format'}};
+  }
+
+  const existingProduct = await Products.findById(product.id);
+
+  if (!existingProduct) return {
+    err: { code: 'invalid_data', message: 'Product does not exists' }
+  };
+
+  const deletedProduct = await Products.del(id);
+  return deletedProduct;
+};
+
 module.exports = {
   create,
   getAll,
   findById,
   update,
+  del,
 };
