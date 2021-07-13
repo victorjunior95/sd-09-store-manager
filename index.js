@@ -13,6 +13,8 @@ app.get('/', (_request, response) => {
 
 app.use('/products', require('./routers/products'));
 
+app.use('/sales', require('./routers/sales'));
+
 app.use(errorMiddleWare);
 
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
