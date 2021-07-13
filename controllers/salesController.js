@@ -1,7 +1,8 @@
 const {
   createSaleService,
   readSaleByIdService,
-  readAllSalesService
+  readAllSalesService,
+  updateSaleService
 } = require('../services/salesService');
 const { httpStatusCode: { ok } } = require('../utils');
 
@@ -34,8 +35,21 @@ const readAllSalesController = async (req, res, next) => {
   }
 };
 
+const updateSaleController = async (req, res, next) => {
+  try {
+    const { productId, quantity} = req.body[0];
+    console.log(quantity);
+    const { id } = req.params;
+    const saleUpdated = await updateSaleService(id, productId, quantity);
+    return res.status(ok).json(saleUpdated);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = { 
   createSaleController,
   readSaleByIdController,
-  readAllSalesController
+  readAllSalesController,
+  updateSaleController
 };

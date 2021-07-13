@@ -12,7 +12,8 @@ const {
 const {
   createSaleController,
   readSaleByIdController,
-  readAllSalesController
+  readAllSalesController,
+  updateSaleController
 } = require('./controllers/salesController');
 
 const app = express();
@@ -39,6 +40,8 @@ app.post('/sales', createSaleController);
 
 app.get('/sales/', readAllSalesController);
 app.get('/sales/:id', readSaleByIdController);
+
+app.put('/sales/:id', updateSaleController);
 
 app.use(errorMiddleware);
 

@@ -38,8 +38,24 @@ const readAllSalesModel = async () => {
   return response;
 };
 
+const updateSaleModel = async (id, productId, quantity) => {
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+
+  if (!ObjectId.isValid(id)) return null;
+  const itensSold = [{ productId, quantity }];
+  const { result } = await salesCollection.updateOne(
+    {_id: ObjectId(id)},
+    { $set: { itensSold }}
+  );
+
+  console.log(result);
+  return {alo: 'oi'};
+};
+
 module.exports = {
   createSaleModel,
   readSaleByIdModel,
-  readAllSalesModel
+  readAllSalesModel,
+  updateSaleModel
 };

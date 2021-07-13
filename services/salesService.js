@@ -3,7 +3,8 @@ const { ObjectID } = require('mongodb');
 const {
   createSaleModel,
   readSaleByIdModel,
-  readAllSalesModel
+  readAllSalesModel,
+  updateSaleModel
 } = require('../models/salesModel');
 
 const { getByID } = require('../models/productsModel');
@@ -55,9 +56,25 @@ const readAllSalesService = async () => {
   return allSales;
 };
 
+const updateSaleService = async (id, productId, quantity) => {
+  const { error } = saleSchema.validate({ quantity });
+  if (error) throw {
+    status: unprocessableEntity,
+    code: 'invalid_data',
+    message: 'Wrong product ID or invalid quantity'
+  };
+
+  const updatedSale = await updateSaleModel(id, productId, quantity);
+  const response = await readSaleByIdModel(id);
+  
+  return response;
+
+};
+
 
 module.exports = {
   createSaleService,
   readSaleByIdService,
-  readAllSalesService
+  readAllSalesService,
+  updateSaleService
 };
