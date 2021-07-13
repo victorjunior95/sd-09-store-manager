@@ -66,9 +66,28 @@ const deleteSale = async (id) => {
   return salesModel.deleteSale(id);
 };
 
+const updateSale = async (sale, id) => {
+  const isUpdateValid = await validateSale(sale);
+  if(isUpdateValid) return salesModel.updateSale(sale, id);
+  // if (validateUpdate.error) {
+  //   throw ({
+  //     err: {
+  //       err: {
+  //         code: 'invalid_data',
+  //         message: validateUpdate.error.details[0].message
+  //       },
+  //     },
+  //     code: response.INVALID_DATA,
+  //   });
+  // }
+  
+  // return productsModel.updateProduct(name, quantity, id);
+};
+
 module.exports = {
   getAllSales,
   getSaleById,
   createNewSale,
   deleteSale,
+  updateSale,
 };

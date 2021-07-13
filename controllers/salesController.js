@@ -27,17 +27,17 @@ SalesRouter.post('/', async (req, res, next) => {
   }
 });
 
-// SalesRouter.put('/:id',
-//   async (req, res, next) => {
-//     try {
-//       const { name, quantity } = req.body;
-//       const id = req.params.id;
-//       const updatedProduct = await productsServices.updateProduct(name, quantity, id);
-//       return res.status(response.STATUS_OK).json(updatedProduct);
-//     } catch (error) {
-//       return next(error);
-//     }
-//   });
+SalesRouter.put('/:id',
+  async (req, res, next) => {
+    try {
+      const saleToUpdate = req.body;
+      const id = req.params.id;
+      const updatedSale = await salesServices.updateSale(saleToUpdate, id);
+      return res.status(response.STATUS_OK).json(updatedSale);
+    } catch (error) {
+      return next(error);
+    }
+  });
 
 SalesRouter.delete('/:id',
   async (req, res) => {

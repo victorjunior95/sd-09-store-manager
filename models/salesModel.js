@@ -66,9 +66,29 @@ const deleteSale = async (id) => {
   }
 };
 
+const updateSale = async (sale, id) => {
+  try {
+    const updatedSale = await connection()
+      .then((db) => db.collection('sales').updateOne(
+        { _id: ObjectId(id)},
+        { $set : { 'itensSold': sale } },
+      ));
+    return getSaleById(id);
+  } catch (error) {
+    const errorObj = {
+      err: {
+        code:'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+    return errorObj;
+  }
+};
+
 module.exports = {
   getAllSales,
   getSaleById,  
   createNewSale,
   deleteSale,
+  updateSale,
 };
