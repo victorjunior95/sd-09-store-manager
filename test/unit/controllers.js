@@ -8,3 +8,4 @@ controllers.product.remove();
 
 controllers.sale.create();
 controllers.sale.getAll();
+controllers.sale.get();
