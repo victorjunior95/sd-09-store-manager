@@ -8,6 +8,7 @@ const PORT = 3000;
 
 app.use(bodyParser);
 
+// vendas
 app.post('/sales', saleController.salesCreate);
 
 app.get('/sales', saleController.listAllSales);
