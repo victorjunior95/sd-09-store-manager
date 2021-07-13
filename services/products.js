@@ -1,10 +1,14 @@
 const modelPoducts = require('../models/products');
+const { messageError } = require('../middlewares/errors');
+
+const UNPROCESSEBLEENTRY_STATUS = 422;
 
 const create = async (name, quantity) => {
   const findName = await modelPoducts.getByName(name);
   
   if (findName) {
-    return false;
+    throw messageError (UNPROCESSEBLEENTRY_STATUS, 'invalid_data',
+      'Product already exists');
   }
 
   const product = await  modelPoducts.create(name, quantity);

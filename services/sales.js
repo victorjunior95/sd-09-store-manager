@@ -2,10 +2,6 @@ const modelPoducts = require('../models/products');
 const modelSales = require('../models/sales');
 
 const create = async (itensSold) => {
-//   const findName = await modelPoducts.getByName(name);
-//   if (findName) {
-//     return false;
-//   }
 
   const sale = await  modelSales.create(itensSold);
 

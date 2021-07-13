@@ -1,13 +1,10 @@
 const servicesSales = require('../services/sales');
+const { messageError } = require('../middlewares/errors');
 
 const OK_STATUS = 200;
 const CREATED_STATUS = 201;
 const NOT_FOUND_STATUS = 404;
 const UNPROCESSEBLEENTRY_STATUS = 422;
-
-const messageError = (status, code, message) => 
-  ({ status, code, message });
-
 
 const saleQuantityIsValid = (res, itensSold) => {
   const minNumber = 0;
