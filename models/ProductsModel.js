@@ -4,8 +4,6 @@ const { ObjectId } = require('mongodb');
 const collection = async () => connection()
   .then((db) => db.collection('products'));
 
-// const create = async (name, quantity) => collection()
-//   .then((products) => products.insertOne({ name, quantity }));
 const create = async (name, quantity) => collection()
   .then((coll) => coll.insertOne({ name, quantity }));
 

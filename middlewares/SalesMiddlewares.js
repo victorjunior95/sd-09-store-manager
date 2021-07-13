@@ -1,0 +1,36 @@
+const { ObjectId } = require('mongodb');
+const errorObject = require('../utils/errorObject');
+
+const QUANTITY_MIN = 1;
+
+const checkQuantity = (quantity) => (
+  typeof quantity === 'number' && quantity >= QUANTITY_MIN
+);
+
+const checkId = (id) => ObjectId.isValid(id);
+
+const checkSale = (productId, quantity) => checkId(productId) && checkQuantity(quantity);
+
+const validateSale = async (req, _res, next) => {
+  const sale = req.body;
+  const error = sale.some(({ productId, quantity }) => !checkSale(productId, quantity));
+
+  if (error) return next(
+    errorObject('invalid_data', 'Wrong product ID or invalid quantity')
+  );
+
+  return next();
+};
+
+// const validateProductId = (req, _res, next) => {
+//   const { id } = req.params;
+
+//   if (!ObjectId.isValid(id)) return next(errorObject('invalid_data', 'Wrong id format'));
+
+//   return next();
+// };
+
+module.exports = {
+  validateSale,
+  // validateProductId,
+};

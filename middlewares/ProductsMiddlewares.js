@@ -3,11 +3,12 @@ const { ObjectId } = require('mongodb');
 const errorObject = require('../utils/errorObject');
 
 const NAME_MIN_LENGTH = 5;
+const QUANTITY_MIN = 1;
 
-const validateProduct = (req, _res, next) => {
+const validateProduct = async (req, _res, next) => {
   const { error } = Joi.object({
     name: Joi.string().min(NAME_MIN_LENGTH),
-    quantity: Joi.number().integer().min(1),
+    quantity: Joi.number().integer().min(QUANTITY_MIN),
   }).validate(req.body);
 
   if (error) return next(errorObject('invalid_data', error));
@@ -15,7 +16,7 @@ const validateProduct = (req, _res, next) => {
   return next();
 };
 
-const validateProductId = (req, _res, next) => {
+const validateProductId = async (req, _res, next) => {
   const { id } = req.params;
 
   if (!ObjectId.isValid(id)) return next(errorObject('invalid_data', 'Wrong id format'));
