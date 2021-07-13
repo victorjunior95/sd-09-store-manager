@@ -1,0 +1,67 @@
+const { ObjectId } = require('mongodb');
+const products = require('../models/products');
+
+const errorMessage = {
+  productExists: 'Product already exists',
+  quantityTooLow: '"quantity" must be larger than or equal to 1',
+  quantityNotNumber: '"quantity" must be a number',
+  saleNotFound: 'Sale not found',
+  invalidData: 'Wrong product ID or invalid quantity',
+};
+
+const errorCode = {
+  invalid_data: 'invalid_data',
+  not_found: 'not_found',
+};
+
+const responseCode = {
+  success: 200,
+  created: 201,
+  notFound: 404,
+  unprocessableEntity: 422,
+  internalServerError: 500,
+};
+
+const fieldMinValues = {
+  quantity: 1,
+};
+
+const isBlank = (value) => (!value);
+const isString = (value) => (typeof value === 'string');
+const isLowerthanMinValue = (value, min) => (value < min);
+const idIsNotValid = (id) => {
+  if(!ObjectId.isValid(id)) {
+    return { response: responseCode.notFound,
+      err: { code: errorCode.not_found, message: errorMessage.saleNotFound } };
+  }
+};
+
+const productExists = async (productId) => {
+  const product = await products.findById(productId);
+  if (!product) return false;
+  return true;
+};
+
+const validateSale = ({ productId, quantity }) => {
+  if(
+    isString(quantity)
+    ||
+    isLowerthanMinValue(quantity, fieldMinValues.quantity)
+    ||
+    isBlank(productId)
+    ||
+    idIsNotValid(productId)
+    ||
+    !productExists(productId)
+  ) {
+    return { response: responseCode.unprocessableEntity,
+      err: { code: errorCode.invalid_data, message: errorMessage.invalidData } };
+  }
+};
+module.exports = {
+  validateSale,
+  idIsNotValid,
+  errorMessage,
+  errorCode,
+  responseCode
+};

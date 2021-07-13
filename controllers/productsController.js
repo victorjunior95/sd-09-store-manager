@@ -5,7 +5,6 @@ const {
   validateProductData,
   validateProductId
 } = require('../middlewares/productsMiddleware');
-const { validateProduct } = require('../schemas/productsSchema');
 
 const responseCodes = {
   success: 200,

@@ -7,7 +7,6 @@ const findById = async (id) => {
 
 const getAll = async () => {
   const productsList = await products.getAll();
-  console.log(productsList);
   return productsList;
 };
 
