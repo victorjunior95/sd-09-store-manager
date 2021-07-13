@@ -16,6 +16,30 @@ const createSaleModel = async (salesToInsert) => {
   return sucssesSale;
 };
 
+const readSaleByIdModel = async (id) => {
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+  
+  if (!ObjectId.isValid(id)) return null;
+
+  const sale = await salesCollection.findOne({ _id: ObjectId(id)});
+  return sale;
+};
+
+const readAllSalesModel = async () => {
+  const salesCollection = await connection()
+    .then((db) => db.collection('sales'));
+  
+  const allSales = await salesCollection.find().toArray();
+  const response = {
+    sales: allSales
+  };
+
+  return response;
+};
+
 module.exports = {
   createSaleModel,
+  readSaleByIdModel,
+  readAllSalesModel
 };

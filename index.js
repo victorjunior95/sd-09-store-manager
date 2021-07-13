@@ -10,7 +10,9 @@ const {
   deleteOneProductController
 } = require('./controllers/productsController');
 const {
-  createSaleController
+  createSaleController,
+  readSaleByIdController,
+  readAllSalesController
 } = require('./controllers/salesController');
 
 const app = express();
@@ -32,7 +34,11 @@ app.put('/products/:id', updateOneProductController);
 app.delete('/products/:id', deleteOneProductController);
 // Daqui pra cima rotas do product -----------------------
 
+// Daqui pra baixo rotas do Sales ----------------------
 app.post('/sales', createSaleController);
+
+app.get('/sales/', readAllSalesController);
+app.get('/sales/:id', readSaleByIdController);
 
 app.use(errorMiddleware);
 

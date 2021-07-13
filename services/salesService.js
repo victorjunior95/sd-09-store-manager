@@ -1,8 +1,17 @@
 const Joi = require('@hapi/joi');
 const { ObjectID } = require('mongodb');
-const { createSaleModel } = require('../models/salesModel');
+const {
+  createSaleModel,
+  readSaleByIdModel,
+  readAllSalesModel
+} = require('../models/salesModel');
+
 const { getByID } = require('../models/productsModel');
-const { httpStatusCode: { unprocessableEntity } } = require('../utils');
+
+const { httpStatusCode: {
+  unprocessableEntity,
+  notFound
+} } = require('../utils');
 const minQuantity = 1;
 
 const saleSchema = Joi.object({
@@ -30,7 +39,25 @@ const createSaleService = async (salesToVerify) => {
   return insertedSales;
 };
 
+const readSaleByIdService = async (id) => {
+  const saleFound = await readSaleByIdModel(id);
+  if (!saleFound) throw {
+    status:  notFound,
+    message: 'Sale not found',
+    code: 'not_found'
+  };
+  return saleFound;
+};
+
+const readAllSalesService = async () => {
+  const allSales = await readAllSalesModel();
+  if (!allSales) throw { status:  notFound, message: 'Sale not found', code: 'not_found'};
+  return allSales;
+};
+
 
 module.exports = {
-  createSaleService
+  createSaleService,
+  readSaleByIdService,
+  readAllSalesService
 };
