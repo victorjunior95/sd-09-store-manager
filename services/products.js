@@ -70,13 +70,16 @@ const del = async (id) => {
     return { err: { code: 'invalid_data', message: 'Wrong id format'}};
   }
 
-  const existingProduct = await Products.findById(product.id);
+  const existingProduct = await Products.findById(id);
 
   if (!existingProduct) return {
     err: { code: 'invalid_data', message: 'Product does not exists' }
   };
 
-  const deletedProduct = await Products.del(id);
+  const { name, quantity } = existingProduct;
+
+  await Products.del(id);
+  const deletedProduct = { _id: id, name, quantity };
   return deletedProduct;
 };
 

@@ -58,7 +58,7 @@ const del = rescue(async (request, response, next) => {
 
   const deleted = await services.del(id);
 
-  if (deleted.err) return next(product);
+  if (deleted.err) return next(deleted);
 
   response.status(OK).json(deleted);
 });
