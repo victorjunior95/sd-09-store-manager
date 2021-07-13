@@ -15,8 +15,8 @@ const validateProductSale = async (product) => {
   return { productNotFound, insufficientQuantity };
 };
 
-const create = async (sale) => {
-  const saleValidation = await sale.map(validateProductSale);
+const create = async (itensSold) => {
+  const saleValidation = await itensSold.map(validateProductSale);
   const productNotExist = saleValidation.some(({ productNotFound }) => productNotFound);
   const outOfStock = saleValidation.some(
     ({ insufficientQuantity }) => insufficientQuantity
@@ -28,9 +28,9 @@ const create = async (sale) => {
     'Such amount is not permitted to sell',
   );
   
-  const { ops: [createdSale] } = await SalesModel.create(sale);
+  const { ops: [createdSale] } = await SalesModel.create(itensSold);
 
-  sale.forEach(async (product) => {
+  itensSold.forEach(async (product) => {
     const { _id, name, quantity } = await ProductsServices.getById(product.productId);
     await ProductsModel.update(_id, name, quantity - product.quantity);
   });
@@ -51,16 +51,16 @@ const getById = async (id) => SalesModel.findByQuery(ObjectId(id));
 //   return removedProduct;
 // };
 
-// const update = async (id, name, quantity) => {
-//   await ProductsModel.update(id, name, quantity);
-//   const updatedProduct = await getById(id);
-//   return updatedProduct;
-// };
+const update = async (id, itensSold) => {
+  await SalesModel.update(id, itensSold);
+  const updatedSale = await getById(id);
+  return updatedSale;
+};
 
 module.exports = {
   create,
   getAll,
   getById,
   // remove,
-  // update,
+  update,
 };

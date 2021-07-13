@@ -22,12 +22,12 @@ SalesRouter.get(
   rescue(validateSaleId),
   rescue(SalesController.getById),
 );
-// SalesRouter.put(
-//   '/:id',
-//   rescue(validateProductId),
-//   rescue(validateProduct),
-//   rescue(ProductsController.update),
-// );
+SalesRouter.put(
+  '/:id',
+  rescue(validateSaleId),
+  rescue(validateSale),
+  rescue(SalesController.update),
+);
 // SalesRouter.delete(
 //   '/:id',
 //   rescue(validateProductId),

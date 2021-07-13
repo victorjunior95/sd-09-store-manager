@@ -22,13 +22,13 @@ const getAll = async () => collection()
 // const remove = async (id) => collection()
 //   .then((coll) => coll.deleteOne({ _id: ObjectId(id) }));
 
-// const update = async (id, name, quantity) => collection()
-//   .then((coll) => coll.updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
+const update = async (id, itensSold) => collection()
+  .then((coll) => coll.updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }));
 
 module.exports = {
   create,
   findByQuery,
   getAll,
   // remove,
-  // update,
+  update,
 };

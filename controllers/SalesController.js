@@ -2,9 +2,9 @@ const SalesServices = require('../services/SalesServices');
 const statusCode = require('../utils/statusCode');
 
 const create = async (req, res, next) => {
-  const sale = req.body;
+  const itensSold = req.body;
 
-  const newSale = await SalesServices.create(sale);
+  const newSale = await SalesServices.create(itensSold);
 
   if (newSale.err) return next(newSale);
 
@@ -28,17 +28,17 @@ const getById = async (req, res) => {
 //   return res.status(statusCode.ok).json(product);
 // };
 
-// const update = async (req, res) => {
-//   const { id } = req.params;
-//   const { name, quantity } = req.body;
-//   const product = await SalesServices.update(id, name, quantity);
-//   return res.status(statusCode.ok).json(product);
-// };
+const update = async (req, res) => {
+  const { id } = req.params;
+  const itensSold = req.body;
+  const updatedSale = await SalesServices.update(id, itensSold);
+  return res.status(statusCode.ok).json(updatedSale);
+};
 
 module.exports = {
   create,
   getAll,
   getById,
   // remove,
-  // update,
+  update,
 };
