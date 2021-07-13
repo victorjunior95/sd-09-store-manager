@@ -26,8 +26,19 @@ const validateQuantity = rescue((req, res, next) => {
   }
   next();
 });
+// Req 2
+const validateId = rescue((req, res, next) => {
+  const { id } = req.params;
+  const idLength = 24;
+  if (!id || id.length !== idLength) {
+    return res.status(status.unprocessable)
+      .json({ err: { code: code.invalidData, message: message.wrongIdFormat } });
+  }
+  next();
+});
 
 module.exports = {
   validateName,
   validateQuantity,
+  validateId,
 };
