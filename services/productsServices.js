@@ -5,6 +5,8 @@ const ERROR_STATUS = 422;
 const NAME_MIN_LENGTH = 5;
 const MIN_QUANTITY = 1;
 
+// Mensagens customizadas do Joi conforme visto em:
+// https://stackoverflow.com/a/58234246
 const productValidationSchema = Joi.object({
   name: Joi.string().min(NAME_MIN_LENGTH).required()
     .messages({

@@ -8,6 +8,9 @@ const ERROR_STATUS = 422;
 const createSale = async (req, res, next) => {
   const soldItems = req.body;
   const newSale = await salesServices.createSale(soldItems);
+  if (newSale.err && newSale.err.code === 'stock_problem') {
+    return res.status(NOT_FOUND_STATUS).json(newSale);
+  }
   if (newSale.err) return res.status(ERROR_STATUS).json(newSale);
   return res.status(DEFAULT_SUCCESS_STATUS).json(newSale);
 };
@@ -38,7 +41,7 @@ const updateSale = async (req, res, next) => {
 
 const deleteSale = async (req, res, next) => {
   const { id } = req.params;
-  const deletedSale = await salesModel.deleteSale(id);
+  const deletedSale = await salesServices.deleteSale(id);
   if (!deletedSale) {
     return res.status(ERROR_STATUS).json({ err: {
       code: 'invalid_data',
