@@ -18,8 +18,22 @@ const getAll = async () => {
 
 const getById = async (id) => ProductsModel.findByQuery(ObjectId(id));
 
+const remove = async (id) => {
+  const removedProduct = await getById(id);
+  await ProductsModel.remove(id);
+  return removedProduct;
+};
+
+const update = async (id, name, quantity) => {
+  await ProductsModel.update(id, name, quantity);
+  const updatedProduct = await getById(id);
+  return updatedProduct;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
+  update,
 };
