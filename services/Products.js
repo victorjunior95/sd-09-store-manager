@@ -1,8 +1,15 @@
 const Product = require('../models/Products');
 const { ObjectId } = require('mongodb');
 
+
 const nameLength = 5;
 const quantitySize = 0;
+const invalidData = {
+  err: {
+    code: 'invalid_data',
+    message: 'Wrong id format',
+  }
+}
 
 const validateData = async (name, quantity) => {
 
@@ -12,17 +19,6 @@ const validateData = async (name, quantity) => {
         code: 'invalid_data',
         message: '"name" length must be at least 5 characters long',
       },
-    };
-  }
-
-  const existingProduct = await Product.findByName(name);
-
-  if (existingProduct) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      }
     };
   }
 
@@ -43,6 +39,16 @@ const validateData = async (name, quantity) => {
       }
     };
   }
+  const existingProduct = await Product.findByName(name);
+
+  if (existingProduct) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      }
+    };
+  }
 };
 
 const create = async (name, quantity) => {
@@ -55,10 +61,17 @@ const create = async (name, quantity) => {
 };
 
 const listProducts = async () => {
-  return Product.listProducts();
+  const produto = await Product.listProducts();
+
+  const products = {
+    'products': produto
+  };
+
+  return products;
+
 };
 
-const getProductById = async (id) => {
+const idValidation = (id) => {
 
   if (!ObjectId.isValid(id)) {
     return {
@@ -68,7 +81,24 @@ const getProductById = async (id) => {
       }
     };
   }
+
+};
+
+const findProductById = async (id) => {
+
+  const validId = idValidation(id);
+
+  console.log(validId, 'id valido');
+
+  if (validId) return invalidData;
+
   const product = await Product.getProductById(id);
+
+  console.log(product, 'produto');
+
+  if (!product) {
+    return invalidData;
+  }
 
   return product;
 };
@@ -77,15 +107,28 @@ const updateProduct = async (id, name, quantity) => {
 
   const data = await validateData(name, quantity);
 
-  console.log(data);
   if (data) return data;
 
-  return Product.getProductByIdAndUpdate(id, name, quantity);
+
+  const produto = await Product.getProductByIdAndUpdate(id, name, quantity);
+
+  return produto;
+};
+
+const deleteProduct = async (id) => {
+  const validId = await idValidation(id);
+  console.log('services');
+  if (validId) return validId;
+  const productDeleted = await Product.deleteProduct(id);
+
+  return productDeleted;
 };
 
 module.exports = {
   create,
   listProducts,
-  getProductById,
+  idValidation,
   updateProduct,
+  deleteProduct,
+  findProductById,
 };

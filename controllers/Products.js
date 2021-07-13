@@ -26,7 +26,7 @@ const getProductById = rescue(async (req, res, next) => {
 
   const { id } = req.params;
 
-  const foundProduct = await service.getProductById(id);
+  const foundProduct = await service.findProductById(id);
 
   if (foundProduct.err) return next(foundProduct.err);
 
@@ -47,9 +47,22 @@ const updateProduct = rescue(async (req, res, next) => {
 
 });
 
+const deleteProduct = rescue(async (req, res, next) => {
+
+  const { id } = req.params;
+  console.log('controller');
+  const productToDelete = await service.deleteProduct(id);
+
+  if (productToDelete.err) return next(productToDelete.err);
+
+  return res.status(OK).json(productToDelete);
+
+});
+
 module.exports = {
   createProduct,
   listProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };

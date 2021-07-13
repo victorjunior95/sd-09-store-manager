@@ -23,6 +23,8 @@ app.get('/products/:id', Product.getProductById);
 
 app.put('/products/:id', Product.updateProduct);
 
+app.delete('/products/:id', Product.deleteProduct);
+
 app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
