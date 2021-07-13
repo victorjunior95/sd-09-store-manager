@@ -16,6 +16,7 @@ app.get('/', (_request, response) => {
 app.post('/products', products.createProduct);
 app.get('/products/:id', products.findProductController);
 app.get('/products', products.getAll);
+app.put('/products', products.editProductController);
 
 
 app.listen(PORT, () => console.log('porta 3000 em uso'));

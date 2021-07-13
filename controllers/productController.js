@@ -19,11 +19,19 @@ const getAll = async (req, res) => {
 const findProductController = async (req, res) => {
   const { id } = req.params;
   const product = await productService.findProductService(id);
+  if (product.err) {
+    return res.status(status.UNPROCESSABLE_ENTITY).json(product);
+  }
   res.status(status.OK).json(product);
+};
+
+const editProductController = async (req, res) => {
+  const { id } = req.params;  
 };
 
 module.exports = {
   createProduct,
   getAll,
   findProductController,
+  editProductController,
 };
