@@ -1,5 +1,6 @@
-// Req 1 => Querys com o mongodb
+// Req 1 => Querys com o mongodb.
 const connection = require('./connection');
+const { ObjectId } = require('mongodb');
 
 const create = async(name, quantity) => {
   const { insertedId } = await connection()
