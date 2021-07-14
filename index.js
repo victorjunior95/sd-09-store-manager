@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser').json();
 require('dotenv').config();
 
+const PORT = 3000;
+
 const router = require('./routes/routes');
 
 const app = express();
@@ -15,4 +17,4 @@ router.get('/', (_request, response) => {
 app.use(router);
 
 
-app.listen(process.env.PORT, () => console.log('Online na porta '+ process.env.PORT));
+app.listen(PORT, () => console.log('Online na porta '+ PORT));

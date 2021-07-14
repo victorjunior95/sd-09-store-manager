@@ -130,7 +130,7 @@ const deleteSale = async (id) => {
     await SalesModel.exlude(id);
     for (let index = zero; index < sale.itensSold.length; index += 1) {
       await ProductsModel.updateQuantity(sale.itensSold[index].productId,
-        -sale.itensSold[index].quantity);  
+        -sale.itensSold[index].quantity);
     }
 
     return ({ status: 200, result: { ...sale } });
