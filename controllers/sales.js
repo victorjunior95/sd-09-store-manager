@@ -32,4 +32,15 @@ module.exports = {
       next(err);
     }
   },
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const itensSold = req.body;
+      const response = await salesService.update({ id, itensSold });
+
+      res.status(HTTP_200_OK).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
