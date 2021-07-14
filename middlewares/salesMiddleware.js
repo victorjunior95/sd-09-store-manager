@@ -1,14 +1,14 @@
 const salesSchema = require('../schemas/salesSchema');
 
-const validateSaleData = (req, res, next) => {
+const validateSaleData = async (req, res, next) => {
   const itensSold = req.body;
-  let error = {};
-  itensSold.forEach(async (item) => {
-    validation = await salesSchema.validateSale(item);
-    if(error){
+  const i = 0;
+  for (let index = i; index < itensSold.length; index += 1) {
+    const validation = await salesSchema.validateSale(itensSold[index]);
+    if (validation) {
       return res.status(validation.response).json({ err: validation.err });
     }
-  });
+  }
   next();
 };
 

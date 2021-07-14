@@ -20,7 +20,7 @@ const updateProduct = async (id, name, quantity) => {
   if(matchedCount) {
     return { _id: id, name, quantity };
   }
-  return {err: {code: 'bd_acess_error', message: 'Erro ao atualizar produto'}};
+  return {err: {code: 'bd_acess_error', message: 'error trying update product'}};
 };
 
 const deleteProduct = async (id) => {
