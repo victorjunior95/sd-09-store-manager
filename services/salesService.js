@@ -73,8 +73,28 @@ const getSaleById = async (id) => {
   };
 };
 
+const editSale = async (id, edit) => {
+  const { productId, quantity } = edit[0];
+  if (!validateId(productId)) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
+  }
+  await validateQuantity(quantity);
+  const editedSale = await salesModel.editSale(id, edit);
+  return {
+    status: 200,
+    editedSale,
+  };
+};
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
+  editSale,
 };

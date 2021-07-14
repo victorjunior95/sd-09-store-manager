@@ -17,9 +17,17 @@ const getSaleById = async (req, res) => {
   res.status(status).json(sale);
 };
 
+const editSale = async (req, res) => {
+  const { id } = req.params;
+  const edit = req.body;
+  const { status, editedSale } = await salesService.editSale(id, edit);
+  res.status(status).json(editedSale);
+};
+
 
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
+  editSale,
 };
