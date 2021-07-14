@@ -13,4 +13,25 @@ const create = rescue(async (request, response, next) => {
   response.status(OK).json(newSale);
 });
 
-module.exports = { create };
+const getAll = rescue(async (_request, response, next) => {
+  const sales = await services.getAll();
+
+  if(sales.err) return next(sales);
+
+  response.status(OK).json({
+    sales,
+  });
+});
+
+const findById = rescue(async (request, response, next) => {
+
+  const { id } = request.params;
+
+  const sale = await services.findById(id);
+
+  if(sale.err) return next(sale);
+
+  response.status(OK).json(sale);
+});
+
+module.exports = { create, getAll, findById };
