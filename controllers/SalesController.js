@@ -60,9 +60,22 @@ const updateOne = rescue(async (req, res, next) => {
   return res.status(STATUS_OK).json(updateSale);
 });
 
+const deleteOne = rescue(async (req, res, next) => {
+  const {id} = req.params;
+
+  const sale = await SalesServices.deleteOne(id);
+
+  if (sale.error) {
+    return next(sale.error);
+  }
+
+  res.status(STATUS_OK).json(sale);
+});
+
 module.exports = {
   create,
   getAll,
   findById,
-  updateOne
+  updateOne,
+  deleteOne
 };

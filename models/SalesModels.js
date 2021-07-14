@@ -38,11 +38,10 @@ async function updateOne(id, body) {
   }
 
   const db = await connection();
-  const updatedSale = await db.collection('sales')
+  await db.collection('sales')
     .updateOne(
       {_id: ObjectId(id)}, 
       {$set: { itensSold: body}}, 
-      { returnOriginal: false}
     );
 
   return {
@@ -51,9 +50,22 @@ async function updateOne(id, body) {
   };
 }
 
+async function deleteOne(id) {
+  if(!ObjectId.isValid(id)) {
+    return null;
+  }
+  
+  const deleted = await findById(id);
+  
+  const db = await connection();
+  await db.collection('sales').deleteOne({_id: ObjectId(id)});
+  return deleted;
+}
+
 module.exports = {
   create,
   getAll,
   findById,
-  updateOne
+  updateOne,
+  deleteOne
 };
