@@ -21,5 +21,4 @@ app.put('/products/:id', products.editProductController);
 app.delete('/products/:id', products.deleteProductController);
 app.post('/sales', sales.salesController);
 
-
 app.listen(PORT, () => console.log('porta 3000 em uso'));

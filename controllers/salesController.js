@@ -3,11 +3,11 @@ const status = require('../assistent/status');
 
 const salesController = async (req, res) => {
   const productList = req.body;
-  const sale = salesService.generateSaleService(productList);
-  if (sale.error) {
-    res.status(status.UNPROCESSABLE_ENTITY).json(sale);
+  const sale = await salesService.generateSaleService(productList);
+  if (sale.err) {
+    return res.status(status.UNPROCESSABLE_ENTITY).json(sale);
   }
-  res.status(status.OK).json(sale);
+  return res.status(status.OK).json(sale);
 };
 
 module.exports = { salesController };
