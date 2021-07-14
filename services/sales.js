@@ -33,6 +33,9 @@ const getAll = async () => {
 };
 
 const findById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return { err: { code: 'not_found', message: 'sale not found' } };
+  }
 
   const sale = await Sale.findById(id);
 
