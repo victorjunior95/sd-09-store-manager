@@ -3,6 +3,14 @@ const connection = require('./connection');
 
 const productsCollection = 'products';
 
+const checkProductByName = async ({ name }) => {
+  const data = await connection().then((db) =>
+    db.collection(productsCollection).findOne({ name }),
+  );
+
+  return data;
+};
+
 const getAllProducts = async () => {
   const data = await connection().then((db) => 
     db.collection(productsCollection).find().toArray(),
@@ -36,4 +44,5 @@ module.exports = {
   getAllProducts,
   getProductById,
   postProduct,
+  checkProductByName
 };

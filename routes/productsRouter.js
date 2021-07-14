@@ -1,11 +1,11 @@
 const express = require('express');
 
 const controller = require('../controllers/productsControler');
-const { checkiD } = require('../middlewares');
+const { checkiD, checkNewProductInfo } = require('../middlewares');
 
 const router = express.Router();
 
-router.post('/', controller.postNewProduct);
+router.post('/', checkNewProductInfo, controller.postNewProduct);
 
 router.get(['/', '/:id'], checkiD, controller.getProducts);
 

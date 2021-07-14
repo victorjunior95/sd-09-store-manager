@@ -3,7 +3,6 @@ const service = require('../services/productsService');
 const {
   HTTP_OK_STATUS,
   HTTP_CREATED_STATUS,
-  HTTP_INVALID_DATA,
 } = require('../httpResponse');
 
 
