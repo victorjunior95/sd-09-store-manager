@@ -28,9 +28,14 @@ router.get('/:id', validateSaleId, validateSaleExists, async(req, res) => {
 });
 
 router.post('/', validateSaleData, async(req, res) => {
-  const itensSold = req.body;
-  const createdSale = await salesService.createSale(itensSold);
-  res.status(responseCode.success).json(createdSale);
+  try {
+    const itensSold = req.body;
+    const createdSale = await salesService.createSale(itensSold);
+    res.status(responseCode.success).json(createdSale);
+  } catch (error) {
+    console.log(error);
+    res.status(error.responseCode).json('{err: error.err}');
+  }
 });
 
 router.put('/:id', validateSaleId, validateSaleData, async (req, res) => {
