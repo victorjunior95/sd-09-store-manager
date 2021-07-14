@@ -11,15 +11,15 @@ const getNewProduct = (productData) => {
   };
 };
 
-const getProductName = async (name) => {
-  return connection()
-    .then((db) => db.collection('products').find({name}).toArray());
-};
-
 const createProduct = async (name, quantity) => {
   return connection()
     .then((db) => db.collection('products').insertOne({name, quantity})
       .then((result) => getNewProduct({_id: result.insertedId, name, quantity})));
+};
+
+const getProductName = async (name) => {
+  return connection()
+    .then((db) => db.collection('products').find({name}).toArray());
 };
 
 const allProducts = async () => {
@@ -45,12 +45,10 @@ const editProduct = async (id, name, quantity) => {
 
 const deleteProduct = async (id) => {
   if (!ObjectId.isValid(id)) return null;
-  const result =  connection()
-    .then((db) => db.collection('products').deleteOne({_id: ObjectId(id)}));
-  return result;
+  const result =  await connection()
+    .then((db) => db.collection('products').findOneAndDelete({_id: ObjectId(id)}));
+  return result.value;
 };
-
-
 
 module.exports = {
   createProduct,

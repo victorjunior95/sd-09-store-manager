@@ -1,5 +1,5 @@
 const productService = require('../services/productsServices');
-const status = require('../status/status');
+const status = require('../assistent/status');
 
 const createProduct = async (req, res) => {
   const {name, quantity} = req.body;
@@ -12,7 +12,7 @@ const createProduct = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  const data = await productService.getAll();
+  const data = await productService.getAllService();
   res.status(status.OK).json({products: data });
 };
 

@@ -3,23 +3,22 @@ const assistent = require('../assistent');
 
 const createProduct = async (name, quantity) => {
   const product = await productModel.createProduct(name, quantity);
-
+  
   if (assistent.verifyName(name)) return assistent.verifyName(name);
-
+  
   if (await assistent.nameExists(name)) return await assistent.nameExists(name);
-
+  
   if (assistent.verifyQuantity(quantity)) return assistent.verifyQuantity(quantity);
 
   return product;
 };
 
-const getAll = async () => {
+const getAllService = async () => {
   const data = await productModel.allProducts();
   return data;
 };
 
 const findProductService = async (id) => {
-  
   const data = await productModel.findProduct(id);
   if (!data) return { err: {
     code: 'invalid_data',
@@ -32,6 +31,7 @@ const editProductService = async (id, name, quantity) => {
   const products = await productModel.editProduct(id, name, quantity);
   if (assistent.verifyName(name)) return assistent.verifyName(name);
   if (assistent.verifyQuantity(quantity)) return assistent.verifyQuantity(quantity);
+  if (!products) return { err: 'Id inexistente'};
   return products;
 };
 
@@ -45,13 +45,12 @@ const deleteProductService = async(id) => {
       },
     };
   };
-  console.log(products);
   return products;
 };
 
 module.exports = {
   createProduct,
-  getAll,
+  getAllService,
   findProductService,
   editProductService,
   deleteProductService,

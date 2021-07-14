@@ -1,5 +1,5 @@
 const salesService = require('../services/salesServices');
-const status = require('../status/status');
+const status = require('../assistent/status');
 
 const salesController = async (req, res) => {
   const productList = req.body;
