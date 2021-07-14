@@ -6,7 +6,11 @@ const {
   findProductById,
   updateProductById,
 } = require('./controllers/productsController');
-const { findProduct } = require('./models/productsModels');
+const {
+  insertSales,
+  allSales,
+  findSalesById,
+} = require('./controllers/salesController');
 
 // const PORT = process.env.PORT || 3000;
 const PORT = 3000;
@@ -23,6 +27,10 @@ app.post('/products', insertProduct);
 app.get('/products', allProducts);
 app.get('/products/:id', findProductById);
 app.put('/products/:id', updateProductById);
+
+app.post('/sales', insertSales);
+app.get('/sales', allSales);
+app.get('/sales/:id', findSalesById);
 
 // Começa o jogo
 app.listen(PORT, () => {
