@@ -2,9 +2,12 @@ const rescue = require('express-rescue');
 
 const {
   createProductsService,
+  getProductsService,
+  getProductByIdService,
 } = require('../services/productsServices');
 
 const CREATED = 201;
+const OK = 200;
 const INVALID_DATA = 422;
 
 const createProductController = rescue( async (req, res) => {
@@ -14,6 +17,24 @@ const createProductController = rescue( async (req, res) => {
 
   res.status(CREATED).json(result);
 });
+
+const getProducts = async (_req, res) => {
+  const result = await getProductsService();
+
+  res.status(OK).json(result);
+};
+
+const getProductById = async (req, res ) => {
+  const productId = req.params.id;
+
+  const result = await getProductByIdService(productId);
+
+  if (result.err) {
+    return res.status(INVALID_DATA).json(result)
+  };
+
+  res.status(OK).json(result);
+};
 
 const createErrorProducts = (err, _req, _res, next) => {
   const newError = new Error();
@@ -29,6 +50,8 @@ const errorProducts = (err, _req, res, _next) => {
 
 module.exports = {
   createProductController,
+  getProducts,
+  getProductById,
   createErrorProducts,
   errorProducts,
 };

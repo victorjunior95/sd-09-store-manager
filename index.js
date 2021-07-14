@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 
 const {
   createProductController,
+  getProducts,
+  getProductById,
   createErrorProducts,
   errorProducts,
 } = require('./controllers/productsController');
@@ -18,6 +20,8 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', createProductController);
+app.get('/products/:id', getProductById);
+app.get('/products/', getProducts);
 
 app.use(createErrorProducts);
 app.use(errorProducts);
