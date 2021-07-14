@@ -7,12 +7,12 @@ const statusSucess = 200;
 
 const ProductsRouter = express.Router();
 
-ProductsRouter.put('/:id', validatorNameQuant, validatorId, async (req, res, _next) => {
+ProductsRouter.put('/:id', validatorNameQuant, async (req, res, _next) => {
   const { id } = req.params;
   const {name, quantity} = req.body;
   const product = await ProductsService.updateProduct(id, name, quantity);
 
-  return res.status(statusSucess).json({ id, name, quantity});
+  return res.status(statusSucess).json({id, name, quantity});
 });
 
 ProductsRouter.get('/', async (_req, res, _next) => {
