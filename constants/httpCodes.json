@@ -1,5 +1,6 @@
 {
   "OK": 200,
   "CREATED": 201,
-  "UNPROCESSED": 422
+  "UNPROCESSED": 422,
+  "NOTFOUND": 404
 }
