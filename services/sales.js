@@ -22,7 +22,7 @@ const create = async (sale) => {
   });
 
   const newSale = await Sale.create(sale);
-  return newSale;
+  return newSale.ops[0];
 };
 
 module.exports = { create };
