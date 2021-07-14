@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const productsRouter = require('./routers/productsRouter');
+const salesRouter = require('./routers/salesRouter');
 
 const app = express();
 app.use(bodyParser.json());
@@ -9,6 +10,7 @@ app.use(bodyParser.json());
 const PORT = 3000;
 
 app.use('/products', productsRouter);
+app.use('/sales', salesRouter);
 
 app.use((error, _req, res, _next) => {
   console.log(error);
