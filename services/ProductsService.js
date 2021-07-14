@@ -1,5 +1,19 @@
 const ProductsModel = require('../models/ProductsModel');
 
+const updateProduct = async (id, name, quantity) => {
+  const product = await ProductsModel.updateProduct(id, name, quantity);
+
+  if (!product) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  }
+  return product;
+};
+
 const getAllProducts = async () => {
   const product = await ProductsModel.getAllProducts();
 
@@ -44,6 +58,7 @@ const addProduct = async (name, quantity) => {
 
 
 module.exports = {
+  updateProduct,
   getProductById,
   getAllProducts,
   addProduct,
