@@ -30,7 +30,7 @@ const getProductById = async (req, res ) => {
   const result = await getProductByIdService(productId);
 
   if (result.err) {
-    return res.status(INVALID_DATA).json(result)
+    return res.status(INVALID_DATA).json(result);
   };
 
   res.status(OK).json(result);
