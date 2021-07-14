@@ -63,7 +63,7 @@ const update = async ({ id, products }) => {
     err: { code: 'invalid_data', message: 'Product does not exists' }
   };
 
-  return await Sale.update(products);
+  return await Sale.update({ id, products });
 };
 
 module.exports = { create, getAll, findById, update };
