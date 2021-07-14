@@ -8,6 +8,12 @@ const validateSaleData = async (req, res, next) => {
     if (validation) {
       return res.status(validation.response).json({ err: validation.err });
     }
+    const quantityValidation = await salesSchema.checkProductInventory(
+      itensSold[index], req.method);
+    if (quantityValidation) {
+      return res.status(
+        quantityValidation.response).json({ err: quantityValidation.err });
+    }
   }
   next();
 };

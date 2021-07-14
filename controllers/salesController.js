@@ -33,7 +33,6 @@ router.post('/', validateSaleData, async(req, res) => {
     const createdSale = await salesService.createSale(itensSold);
     res.status(responseCode.success).json(createdSale);
   } catch (error) {
-    console.log(error);
     res.status(error.responseCode).json('{err: error.err}');
   }
 });

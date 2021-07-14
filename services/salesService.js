@@ -24,7 +24,7 @@ const validateItemSoldQuantity = async (item, operation, saleQuantityDiference) 
     ||
     itemInventory.quantity < saleQuantityDiference
   ) {
-    throw new Error('Sold quantity is too much');
+    return {err: 'error on first test to update quantity'};
   }
   switch (true) {
   case (operation === 'sale'):
@@ -67,7 +67,6 @@ const updateSale = async (saleId, itemSold) => {
 
 const deleteSale = async (id) => {
   const sale = await findById(id);
-  console.log(sale);
   sale.itensSold.forEach((item) => {
     validateItemSoldQuantity(
       item, operation.DELETE_SALE);

@@ -1,12 +1,11 @@
 const { ObjectId } = require('mongodb');
-const { validateSaleId } = require('../middlewares/salesMiddleware');
-const products = require('../models/products');
+const products = require('../models/products')
 const sales = require('../models/sales');
 
 const errorMessage = {
   saleInvalidData: 'Wrong sale ID format',
   quantityTooLow: '"quantity" must be larger than or equal to 1',
-  quantityNotNumber: '"quantity" must be a number',
+  stockProblem: 'Such amount is not permitted to sell',
   saleNotFound: 'Sale not found',
   invalidData: 'Wrong product ID or invalid quantity',
 };
@@ -14,6 +13,7 @@ const errorMessage = {
 const errorCode = {
   invalid_data: 'invalid_data',
   not_found: 'not_found',
+  stock_problem: 'stock_problem',
 };
 
 const responseCode = {
@@ -60,6 +60,19 @@ const saleExists = async (saleId, method) => {
   }
 };
 
+const checkProductInventory = async (item, operation) => {
+  const itemInventory = await products.findById(item.productId);
+  if (
+    (itemInventory.quantity < item.quantity && operation === 'POST')
+    ||
+    (itemInventory.quantity < (
+      itemInventory.quantity - item.quantity && operation === 'PUT'))
+  ) {
+    return { response: responseCode.notFound,
+      err: { code: errorCode.stock_problem, message: errorMessage.stockProblem } };
+  }
+};
+
 const validateSale = ({ productId, quantity }) => {
   if(
     isString(quantity)
@@ -83,5 +96,6 @@ module.exports = {
   saleExists,
   errorMessage,
   errorCode,
-  responseCode
+  responseCode,
+  checkProductInventory,
 };
