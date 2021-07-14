@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { insertProduct } = require('./controllers/productsController');
+const {
+  insertProduct,
+  allProducts,
+  findProductById,
+} = require('./controllers/productsController');
+const { findProduct } = require('./models/productsModels');
 
 // const PORT = process.env.PORT || 3000;
 const PORT = 3000;
@@ -14,6 +19,8 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', insertProduct);
+app.get('/products', allProducts);
+app.get('/products/:id', findProductById);
 
 // Começa o jogo
 app.listen(PORT, () => {

@@ -1,7 +1,9 @@
 const {
   productFormatValidator,
   registerProduct,
-} = require('../services/productFormatValidator');
+  allProductsService,
+  findProduct,
+} = require('../services/indexProducts');
 
 const insertProduct = async (req, res) => {
   const { name, quantity } = req.body;
@@ -18,6 +20,22 @@ const insertProduct = async (req, res) => {
   return res.status(code).json(message);
 };
 
+const allProducts = async (_req, res) => {
+  const { code, message } = await allProductsService();
+
+  res.status(code).json(message);
+};
+
+const findProductById = async (req, res) => {
+  const { id } = req.params;
+
+  const { code, message } = await findProduct(id);
+
+  res.status(code).json(message);
+};
+
 module.exports = {
   insertProduct,
+  allProducts,
+  findProductById,
 };

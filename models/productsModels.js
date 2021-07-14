@@ -12,7 +12,19 @@ const findProduct = async (name) => {
     .then((db) => db.collection('products').findOne({ name }));
 };
 
+const findProductById = async (id) => {
+  return await connection()
+    .then((db) => db.collection('products').findOne({ _id: ObjectId(id)}));
+};
+
+const getAllProducts = async () => {
+  return await connection()
+    .then((db) => db.collection('products').find({}).toArray());
+};
+
 module.exports = {
   insertProduct,
   findProduct,
+  getAllProducts,
+  findProductById,
 };

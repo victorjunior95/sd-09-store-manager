@@ -39,9 +39,20 @@ const INVALID_QUANTITY_TYPE = {
   },
 };
 
+const INVALID_ID = {
+  code: 422,
+  message: {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format',
+    },
+  },
+};
+
 module.exports = {
   INVALID_PRODUCT_LENGTH,
   DUPLICATE_REGISTRATION,
   INVALID_QUANTITY_NUMBER,
   INVALID_QUANTITY_TYPE,
+  INVALID_ID,
 };
