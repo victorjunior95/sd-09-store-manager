@@ -52,9 +52,26 @@ const update = async (id, name, quantity) => {
   return ({ message: 'Não foi possivel editar' });
 };
 
+const updateQuantity = async (id, quantity) => {
+  const result = await connection().then((db) => db.collection('products').updateOne(
+    {
+      _id: ObjectId(id),
+    },
+    {
+      $inc:
+        {
+          quantity: -quantity,
+        }
+    }));
+  if (result.modifiedCount === 1) {
+    return id;
+  };
+  return ({ message: 'Não foi possivel editar' });
+};
 module.exports = {
   find,
   create,
   update,
   exlude,
+  updateQuantity,
 };
