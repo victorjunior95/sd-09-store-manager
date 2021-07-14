@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi');
 const { MIN_NUMBER } = require('../constants/magicNumbers.json');
 const { ObjectId } = require('mongodb');
+const Sale = require('../models/sales');
 
 const create = async (sale) => {
   const { error } = Joi.array().items(
