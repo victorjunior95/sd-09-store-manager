@@ -33,6 +33,8 @@ app.get('/sales', Sales.getSales);
 
 app.get('/sales/:id', Sales.getSalesListById);
 
+app.put('/sales/:id', Sales.updateSales);
+
 app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

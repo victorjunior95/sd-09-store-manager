@@ -74,9 +74,20 @@ const getSalesListById = async (id) => {
   return salesList;
 };
 
+const updateSales = async (id, sale) => {
+  const data = await validateSales(sale);
+
+  if (data) return data;
+
+  const sales = await Sales.updateSalesList(id, sale);
+
+  return sales;
+};
+
 module.exports = {
   registerSales,
   listSales,
   saleIdValidation,
   getSalesListById,
+  updateSales,
 };

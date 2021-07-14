@@ -28,8 +28,19 @@ const getSalesListById = rescue(async (req, res, next) => {
   return res.status(OK).json(foundList);
 });
 
+const updateSales = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const listToUpdate = await service.updateSales(id, req.body);
+
+  if (listToUpdate.err) return next(listToUpdate.err);
+
+  return res.status(OK).json(listToUpdate);
+});
+
 module.exports = {
   registerSales,
   getSales,
   getSalesListById,
+  updateSales,
 };
