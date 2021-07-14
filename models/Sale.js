@@ -51,6 +51,15 @@ class Sale {
         ))
         .then((result) => !result.value ? {} : result.value);
   }
+
+  remove(id) {
+    return !ObjectID.isValid(id)
+      ? null
+      : connection()
+        .then((db) => db.collection(this.collection))
+        .then((collection) => collection.findOneAndDelete({ _id: ObjectID(id) }))
+        .then((result) => !result.value ? {} : result.value);
+  }
 }
 
 module.exports = Sale;
