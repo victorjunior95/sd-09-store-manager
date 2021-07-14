@@ -47,4 +47,15 @@ const update = rescue(async (request, response, next) => {
   response.status(OK).json(newSale);
 });
 
-module.exports = { create, getAll, findById, update };
+const del = rescue(async (request, response, next) => {
+  
+  const { id } = request.params;
+
+  const deletedSale = await services.delete(id);
+
+  if(deletedSale.err) return next(deletedSale);
+
+  response.status(OK).json(deletedSale);
+});
+
+module.exports = { create, getAll, findById, update, del };
