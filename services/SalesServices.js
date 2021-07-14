@@ -1,5 +1,8 @@
 const SalesModels = require('../models/SalesModels');
 
+const return_length = 0;
+
+
 const create = async (sale) => {
   const newSale = await SalesModels.create(sale);
 
@@ -11,7 +14,19 @@ const create = async (sale) => {
 };
 
 const getAll = async () => {
-  return await SalesModels.getAll();
+  const sale = await SalesModels.getAll();
+
+  if (!sale) {
+    return {
+      error: {
+        code: 'not_found',
+        message: 'Sale not found'
+      }
+    };
+  }
+  console.log(sale);
+
+  return sale;
 };
 
 const findById = async (id) => {
@@ -36,8 +51,11 @@ const updateOne = async (id, body) => {
 };
 
 const deleteOne = async (id) => {
+  // const sale = await SalesModels.findById(id);
+  
   const sale = await SalesModels.deleteOne(id);
-  console.log(sale);
+  // console.log(sale);
+
 
   if (!sale) {
     return {
@@ -48,6 +66,7 @@ const deleteOne = async (id) => {
     };
   }
 
+  
   return sale;
 };
 

@@ -6,8 +6,7 @@ const bodyParser = require('body-parser').json();
 const products = require('./routes/productRouter');
 const sales = require('./routes/salesRouter');
 
-const Producterror = require('./middlewares/productError');
-const SaleError = require('./middlewares/saleError');
+const error = require('./middlewares/error');
 
 const PORT = 3000;
 
@@ -19,10 +18,9 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', products);
-app.use(Producterror);
 
 app.use('/sales', sales);
-app.use(SaleError);
+app.use(error);
 
 app.listen(PORT, () => {
   console.log(`App listening on PORT ${PORT}`);

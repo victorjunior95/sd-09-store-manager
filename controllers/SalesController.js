@@ -1,13 +1,24 @@
 const rescue = require('express-rescue');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 const SalesServices = require('../services/SalesServices');
 
 const STATUS_OK = 200;
+const NOT_FOUND = 404;
+
+const errorMessage = 'Wrong product ID or invalid quantity';
 
 const saleSchema = Joi.array().items({
-  productId: Joi.string().required(),
-  quantity: Joi.number().integer().min(1).not().empty().required(),
+  productId: Joi.string().required().messages({
+    'any.required': errorMessage
+  }),
+  quantity: Joi.number().integer().min(1).required().messages({
+    'number.base': errorMessage,
+    'number.min': errorMessage,
+    'number.integer': errorMessage,
+    'array.base': errorMessage,
+    'any.unknown': errorMessage,
+  })
 });
 
 const create = rescue(async (req, res, next) => {
@@ -29,8 +40,13 @@ const create = rescue(async (req, res, next) => {
   return res.status(STATUS_OK).json(newSale);
 });
 
-const getAll = rescue(async (_req, res, _next) => {
-  const sales = await SalesServices.getAll();  
+const getAll = rescue(async (_req, res, next) => {
+  const sales = await SalesServices.getAll();
+
+  if (sales.error) {
+    return next(sales.error);
+  }
+
   return res.status(STATUS_OK).json(sales);
 });
 
