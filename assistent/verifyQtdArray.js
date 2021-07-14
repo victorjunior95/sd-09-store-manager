@@ -7,18 +7,6 @@ const verifyQtdArray = (array) => {
       },
     };
   };
-  // return array;
 };
-
-// console.log(verifyQtdArray([
-//   {
-//     productId: '3123213213',
-//     quantity: -15 
-//   },
-//   {
-//     productId: '232132',
-//     quantity: 15
-//   },
-// ]));
 
 module.exports = verifyQtdArray;
