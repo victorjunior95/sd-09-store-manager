@@ -1,8 +1,10 @@
 const { ObjectId } = require('mongodb');
+const { validateSaleId } = require('../middlewares/salesMiddleware');
 const products = require('../models/products');
+const sales = require('../models/sales');
 
 const errorMessage = {
-  productExists: 'Product already exists',
+  saleInvalidData: 'Wrong sale ID format',
   quantityTooLow: '"quantity" must be larger than or equal to 1',
   quantityNotNumber: '"quantity" must be a number',
   saleNotFound: 'Sale not found',
@@ -42,6 +44,22 @@ const productExists = async (productId) => {
   return true;
 };
 
+const saleExists = async (saleId, method) => {
+  if (!ObjectId.isValid(saleId)) {
+    return { response: responseCode.unprocessableEntity,
+      err: { code: errorCode.invalid_data, message: errorMessage.saleInvalidData } };
+  }
+  const sale = await sales.findById(saleId);
+  if (!sale && method === 'DELETE') {
+    return { response: responseCode.unprocessableEntity,
+      err: { code: errorCode.invalid_data, message: errorMessage.saleInvalidData } };
+  }
+  if (!sale) {
+    return { response: responseCode.notFound,
+      err: { code: errorCode.not_found, message: errorMessage.saleNotFound } };
+  }
+};
+
 const validateSale = ({ productId, quantity }) => {
   if(
     isString(quantity)
@@ -61,6 +79,8 @@ const validateSale = ({ productId, quantity }) => {
 module.exports = {
   validateSale,
   idIsNotValid,
+  productExists,
+  saleExists,
   errorMessage,
   errorCode,
   responseCode

@@ -21,4 +21,14 @@ const validateSaleId = (req, res, next) => {
   next();
 };
 
-module.exports = { validateSaleData, validateSaleId };
+const validateSaleExists = async (req, res, next) => {
+  const  { id } = req.params;
+  const { method } = req;
+  const validation = await salesSchema.saleExists(id, method);
+  if (validation) {
+    return res.status(validation.response).json({ err: validation.err });
+  }
+  next();
+};
+
+module.exports = { validateSaleData, validateSaleId, validateSaleExists };

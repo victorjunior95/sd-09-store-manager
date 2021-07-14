@@ -29,9 +29,16 @@ const updateSale = async (saleId, itemSold) => {
   return {err: {code: 'bd_acess_error', message: 'Error trying update sale'}};
 };
 
+const deleteSale = async (id) => {
+  const sale = findById(id);
+  sales.remove(id);
+  return sale;
+};
+
 module.exports = {
   getAll,
   findById,
   createSale,
-  updateSale
+  updateSale,
+  deleteSale,
 };

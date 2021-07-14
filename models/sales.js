@@ -31,11 +31,6 @@ const update = (id, itensSold) => {
     ));
 };
 
-// db.sales.updateOne(
-//   { _id: ObjectId("60edc30a197392463ffb45c2")},
-//   {$set:{"itensSold.$[element].quantity": 20}},
-//   { arrayFilters: [{ "element.productId": "60ec38e0b913b56448e81ffb" }] });
-
 const remove = (id) => {
   return connection()
     .then((db) => db.collection(collection).deleteOne({ _id: ObjectId(id) }));

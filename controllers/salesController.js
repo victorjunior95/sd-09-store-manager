@@ -3,6 +3,7 @@ const salesService = require('../services/salesService');
 const {
   validateSaleData,
   validateSaleId,
+  validateSaleExists,
 } = require('../middlewares/salesMiddleware');
 const { route } = require('./productsController');
 const router = express.Router();
@@ -20,7 +21,7 @@ router.get('/', async (_req, res) => {
   res.status(responseCode.success).json(salesList);
 });
 
-router.get('/:id', validateSaleId, async(req, res) => {
+router.get('/:id', validateSaleId, validateSaleExists, async(req, res) => {
   const { id } = req.params;
   const sale = await salesService.findById(id);
   res.status(responseCode.success).json(sale);
@@ -28,15 +29,21 @@ router.get('/:id', validateSaleId, async(req, res) => {
 
 router.post('/', validateSaleData, async(req, res) => {
   const itensSold = req.body;
-  const sale = await salesService.createSale(itensSold);
-  res.status(responseCode.success).json(sale);
+  const createdSale = await salesService.createSale(itensSold);
+  res.status(responseCode.success).json(createdSale);
 });
 
 router.put('/:id', validateSaleId, validateSaleData, async (req, res) => {
   const { id } = req.params;
   const itemSold = req.body[0];
-  const sale = await salesService.updateSale(id, itemSold);
-  res.status(responseCode.success).json(sale);
+  const editedSale = await salesService.updateSale(id, itemSold);
+  res.status(responseCode.success).json(editedSale);
+});
+
+router.delete('/:id', validateSaleExists, async (req, res) => {
+  const { id } = req.params;
+  const deletedSale = await salesService.deleteSale(id);
+  res.status(responseCode.success).json(deletedSale);
 });
 
 module.exports = router;
