@@ -1,3 +1,4 @@
+// A fim de melhorar as mensagens e status, esse componente é necessário
 const status = {
   created: 201,
   unprocessable: 422,

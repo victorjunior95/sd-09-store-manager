@@ -1,3 +1,5 @@
+// Componente responsável pelas validações exigidas pelos requisitos
+
 const rescue = require('express-rescue');
 // Req 1 => Sacada para importar os códigos de erro
 const { status, message, code } = require('../schema/status');

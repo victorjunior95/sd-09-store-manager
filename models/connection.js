@@ -1,3 +1,4 @@
+// Configurando a conexão com o mongodb
 const { MongoClient } = require('mongodb');
 
 const OPTIONS = {
