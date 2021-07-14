@@ -66,5 +66,17 @@ module.exports = {
     }
 
     return response;
-  }
+  },
+  async remove(id) {
+    const sale = new Sale();
+    const response = await sale.get(id);
+
+    if(!response) {
+      throw new InvalidArgumentError('Wrong sale ID quantity');
+    } else if(!Object.keys(response).length) {
+      throw new NotFoundError('Sale');
+    };
+
+    return response;
+  },
 };
