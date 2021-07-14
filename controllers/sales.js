@@ -43,4 +43,14 @@ module.exports = {
       next(err);
     }
   },
+  async remove(req, res, next) {
+    try {
+      const { id } = req.params;
+      const response = await salesService.remove(id);
+
+      res.status(HTTP_200_OK).json(response);
+    } catch (err) {
+      next(err);
+    }
+  }
 };

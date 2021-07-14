@@ -10,3 +10,4 @@ controllers.sale.create();
 controllers.sale.getAll();
 controllers.sale.get();
 controllers.sale.update();
+controllers.sale.remove();

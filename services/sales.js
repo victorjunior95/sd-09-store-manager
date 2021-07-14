@@ -43,7 +43,7 @@ module.exports = {
     // };
     // Teste passa um ID inválido (9999)
     // Tenho que contornar para poder passar no requisito
-    if(!response) throw new NotFoundError('Sale');
+    if(!response || !Object.keys(response).length) throw new NotFoundError('Sale');
 
     return response;
   },
@@ -69,10 +69,10 @@ module.exports = {
   },
   async remove(id) {
     const sale = new Sale();
-    const response = await sale.get(id);
+    const response = await sale.remove(id);
 
     if(!response) {
-      throw new InvalidArgumentError('Wrong sale ID quantity');
+      throw new InvalidArgumentError('Wrong sale ID format');
     } else if(!Object.keys(response).length) {
       throw new NotFoundError('Sale');
     };
