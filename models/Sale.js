@@ -39,16 +39,14 @@ class Sale {
         .then((result) => result ? result : {});
   }
 
-  update(payload) {
-    const { id, itensSold } = payload;
-
-    return !ObjectID.isValid(id)
+  update() {
+    return !ObjectID.isValid(this.id)
       ? null
       : connection()
         .then((db) => db.collection(this.collection))
         .then((collection) => collection.findOneAndUpdate(
-          { _id: ObjectID(id) },
-          { $set: { itensSold } },
+          { _id: ObjectID(this.id) },
+          { $set: { itensSold: this.items } },
           { returnOriginal: false },
         ))
         .then((result) => !result.value ? {} : result.value);

@@ -1,19 +1,21 @@
+const Joi = require('joi');
 const { Sale } = require('../models');
 const { InvalidArgumentError, NotFoundError } = require('../errors');
 const validations = require('../validations');
 
+const SaleSchema = Joi.array().items(
+  Joi.object({
+    productId: Joi.string().required(),
+    quantity: Joi.number().min(1).required(),
+  })
+);
+
 module.exports = {
   async create(payload) {
-    payload.forEach(({ quantity }) => {
-      try {
-        // Anotação pra nào esquecer:
-        // Gambi pra passar no teste pq a messagem de erro nas duas situações são diferentes
-        // apesar de as situação de erro serem as mesmas x:
-        validations.quantity(quantity);
-      } catch (_err) {
-        throw new InvalidArgumentError('Wrong product ID or invalid quantity');
-      }
-    });
+    const { error } = SaleSchema.validate(payload);
+    if (error) {
+      throw new InvalidArgumentError('Wrong product ID or invalid quantity');
+    }
 
     const sale = new Sale(payload);
     const response = await sale.create();
@@ -45,4 +47,24 @@ module.exports = {
 
     return response;
   },
+  async update(payload) {
+    const { id, itensSold } = payload;
+
+    const { error } = SaleSchema.validate(itensSold);
+    if (error) {
+      throw new InvalidArgumentError('Wrong product ID or invalid quantity');
+    }
+
+    const sale = new Sale(itensSold, id);
+
+    const response = await sale.update();
+
+    if (!response) {
+      throw new InvalidArgumentError('Wrong product ID or invalid quantity');
+    } else if (!Object.keys(response).length) {
+      throw new NotFoundError('Sale');
+    }
+
+    return response;
+  }
 };
