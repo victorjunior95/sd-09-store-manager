@@ -22,4 +22,12 @@ const update = async ({ id, products }) => (
     ).then((result) => result.value))
 );
 
-module.exports = { create, getAll, findById, update };
+const del = async (id) => (
+  await connection()
+    .then(
+      (db) => db.collection('sales')
+        .deleteOne({_id: new ObjectId(id)})
+    )
+);
+
+module.exports = { create, getAll, findById, update, del };
