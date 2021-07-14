@@ -1,6 +1,6 @@
 const rescue = require('express-rescue');
 const services = require('../services/sales');
-const { CREATED, OK } = require('../constants/httpCodes.json');
+const { OK } = require('../constants/httpCodes.json');
 
 const create = rescue(async (request, response, next) => {
 
@@ -10,7 +10,7 @@ const create = rescue(async (request, response, next) => {
 
   if (newSale.err) return next(newSale);
 
-  response.status(CREATED).json(newSale);
+  response.status(OK).json(newSale);
 });
 
 module.exports = { create };
