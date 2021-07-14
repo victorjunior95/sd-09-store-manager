@@ -57,7 +57,7 @@ const getSaleById = async (id) => {
       }
     };
   }
-  const sale = await salesModel.getProductById(ObjectId(id));
+  const sale = await salesModel.getSaleById(ObjectId(id));
   if (!sale) {
     throw {
       status: 404,
@@ -92,9 +92,44 @@ const editSale = async (id, edit) => {
   };
 };
 
+const validateIfSaleExists = async (id) => {
+  const saleExists = await salesModel.getSaleById(id);
+  if (!saleExists) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    };
+  }
+  return saleExists;
+};
+
+const deleteSale = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    };
+  }
+  const deletedSale = validateIfSaleExists(id);
+  const checkDelete = await salesModel.deleteSale(id);
+  if (!checkDelete) {
+    return {
+      status: 200,
+      deletedSale,
+    };
+  }
+};
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   editSale,
+  deleteSale,
 };
