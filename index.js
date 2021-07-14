@@ -5,6 +5,7 @@ const app = express();
 const PORT = 3000;
 
 const products = require('./controllers/productController');
+const sales = require('./controllers/salesController');
 
 app.use(bodyParser.json());
 
@@ -18,7 +19,7 @@ app.get('/products/:id', products.findProductController);
 app.get('/products', products.getAll);
 app.put('/products/:id', products.editProductController);
 app.delete('/products/:id', products.deleteProductController);
-app.post('/sales', sales.generateSale);
+app.post('/sales', sales.salesController);
 
 
 app.listen(PORT, () => console.log('porta 3000 em uso'));

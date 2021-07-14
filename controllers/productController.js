@@ -1,5 +1,5 @@
 const productService = require('../services/productsServices');
-const status = require('./status');
+const status = require('../status/status');
 
 const createProduct = async (req, res) => {
   const {name, quantity} = req.body;
