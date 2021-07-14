@@ -25,4 +25,18 @@ const create = async (sale) => {
   return newSale.ops[0];
 };
 
-module.exports = { create };
+const getAll = async () => {
+  
+  const sales = await Sale.getAll();
+  
+  return sales;
+};
+
+const findById = async (id) => {
+
+  const sale = await Sale.findById(id);
+
+  return sale;
+};
+
+module.exports = { create, getAll, findById };
