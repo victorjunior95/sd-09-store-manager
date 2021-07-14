@@ -37,6 +37,44 @@ const createSale = async (order) => {
   };
 };
 
+const getAllSales = async () => {
+  const sales = await salesModel.getAllSales();
+  return {
+    status: 200,
+    sales,
+  };
+};
+
+const validateId = (id) => (ObjectId.isValid(id));
+
+const getSaleById = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
+  }
+  const sale = await salesModel.getProductById(ObjectId(id));
+  if (!sale) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
+  }
+  return {
+    status: 200,
+    sale,
+  };
+};
+
 module.exports = {
   createSale,
+  getAllSales,
+  getSaleById,
 };
