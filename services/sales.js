@@ -66,4 +66,19 @@ const update = async ({ id, products }) => {
   return await Sale.update({ id, products });
 };
 
-module.exports = { create, getAll, findById, update };
+const del = async (id) => {
+  if(!ObjectId.isValid(id)) {
+    return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
+  }
+
+  const existingSale = await Sale.findById(id);
+
+  if(!existingSale) return {
+    err: { code: 'not_found', message: 'sale does not exists' }
+  };
+
+  await Sale.del(id);
+  return existingSale;
+};
+
+module.exports = { create, getAll, findById, update, del };
