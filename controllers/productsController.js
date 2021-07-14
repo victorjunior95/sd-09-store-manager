@@ -23,7 +23,12 @@ const createErrorProducts = (err, _req, _res, next) => {
   return next(newError);
 };
 
+const errorProducts = (err, _req, res, _next) => {
+  res.status(`${err.status}`).json({ err: { code: err.code, message: err.message }});
+};
+
 module.exports = {
   createProductController,
   createErrorProducts,
+  errorProducts,
 };

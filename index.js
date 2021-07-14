@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const {
   createProductController,
   createErrorProducts,
+  errorProducts,
 } = require('./controllers/productsController');
 
 const app = express();
@@ -17,5 +18,8 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', createProductController);
+
+app.use(createErrorProducts);
+app.use(errorProducts);
 
 app.listen(PORT, () => console.log('server ON'));
