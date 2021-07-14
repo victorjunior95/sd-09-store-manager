@@ -9,7 +9,7 @@ const create = async (sale) => {
       productId: Joi.string().not().empty().required(),
       quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
     })
-  ).validate(sale);
+  ).validate(sale, { convert: false });
 
   if (error) return {
     err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' }
@@ -41,4 +41,29 @@ const findById = async (id) => {
   return sale;
 };
 
-module.exports = { create, getAll, findById };
+const update = async ({ id, products }) => {
+  if (!ObjectId.isValid(id)) {
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  }
+
+  const { error } = Joi.array().items(
+    Joi.object({
+      productId: Joi.string().not().empty().required(),
+      quantity: Joi.number().not().empty().min(MIN_NUMBER).required(),
+    })
+  ).validate(products, { convert: false });
+
+  if (error) return {
+    err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' }
+  };
+
+  const existingSale = await Sale.findById(id);
+
+  if(!existingSale) return {
+    err: { code: 'invalid_data', message: 'Product does not exists' }
+  };
+
+  return await Sale.update(products);
+};
+
+module.exports = { create, getAll, findById, update };
