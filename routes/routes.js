@@ -4,10 +4,6 @@ const SaleController = require('../controllers/SalesController');
 
 const router = express.Router();
 
-router.get('/', (_request, response) => {
-  response.send();  
-});
-
 router.post('/products', ProductsController.addNewProduct);
 router.get('/products/:id', ProductsController.listProduct);
 router.get('/products', ProductsController.listProduct);

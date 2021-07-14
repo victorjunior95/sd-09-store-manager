@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser);
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
+router.get('/', (_request, response) => {
   response.send();  
 });
 
