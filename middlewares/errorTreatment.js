@@ -10,6 +10,7 @@ module.exports = (error, _req, res, _next) => {
   switch (error.constructor) {
   case errors.InvalidArgumentError:
     return res.status(HTTP_422_UNPROCESSED_ENTITY).json(body);
+  case errors.OperationError:
   case errors.NotFoundError:
     return res.status(HTTP_404_NOT_FOUND).json(body);
   default:

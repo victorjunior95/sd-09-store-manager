@@ -1,7 +1,6 @@
 const Joi = require('joi');
-const { Sale } = require('../models');
-const { InvalidArgumentError, NotFoundError } = require('../errors');
-const validations = require('../validations');
+const { Sale, Product } = require('../models');
+const { InvalidArgumentError, NotFoundError, OperationError } = require('../errors');
 
 const SaleSchema = Joi.array().items(
   Joi.object({
@@ -10,12 +9,33 @@ const SaleSchema = Joi.array().items(
   })
 );
 
+async function subtractProductQuantity(sales) {
+  const product = new Product();
+  for (const sale of sales) {
+    const { quantity, _id: id } = await product.get(sale.productId);
+    if(quantity < sale.quantity) {
+      throw new OperationError();
+    }
+    product.update({ id, quantity: quantity - sale.quantity });
+  }
+};
+
+async function addProductQuantity(sales) {
+  const product = new Product();
+  for (const sale of sales) {
+    const { quantity, _id: id } = await product.get(sale.productId);
+    product.update({ id, quantity: quantity + sale.quantity });
+  }
+};
+
 module.exports = {
   async create(payload) {
     const { error } = SaleSchema.validate(payload);
     if (error) {
       throw new InvalidArgumentError('Wrong product ID or invalid quantity');
     }
+
+    await subtractProductQuantity(payload);
 
     const sale = new Sale(payload);
     const response = await sale.create();
@@ -76,6 +96,8 @@ module.exports = {
     } else if(!Object.keys(response).length) {
       throw new NotFoundError('Sale');
     };
+
+    await addProductQuantity(response.itensSold);
 
     return response;
   },
