@@ -1,3 +1,4 @@
+const util = require('../model/util');
 const salesModel = require('../model/salesModel');
 const productService = require('../service/productService');
 
@@ -7,7 +8,6 @@ const newSale = async (items) => {
   return Promise.all(
     items.map(async (item) => {
       const idFound = await productService.validateFoundId(item.productId);
-      console.log(idFound);
       if (
         item.quantity <= minQuantity ||
         typeof item.quantity !== 'number' ||
@@ -22,4 +22,20 @@ const newSale = async (items) => {
   ).then(() => salesModel.createSale(items));
 };
 
-module.exports = { newSale };
+const getAllSales = async () => {
+  return await util.getAll('sales');
+};
+
+const findSale =  async (id) => {
+  const sale = await salesModel.findSaleById(id);
+  if (!sale) return {
+    err: { 
+      code: 'not_found',
+      message: 'Sale not found'
+    }
+  };
+
+  return sale;
+};
+
+module.exports = { newSale, getAllSales, findSale };
