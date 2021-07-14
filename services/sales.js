@@ -12,7 +12,7 @@ const create = async (sale) => {
   ).validate(sale);
 
   if (error) return {
-    err: { code: 'invalid_data', message: error.message }
+    err: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' }
   };
 
   sale.forEach(product => {
