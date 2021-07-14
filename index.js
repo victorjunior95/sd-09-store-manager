@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const productsRoute = require('./routes/productsRouter');
+
 const app = express();
 app.use(bodyParser.json());
+
+app.use('/products', productsRoute);
 
 const PORT = 3000;
 
