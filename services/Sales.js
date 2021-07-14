@@ -9,6 +9,13 @@ const invalidData = {
   }
 };
 
+const invalidId = {
+  err: {
+    code: 'invalid_data',
+    message: 'Wrong sale ID format',
+  }
+};
+
 const notFound = {
   err: {
     code: 'not_found',
@@ -84,10 +91,21 @@ const updateSales = async (id, sale) => {
   return sales;
 };
 
+const deleteSale = async (id) => {
+  const validateId = await saleIdValidation(id);
+
+  if (validateId) return invalidId;
+
+  const saleDeleted = await Sales.deleteSale(id);
+  console.log(saleDeleted);
+  return saleDeleted;
+};
+
 module.exports = {
   registerSales,
   listSales,
   saleIdValidation,
   getSalesListById,
   updateSales,
+  deleteSale,
 };

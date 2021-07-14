@@ -20,9 +20,13 @@ const updateSalesList = (id, sale) => connection()
   )
   .then(result => result.value);
 
+const deleteSale = (id) => connection()
+  .then((db) => db.collection('sales').remove({ _id: ObjectId(id) }));
+
 module.exports = {
   registerSales,
   getSales,
   getSalesListById,
   updateSalesList,
+  deleteSale,
 };

@@ -35,6 +35,8 @@ app.get('/sales/:id', Sales.getSalesListById);
 
 app.put('/sales/:id', Sales.updateSales);
 
+app.delete('/sales/:id', Sales.deleteSale);
+
 app.use(errorMiddleware);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

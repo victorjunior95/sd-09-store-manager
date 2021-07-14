@@ -38,9 +38,20 @@ const updateSales = rescue(async (req, res, next) => {
   return res.status(OK).json(listToUpdate);
 });
 
+const deleteSale = rescue(async (req, res, next) => {
+  const { id } = req.params;
+
+  const saleToDelete = await service.deleteSale(id);
+
+  if (saleToDelete.err) return next(saleToDelete.err);
+
+  return res.status(OK).json(saleToDelete);
+});
+
 module.exports = {
   registerSales,
   getSales,
   getSalesListById,
   updateSales,
+  deleteSale,
 };
