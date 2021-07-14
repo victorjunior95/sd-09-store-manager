@@ -4,6 +4,7 @@ const {
   insertProduct,
   allProducts,
   findProductById,
+  updateProductById,
 } = require('./controllers/productsController');
 const { findProduct } = require('./models/productsModels');
 
@@ -21,6 +22,7 @@ app.get('/', (_request, response) => {
 app.post('/products', insertProduct);
 app.get('/products', allProducts);
 app.get('/products/:id', findProductById);
+app.put('/products/:id', updateProductById);
 
 // Começa o jogo
 app.listen(PORT, () => {

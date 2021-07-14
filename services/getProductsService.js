@@ -1,4 +1,8 @@
-const { getAllProducts, findProductById } = require('../models/productsModels');
+const {
+  getAllProducts,
+  findProductById,
+  updateById,
+} = require('../models/productsModels');
 const { INVALID_ID } = require('../errors');
 const { ObjectId } = require('mongodb');
 
@@ -22,7 +26,15 @@ const findProduct = async (id) => {
   return { code: 200, message: product };
 };
 
+const updateProduct = async (id) => {
+
+  const product = await updateById(id);
+
+  if (product === null || product === undefined) return ;
+};
+
 module.exports = { 
   allProductsService,
   findProduct,
+  updateProduct,
 };

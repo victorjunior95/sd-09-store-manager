@@ -22,9 +22,15 @@ const getAllProducts = async () => {
     .then((db) => db.collection('products').find({}).toArray());
 };
 
+const updateById = async (id) => {
+  return await connection()
+    .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }));
+};
+
 module.exports = {
   insertProduct,
   findProduct,
   getAllProducts,
   findProductById,
+  updateById,
 };

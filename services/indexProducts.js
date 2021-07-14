@@ -1,6 +1,7 @@
 const {
   allProductsService,
   findProduct,
+  updateProduct
 } = require('./getProductsService');
 const {
   productFormatValidator,
@@ -10,6 +11,7 @@ const {
 module.exports = {
   allProductsService,
   findProduct,
+  updateProduct,
   productFormatValidator,
   registerProduct,
 };

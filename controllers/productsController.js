@@ -34,8 +34,17 @@ const findProductById = async (req, res) => {
   res.status(code).json(message);
 };
 
+const updateProductById = async (req, res) => {
+  const { id } = req.params;
+
+  const { code, message } = await updateProduct(id);
+
+  return res.status(code).json(message);
+};
+
 module.exports = {
   insertProduct,
   allProducts,
   findProductById,
+  updateProductById,
 };
