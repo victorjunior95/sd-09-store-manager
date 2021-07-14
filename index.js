@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const Product = require('./controllers/Products');
 const Sales = require('./controllers/Sales');
 const errorMiddleware = require('./middlewares/error');
+const { get } = require('frisby');
 const app = express();
 
 app.use(bodyParser.json());
@@ -27,6 +28,10 @@ app.put('/products/:id', Product.updateProduct);
 app.delete('/products/:id', Product.deleteProduct);
 
 app.post('/sales', Sales.registerSales);
+
+app.get('/sales', Sales.getSales);
+
+app.get('/sales/:id', Sales.getSalesListById);
 
 app.use(errorMiddleware);
 

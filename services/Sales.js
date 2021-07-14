@@ -9,6 +9,13 @@ const invalidData = {
   }
 };
 
+const notFound = {
+  err: {
+    code: 'not_found',
+    message: 'Sale not found',
+  }
+};
+
 const validateSales = (sale) => {
 
   const testSale = sale
@@ -30,6 +37,46 @@ const registerSales = async (sale) => {
   return sales;
 };
 
+const saleIdValidation = (id) => {
+
+  if (!ObjectId.isValid(id)) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
+  }
+
+};
+
+const listSales = async () => {
+  const sales = await Sales.getSales();
+
+  const salesList = {
+    'sales': sales
+  };
+
+  return salesList;
+};
+
+const getSalesListById = async (id) => {
+  const validId = saleIdValidation(id);
+
+  if (validId) return notFound;
+
+  const salesList = await Sales.getSalesListById(id);
+
+  if (!salesList) {
+    return notFound;
+  }
+
+  return salesList;
+};
+
 module.exports = {
   registerSales,
+  listSales,
+  saleIdValidation,
+  getSalesListById,
 };
