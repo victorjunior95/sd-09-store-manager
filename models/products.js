@@ -34,11 +34,18 @@ const updateById = async (id, name, quantity) => {
       .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
   return updateProduct;
 };
+// Req 4
+const deleteById = async (id) => {
+  const deleteProduct = await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+  return deleteProduct;
+};
 
 module.exports = {
   findByName,
   create,
   findAll,
   findById,
-  updateById
+  updateById,
+  deleteById
 };

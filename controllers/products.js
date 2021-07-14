@@ -32,5 +32,11 @@ routes.put('/:id', validateName, validateQuantity, async (req, res) => {
   await services.updateById(id, name, quantity);
   return res.status(status.OK).json({ _id: id, name, quantity });
 });
+// Req 4
+routes.delete('/:id', validateId, async (req, res) => {
+  const { id } = req.params;
+  const deleteProduct = await services.deleteById(id);
+  return res.status(status.OK).json(deleteProduct);
+});
 
 module.exports = routes;
