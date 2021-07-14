@@ -7,6 +7,13 @@ const statusSucess = 200;
 
 const ProductsRouter = express.Router();
 
+ProductsRouter.delete('/:id', async (req, res, _next) => {
+  const { id } = req.params;
+  const product = await ProductsService.deleteProduct(id);
+
+  return res.status(statusSucess).json(product);
+});
+
 ProductsRouter.put('/:id', validatorNameQuant, async (req, res, _next) => {
   const { id } = req.params;
   const {name, quantity} = req.body;
