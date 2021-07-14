@@ -1,27 +1,25 @@
 const sales = require('../models/sales');
 
-const create = async (itensSold) => {
+const create = (itensSold) => {
   itensSold.forEach(({ productId, quantity }) =>
     sales.updateProducts(productId,-quantity));
-  return sales.create(itensSold).then((res) => res.ops[0]);
+  return sales.create(itensSold).then((data) => ({ status: 200, data }));
 };
 
-const getAll = async () => sales.getAll().then((res) => ({ 'sales': res }));
+const getAll = () => sales.getAll().then((data) => ({ status: 200, data }));
 
-const getById = async (id) => sales.getById(id)
-  .then((res) => res || { err: 'Sale not found' });
+const getById = (id) => sales.getById(id).then((data) => ({ status: 200, data }));
 
-const update = async (id, itensSold) => {
+const update = (id, itensSold) => {
   itensSold.forEach(({ productId, quantity }) =>
     sales.updateProducts(productId, -quantity));
-  return sales.update(id, itensSold).then((res) => res);
+  return sales.update(id, itensSold).then((data) => ({ status: 200, data }));
 };
 
-const remove = async (id) => {
-  const { itensSold } = await sales.getById(id);
-  itensSold.forEach(({ productId, quantity }) =>
-    sales.updateProducts(productId, quantity));
-  return sales.remove(id).then((res) => res);
+const remove = (id) => {
+  sales.getById(id).then(({ itensSold }) => itensSold.forEach(({ productId, quantity }) =>
+    sales.updateProducts(productId, quantity)));
+  return sales.remove(id).then((data) => ({ status: 200, data }));
 };
 
 module.exports = { create, getAll, getById, update, remove };

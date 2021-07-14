@@ -1,16 +1,15 @@
 const products = require('../models/products');
 
-const create = async ({ name, quantity }) => products.create({ name, quantity })
-  .then((res) => res.ops[0]);
+const create = (product) => products.create(product)
+  .then((data) => ({ status: 201, data }));
 
-const getAll = async () => products.getAll().then((res) => ({ 'products': res }));
+const getAll = () => products.getAll().then((data) => ({ status: 200, data }));
 
-const getById = async (id) => products.getById(id)
-  .then((res) => res);
+const getById = (id) => products.getById(id).then((data) => ({ status: 200, data }));
 
-const update = async ({ id, name, quantity }) => products.update({ id, name, quantity })
-  .then((res) => res.ops[0]);
+const update = (id, product) => products.update(id, product)
+  .then((data) => ({ status: 200, data }));
 
-const remove = async (id) => products.remove(id).then((res) => res.value);
+const remove = (id) => products.remove(id).then((data) => ({ status: 200, data }));
 
 module.exports = { create, getAll, getById, update, remove };
