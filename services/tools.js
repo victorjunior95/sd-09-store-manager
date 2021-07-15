@@ -17,6 +17,27 @@ const validateProduct = (product) => {
   return null;
 };
 
+const ERROR_MESSAGE = {
+  err: {
+    code: 'invalid_data',
+    message: 'Wrong product ID or invalid quantity',
+  }
+};
+
+const validSales = (sales) => {
+  const VALUE_LIMIT = 1;
+  let message = null;
+
+  sales.forEach((sale) => {
+    if (sale.quantity < VALUE_LIMIT || typeof sale.quantity === 'string') {
+      message = ERROR_MESSAGE;
+    }
+  });
+
+  return message;
+};
+
 module.exports = {
   validateProduct,
+  validSales
 };

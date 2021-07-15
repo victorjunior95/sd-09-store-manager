@@ -11,6 +11,10 @@ const {
   errorProducts,
 } = require('./controllers/productsController');
 
+const {
+  createSalesController,
+} = require('./controllers/salesController');
+
 const app = express();
 const PORT = 3000;
 
@@ -29,5 +33,7 @@ app.delete('/products/:id', deleteProductController);
 
 app.use(createErrorProducts);
 app.use(errorProducts);
+
+app.post('/sales', createSalesController);
 
 app.listen(PORT, () => console.log('server ON'));
