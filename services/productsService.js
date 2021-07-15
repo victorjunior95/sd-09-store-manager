@@ -1,7 +1,7 @@
 const productsModel = require('../models/productsModel');
 const { ObjectID } = require('mongodb');
 const listAll = () => {
-  const allProducts =  productsModel.listAll();
+  const allProducts = productsModel.listAll();
   return allProducts;
 };
 

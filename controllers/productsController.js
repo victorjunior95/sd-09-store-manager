@@ -9,7 +9,7 @@ const HTTP_CREATE_STATUS = 201;
 
 ProductsRouter.get('/', async (req, res) => {
   const products = await productsService.listAll();
-  return res.status(HTTP_OK_STATUS).json(products);
+  return res.status(HTTP_OK_STATUS).json({ products: products });
 });
 
 ProductsRouter.get('/:id',
