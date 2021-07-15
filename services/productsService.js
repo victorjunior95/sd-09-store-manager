@@ -18,9 +18,14 @@ const listProductId = (id) => {
   return productsModel.listProductId(ObjectID(id));
 };
 
+const editProduct = (id, name, quantity) => {
+  return productsModel.editProduct(ObjectID(id), name, quantity);
+};
+
 module.exports = {
   listAll,
   registerProduct,
   getProduct,
   listProductId,
+  editProduct,
 };

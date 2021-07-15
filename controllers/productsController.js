@@ -20,6 +20,17 @@ ProductsRouter.get('/:id',
     return res.status(HTTP_OK_STATUS).json(product);
   });
 
+ProductsRouter.put('/:id',
+  productsMiddlewares.validaId,
+  productsMiddlewares.validaName,
+  productsMiddlewares.validaQuantidade,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+    const product = await productsService.editProduct(id, name, quantity);
+    return res.status(HTTP_OK_STATUS).json(product);
+  });
+
 ProductsRouter.post('/', productsMiddlewares.validaName,
   productsMiddlewares.validaProduto,
   productsMiddlewares.validaQuantidade,
@@ -32,5 +43,7 @@ ProductsRouter.post('/', productsMiddlewares.validaName,
     return res.status(HTTP_CREATE_STATUS).json(product);
     
   });
+
+
 
 module.exports = ProductsRouter;
