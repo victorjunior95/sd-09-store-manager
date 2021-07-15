@@ -100,16 +100,25 @@ const create = async (name, quantity) => {
 const updateProduct = async (id, name, quantity) => {
   validateProductInfo(name, quantity);
   const updatedProduct = await Products.updateProduct(id, name, quantity);
-  console.log(updatedProduct);
   return {
     status: 200,
     updatedProduct
   };
 };
 
+const deleteProduct = async (id) => {
+  const deletedProduct = await Products.deleteProduct(id);
+  checkProduct(deletedProduct);
+  return {
+    status: 200,
+    deletedProduct
+  };
+};
+
 module.exports = {
   create,
+  updateProduct,
+  deleteProduct,
   getAll,
   findById,
-  updateProduct,
 };

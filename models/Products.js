@@ -15,11 +15,13 @@ const updateProduct = async (id, name, quantity) => {
     .then(() => ({ _id: id, name, quantity }));
 };
 
-// const deleteProduct = async (id) => 
-//   connection()
-//     .then((db) => db.collection('products').deleteOne(new ObjectId(id)))
-//     .then((result) => ({ _id: id }))
-
+const deleteProduct = async (id) => {
+  if (!ObjectId.isValid(id)) return null;  
+  return connection()
+    .then((db) => db.collection('products').findOneAndDelete({ _id: ObjectId(id)}))
+    .then(({ value: { name, quantity } }) => ({ _id: id, name, quantity }))
+    .catch(() => null);
+};
 
 const findByName = async (name) => {
   const result = await connection()
@@ -50,6 +52,7 @@ const findById = async (id) => {
 module.exports = {
   create,
   updateProduct,
+  deleteProduct,
   findByName,
   getAll,
   findById
