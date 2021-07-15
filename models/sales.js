@@ -23,8 +23,8 @@ const getSaleById = async (saleId) => {
   }
 
   const result = await connection()
-  .then((db) => db.collection('sales')
-    .find({ _id: new ObjectID(saleId) }));
+    .then((db) => db.collection('sales')
+      .find({ _id: new ObjectID(saleId) }));
 
   if(!result) {
     return null;

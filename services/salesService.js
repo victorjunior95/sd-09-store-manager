@@ -26,7 +26,7 @@ const getSaleByIdService = async (saleId) => {
   const result = await getSaleById(saleId);
 
   if (result === null) {
-   throw(Error('not_found_sale'));
+    throw(Error('not_found_sale'));
   }
 
   return result;
