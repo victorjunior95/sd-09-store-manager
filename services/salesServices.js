@@ -29,6 +29,7 @@ const getSaleById = async (id) => {
 
 const validateSale = async (sales) => {
   const checkSales = await sales.map(async ({ quantity, productId }) => {
+    const stockOk = await checkStock(productId, quantity);
     const saleQuantity = SALE_SCHEMA.validate({ quantity });
     const productExists = await productsModel.getProductById(ObjectId(productId));
   
@@ -44,6 +45,18 @@ const validateSale = async (sales) => {
       };
       throw errorObj;
     }
+    if(!stockOk) {
+      const errorObj = {
+        err: {
+          err: {
+            code: 'stock_problem',
+            message: 'Such amount is not permitted to sell'
+          }
+        },
+        code: response.NOT_FOUND,
+      };
+      throw errorObj;
+    };
   });
   return Promise.all(checkSales);
 };
@@ -82,6 +95,11 @@ const updateSale = async (sale, id) => {
   // }
   
   // return productsModel.updateProduct(name, quantity, id);
+};
+
+const checkStock = async (productId, quantity) => {
+  const productChecked = await productsModel.getProductById(ObjectId(productId));
+  return quantity <= productChecked.quantity ? true : false;
 };
 
 module.exports = {
