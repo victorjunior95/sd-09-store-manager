@@ -34,7 +34,7 @@ async function updateProduct(id, name, quantity) {
       { _id: ObjectId(id) },
       { $set: { name, quantity } }
     ));
-  return { _id: result.id, name, quantity };
+  return { _id: id, name, quantity };
 }
 
 module.exports = {
