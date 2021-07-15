@@ -61,7 +61,9 @@ function quantityIsNumber(quantity) {
 
 async function create (name, quantity) {
   nameValidation(name);
+  await nameExists(name);
   quantityValidation(quantity);
+  quantityIsNumber(quantity);
   return Products.create(name, quantity);
 };
 
