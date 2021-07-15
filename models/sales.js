@@ -1,9 +1,9 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const create = async (itensSold) =>
+const create = async (sale) =>
   connection()
-    .then((db) => db.collection('sales').insertOne({ itensSold }))
+    .then((db) => db.collection('sales').insertOne({ sale }))
     .then((result) => result.ops[0]);
 
 const getAll = async () => {
@@ -17,17 +17,13 @@ const getById = async (id) => {
     .findOne(ObjectId(id)));
 };
 
-const change = async (id, sales) => {
-  if (!ObjectId.isValid(id)) {
-    return null;
-  } else {
-    connection().then((db) => db.collection('sales')
-      .updateOne({ _id: ObjectId(id) }, { $set: { sales } }),
-    );
-    return { _id: id, sales };
-  }
+const change = async (id, sale) => {
+  if (!ObjectId.isValid(id)) return null;
+  connection().then((db) =>
+    db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { sale } }),
+  );
+  return { _id: id, sale };
 };
-
 module.exports = {
   // del,
   getAll,
