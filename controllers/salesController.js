@@ -36,12 +36,9 @@ const getById = async (req, res) => {
   if (sale !== null) {
     return res.status(STATUS_200).send(sale);
   } else {
-    res.status(STATUS_404).json({
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    });
+    res.status(STATUS_404).send(
+      '{"err":{"code":"not_found","message":"Sale not found"}}'
+    );
   }
 };
 
