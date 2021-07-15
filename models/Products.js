@@ -11,14 +11,14 @@ const updateProduct = async (id, name, quantity) => {
   return connection()
     .then((db) => db
       .collection('products')
-      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-    .then(({ value }) => value);
+      .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
+    .then(() => ({ _id: id, name, quantity }));
 };
 
 // const deleteProduct = async (id) => 
 //   connection()
 //     .then((db) => db.collection('products').deleteOne(new ObjectId(id)))
-//     .then((result) => ({ _id: id,  }))
+//     .then((result) => ({ _id: id }))
 
 
 const findByName = async (name) => {
