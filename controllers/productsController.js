@@ -1,16 +1,28 @@
 const express = require('express');
 const productsService = require('../services/productsService');
+const productsMiddlewares = require('../middlewares/middlewareProducts');
 const ProductsRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATE_STATUS = 201;
+
 
 ProductsRouter.get('/', async (req, res) => {
   const products = await productsService.listAll();
   return res.status(HTTP_OK_STATUS).json(products);
 });
 
-ProductsRouter.post('/products', (req, res) => {
+ProductsRouter.post('/', productsMiddlewares.validaName,
+  productsMiddlewares.validaProduto,
+  productsMiddlewares.validaQuantidade,
+  async (req, res) => {
+    const { name, quantity } = req.body;
+    const product = await productsService.registerProduct(name, quantity);
 
-});
+    if(product.err) return res.status(HTTP_UNPROCESS_CLIENT).json(product);
+
+    return res.status(HTTP_CREATE_STATUS).json(product);
+    
+  });
 
 module.exports = ProductsRouter;
