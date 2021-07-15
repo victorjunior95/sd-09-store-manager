@@ -50,8 +50,26 @@ function quantityIsNumber(quantity) {
   }
 }
 
+async function productValidation(product) {
+  const result = await model.findByName(name);
+  if (result) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
+    };
+  }
+}
+
 async function fetchProducts() {
   const result = await model.fetchProducts();
+  return { status: 200, result };
+}
+
+async function findById(id) {
+  const result = await model.findById(id);
   return { status: 200, result };
 }
 
