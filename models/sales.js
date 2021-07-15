@@ -14,7 +14,7 @@ const getAll = async () => {
 
 const change = async (id, itensSold) => {
   if (!ObjectId.isValid(id)) return null; 
-  connect().then((db) =>
+  connection().then((db) =>
     db.collection('sales')
       .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }),
   );
