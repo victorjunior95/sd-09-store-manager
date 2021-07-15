@@ -20,6 +20,7 @@ const change = async (id, itensSold) => {
   );
   return { _id: id, itensSold };
 };
+
 module.exports = {
   // del,
   getAll,
