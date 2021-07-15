@@ -26,3 +26,4 @@ app.delete('/products/:id', rescue(productController.deleteProduct));
 app.post('/sales', rescue(salesController.postSale));
 app.get('/sales', rescue(salesController.getSales));
 app.get('/sales/:id', rescue(salesController.getSale));
+app.put('/sales/:id', rescue(salesController.putSale));

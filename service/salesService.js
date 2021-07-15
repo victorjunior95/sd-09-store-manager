@@ -38,4 +38,19 @@ const findSale =  async (id) => {
   return sale;
 };
 
-module.exports = { newSale, getAllSales, findSale };
+const saleUpdate = async (id, items) => {
+  return Promise.all(
+    items.map(async (item) => {
+      await productService.validateFoundId(id);
+      if ( item.quantity <= minQuantity || typeof item.quantity !== 'number' ) throw {
+        err: {
+          message: 'Wrong product ID or invalid quantity',
+          code: 'invalid_data'
+        }
+      };
+      console.log(`id no service: ${id}`);
+    })
+  ).then(() => salesModel.updateSale(id, items));
+};
+
+module.exports = { newSale, getAllSales, findSale, saleUpdate };

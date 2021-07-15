@@ -26,4 +26,17 @@ const getSale = async (req, res) => {
   return res.status(status_ok).json(sale);
 };
 
-module.exports = { postSale, getSales, getSale };
+const putSale = async (req, res) => {
+  const { id } = req.params;
+  const itensSold = req.body;
+  try {
+    const sale = { id, itensSold };
+    console.log(`id no controller: ${id}`);
+    await salesService.saleUpdate(id, itensSold);
+    return res.status(status_ok).json(sale);
+  } catch(err) {
+    return res.status(unprocessable).json(err);
+  }
+};
+
+module.exports = { postSale, getSales, getSale, putSale };
