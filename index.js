@@ -22,7 +22,7 @@ app.get('/sales', sale.listSales);
 app.get('/sales/:id', sale.listSalesById);
 app.post('/sales', sale.createSale);
 app.put('/sales/:id', sale.updateSale);
-app.delete('/sales', sale.deleteSale);
+app.delete('/sales/:id', sale.deleteSale);
 
 
 app.listen(PORT, () => console.log(`> Server is up and running on PORT : ${PORT}`));

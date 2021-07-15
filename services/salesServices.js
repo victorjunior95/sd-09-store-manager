@@ -1,5 +1,4 @@
 const sale = require('../models/salesModel');
-const product = require('./productServices');
 const validation = require('../validation');
 
 const createSale = async (listSolds) => {
@@ -63,8 +62,19 @@ const updateSale = async (id, productId, quantity) => {
   return saleUpdate;
 };
 
+const deleteSale = async (id) => {
+  if (!(await validation.validId(id))) return {
+    'err':
+      { 'code': 'invalid_data', 'message': 'Wrong sale ID format' }
+  };
+
+  const result = await sale.deleteSale(id);
+  return result;
+};
+
 module.exports = {
   createSale,
   findById,
-  updateSale
+  updateSale,
+  deleteSale
 };

@@ -39,7 +39,12 @@ const updateSale = async (req, res) => {
 
 const deleteSale = async (req, res) => {
   const { id } = req.params;
-  res.status(200).json({ message: 'Product deleted successfully' });
+  const saleDeleted = await sale.deleteSale(id);
+
+  console.log( await sale.deleteSale(id));
+  if (saleDeleted.err) return res.status(422).json(saleDeleted);
+
+  return res.status(200).json({ message: 'Product deleted successfully' });
 };
 
 module.exports = {
