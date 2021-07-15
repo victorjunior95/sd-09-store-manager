@@ -23,7 +23,7 @@ const change = async (id, sale) => {
     db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { sale } }),
   );
   return { _id: id, sale };
-}
+};
 module.exports = {
   // del,
   getAll,
