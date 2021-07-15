@@ -18,7 +18,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/products', rescue(controller.fetchProducts));
-// app.get('/products/:id', controller.findById);
+app.get('/products/:id', rescue(controller.findById));
 app.post('/products', rescue(controller.createProduct));
 
 app.use((err, _req, res, _next) => {

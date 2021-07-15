@@ -50,14 +50,13 @@ function quantityIsNumber(quantity) {
   }
 }
 
-async function productValidation(product) {
-  const result = await model.findByName(name);
-  if (result) {
+function productValidation(product) {
+  if (!product) {
     throw {
       status: 422,
       err: {
         code: 'invalid_data',
-        message: 'Product already exists',
+        message: 'Wrong id format',
       },
     };
   }
@@ -70,6 +69,7 @@ async function fetchProducts() {
 
 async function findById(id) {
   const result = await model.findById(id);
+  productValidation(result);
   return { status: 200, result };
 }
 
@@ -87,6 +87,8 @@ module.exports = {
   nameExists,
   quantityValidation,
   quantityIsNumber,
+  productValidation,
   fetchProducts,
+  findById,
   createProduct,
 };
