@@ -82,16 +82,35 @@ const findById = async (id) => {
   };
 };
 
-const create = async (name, quantity) => {
-  await checkIfProductExists(name);
+const validateProductInfo = (name, quantity) => {
   checkProductNameLength(name);
   checkProductQuantity(quantity);
   checkQuantityType(quantity);
-  return Products.create(name, quantity);
+};
+
+const create = async (name, quantity) => {
+  await checkIfProductExists(name);
+  validateProductInfo(name, quantity);
+  const newProduct = await Products.create(name, quantity);
+  return {
+    status: 201,
+    newProduct
+  };
+};
+
+const updateProduct = async (id, name, quantity) => {
+  validateProductInfo(name, quantity);
+  const updatedProduct = await Products.updateProduct(id, name, quantity);
+  console.log(updatedProduct);
+  return {
+    status: 200,
+    updatedProduct
+  };
 };
 
 module.exports = {
   create,
   getAll,
-  findById
+  findById,
+  updateProduct,
 };

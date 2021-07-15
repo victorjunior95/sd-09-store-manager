@@ -5,8 +5,15 @@ const CREATED = 201;
 
 const create = rescue(async (req, res) => {
   const { name, quantity } = req.body;
-  const newProduct = await Products.create(name, quantity);
-  res.status(CREATED).json(newProduct);
+  const { status, newProduct } = await Products.create(name, quantity);
+  res.status(status).json(newProduct);
+});
+
+const updateProduct = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const { status, updatedProduct } = await Products.updateProduct(id, name, quantity);
+  res.status(status).json(updatedProduct);
 });
 
 const getAll = rescue(async (req, res) => {
@@ -22,6 +29,7 @@ const findById = rescue(async (req, res) => {
 
 module.exports = {
   create,
+  updateProduct,
   getAll,
   findById,
 };
