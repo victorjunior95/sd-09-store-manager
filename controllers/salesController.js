@@ -1,7 +1,8 @@
 const salesServices = require('../services/sales');
-const STATUS_200 = 200; // Respostas de sucesso (200-299)
-const STATUS_201 = 201;
-const STATUS_422 = 422; // Erros do cliente (400-499)
+const STATUS_200 = 200,
+  STATUS_201 = 201,
+  STATUS_422 = 422,
+  STATUS_404 = 404;
 
 const create = async (req, res) => {
   const newSale = req.body;
@@ -32,6 +33,16 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const sale = await salesServices.getById(id);
+  if (sale !== null) {
+    return res.status(STATUS_200).send(sale);
+  } else {
+    res.status(STATUS_404).json({
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    });
+  }
 };
 
 const change = async (req, res) => {

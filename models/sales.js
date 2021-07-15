@@ -17,13 +17,15 @@ const getById = async (id) => {
     .findOne(ObjectId(id)));
 };
 
-const change = async (id, itensSold) => {
-  if (!ObjectId.isValid(id)) return null; 
-  connection().then((db) =>
-    db.collection('sales')
-      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }),
-  );
-  return { _id: id, itensSold };
+const change = async (id, sales) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  } else {
+    connection().then((db) => db.collection('sales')
+      .updateOne({ _id: ObjectId(id) }, { $set: { sales } }),
+    );
+    return { _id: id, sales };
+  }
 };
 
 module.exports = {
