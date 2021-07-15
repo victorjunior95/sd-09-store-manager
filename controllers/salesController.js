@@ -27,8 +27,19 @@ const findOneSaleController = async (req, res) => {
   return res.status(status.OK).json(productList);
 };
 
+const editOneSaleController = async (req, res) => {
+  const { id } = req.params;
+  const updatedSale = await salesService.editOneSaleService(id, req.body);
+  if (updatedSale.err) {
+    console.log('entrou no erro');
+    return res.status(status.UNPROCESSABLE_ENTITY).json(updatedSale);
+  }
+  return res.status(status.OK).json(updatedSale);
+};
+
 module.exports = { 
   salesController,
   getAllSalesController,
   findOneSaleController,
+  editOneSaleController,
 };

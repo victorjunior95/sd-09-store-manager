@@ -25,8 +25,22 @@ const findOneSaleService = async (id) => {
   return saleList;
 };
 
+const editOneSaleService = async (id, array) => {
+  
+  const editableSale = await salesModel.editOneSale(id, array);
+  if (assistent.verifyQtdArray(array)) return (assistent.verifyQtdArray(array));
+  if (!editableSale) return { 
+    err: {
+      code: 'not_found',
+      message: 'Sale not found',
+    },
+  };
+  return editableSale;
+};
+
 module.exports = {
   generateSaleService,
   getAllSalesServices,
   findOneSaleService,
+  editOneSaleService,
 };

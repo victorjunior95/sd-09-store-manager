@@ -7,7 +7,7 @@ const verifySaleQtd = (quantity) => {
         message: 'Wrong product ID or invalid quantity',
       },
     };
-  }
+  };
 };
 
 module.exports = verifySaleQtd;
