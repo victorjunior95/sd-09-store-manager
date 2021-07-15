@@ -29,17 +29,19 @@ async function createProduct(name, quantity) {
 }
 
 async function updateProduct(id, name, quantity) {
-  await connection()
-    .then((db) => db.collection('products').updateOne(
-      { _id: ObjectId(id) },
-      { $set: { name, quantity } }
-    ));
-  return { _id: id, name, quantity };
+  const db = await connection();
+  const result = await db.collection('products').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { name, quantity } }
+  );
+  return result;
 }
 
-// async function deleteProduct(id) {
-//   const
-// }
+async function deleteProduct(id) {
+  const result = await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+  return result;
+}
 
 module.exports = {
   findByName,
@@ -47,4 +49,5 @@ module.exports = {
   findById,
   createProduct,
   updateProduct,
+  deleteProduct,
 };

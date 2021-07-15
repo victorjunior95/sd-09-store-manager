@@ -14,8 +14,8 @@ function nameValidation(name) {
 }
 
 async function nameExists(name) {
-  const result = await model.findByName(name);
-  if (result) {
+  const product = await model.findByName(name);
+  if (product) {
     throw {
       status: 422,
       err: {
@@ -62,6 +62,19 @@ function productValidation(product) {
   }
 }
 
+async function idValidation(id) {
+  const product = await model.findById(id);
+  if (!product) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    };
+  };
+}
+
 async function fetchProducts() {
   const result = await model.fetchProducts();
   return { status: 200, result };
@@ -84,21 +97,22 @@ async function createProduct(name, quantity) {
 
 async function updateProduct(id, name, quantity) {
   nameValidation(name);
-  await nameExists(name);
   quantityValidation(quantity);
   quantityIsNumber(quantity);
-  const result = await model.updateProduct(id, name, quantity);
+  await model.updateProduct(id, name, quantity);
+  return { status: 200, result: { _id: id, name, quantity } };
+}
+
+async function deleteProduct(id) {
+  await idValidation(id);
+  const result = await model.deleteProduct(id);
   return { status: 200, result };
 }
 
 module.exports = {
-  nameValidation,
-  nameExists,
-  quantityValidation,
-  quantityIsNumber,
-  productValidation,
   fetchProducts,
   findById,
   createProduct,
   updateProduct,
+  deleteProduct,
 };
