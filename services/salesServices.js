@@ -1,12 +1,13 @@
 const sale = require('../models/salesModel');
 const validation = require('../validation');
+const errorMessage = 'Wrong product ID or invalid quantity';
 
 const createSale = async (listSolds) => {
   for (const { productId } of listSolds) {
     if (!(await validation.existIdProduct(productId))) return {
       'err': {
         'code': 'invalid_data',
-        'message': 'Wrong product ID or invalid quantity'
+        'message': errorMessage,
       }
     };
   }
@@ -15,7 +16,7 @@ const createSale = async (listSolds) => {
     if (!(await validation.isNumber(quantity))) return {
       'err': {
         'code': 'invalid_data',
-        'message': 'Wrong product ID or invalid quantity'
+        'message': errorMessage,
       }
     };
   }
@@ -24,7 +25,7 @@ const createSale = async (listSolds) => {
     if (!(await validation.isMustBeZero(quantity))) return {
       'err': {
         'code': 'invalid_data',
-        'message': 'Wrong product ID or invalid quantity'
+        'message': errorMessage,
       }
     };
   }
@@ -47,14 +48,14 @@ const updateSale = async (id, productId, quantity) => {
   if (!validation.isNumber(quantity)) return {
     'err': {
       'code': 'invalid_data',
-      'message': 'Wrong product ID or invalid quantity'
+      'message': errorMessage
     }
   };
 
   if (!validation.isMustBeZero(quantity)) return {
     'err': {
       'code': 'invalid_data',
-      'message': 'Wrong product ID or invalid quantity'
+      'message': errorMessage
     }
   };
 
