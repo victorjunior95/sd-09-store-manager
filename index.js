@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const rescue = require('express-rescue');
 const bodyParser = require('body-parser').json();
-const Products = require('./controllers/Products');
+const controller = require('./controllers/products');
 const PORT = 3000;
 
 app.use(bodyParser);
@@ -12,9 +12,9 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/products', Products.fetchAll);
-app.get('/products/:id', Products.findById);
-app.post('/products', rescue(Products.create));
+app.get('/products', rescue(controller.fetchProducts));
+// app.get('/products/:id', controller.findById);
+app.post('/products', rescue(controller.createProduct));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;

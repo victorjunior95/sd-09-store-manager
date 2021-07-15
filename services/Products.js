@@ -1,4 +1,4 @@
-const Products = require('../models/Products');
+const model = require('../models/products');
 
 function nameValidation(name) {
   const char = 5;
@@ -14,7 +14,7 @@ function nameValidation(name) {
 }
 
 async function nameExists(name) {
-  const result = await Products.findByName(name);
+  const result = await model.findByName(name);
   if (result) {
     throw {
       status: 422,
@@ -50,12 +50,17 @@ function quantityIsNumber(quantity) {
   }
 }
 
-async function create (name, quantity) {
+async function fetchProducts() {
+  const result = await model.fetchProducts();
+  return { status: 200, result };
+}
+
+async function createProduct(name, quantity) {
   nameValidation(name);
   await nameExists(name);
   quantityValidation(quantity);
   quantityIsNumber(quantity);
-  const result = await Products.create(name, quantity);
+  const result = await model.createProduct(name, quantity);
   return { status: 201, result };
 };
 
@@ -64,5 +69,6 @@ module.exports = {
   nameExists,
   quantityValidation,
   quantityIsNumber,
-  create,
+  fetchProducts,
+  createProduct,
 };

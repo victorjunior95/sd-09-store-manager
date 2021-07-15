@@ -6,7 +6,15 @@ async function findByName(name) {
   return result;
 }
 
-async function create(name, quantity) {
+async function fetchProducts() {
+  const result = await connection()
+    .then((db) => db.collection('products').find().toArray());
+  return {
+    products: result
+  };
+}
+
+async function createProduct(name, quantity) {
   const db = await connection();
   const result = await db.collection('products').insertOne({ name, quantity });
   return { _id: result.insertedId, name, quantity };
@@ -14,5 +22,6 @@ async function create(name, quantity) {
 
 module.exports = {
   findByName,
-  create,
+  fetchProducts,
+  createProduct,
 };
