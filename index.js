@@ -2,13 +2,8 @@ const express = require('express');
 const app = express();
 const rescue = require('express-rescue');
 const bodyParser = require('body-parser').json();
-const controller = require('./controllers/products');
+const controller = require('./controllers/Products');
 const PORT = 3000;
-
-// Error: Cannot find module './controllers/products'
-// Require stack:
-// - /github/workspace/index.js
-
 
 app.use(bodyParser);
 

@@ -1,4 +1,4 @@
-const model = require('../models/products');
+const model = require('../models/Products');
 
 function nameValidation(name) {
   const char = 5;
