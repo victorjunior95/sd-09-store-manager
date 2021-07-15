@@ -5,6 +5,7 @@ const {
   getProductById,
   getProducts,
   updateProductById,
+  deleteProductById,
 } = require('../models/products');
 
 const VALUE_LIMIT = 0;
@@ -34,7 +35,7 @@ const getProductsService = async () => {
 const getProductByIdService = async (productId) => {
   const result = await getProductById(productId);
 
-  if (result === null) {
+  if (!result) {
     return  ({ err: {
       code: DATA_ERROR_CODE,
       message: 'Wrong id format'}});
@@ -53,9 +54,22 @@ const updateProductByIdService = async (productId, data) => {
   return result;
 };
 
+const deleteProductService = async (productId) => {
+  const result = await deleteProductById(productId);
+
+  if (result === null) {
+    return  ({ err: {
+      code: DATA_ERROR_CODE,
+      message: 'Wrong id format'}});
+  }
+
+  return result;
+};
+
 module.exports = {
   createProductsService,
   getProductsService,
   getProductByIdService,
   updateProductByIdService,
+  deleteProductService,
 };

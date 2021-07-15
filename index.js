@@ -6,6 +6,7 @@ const {
   getProducts,
   getProductById,
   updateProductById,
+  deleteProductController,
   createErrorProducts,
   errorProducts,
 } = require('./controllers/productsController');
@@ -24,6 +25,7 @@ app.post('/products', createProductController);
 app.get('/products/:id', getProductById);
 app.get('/products/', getProducts);
 app.put('/products/:id', updateProductById);
+app.delete('/products/:id', deleteProductController);
 
 app.use(createErrorProducts);
 app.use(errorProducts);

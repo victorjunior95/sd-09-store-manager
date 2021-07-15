@@ -5,6 +5,7 @@ const {
   getProductsService,
   getProductByIdService,
   updateProductByIdService,
+  deleteProductService,
 } = require('../services/productsServices');
 
 const CREATED = 201;
@@ -51,11 +52,25 @@ const updateProductById = async (req, res) => {
   res.status(OK).json(result);
 };
 
+const deleteProductController = async (req, res) => {
+  const productId = req.params.id;
+
+  const result = await deleteProductService(productId);
+
+  if (result.err) {
+    return res.status(INVALID_DATA).json(result);
+  };
+
+  res.status(OK).json(result);
+};
+
 const createErrorProducts = (err, _req, _res, next) => {
   const newError = new Error();
+
   newError.code = 'invalid_data';
   newError.status = INVALID_DATA;
   newError.message = err.message;
+
   return next(newError);
 };
 
@@ -68,6 +83,7 @@ module.exports = {
   getProducts,
   getProductById,
   updateProductById,
+  deleteProductController,
   createErrorProducts,
   errorProducts,
 };
