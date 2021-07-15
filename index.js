@@ -11,9 +11,14 @@ app.use(bodyParser);
 app.get('/', (_request, response) => {
   response.send();
 });
+
+app.get('/products', Products.fetchAll);
+app.get('/products/:id', Products.findById);
 app.post('/products', rescue(Products.create));
+
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
   res.status(status).json({ err: { code, message } });
 });
+
 app.listen(PORT, () => console.log(`Servidor funcionando na porta ${PORT}`));
