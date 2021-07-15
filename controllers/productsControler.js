@@ -34,12 +34,21 @@ const updateProduct = async (req, res) => {
   const productUpdated = await service.updateProduct({ name, quantity, id });
 
   if (productUpdated) {  
-    res.status(HTTP_OK_STATUS).send({ id, name, quantity });
+    return res.status(HTTP_OK_STATUS).send({ id, name, quantity });
   }
+};
+
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const productToBeDeleted = await service.deleteProduct(id);
+
+  if (productToBeDeleted) return res.status(HTTP_OK_STATUS).send(productToBeDeleted);
 };
 
 module.exports = {
   getProducts,
   postNewProduct,
   updateProduct,
+  deleteProduct,
 };
