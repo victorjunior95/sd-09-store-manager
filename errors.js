@@ -49,10 +49,21 @@ const INVALID_ID = {
   },
 };
 
+const INVALID_ID_OR_QUANTITY = {
+  code: 422,
+  message: {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong product ID or invalid quantity',
+    },
+  },
+};
+
 module.exports = {
   INVALID_PRODUCT_LENGTH,
   DUPLICATE_REGISTRATION,
   INVALID_QUANTITY_NUMBER,
   INVALID_QUANTITY_TYPE,
   INVALID_ID,
+  INVALID_ID_OR_QUANTITY,
 };

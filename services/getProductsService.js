@@ -2,6 +2,7 @@ const {
   getAllProducts,
   findProductById,
   updateById,
+  deleteById,
 } = require('../models/productsModels');
 const { INVALID_ID } = require('../errors');
 const { ObjectId } = require('mongodb');
@@ -19,6 +20,7 @@ const allProductsService = async () => {
 
 const findProduct = async (id) => {
   if (!ObjectId.isValid(id)) return INVALID_ID;
+
   const product = await findProductById(id);
 
   if (product === null || product === undefined) return INVALID_ID;
@@ -26,15 +28,25 @@ const findProduct = async (id) => {
   return { code: 200, message: product };
 };
 
-const updateProduct = async (id) => {
+const updateProduct = async (id, name, quantity) => {
+  const product = await updateById(id, name, quantity);
 
-  const product = await updateById(id);
+  return { code: 200, message: product };
+};
 
-  if (product === null || product === undefined) return ;
+const deleteProduct = async (id) => {
+  const { code, message } = await findProduct(id);
+
+  if (code === INVALID_ID.code) return { code: code, message: message };
+  
+  const result = await deleteById(id);
+
+  return { code: code, message: message };
 };
 
 module.exports = { 
   allProductsService,
   findProduct,
   updateProduct,
+  deleteProduct,
 };

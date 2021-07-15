@@ -5,20 +5,14 @@ const {
 const {
   allSalesService,
   findSale,
+  registerSales,
 } = require('../services/indexSales');
 
 const insertSales = async (req, res) => {
-  const { name, quantity } = req.body;
+  const { body } = req;
 
-  const formatIsValid = productFormatValidator(name, quantity);
-  if (formatIsValid !== true) {
-    const { code, message } = formatIsValid;
-    return res.status(code).json(message);
-  };
+  const { code, message } = await registerSales(body);
 
-  const register = await registerProduct(name, quantity);
-
-  const { code, message } = register;
   return res.status(code).json(message);
 };
 
@@ -39,4 +33,5 @@ const findSalesById = async (req, res) => {
 module.exports = {
   insertSales,
   allSales,
+  findSalesById,
 };

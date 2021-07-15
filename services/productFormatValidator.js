@@ -13,8 +13,6 @@ const {
 const productFormatValidator = (name, quantity) => {
   const min_name_length = 5;
   const min_quantity_value = 1;
-  console.log(typeof quantity !== 'number');
-  console.log(quantity < min_quantity_value);
 
   if (name.length < min_name_length) return INVALID_PRODUCT_LENGTH;
 

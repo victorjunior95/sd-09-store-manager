@@ -1,6 +1,7 @@
-const { allSalesService, findSale } = require('./getSalesService');
+const { allSalesService, findSale, registerSales } = require('./getSalesService');
 
 module.exports = {
   allSalesService,
   findSale,
+  registerSales,
 };

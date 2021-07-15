@@ -3,6 +3,8 @@ const {
   registerProduct,
   allProductsService,
   findProduct,
+  updateProduct,
+  deleteProduct,
 } = require('../services/indexProducts');
 
 const insertProduct = async (req, res) => {
@@ -14,9 +16,8 @@ const insertProduct = async (req, res) => {
     return res.status(code).json(message);
   };
 
-  const register = await registerProduct(name, quantity);
+  const { code, message } = await registerProduct(name, quantity);
 
-  const { code, message } = register;
   return res.status(code).json(message);
 };
 
@@ -36,8 +37,23 @@ const findProductById = async (req, res) => {
 
 const updateProductById = async (req, res) => {
   const { id } = req.params;
+  const { name, quantity } = req.body;
 
-  const { code, message } = await updateProduct(id);
+  const formatIsValid = productFormatValidator(name, quantity);
+  if (formatIsValid !== true) {
+    const { code, message } = formatIsValid;
+    return res.status(code).json(message);
+  };
+
+  const { code, message } = await updateProduct(id, name, quantity);
+
+  return res.status(code).json(message);
+};
+
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+
+  const { code, message } = await deleteProduct(id);
 
   return res.status(code).json(message);
 };
@@ -47,4 +63,5 @@ module.exports = {
   allProducts,
   findProductById,
   updateProductById,
+  deleteById,
 };

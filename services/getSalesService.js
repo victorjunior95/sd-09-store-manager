@@ -1,4 +1,14 @@
-const { getAllSales } = require('../models/salesModels');
+const { getAllSales, insertSales } = require('../models/salesModels');
+const { verifyQuantityArray } = require('./saleFormatValidator');
+
+
+const registerSales = async (body) => {
+  const verifyQuantity = verifyQuantityArray(body);
+  if (!verifyQuantity) return verifyQuantity;
+
+  const result = await insertSales(body);
+  return { code: 200, message: result };
+};
 
 const allSalesService = async () => {
   const sales = await getAllSales();
@@ -23,4 +33,5 @@ const findSale = async (id) => {
 module.exports = { 
   allSalesService,
   findSale,
+  registerSales,
 };

@@ -5,6 +5,7 @@ const {
   allProducts,
   findProductById,
   updateProductById,
+  deleteById,
 } = require('./controllers/productsController');
 const {
   insertSales,
@@ -27,6 +28,7 @@ app.post('/products', insertProduct);
 app.get('/products', allProducts);
 app.get('/products/:id', findProductById);
 app.put('/products/:id', updateProductById);
+app.delete('/products/:id', deleteById);
 
 app.post('/sales', insertSales);
 app.get('/sales', allSales);
