@@ -22,7 +22,7 @@ const verifyQuantityArray = (body) => {
 
       return true;
     });
-
+  console.log(productsVerify);
   const check = productsVerify.find((prod) => prod === 'error');
   if (check === 'error') return INVALID_ID_OR_QUANTITY;
   return true;

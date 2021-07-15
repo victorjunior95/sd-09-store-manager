@@ -4,7 +4,7 @@ const { verifyQuantityArray } = require('./saleFormatValidator');
 
 const registerSales = async (body) => {
   const verifyQuantity = verifyQuantityArray(body);
-  if (!verifyQuantity) return verifyQuantity;
+  if (verifyQuantity !== true) return verifyQuantity;
 
   const result = await insertSales(body);
   return { code: 200, message: result };

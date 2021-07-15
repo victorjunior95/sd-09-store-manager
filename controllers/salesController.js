@@ -1,8 +1,4 @@
 const {
-  productFormatValidator,
-  // registerProduct,
-} = require('../services/indexProducts');
-const {
   allSalesService,
   findSale,
   registerSales,
@@ -12,7 +8,7 @@ const insertSales = async (req, res) => {
   const { body } = req;
 
   const { code, message } = await registerSales(body);
-
+  
   return res.status(code).json(message);
 };
 
