@@ -1,7 +1,6 @@
 const sale = require('../models/salesModel');
 const product = require('./productServices');
 const validation = require('../validation');
-const { valid } = require('joi');
 
 const createSale = async (listSolds) => {
   for (const { productId } of listSolds) {
@@ -36,8 +35,7 @@ const createSale = async (listSolds) => {
 };
 
 const findById = async (salesId) => {
-  const validId = await (await sale.getAllSales()).find((sale) => sale._id === salesId);
-  if (!validId) return {
+  if (!(await validation.validId(salesId))) return {
     'err':
       { 'code': 'not_found', 'message': 'Sale not found' }
   };
@@ -46,8 +44,27 @@ const findById = async (salesId) => {
   return response;
 };
 
+const updateSale = async (id, productId, quantity) => {
+  if (!validation.isNumber(quantity)) return {
+    'err': {
+      'code': 'invalid_data',
+      'message': 'Wrong product ID or invalid quantity'
+    }
+  };
+
+  if (!validation.isMustBeZero(quantity)) return {
+    'err': {
+      'code': 'invalid_data',
+      'message': 'Wrong product ID or invalid quantity'
+    }
+  };
+
+  const saleUpdate = await sale.updateSale(id, productId, quantity);
+  return saleUpdate;
+};
 
 module.exports = {
   createSale,
-  findById
+  findById,
+  updateSale
 };

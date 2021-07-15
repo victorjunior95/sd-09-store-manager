@@ -10,15 +10,33 @@ const getAllSales = async () => {
 
 const createSale = async (products) => {
   const connect = await connection();
-  const result = await connect.collection('sales').insertOne({'itensSold': products });
+  const result = await connect.collection('sales').insertOne({ 'itensSold': products });
   return result.ops[0];
 };
 
 const getSaleById = async (id) => {
   const connect = await connection();
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
   const result = await connect
-    .collection('sales').findOne({_id: new ObjectId(id)});
+    .collection('sales').findOne({ _id: new ObjectId(id) });
+
   return result;
 };
 
-module.exports = { createSale, getAllSales, getSaleById };
+const updateSale = async (id, productId, quantity) => {
+  const connect = await connection();
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const result = await connect
+    .collection('sales').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { itensSold: [{ productId, quantity, }] } }
+    );
+  return result;
+};
+
+module.exports = { createSale, getAllSales, getSaleById, updateSale };

@@ -21,7 +21,7 @@ app.delete('/products/:id', product.deleteProduct);
 app.get('/sales', sale.listSales);
 app.get('/sales/:id', sale.listSalesById);
 app.post('/sales', sale.createSale);
-app.put('/sales', sale.updateSale);
+app.put('/sales/:id', sale.updateSale);
 app.delete('/sales', sale.deleteSale);
 
 

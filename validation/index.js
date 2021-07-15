@@ -1,4 +1,5 @@
 const product = require('../models/productModel');
+const sale = require('../models/salesModel');
 
 module.exports = {
   isValidName: (name) => {
@@ -38,6 +39,12 @@ module.exports = {
       .find((product) => product._id.toString() === id);
 
     return list ? true : false;
+  },
+
+  validId: async (id) => {
+    const result = await (await sale.getAllSales())
+      .find((sale) => sale._id.toString() === id);
+    return result ? true : false;
   }
 };
 
