@@ -6,20 +6,13 @@ const create = (req, res) => products.create(req.body)
 const getAll = (_req, res) => products.getAll()
   .then(({ status, data }) => res.status(status).json({ 'products': data }));
 
-const getById = (req, res) => {
-  const { id } = req.params;
-  products.getById(id).then(({ status, data }) => res.status(status).json(data));
-};
+const getById = (req, res) => products.getById(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
-const update = (req, res) => {
-  const { id } = req.params;
-  products.update(id, req.body)
-    .then(({ status }) => res.status(status).json({ _id: id, ...req.body }));
-};
+const update = (req, res) => products.update(req.params.id, req.body)
+  .then(({ status }) => res.status(status).json({ _id: req.params.id, ...req.body }));
 
-const remove = (req, res) => {
-  const { id } = req.params;
-  products.remove(id).then(({ status, data }) => res.status(status).json(data));
-};
+const remove = (req, res) => products.remove(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
 module.exports = { create, getAll, getById, update, remove };

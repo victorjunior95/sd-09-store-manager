@@ -1,14 +1,13 @@
 const express = require('express');
 const sales = require('../controllers/sales');
-const { checkSale, findSale, checkSaleId, checkStock,
-} = require('../middlewares/validators');
+const validate = require('../middlewares/validators');
 
 const route = express.Router();
 
-route.post('/', checkSale, checkStock, sales.create);
+route.post('/', validate.sale, validate.stock, sales.create);
 route.get('/', sales.getAll);
-route.get('/:id', findSale, sales.getById);
-route.put('/:id', checkSale, sales.update);
-route.delete('/:id', checkSaleId, sales.remove);
+route.get('/:id', validate.saleExists, sales.getById);
+route.put('/:id', validate.sale, sales.update);
+route.delete('/:id', validate.saleId, sales.remove);
 
 module.exports = route;

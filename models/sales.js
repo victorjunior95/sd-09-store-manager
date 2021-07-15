@@ -16,8 +16,7 @@ const update = (id, itensSold) => connection().then((db) =>
 const remove = (id) => connection().then((db) =>
   db.collection('sales').findOneAndDelete({ _id: ObjectID(id) }));
 
-const updateProducts = (id, quantity) => connection().then((db) =>
-  db.collection('products').updateOne({ _id: ObjectID(id) }, { $inc: { quantity } }))
-  .then(({ value }) => value);
+const updateStock = (id, quantity) => connection().then((db) =>
+  db.collection('products').updateOne({ _id: ObjectID(id) }, { $inc: { quantity } }));
 
-module.exports = { create, getAll, getById, update, remove, updateProducts };
+module.exports = { create, getAll, getById, update, remove, updateStock };
