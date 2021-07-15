@@ -29,6 +29,19 @@ const getAll = async (req, res) => {
   }
 };
 
+const change = async (req, res) => {
+  try {
+    const newSale = req.body;
+    const { id } = req.params;
+    const sale = await salesServices.change(id, newSale);
+    res.status(STATUS_200).send(sale);
+  } catch (err) {
+    console.error(err);
+    res.status(STATUS_422)
+      .send({ message: 'Wrong product ID or invalid quantity' });
+  }
+};
+
 // const getById = async (req, res) => {
 //   const { id } = req.params;
 //   const product = await productsServices.getById(id);
@@ -75,7 +88,7 @@ const getAll = async (req, res) => {
 module.exports = {
   // del,
   // getById,
-  // change,
+  change,
   getAll,
   create
 };
