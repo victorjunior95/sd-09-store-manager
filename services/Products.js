@@ -5,27 +5,23 @@ function nameValidation(name) {
   if (name.length < char) {
     throw {
       status: 422,
-      result: {
-        err: {
-          code: 'invalid_data',
-          message: '"name" length must be at least 5 characters long',
-        },
+      err: {
+        code: 'invalid_data',
+        message: '"name" length must be at least 5 characters long',
       },
     };
   }
 }
 
 async function nameExists(name) {
-  const product = await Products.fetchProduts(name);
-  if (product) {
+  const result = await Products.findByName(name);
+  if (result) {
     throw {
       status: 422,
-      result: {
-        err: {
-          code: 'invalid_data',
-          message: 'Product already exists',
-        }
-      }
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
     };
   }
 }
@@ -35,25 +31,21 @@ function quantityValidation(quantity) {
   if (quantity < qtt) {
     throw {
       status: 422,
-      result: {
-        err: {
-          code: 'invalid_data',
-          message: '"quantity" must be larger than or equal to 1',
-        },
+      err: {
+        code: 'invalid_data',
+        message: '"quantity" must be larger than or equal to 1',
       },
     };
   }
 }
 
 function quantityIsNumber(quantity) {
-  if (quantity.type !== 'number') {
+  if (typeof quantity !== 'number') {
     throw {
       status: 422,
-      result: {
-        err: {
-          code: 'invalid_data',
-          message: '"quantity" must be a number'
-        },
+      err: {
+        code: 'invalid_data',
+        message: '"quantity" must be a number'
       },
     };
   }
@@ -64,7 +56,8 @@ async function create (name, quantity) {
   await nameExists(name);
   quantityValidation(quantity);
   quantityIsNumber(quantity);
-  return Products.create(name, quantity);
+  const result = await Products.create(name, quantity);
+  return { status: 201, result };
 };
 
 module.exports = {
