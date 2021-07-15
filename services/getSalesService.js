@@ -1,6 +1,11 @@
-const { getAllSales, insertSales, findSaleById } = require('../models/salesModels');
+const {
+  getAllSales,
+  insertSales,
+  findSaleById,
+  deleteById,
+} = require('../models/salesModels');
 const { verifyQuantityArray } = require('./saleFormatValidator');
-const { NOT_FOUND_SALE } = require('../errors');
+const { NOT_FOUND_SALE, INVALID_SALE_ID } = require('../errors');
 const { ObjectId } = require('mongodb');
 
 const registerSales = async (body) => {
@@ -31,8 +36,19 @@ const findSale = async (id) => {
   return { code: 200, message: product };
 };
 
+const deleteSale = async (id) => {
+  const { code, message } = await findSale(id);
+
+  if (code === NOT_FOUND_SALE.code) return INVALID_SALE_ID;
+  
+  await deleteById(id);
+
+  return { code: code, message: message };
+};
+
 module.exports = { 
   allSalesService,
   findSale,
   registerSales,
+  deleteSale,
 };

@@ -2,6 +2,7 @@ const {
   allSalesService,
   findSale,
   registerSales,
+  deleteSale,
 } = require('../services/indexSales');
 
 const insertSales = async (req, res) => {
@@ -26,8 +27,17 @@ const findSalesById = async (req, res) => {
   res.status(code).json(message);
 };
 
+const deleteSaleById = async (req, res) => {
+  const { id } = req.params;
+
+  const { code, message } = await deleteSale(id);
+
+  return res.status(code).json(message);
+};
+
 module.exports = {
   insertSales,
   allSales,
   findSalesById,
+  deleteSaleById,
 };

@@ -69,6 +69,16 @@ const NOT_FOUND_SALE = {
   },
 };
 
+const INVALID_SALE_ID = {
+  code: 422,
+  message: {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format',
+    },
+  },
+};
+
 module.exports = {
   INVALID_PRODUCT_LENGTH,
   DUPLICATE_REGISTRATION,
@@ -77,4 +87,5 @@ module.exports = {
   INVALID_ID,
   INVALID_ID_OR_QUANTITY,
   NOT_FOUND_SALE,
+  INVALID_SALE_ID,
 };

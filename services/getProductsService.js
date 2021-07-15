@@ -20,7 +20,6 @@ const allProductsService = async () => {
 
 const findProduct = async (id) => {
   if (!ObjectId.isValid(id)) return INVALID_ID;
-
   const product = await findProductById(id);
 
   if (product === null || product === undefined) return INVALID_ID;
@@ -39,7 +38,7 @@ const deleteProduct = async (id) => {
 
   if (code === INVALID_ID.code) return { code: code, message: message };
   
-  const result = await deleteById(id);
+  await deleteById(id);
 
   return { code: code, message: message };
 };

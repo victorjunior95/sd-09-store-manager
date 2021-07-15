@@ -11,6 +11,7 @@ const {
   insertSales,
   allSales,
   findSalesById,
+  deleteSaleById,
 } = require('./controllers/salesController');
 
 // const PORT = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ app.delete('/products/:id', deleteById);
 app.post('/sales', insertSales);
 app.get('/sales', allSales);
 app.get('/sales/:id', findSalesById);
+app.delete('/sales/:id', deleteSaleById);
 
 // Começa o jogo
 app.listen(PORT, () => {
