@@ -23,5 +23,6 @@ app.post('/sales', sales.salesController);
 app.get('/sales/:id', sales.findOneSaleController);
 app.get('/sales', sales.getAllSalesController);
 app.put('/sales/:id',sales.editOneSaleController);
+app.delete('/sales/:id',sales.deleteSaleController);
 
 app.listen(PORT, () => console.log('porta 3000 em uso'));

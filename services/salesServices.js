@@ -38,9 +38,23 @@ const editOneSaleService = async (id, array) => {
   return editableSale;
 };
 
+const deleteSaleService = async (id) => {
+  const deleteSaleObject = await salesModel.deleteSale(id);
+  if (deleteSaleObject === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      },
+    };
+  };
+  return deleteSaleObject;
+};
+
 module.exports = {
   generateSaleService,
   getAllSalesServices,
   findOneSaleService,
   editOneSaleService,
+  deleteSaleService,
 };

@@ -37,9 +37,17 @@ const editOneSaleController = async (req, res) => {
   return res.status(status.OK).json(updatedSale);
 };
 
+const deleteSaleController = async (req, res) => {
+  const { id } = req.params;
+  const saleDeleted = await salesService.deleteSaleService(id);
+  if (saleDeleted.err) return res.status(status.UNPROCESSABLE_ENTITY).json(saleDeleted);
+  return res.status(status.OK).json(saleDeleted);
+};
+
 module.exports = { 
   salesController,
   getAllSalesController,
   findOneSaleController,
   editOneSaleController,
+  deleteSaleController,
 };

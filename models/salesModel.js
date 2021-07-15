@@ -55,10 +55,19 @@ const editOneSale = async (id, itensSoldArray) => {
     .updateOne({_id: ObjectId(id)}, {$set: {itensSold: itensSoldArray}});
   return {_id: id, itensSold: itensSoldArray };
 };
+const deleteSale = async (id) => {
+  if(!ObjectId.isValid(id)) return null;
+  const db = await connection();
+  const collection = await db.collection('sales');
+  const deletedSale = await collection.findOneAndDelete({_id: ObjectId(id)});
+  console.log(deletedSale.value);
+  return deletedSale.value;
+};
 
 module.exports = {
   generateSale,
   getAllSales,
   findOneSale,
   editOneSale,
+  deleteSale,
 };
