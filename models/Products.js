@@ -26,11 +26,21 @@ async function createProduct(name, quantity) {
   const db = await connection();
   const result = await db.collection('products').insertOne({ name, quantity });
   return { _id: result.insertedId, name, quantity };
-};
+}
+
+async function updateProduct(id, name, quantity) {
+  const result = await connection()
+    .then((db) => db.collection('products').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } }
+    ));
+  return { _id: result.id, name, quantity };
+}
 
 module.exports = {
   findByName,
   fetchProducts,
   findById,
   createProduct,
+  updateProduct,
 };

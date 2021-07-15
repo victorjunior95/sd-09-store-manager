@@ -82,6 +82,15 @@ async function createProduct(name, quantity) {
   return { status: 201, result };
 };
 
+async function updateProduct(id, name, quantity) {
+  nameValidation(name);
+  await nameExists(name);
+  quantityValidation(quantity);
+  quantityIsNumber(quantity);
+  const result = await model.updateProduct(id, name, quantity);
+  return { status: 200, result };
+}
+
 module.exports = {
   nameValidation,
   nameExists,
@@ -91,4 +100,5 @@ module.exports = {
   fetchProducts,
   findById,
   createProduct,
+  updateProduct,
 };
