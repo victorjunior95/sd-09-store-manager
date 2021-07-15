@@ -14,3 +14,4 @@ app.get('/', (_request, response) => {
 
 app.use('/products', productRoute);
 
+app.listen(PORT, () => console.log(`funfando in the door ${PORT}`));
