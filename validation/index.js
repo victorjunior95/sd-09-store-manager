@@ -29,12 +29,15 @@ module.exports = {
 
   isMustBeZero: (quantity) => {
     const zero = 0;
-
     if (quantity <= zero) return false;
     return true;
   },
 
+  existIdProduct: async (id) => {
+    const list = await (await product.getAll())
+      .find((product) => product._id.toString() === id);
 
-
+    return list ? true : false;
+  }
 };
 

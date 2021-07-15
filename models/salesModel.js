@@ -1,7 +1,17 @@
-/*
-{ "itensSold": [{ "productId": "5f43cbf4c45ff5104986e81d", "quantity": 2 }] }
-{
-  "_id": ObjectId("5f43cc53c45ff5104986e81e"),
-  "itensSold": [{ "productId": "5f43cbf4c45ff5104986e81d", "quantity": 2 }]
-}
-*/
+const connection = require('./connection');
+const { ObjectId } = require('mongodb');
+
+const getAllSales = async () => {
+  const connect = await connection();
+  const result = await connect
+    .collection('sales').find().toArray();
+  return result;
+};
+
+const createSale = async (products) => {
+  const connect = await connection();
+  const result = await connect.collection('sales').insertOne({'itensSold': products });
+  return result.ops[0];
+};
+
+module.exports = { createSale, getAllSales };

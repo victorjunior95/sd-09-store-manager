@@ -1,7 +1,6 @@
 const product = require('../services/productServices');
 const products = require('../models/productModel');
 
-
 const createProduct = async (req, res) => {
   const { name, quantity } = req.body;
   const valid = await product.createProduct(name, quantity);
