@@ -53,6 +53,35 @@ const checkQuantityType = (quantity) => {
   }
 };
 
+const checkProduct = (product) => {
+  if (!product) {
+    throw {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      },
+      status: 422,
+    };
+  }
+};
+
+const getAll = async () => {
+  const result = await Products.getAll();
+  return {
+    status: 200,
+    result
+  };
+};
+
+const findById = async (id) => {
+  const product = await Products.findById(id);
+  checkProduct(product);
+  return {
+    status: 200,
+    product,
+  };
+};
+
 const create = async (name, quantity) => {
   await checkIfProductExists(name);
   checkProductNameLength(name);
@@ -63,4 +92,6 @@ const create = async (name, quantity) => {
 
 module.exports = {
   create,
+  getAll,
+  findById
 };
