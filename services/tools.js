@@ -7,13 +7,14 @@ const MIN_CHARACTERS = 5;
 const VALUE_LIMIT = 1;
 
 const validateProduct = (product) => {
+  const limit = 0;
   const { name, quantity } = product;
 
   if (name.length < MIN_CHARACTERS) {
     throw(Error('"name" length must be at least 5 characters long'));
   }
 
-  if (quantity < VALUE_LIMIT || quantity === VALUE_LIMIT) {
+  if (quantity < limit|| quantity === limit) {
     throw(Error('"quantity" must be larger than or equal to 1'));
   }
 

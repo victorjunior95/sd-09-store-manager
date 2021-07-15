@@ -19,6 +19,7 @@ const createProductsService = async (data) => {
   if (product.length > VALUE_LIMIT) throw(Error('Product already exists'));
 
   let result = validateProduct(data);
+  console.log(result);
   if (!result) {
     result = await createProduct(data);
   }
