@@ -59,6 +59,16 @@ const INVALID_ID_OR_QUANTITY = {
   },
 };
 
+const NOT_FOUND_SALE = {
+  code: 404,
+  message: {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found',
+    },
+  },
+};
+
 module.exports = {
   INVALID_PRODUCT_LENGTH,
   DUPLICATE_REGISTRATION,
@@ -66,4 +76,5 @@ module.exports = {
   INVALID_QUANTITY_TYPE,
   INVALID_ID,
   INVALID_ID_OR_QUANTITY,
+  NOT_FOUND_SALE,
 };

@@ -1,6 +1,7 @@
-const { getAllSales, insertSales } = require('../models/salesModels');
+const { getAllSales, insertSales, findSaleById } = require('../models/salesModels');
 const { verifyQuantityArray } = require('./saleFormatValidator');
-
+const { NOT_FOUND_SALE } = require('../errors');
+const { ObjectId } = require('mongodb');
 
 const registerSales = async (body) => {
   const verifyQuantity = verifyQuantityArray(body);
@@ -22,10 +23,10 @@ const allSalesService = async () => {
 };
 
 const findSale = async (id) => {
-  if (!ObjectId.isValid(id)) return INVALID_ID;
-  const product = await findProductById(id);
+  if (!ObjectId.isValid(id)) return NOT_FOUND_SALE;
+  const product = await findSaleById(id);
 
-  if (product === null || product === undefined) return INVALID_ID;
+  if (product === null || product === undefined) return NOT_FOUND_SALE;
 
   return { code: 200, message: product };
 };
