@@ -19,6 +19,8 @@ app.post('/products', Products.create);
 
 app.put('/products/:id', Products.updateProduct);
 
+// app.delete('/products/:id', Products.deleteProduct);
+
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
   res.status(status).json({ err: { code, message } });

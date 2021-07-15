@@ -11,9 +11,15 @@ const updateProduct = async (id, name, quantity) => {
   return connection()
     .then((db) => db
       .collection('products')
-      .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-    .then(() => ({ _id: id, name, quantity }));
+      .findOneAndUpdate({ _id: ObjectId(id) }, { $set: { name, quantity } }))
+    .then(({ value }) => value);
 };
+
+// const deleteProduct = async (id) => 
+//   connection()
+//     .then((db) => db.collection('products').deleteOne(new ObjectId(id)))
+//     .then((result) => ({ _id: id,  }))
+
 
 const findByName = async (name) => {
   const result = await connection()
@@ -37,8 +43,7 @@ const getAll = async () =>
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return null;
   const product = await connection()
-    .then((db) => db.collection('products').findOne(new ObjectId(id)));
-  
+    .then((db) => db.collection('products').findOne(new ObjectId(id)));  
   return product;
 };
 

@@ -29,7 +29,6 @@ const checkProductNameLength = (name) => {
 };
 
 const checkProductQuantity = (quantity) => {
-  // const minNameLength = 5;
   if (quantity < 1) {
     throw { 
       err: {
