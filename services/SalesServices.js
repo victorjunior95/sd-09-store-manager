@@ -8,21 +8,18 @@ const MIN_QUANTITY_ALLOWED = 0;
 
 const validateProductSale = async (product) => {
   const productFound = await ProductsServices.getById(product.productId);
-  const productNotFound = !productFound;
-  const insufficientQuantity = (
+  const outOfStock = (
     (productFound.quantity - product.quantity) < MIN_QUANTITY_ALLOWED
   );
-  return { productNotFound, insufficientQuantity };
+  return { productNotFound: !productFound, outOfStock };
 };
 
 const create = async (itensSold) => {
   const saleValidation = await Promise.all(itensSold.map(validateProductSale));
-  const productNotExist = saleValidation.some(({ productNotFound }) => productNotFound);
-  const outOfStock = saleValidation.some(
-    ({ insufficientQuantity }) => insufficientQuantity
-  );
+  const productNotFound = saleValidation.some(({ productNotFound }) => productNotFound);
+  const outOfStock = saleValidation.some(({ outOfStock }) => outOfStock);
 
-  if (productNotExist) return errorObject('product_not_found', 'Product not found');
+  if (productNotFound) return errorObject('product_not_found', 'Product not found');
   if (outOfStock) return errorObject(
     'stock_problem',
     'Such amount is not permitted to sell',
