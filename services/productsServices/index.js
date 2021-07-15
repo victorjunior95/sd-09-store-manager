@@ -1,14 +1,15 @@
 const productModels = require('../../models/Products');
-const validateName = require('./validateName');
+const { validateName, validateLengthName } = require('./validateName');
 const validateQuantity = require('./validateQuantity');
 const validateProductExists = require('./validateProductExists');
 
 const insertProduct = async (name, quantity) => {
-  const validateNameErr = await validateName(name);
+  const validateLengthNameErr = validateLengthName(name);
   const validateQuantityErr = validateQuantity(quantity);
   const insertedProduct = await productModels.insertProduct(name, quantity);
-  if (validateNameErr) return validateNameErr;
+  if (await validateName(name)) return await validateName(name);
   if (validateQuantityErr) return validateQuantityErr;
+  if (validateLengthNameErr) return validateLengthNameErr;
   return insertedProduct;
 };
 
@@ -29,8 +30,19 @@ const getById = async (id) => {
   return productById;
 };
 
+const updateProductById = async (id, name, quantity) => {
+  const productById = await productModels.updateProductById(id, name, quantity);
+  const validateQuantityErr = validateQuantity(quantity);
+  const validateLengthNameErr = validateLengthName(name);
+  if (await validateName(name)) return await validateName(name);
+  if (validateQuantityErr) return validateQuantityErr;
+  if (validateLengthNameErr) return validateLengthNameErr;
+  return productById;
+};
+
 module.exports = {
   insertProduct,
   getAll,
-  getById
+  getById,
+  updateProductById
 };

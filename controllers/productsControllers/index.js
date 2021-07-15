@@ -26,8 +26,20 @@ const getById = async (req, res) => {
   return res.status(okay).json(productById);
 };
 
+const updateProductById = async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const productById = await productsServices.updateProductById(id, name, quantity);
+  console.log(productById, 'CONTROLLERRRRR!!!');
+  if (productById.err) {
+    return res.status(unprocessableEntity).json(productById);
+  }
+  return res.status(okay).json(productById);
+};
+
 module.exports = {
   insertProduct,
   getAll,
-  getById
+  getById,
+  updateProductById
 };

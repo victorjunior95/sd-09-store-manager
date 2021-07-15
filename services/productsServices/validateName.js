@@ -3,18 +3,9 @@ const productModels = require('../../models/Products');
 const validateName = async (name) => {
   const getByName = await productModels.getByName(name);
   const verifyName = getByName.filter((product) => product.name === name && product.name);
-  const lengthName = 5;
-  const lengthZero = 0;
+  const lengthOne = 1;
 
-  if (name.length < lengthName) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: '"name" length must be at least 5 characters long'
-      }
-    };
-  }
-  if (verifyName.length > lengthZero) {
+  if (verifyName.length > lengthOne) {
     return {
       err: {
         code: 'invalid_data',
@@ -24,4 +15,19 @@ const validateName = async (name) => {
   }
 };
 
-module.exports = validateName;
+const validateLengthName = (name) => {
+  const lengthName = 5;
+  if (name.length < lengthName) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: '"name" length must be at least 5 characters long'
+      }
+    };
+  }
+};
+
+module.exports = {
+  validateName,
+  validateLengthName
+};
