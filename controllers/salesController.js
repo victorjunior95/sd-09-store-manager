@@ -33,6 +33,17 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const sale = await salesServices.getById(id);
+
+  if (sale !== null) {
+    return res.status(STATUS_200).send(sale);
+  } else {
+    res.status(STATUS_404).json({
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    });
+  }
 };
 
 const change = async (req, res) => {
