@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 app.post('/products', rescue(Products.create));
 app.use((err, _req, res, _next) => {
-  const { result, status } = err;
-  res.status(status).json(result);
+  const { status, err: { code, message } } = err;
+  res.status(status).json({ err: { code, message } });
 });
 app.listen(PORT, () => console.log(`Servidor funcionando na porta ${PORT}`));

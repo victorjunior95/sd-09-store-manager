@@ -27,8 +27,7 @@ async function nameExists(name) {
 }
 
 function quantityValidation(quantity) {
-  const qtt = 1;
-  if (quantity < qtt) {
+  if (quantity < 1) {
     throw {
       status: 422,
       err: {
