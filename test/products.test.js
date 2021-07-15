@@ -33,7 +33,6 @@ describe('1 - Crie um endpoint para o cadastro de produtos', () => {
   afterAll(async () => {
     await connection.close();
   });
-
   it('Será validado que não é possível criar um produto com o nome menor que 5 caracteres', async () => {
     await frisby
       .post(`${url}/products/`, {
