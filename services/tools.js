@@ -12,7 +12,13 @@ const validateProduct = (product) => {
     throw(Error('"quantity" must be larger than or equal to 1'));
   }
 
-  if( typeof quantity !== 'number') throw(Error('"quantity" must be a number'));
+  if( typeof quantity !== 'number') {
+    throw(Error('"quantity" must be a number'));
+  };
+
+  if( typeof quantity !== 'number') {
+    throw(Error('"quantity" must be a number'));
+  };
 
   return null;
 };
@@ -37,7 +43,18 @@ const validSales = (sales) => {
   return message;
 };
 
+const checkError = (codeErr, statusErr, msgErr) => {
+  const newError = new Error();
+
+  newError.code = codeErr;
+  newError.status = statusErr;
+  newError.message = msgErr;
+
+  return newError;
+};
+
 module.exports = {
   validateProduct,
-  validSales
+  validSales,
+  checkError,
 };

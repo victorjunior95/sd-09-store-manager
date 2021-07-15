@@ -38,19 +38,15 @@ const getProductById = async (req, res ) => {
   res.status(OK).json(result);
 };
 
-const updateProductById = async (req, res) => {
+const updateProductById = rescue(async (req, res) => {
   const productId = req.params.id;
 
   const data = req.body;
 
   const result = await updateProductByIdService(productId, data);
 
-  if (result.err) {
-    return res.status(INVALID_DATA).json(result);
-  };
-
   res.status(OK).json(result);
-};
+});
 
 const deleteProductController = async (req, res) => {
   const productId = req.params.id;

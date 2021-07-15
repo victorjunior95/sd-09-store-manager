@@ -11,9 +11,11 @@ const {
   errorProducts,
 } = require('./controllers/productsController');
 
-const {
-  createSalesController,
-} = require('./controllers/salesController');
+// const {
+//   createSalesController,
+//   createErrorSales,
+//   errorSalesResponse,
+// } = require('./controllers/salesController');
 
 const app = express();
 const PORT = 3000;
@@ -34,6 +36,9 @@ app.delete('/products/:id', deleteProductController);
 app.use(createErrorProducts);
 app.use(errorProducts);
 
-app.post('/sales', createSalesController);
+// app.post('/sales', createSalesController);
+
+// app.use(createErrorSales);
+// app.use(errorSalesResponse);
 
 app.listen(PORT, () => console.log('server ON'));
