@@ -1,3 +1,4 @@
+const rescue = require('express-rescue');
 const {
   createSalesService,
 } = require('../services/salesService');
@@ -9,7 +10,7 @@ const OK = 200;
 const NOT_FOUND = 404;
 const INVALID_DATA = 422;
 
-const createSales = async (req, res) => {
+const createSales = rescue(async (req, res) => {
   const sales = req.body;
 
   const result = await createSalesService(sales);
@@ -19,7 +20,7 @@ const createSales = async (req, res) => {
   };
 
   res.status(OK).json(result);
-};
+});
 
 const createErrorSales = (err, _req, _res, next) => {
 

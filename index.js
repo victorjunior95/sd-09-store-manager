@@ -11,11 +11,11 @@ const {
   errorProducts,
 } = require('./controllers/productsController');
 
-// const {
-//   createSalesController,
-//   createErrorSales,
-//   errorSalesResponse,
-// } = require('./controllers/salesController');
+const {
+  createSales,
+  createErrorSales,
+  errorSalesResponse,
+} = require('./controllers/salesController');
 
 const app = express();
 const PORT = 3000;
@@ -36,9 +36,9 @@ app.delete('/products/:id', deleteProduct);
 app.use(createErrorProducts);
 app.use(errorProducts);
 
-// app.post('/sales', createSalesController);
+app.post('/sales', createSales);
 
-// app.use(createErrorSales);
-// app.use(errorSalesResponse);
+app.use(createErrorSales);
+app.use(errorSalesResponse);
 
 app.listen(PORT, () => console.log('server ON'));
