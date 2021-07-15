@@ -21,9 +21,17 @@ const findById = async (id) => {
     .then((db) => db.collection('sales').findOne({ _id: ObjectId(id) }));
   return soldProductById;
 };
+// Req 7 => query para atualizar venda
+const updateById = async (id, itensSold) => {
+  const updateSale = await connection()
+    .then((db) => db.collection('sales')
+      .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }));
+  return updateSale;
+};
 
 module.exports = {
   register,
   findAll,
   findById,
+  updateById
 };

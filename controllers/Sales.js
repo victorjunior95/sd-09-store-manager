@@ -26,5 +26,12 @@ routes.get('/:id', validateId, async (req, res) => {
   }
   return res.status(status.OK).json(soldProducts); // Caso exista vai retornar uma msg ok
 });
+// Req 7
+routes.put('/:id', validateQuantity, async (req, res) => {
+  const { id } = req.params;
+  const itensSold = req.body;
+  await services.updateById(id, itensSold);
+  return res.status(status.OK).json({ _id: id, itensSold });
+});
 
 module.exports = routes;
