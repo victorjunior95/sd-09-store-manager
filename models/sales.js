@@ -11,6 +11,11 @@ const getAll = async () => {
     .then((db) => db.collection('sales').find().toArray());
 };
 
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection().then((db) => db.collection('sales')
+    .findOne(ObjectId(id)));
+};
 
 const change = async (id, itensSold) => {
   if (!ObjectId.isValid(id)) return null; 
@@ -25,7 +30,7 @@ module.exports = {
   // del,
   getAll,
   // findByName,
-  // getById,
+  getById,
   change,
   create,
 };

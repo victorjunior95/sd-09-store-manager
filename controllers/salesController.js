@@ -29,6 +29,11 @@ const getAll = async (req, res) => {
   }
 };
 
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const sale = await salesServices.getById(id);
+};
+
 const change = async (req, res) => {
   try {
     const newSale = req.body;
@@ -87,8 +92,8 @@ const change = async (req, res) => {
 
 module.exports = {
   // del,
-  // getById,
+  getById,
   change,
   getAll,
-  create
+  create,
 };

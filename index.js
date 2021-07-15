@@ -23,7 +23,7 @@ app.delete('/products/:id', productsController.del);
 
 app.post('/sales', validationSalesQuantity, salesController.create);
 app.get('/sales', salesController.getAll);
-app.put('/sales/:id', salesController.change);
+app.put('/sales/:id', validationSalesQuantity, salesController.change);
 // app.get('/books/:id', Book.findById);
 // app.post('/books', Book.create);
 
