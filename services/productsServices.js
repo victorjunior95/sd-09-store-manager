@@ -4,6 +4,7 @@ const {
   findProductByName,
   getProductById,
   getProducts,
+  updateProductById,
 } = require('../models/products');
 
 const VALUE_LIMIT = 0;
@@ -11,7 +12,7 @@ const DATA_ERROR_CODE = 'invalid_data';
 
 const createProductsService = async (data) => {
   const { name } = data;
-  console.log(name);
+
   const product = await findProductByName(name);
 
   if (product.length > VALUE_LIMIT) throw(Error('Product already exists'));
@@ -42,8 +43,19 @@ const getProductByIdService = async (productId) => {
   return result;
 };
 
+const updateProductByIdService = async (productId, data) => {
+  let result = validateProduct(data);
+
+  if (!result) {
+    result = await updateProductById(productId, data);
+  }
+
+  return result;
+};
+
 module.exports = {
   createProductsService,
   getProductsService,
   getProductByIdService,
+  updateProductByIdService,
 };

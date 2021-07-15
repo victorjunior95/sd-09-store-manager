@@ -5,6 +5,7 @@ const {
   createProductController,
   getProducts,
   getProductById,
+  updateProductById,
   createErrorProducts,
   errorProducts,
 } = require('./controllers/productsController');
@@ -22,6 +23,7 @@ app.get('/', (_request, response) => {
 app.post('/products', createProductController);
 app.get('/products/:id', getProductById);
 app.get('/products/', getProducts);
+app.put('/products/:id', updateProductById);
 
 app.use(createErrorProducts);
 app.use(errorProducts);

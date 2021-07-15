@@ -4,6 +4,7 @@ const {
   createProductsService,
   getProductsService,
   getProductByIdService,
+  updateProductByIdService,
 } = require('../services/productsServices');
 
 const CREATED = 201;
@@ -36,6 +37,20 @@ const getProductById = async (req, res ) => {
   res.status(OK).json(result);
 };
 
+const updateProductById = async (req, res) => {
+  const productId = req.params.id;
+
+  const data = req.body;
+
+  const result = await updateProductByIdService(productId, data);
+
+  if (result.err) {
+    return res.status(INVALID_DATA).json(result);
+  };
+
+  res.status(OK).json(result);
+};
+
 const createErrorProducts = (err, _req, _res, next) => {
   const newError = new Error();
   newError.code = 'invalid_data';
@@ -52,6 +67,7 @@ module.exports = {
   createProductController,
   getProducts,
   getProductById,
+  updateProductById,
   createErrorProducts,
   errorProducts,
 };
