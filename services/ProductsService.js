@@ -1,4 +1,3 @@
-const connection = require('../models/connection');
 const ProductsModel = require('../models/ProductsModel');
 
 const deleteProduct = async (id) => {
