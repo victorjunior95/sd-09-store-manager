@@ -5,7 +5,7 @@ const mongoDbUrl = 'mongodb://localhost:27017';
 const url = 'http://localhost:3000';
 const invalidId = 99999;
 
-describe.skip('5 - Crie um endpoint para cadastrar vendas', () => {
+describe('5 - Crie um endpoint para cadastrar vendas', () => {
   let connection;
   let db;
 
@@ -123,7 +123,7 @@ describe.skip('5 - Crie um endpoint para cadastrar vendas', () => {
       });
   });
 
-  it('Será validado que é possível criar uma compra com sucesso', async () => {
+  it.skip('Será validado que é possível criar uma compra com sucesso', async () => {
     let result;
     let resultProductId;
 
@@ -154,7 +154,7 @@ describe.skip('5 - Crie um endpoint para cadastrar vendas', () => {
       });
   });
 
-  it('Será validado que é possível criar várias compras com sucesso', async () => {
+  it.skip('Será validado que é possível criar várias compras com sucesso', async () => {
     let result;
     let resultProductId;
 
