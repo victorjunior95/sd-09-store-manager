@@ -31,4 +31,16 @@ const registerNewProduct = async ({name,quantity}) => {
   return await productModel.registerNewProduct({name,quantity});
 };
 
-module.exports = { registerNewProduct };
+const getProducts = async () => {
+  return await productModel.getProducts();
+};
+
+const getProductById = async (id) => {
+  const product = await productModel.getProductById(id);
+  if(product){return {message: product, status: 200};}
+  const code = 'invalid_data';
+  const message = 'Wrong id format';
+  return {message: errorObject(code, message), status: 422};
+};
+
+module.exports = { registerNewProduct, getProducts, getProductById };

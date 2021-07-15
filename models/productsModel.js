@@ -1,4 +1,5 @@
 const mongoConnection = require('../util/mongoConnection');
+const ObjectId = require('mongodb').ObjectId;
 
 const registerNewProduct = async (product) => {
   const newProduct = await mongoConnection().then((db) => {
@@ -9,6 +10,22 @@ const registerNewProduct = async (product) => {
   return {message: newProduct, status: 201};
 };
 
+const getProducts = async () => {
+  return await mongoConnection().then(db => 
+    db.collection('products').find().toArray()
+  );
+};
+
+const getProductById = async (id) => {
+  if(!ObjectId.isValid(id)){return null;}
+  const product = await mongoConnection().then(db => 
+    db.collection('products').find({_id:ObjectId(id)}).toArray()
+  );
+  return product[0];
+};
+
 module.exports = {
-  registerNewProduct
+  registerNewProduct,
+  getProducts,
+  getProductById
 };
