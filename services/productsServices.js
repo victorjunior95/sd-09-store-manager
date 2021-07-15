@@ -22,7 +22,7 @@ const registerNewProduct = async ({name,quantity}) => {
     const message = '"quantity" must be a number';
     return {message: errorObject(code, message), status: 422};}
   const isProductAlreadyExist = await mongoConnection()
-    .then(db => db.collection('products').find({name:name}).count()) > ZERO_DOCUMENT;
+    .then(db => db.collection('Products').find({name:name}).count()) > ZERO_DOCUMENT;
   if(isProductAlreadyExist){
     const code = 'invalid_data';
     const message = 'Product already exists';
