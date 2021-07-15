@@ -1,4 +1,4 @@
-const { ObjectID, ResumeToken } = require('mongodb');
+const { ObjectID } = require('mongodb');
 const connection = require('./connection');
 
 const createSales = async (sales) => {
@@ -33,22 +33,14 @@ const getSaleById = async (saleId) => {
   return result;
 };
 
-const updateSaleById = (saleId, data) => {
+const updateSaleById = async (saleId, data) => {
   if (!ObjectID.isValid(saleId)) {
     return null;
   }
 
   const result = await connection()
     .then((db) => db.collection('sales')
-      .updateOne({
-        _id: new ObjectID(saleId)
-      }, {
-        $set: {
-          itensSold: data
-        },
-      },
-      )
-    );
+      .updateOne({ _id: new ObjectID(saleId) }, { $set: { itensSold: data} }));
 
   return { _id: saleId, itensSold: data };
 };

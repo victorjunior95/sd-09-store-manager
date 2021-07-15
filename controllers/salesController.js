@@ -18,10 +18,6 @@ const createSales = rescue(async (req, res) => {
 
   const result = await createSalesService(sales);
 
-  if (result.err) {
-    return res.status(INVALID_DATA).json(result);
-  };
-
   res.status(OK).json(result);
 });
 
@@ -43,33 +39,37 @@ const getSaleById = rescue(async (req, res) => {
   res.status(OK).Json(result);
 });
 
-const updateProductById = rescue(async (req, res) => {
+const updateSalesById = rescue(async (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
   const result = await updateProductByIdService(id, data);
 
-  res.status(OK).Json(result);
+  res.status(OK).json(result);
 });
 
 const createErrorSales = (err, _req, _res, next) => {
-
   if (err.message === 'not_found_sale') {
-    const erro = checkError('not_found', NOT_FOUND, 'Sale not found');
-
-    return next(erro);
+    const newError = new Error();
+    newError.code = 'not_found';
+    newError.status = NOT_FOUND;
+    newError.message = 'Sale not found';
+    return next(newError);
   }
 
   if (err.message === 'stock_problem') {
     const newError = new Error();
-    const e = checkError(err.message, NOT_FOUND, 'Such amount is not permitted to sell');
-
-    return next(e);
+    newError.code = err.message;
+    newError.status = NOT_FOUND;
+    newError.message = 'Such amount is not permitted to sell';
+    return next(newError);
   }
 
-  const erro = checkError('invalid_data', INVALID_DATA, err.message);
-
-  return next(erro);
+  const newError = new Error();
+  newError.code = 'invalid_data';
+  newError.status = INVALID_DATA;
+  newError.message = err.message;
+  return next(newError);
 };
 
 const errorSalesResponse = (err, _req, res, _next) => {
@@ -83,5 +83,5 @@ module.exports = {
   errorSalesResponse,
   getSales,
   getSaleById,
-  updateProductById,
+  updateSalesById,
 };

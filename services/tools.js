@@ -1,5 +1,10 @@
+const {
+  getProductById,
+  updateQuantityProductById,
+} = require('../models/products');
+
 const MIN_CHARACTERS = 5;
-const VALUE_LIMIT = 0;
+const VALUE_LIMIT = 1;
 
 const validateProduct = (product) => {
   const { name, quantity } = product;
@@ -30,17 +35,31 @@ const ERROR_MESSAGE = {
   }
 };
 
-const validSales = (sales) => {
-  const VALUE_LIMIT = 1;
-  let message = null;
-
+const validSales = async (sales) => {
   sales.forEach((sale) => {
     if (sale.quantity < VALUE_LIMIT || typeof sale.quantity === 'string') {
-      message = ERROR_MESSAGE;
+      throw(Error('Wrong product ID or invalid quantity'));
     }
   });
+};
 
-  return message;
+const validateStock = async (sales) => {
+  const products = await Promise
+    .all(sales.map((sale) => getProductById(sale.productId)));
+
+  products.forEach((product, index) => {
+    if (!product || sales[index].quantity > product.quantity) {
+      throw(Error('stock_problem'));
+    }
+  });
+};
+
+const updateStock = async (sales, type) => {
+  await Promise
+    .all(sales
+      .map((sale) => updateQuantityProductById(
+        sale.productId,
+        `${type === 'DEC' ? -sale.quantity : sale.quantity}`)));
 };
 
 const checkError = (codeErr, statusErr, msgErr) => {
@@ -57,4 +76,6 @@ module.exports = {
   validateProduct,
   validSales,
   checkError,
+  validateStock,
+  updateStock,
 };
