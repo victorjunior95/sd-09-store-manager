@@ -13,6 +13,8 @@ const {
 
 const {
   createSales,
+  getSales,
+  getSaleById,
   createErrorSales,
   errorSalesResponse,
 } = require('./controllers/salesController');
@@ -29,7 +31,7 @@ app.get('/', (_request, response) => {
 
 app.post('/products', createProductController);
 app.get('/products/:id', getProductById);
-app.get('/products/', getProducts);
+app.get('/products', getProducts);
 app.put('/products/:id', updateProductById);
 app.delete('/products/:id', deleteProduct);
 
@@ -37,6 +39,8 @@ app.use(createErrorProducts);
 app.use(errorProducts);
 
 app.post('/sales', createSales);
+app.get('/sales/:id', getSaleById);
+app.get('/sales', getSales);
 
 app.use(createErrorSales);
 app.use(errorSalesResponse);

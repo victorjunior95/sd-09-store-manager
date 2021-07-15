@@ -1,6 +1,8 @@
 const rescue = require('express-rescue');
 const {
   createSalesService,
+  getSalesService,
+  getSaleByIdService,
 } = require('../services/salesService');
 
 const { checkError } = require('../services/tools');
@@ -20,6 +22,24 @@ const createSales = rescue(async (req, res) => {
   };
 
   res.status(OK).json(result);
+});
+
+const getSales = async (_req, res) => {
+  const result = await getSalesService();
+
+  res.status(OK).json(result);
+};
+
+const getSaleById = rescue(async (req, res) => {
+  const saleId = req.params.id;
+
+  const result = await getSaleByIdService(saleId);
+
+  if (result.err) {
+    return res.status(NOT_FOUND).Json(result);
+  }
+
+  res.status(OK).Json(result);
 });
 
 const createErrorSales = (err, _req, _res, next) => {
@@ -51,4 +71,6 @@ module.exports = {
   createSales,
   createErrorSales,
   errorSalesResponse,
+  getSales,
+  getSaleById,
 };
