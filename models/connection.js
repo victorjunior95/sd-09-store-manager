@@ -1,22 +1,23 @@
 const { MongoClient } = require('mongodb');
 
-// BD local
-// const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
-// const DB_NAME = 'StoreManager';
+const OPTIONS = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
-// BD avaliador
 const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
 const DB_NAME = 'StoreManager';
 
-const connection = () => MongoClient
-  .connect(MONGO_DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then((conn) => conn.db(DB_NAME))
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+let dataBase = null;
+
+const connection = () => {
+  return dataBase
+    ? Promise.resolve(dataBase)
+    : MongoClient.connect(MONGO_DB_URL, OPTIONS)
+      .then((conn) => {
+        dataBase = conn.db(DB_NAME);
+        return dataBase;
+      });
+};
 
 module.exports = connection;
