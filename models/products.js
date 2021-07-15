@@ -34,7 +34,7 @@ const updateById = async (id, name, quantity) => {
       .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
   return updateProduct;
 };
-// Req 4
+// Req 4 => query para fazer o delete no BD
 const deleteById = async (id) => {
   const deleteProduct = await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));

@@ -27,16 +27,16 @@ routes.get('/:id', validateId, async (req, res) => { // vai chamar caso passe no
 });
 // Req 3 
 routes.put('/:id', validateName, validateQuantity, async (req, res) => {
-  const { id } = req.params;
-  const { name, quantity } = req.body;
+  const { id } = req.params; // captura o que foi digitado na url
+  const { name, quantity } = req.body; // captura o que foi digitado no corpo
   await services.updateById(id, name, quantity);
   return res.status(status.OK).json({ _id: id, name, quantity });
 });
-// Req 4
+// Req 4 => Delete do crud
 routes.delete('/:id', validateId, async (req, res) => {
-  const { id } = req.params;
-  const deleteProduct = await services.deleteById(id);
-  return res.status(status.OK).json(deleteProduct);
+  const { id } = req.params; // captura o que foi digitado na url
+  const deleteProduct = await services.deleteById(id); // resp por deletar do BD
+  return res.status(status.OK).json(deleteProduct); // msg
 });
 
 module.exports = routes;
