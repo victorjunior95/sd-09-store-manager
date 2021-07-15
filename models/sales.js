@@ -1,9 +1,9 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const create = async (sale) =>
+const create = async (itensSold) =>
   connection()
-    .then((db) => db.collection('sales').insertOne({ sale }))
+    .then((db) => db.collection('sales').insertOne({ itensSold }))
     .then((result) => result.ops[0]);
 
 const getAll = async () => {
@@ -23,7 +23,7 @@ const change = async (id, sale) => {
     db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { sale } }),
   );
   return { _id: id, sale };
-};
+}
 module.exports = {
   // del,
   getAll,
