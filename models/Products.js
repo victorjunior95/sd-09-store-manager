@@ -29,13 +29,17 @@ async function createProduct(name, quantity) {
 }
 
 async function updateProduct(id, name, quantity) {
-  const result = await connection()
+  await connection()
     .then((db) => db.collection('products').updateOne(
       { _id: ObjectId(id) },
       { $set: { name, quantity } }
     ));
   return { _id: id, name, quantity };
 }
+
+// async function deleteProduct(id) {
+//   const
+// }
 
 module.exports = {
   findByName,
