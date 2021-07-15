@@ -24,6 +24,7 @@ const change = async (id, sale) => {
   );
   return { _id: id, sale };
 };
+
 module.exports = {
   // del,
   getAll,
