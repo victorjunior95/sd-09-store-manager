@@ -15,6 +15,7 @@ const {
   createSales,
   getSales,
   getSaleById,
+  updateSalesById,
   createErrorSales,
   errorSalesResponse,
 } = require('./controllers/salesController');
@@ -41,6 +42,7 @@ app.use(errorProducts);
 app.post('/sales', createSales);
 app.get('/sales/:id', getSaleById);
 app.get('/sales', getSales);
+app.put('/sales/:id', updateSalesById);
 
 app.use(createErrorSales);
 app.use(errorSalesResponse);

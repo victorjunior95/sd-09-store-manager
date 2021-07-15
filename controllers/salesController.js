@@ -3,6 +3,7 @@ const {
   createSalesService,
   getSalesService,
   getSaleByIdService,
+  updateProductByIdService,
 } = require('../services/salesService');
 
 const { checkError } = require('../services/tools');
@@ -42,6 +43,15 @@ const getSaleById = rescue(async (req, res) => {
   res.status(OK).Json(result);
 });
 
+const updateProductById = rescue(async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+
+  const result = await updateProductByIdService(id, data);
+
+  res.status(OK).Json(result);
+});
+
 const createErrorSales = (err, _req, _res, next) => {
 
   if (err.message === 'not_found_sale') {
@@ -73,4 +83,5 @@ module.exports = {
   errorSalesResponse,
   getSales,
   getSaleById,
+  updateProductById,
 };

@@ -2,6 +2,7 @@ const {
   createSales,
   getSales,
   getSaleById,
+  updateSaleById,
 } = require('../models/sales');
 
 const { validSales } = require('./tools');
@@ -32,8 +33,17 @@ const getSaleByIdService = async (saleId) => {
   return result;
 };
 
+const updateProductByIdService = (saleId, data) => {
+  await validSales(data);
+
+  const result = await updateSaleById(saleId, data);
+
+  return result;
+}
+
 module.exports = {
   createSalesService,
   getSalesService,
   getSaleByIdService,
+  updateProductByIdService,
 };
