@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const ProductModel = require('../models/ProductModel');
+const ProductModel = require('../models/productsModel');
 const { ObjectId } = require('mongodb');
 
 const minLength = 5;

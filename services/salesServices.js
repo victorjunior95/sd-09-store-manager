@@ -1,7 +1,7 @@
 const Joi = require('joi');
-const SaleModel = require('../models/SaleModel');
-const ProductModel = require('../models/ProductModel');
-const ProductService = require('../services/ProductService');
+const SaleModel = require('../models/salesModel');
+const ProductModel = require('../models/productsModel');
+const ProductService = require('../services/productsServices');
 const { ObjectId } = require('mongodb');
 
 function dataValidation(data) {
