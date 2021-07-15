@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const ProductModel = require('../models/ProductModel');
-const { validateId, ObjectId } = require('./validateId');
+const { ObjectId } = require('mongodb');
 
 const STRING_LENGTH = 5;
 
@@ -10,38 +10,26 @@ function validateData(data) {
     quantity: Joi.number().integer().min(1).required(),
   }).validate(data);
   if (error) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: error.details[0].message,
-      },
-    };
+    throw ({ code: 'invalid_data', message: error.details[0].message });
   }
-  return {};
 }
 
 async function validateNameAvailability(name) {
   const getByNameResp = await ProductModel.getByName(name);
   if (getByNameResp) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      },
-    };
+    throw ({ code: 'invalid_data', message: 'Product already exists' });
   }
-  return {};
+}
+
+function validateId(id) {
+  if (!ObjectId.isValid(id)) {
+    throw ({ code: 'invalid_data', message: 'Wrong id format' });
+  }
 }
 
 async function create(data) {
-  const dataValidation = validateData(data);
-  if (dataValidation.err) {
-    return dataValidation;
-  }
-  const nameValidation = await validateNameAvailability(data.name);
-  if (nameValidation.err) {
-    return nameValidation;
-  }
+  validateData(data);
+  await validateNameAvailability(data.name);
   const response = await ProductModel.create(data);
   return response;
 }
@@ -52,58 +40,41 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    return idValidation;
-  }
+  validateId(id);
   const response = await ProductModel.getById(new ObjectId(id));
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Product not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Product not found' });
   }
   return response;
 }
 
 async function updateById(id, data) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    return idValidation;
-  }
-  const dataValidation = validateData(data);
-  if (dataValidation.err) {
-    return dataValidation;
-  }
+  validateId(id);
+  validateData(data);
   const response = await ProductModel.updateById(new ObjectId(id), data);
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Product not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Product not found' });
   }
   return response;
 }
 
 async function deleteById(id) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    return idValidation;
-  }
+  validateId(id);
   const response = await ProductModel.deleteById(new ObjectId(id));
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Product not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Product not found' });
   }
   return response;
+}
+
+async function checkStock(id, saleQuantity) {
+  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  if (saleQuantity > quantity) {
+    throw ({
+      code: 'stock_problem',
+      message: 'Such amount is not permitted to sell',
+    });
+  }
 }
 
 async function increaseQuantity(id, saleQuantity) {
@@ -127,4 +98,5 @@ module.exports = {
   deleteById,
   increaseQuantity,
   deacreaseQuantity,
+  checkStock,
 };

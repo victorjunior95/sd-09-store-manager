@@ -6,12 +6,13 @@ const SaleRouter = Router();
 const HTTP_OK = 200;
 
 SaleRouter.post('/', async (req, res, next) => {
-  const salesData = req.body;
-  const response = await SaleService.create(salesData);
-  if (response.err) {
-    return next(response);
+  try {
+    const salesData = req.body;
+    const response = await SaleService.create(salesData);
+    return res.status(HTTP_OK).json(response);
+  } catch(err) {
+    next(err);
   }
-  return res.status(HTTP_OK).json(response);
 });
 
 SaleRouter.get('/', async (_req, res) => {
@@ -20,31 +21,34 @@ SaleRouter.get('/', async (_req, res) => {
 });
 
 SaleRouter.get('/:id', async (req, res, next) => {
-  const { id } = req.params;
-  const response = await SaleService.getById(id);
-  if (response.err) {
-    return next(response);
+  try {
+    const { id } = req.params;
+    const response = await SaleService.getById(id);
+    return res.status(HTTP_OK).json(response);
+  } catch(err) {
+    next(err);
   }
-  return res.status(HTTP_OK).json(response);
 });
 
 SaleRouter.put('/:id', async (req, res, next) => {
-  const { id } = req.params;
-  const salesData = req.body;
-  const response = await SaleService.updateById(id, salesData);
-  if (response.err) {
-    return next(response);
+  try {
+    const { id } = req.params;
+    const salesData = req.body;
+    const response = await SaleService.updateById(id, salesData);
+    return res.status(HTTP_OK).json(response);
+  } catch(err) {
+    next(err);
   }
-  return res.status(HTTP_OK).json(response);
 });
 
 SaleRouter.delete('/:id', async (req, res, next) => {
-  const { id } = req.params;
-  const response = await SaleService.deleteById(id);
-  if (response.err) {
-    return next(response);
+  try {
+    const { id } = req.params;
+    const response = await SaleService.deleteById(id);
+    return res.status(HTTP_OK).json(response);
+  } catch(err) {
+    next(err);
   }
-  return res.status(HTTP_OK).json(response);
 });
 
 module.exports = SaleRouter;

@@ -2,7 +2,7 @@ const Joi = require('joi');
 const SaleModel = require('../models/SaleModel');
 const ProductModel = require('../models/ProductModel');
 const ProductService = require('../services/ProductService');
-const { validateId, ObjectId } = require('./validateId');
+const { ObjectId } = require('mongodb');
 
 function validateData(data) {
   const { error } = Joi.array().items(
@@ -12,47 +12,35 @@ function validateData(data) {
     })
   ).validate(data);
   if (error) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong product ID or invalid quantity',
-      },
-    };
+    throw ({ code: 'invalid_data', message: 'Wrong product ID or invalid quantity' });
   }
-  return {};
+}
+
+function validateId(id) {
+  if (!ObjectId.isValid(id)) {
+    throw ({ code: 'invalid_data', message: 'Wrong id format' });
+  }
 }
 
 async function validateSaleProductId(salesData) {
-  let err = {};
   for (const { productId } of salesData) {
-    const idValidation = validateId(productId);
-    if (idValidation.err) {
-      err = idValidation;
-    }
+    validateId(productId);
     const response = await ProductModel.getById(new ObjectId(productId));
     if (!response) {
-      err = {
-        err: {
-          code: 'invalid_data',
-          message: 'Wrong product ID or invalid quantity',
-        },
-      };
+      throw ({
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
+      });
     }
   }
-  return err;
 }
 
 async function create(salesData) {
-  const dataValidation = validateData(salesData);
-  if (dataValidation.err) {
-    return dataValidation;
-  }
-  const idValidation = await validateSaleProductId(salesData);
-  if (idValidation.err) {
-    return idValidation;
-  }
+  validateData(salesData);
+  await validateSaleProductId(salesData);
   const response = await SaleModel.create(salesData);
   for (const { productId, quantity } of salesData) {
+    await ProductService.checkStock(productId, quantity);
     await ProductService.deacreaseQuantity(productId, quantity);
   }
   return response;
@@ -64,66 +52,39 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    };
+  try {
+    validateId(id);
+  } catch(err) {
+    throw ({ code: 'not_found', message: 'Sale not found' });
   }
   const response = await SaleModel.getById( new ObjectId(id));
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Sale not found' });
   }
   return response;
 }
 
 async function updateById(id, salesData) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    return idValidation;
-  }
-  const dataValidation = validateData(salesData);
-  if (dataValidation.err) {
-    return dataValidation;
-  }
-  const productIdValidation = validateSaleProductId(salesData);
-  if (productIdValidation.err) {
-    return productIdValidation;
-  }
+  validateId(id);
+  validateData(salesData);
+  validateSaleProductId(salesData);
   const response = await SaleModel.updateById(new ObjectId(id), salesData);
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Sale not found' });
   }
   return response;
 }
 
 async function deleteById(id) {
-  const idValidation = validateId(id);
-  if (idValidation.err) {
-    idValidation.err.message = 'Wrong sale ID format';
-    return idValidation;
+  try {
+    validateId(id);
+  } catch(err) {
+    err.message = 'Wrong sale ID format';
+    throw (err);
   }
   const response = await SaleModel.deleteById(new ObjectId(id));
   if (!response) {
-    return {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found',
-      },
-    };
+    throw ({ code: 'not_found', message: 'Sale not found' });
   }
   for (const { productId, quantity } of response.itensSold) {
     await ProductService.increaseQuantity(productId, quantity);
