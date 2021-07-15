@@ -32,15 +32,14 @@ const putSale = async (req, res) => {
   const { id } = req.params;
   const itensSold = req.body;
   try {
-    const sale = { id, itensSold };
     await salesService.saleUpdate(id, itensSold);
-    return res.status(status_ok).json(sale);
+    return res.status(status_ok).json({ _id: id, itensSold });
   } catch(err) {
     return res.status(unprocessable).json(err);
   }
 };
 
-const deleteSale = async (req, res, next) => {
+const deleteSale = async (req, res) => {
   const { id } = req.params;
   try {
     const sale = await salesService.findSale(id);
