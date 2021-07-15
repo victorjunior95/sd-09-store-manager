@@ -1,4 +1,4 @@
-const connection = require('./connectionMongoDB');
+const connection = require('./connection');
 
 const createSales = async (sales) => {
   const result = await connection()
