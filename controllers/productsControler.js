@@ -27,7 +27,19 @@ const getProducts = async (req, res) => {
   res.status(HTTP_OK_STATUS).send(data);
 };
 
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+
+  const productUpdated = await service.updateProduct({ name, quantity, id });
+
+  if (productUpdated) {  
+    res.status(HTTP_OK_STATUS).send({ id, name, quantity });
+  }
+};
+
 module.exports = {
   getProducts,
   postNewProduct,
+  updateProduct,
 };

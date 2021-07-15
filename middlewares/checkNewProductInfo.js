@@ -1,4 +1,3 @@
-const { checkProductByName } = require('../models/productsModel');
 const { HTTP_INVALID_DATA } = require('../httpResponse');
 
 
@@ -7,12 +6,6 @@ const errors = {
     err: {
       code: 'invalid_data',
       message: '"name" length must be at least 5 characters long',
-    }
-  },
-  nameAlreadyExistError: {
-    err: {
-      code: 'invalid_data',
-      message: 'Product already exists',
     }
   },
   quantityError: {
@@ -34,14 +27,8 @@ const checkNewProductInfo = async (req, res, next) => {
   const minNameLength = 5;
   const minQuantity = 1;
 
-  const nameAlreadyExist = await checkProductByName({ name });
-
   if (name.length < minNameLength) {
     return res.status(HTTP_INVALID_DATA).json(errors.nameLengthError);
-  }
-
-  if (nameAlreadyExist !== null) {
-    return res.status(HTTP_INVALID_DATA).json(errors.nameAlreadyExistError);
   }
 
   if (quantity < minQuantity) {
