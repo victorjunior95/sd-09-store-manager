@@ -1,4 +1,5 @@
 const productsService = require('../services/productsService');
+const { ObjectID } = require('mongodb');
 const HTTP_UNPROCESS_CLIENT = 422;
 
 const validaName = (req, res, next) => {
@@ -10,6 +11,21 @@ const validaName = (req, res, next) => {
       message: '"name" length must be at least 5 characters long',
     }
   });
+  next();
+};
+
+const validaId = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    ObjectID(id);
+  } catch(_err) {
+    return res.status(HTTP_UNPROCESS_CLIENT).json({
+      err: { 
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    });
+  }
   next();
 };
 
@@ -53,4 +69,5 @@ module.exports = {
   validaName,
   validaProduto,
   validaQuantidade,
+  validaId,
 };

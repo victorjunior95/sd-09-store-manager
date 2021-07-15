@@ -12,6 +12,14 @@ ProductsRouter.get('/', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(products);
 });
 
+ProductsRouter.get('/:id',
+  productsMiddlewares.validaId,
+  async (req, res) => {
+    const { id } = req.params;
+    const product = await productsService.listProductId(id);
+    return res.status(HTTP_OK_STATUS).json(product);
+  });
+
 ProductsRouter.post('/', productsMiddlewares.validaName,
   productsMiddlewares.validaProduto,
   productsMiddlewares.validaQuantidade,
