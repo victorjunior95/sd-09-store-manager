@@ -12,6 +12,22 @@ const insertProduct = async (req, res) => {
   return res.status(created).json(product);
 };
 
+const getAll = async (_req, res) => {
+  const allProducts = await productsServices.getAll();
+  return res.status(okay).json(allProducts);
+};
+
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const productById = await productsServices.getById(id);
+  if (productById.err) {
+    return res.status(unprocessableEntity).json(productById);
+  }
+  return res.status(okay).json(productById);
+};
+
 module.exports = {
-  insertProduct
+  insertProduct,
+  getAll,
+  getById
 };

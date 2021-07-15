@@ -14,4 +14,8 @@ app.get('/', (_request, response) => {
 
 app.post('/products', productsControllers.insertProduct);
 
+app.get('/products', productsControllers.getAll);
+
+app.get('/products/:id', productsControllers.getById);
+
 app.listen(PORT, () => console.log(`listening ${PORT}`));

@@ -5,6 +5,7 @@ const validateName = async (name) => {
   const verifyName = getByName.filter((product) => product.name === name && product.name);
   const lengthName = 5;
   const lengthZero = 0;
+
   if (name.length < lengthName) {
     return {
       err: {
