@@ -7,20 +7,24 @@ const statusSucess = 200;
 
 const ProductsRouter = express.Router();
 
-ProductsRouter.delete('/:id', async (req, res, _next) => {
+ProductsRouter.delete('/:id', validatorId, async (req, res, _next) => {
   const { id } = req.params;
-  const product = await ProductsService.deleteProduct(id);
+  const deletecProduct = await ProductsService.deleteProduct(id);
 
-  return res.status(statusSucess).json(product);
+  return res.status(statusSucess).json(deletecProduct);
 });
 
-ProductsRouter.put('/:id', validatorNameQuant, async (req, res, _next) => {
-  const { id } = req.params;
-  const {name, quantity} = req.body;
-  const product = await ProductsService.updateProduct(id, name, quantity);
+ProductsRouter.put('/:id',
+  validatorNameQuant,
+  validatorId,
+  async (req, res, _next) => {
+    const { id } = req.params;
+    const {name, quantity} = req.body;
 
-  return res.status(statusSucess).json({id, name, quantity});
-});
+    const newProduct = await ProductsService.updateProduct(id, name, quantity);
+
+    return res.status(statusSucess).json(newProduct);
+  });
 
 ProductsRouter.get('/', async (_req, res, _next) => {
   const allProducts = await ProductsService.getAllProducts();

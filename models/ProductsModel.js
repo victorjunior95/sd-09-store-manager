@@ -2,20 +2,16 @@ const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
 const deleteProduct = async (id) => {
-  const product = await connection()
-    .then((db) => db.collection('products').deleteOne({_id: ObjectId(id)}));
-
-  if (!product) return null;
-  return product;
+  return connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
 };
 
 const updateProduct = async (id, name, quantity) => {
-  const product = await connection()
+  return connection()
     .then((db) => db.collection('products')
-      .updateOne({_id: ObjectId(id)}, { $set: {name, quantity}}));
-
-  if (!product) return null;
-  return product;
+      .findOneAndUpdate({_id: ObjectId(id)},
+        { $set: {name, quantity}}, {returnOriginal: false}))
+    .then((result) => result.value);
 };
 
 const getAllProducts = async () => {

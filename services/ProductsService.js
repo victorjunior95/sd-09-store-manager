@@ -1,50 +1,27 @@
+const connection = require('../models/connection');
 const ProductsModel = require('../models/ProductsModel');
 
 const deleteProduct = async (id) => {
-  const product = await ProductsModel.deleteProduct(id);
+  product = await ProductsModel.deleteProduct(id);
 
-  if (!product) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
   return product;
 };
 
 const updateProduct = async (id, name, quantity) => {
   const product = await ProductsModel.updateProduct(id, name, quantity);
 
-  if (!product) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
   return product;
 };
 
 const getAllProducts = async () => {
-  const product = await ProductsModel.getAllProducts();
+  const newProduct = await ProductsModel.getAllProducts();
 
-  return product;
+  return newProduct;
 };
 
 const getProductById = async (id) => {
   const product = await ProductsModel.getProductById(id);
 
-  if (!product) {
-    return {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      },
-    };
-  }
   return product;
 };
 
