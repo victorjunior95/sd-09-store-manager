@@ -1,29 +1,30 @@
 const sale = require('../services/salesServices');
 const sales = require('../models/salesModel');
+const HTTP = require('../httpStatusCodeList');
 
 const createSale = async (req, res) => {
   const newSale = await sale.createSale(req.body);
-  if (newSale.err) res.status(422).json(newSale);
-  return res.status(200).json(newSale);
+  if (newSale.err) res.status(HTTP.unprocessableEntity).json(newSale);
+  return res.status(HTTP.ok).json(newSale);
 };
 
 const listSales = async (_req, res) => {
   const list = await sales.getAllSales();
-  if (!list.length) return res.status(404)
+  if (!list.length) return res.status(HTTP.notFound)
     .json({
       'err':
         { 'code': 'not_found', 'message': 'Sales not found' }
     }
     );
-  res.status(200).json({ sales: list });
+  res.status(HTTP.ok).json({ sales: list });
 };
 
 const listSalesById = async (req, res) => {
   const { id } = req.params;
   const saleById = await sale.findById(id);
 
-  if (saleById.err) return res.status(404).json(saleById);
-  return res.status(200).json(saleById);
+  if (saleById.err) return res.status(HTTP.notFound).json(saleById);
+  return res.status(HTTP.ok).json(saleById);
 };
 
 const updateSale = async (req, res) => {
@@ -33,18 +34,16 @@ const updateSale = async (req, res) => {
   const saleById = await sale.findById(id);
 
   console.log(saleById);
-  if (saleUpdate.err) return res.status(422).json(saleUpdate);
-  return res.status(200).json(saleById);
+  if (saleUpdate.err) return res.status(HTTP.unprocessableEntity).json(saleUpdate);
+  return res.status(HTTP.ok).json(saleById);
 };
 
 const deleteSale = async (req, res) => {
   const { id } = req.params;
   const saleDeleted = await sale.deleteSale(id);
 
-  console.log( await sale.deleteSale(id));
-  if (saleDeleted.err) return res.status(422).json(saleDeleted);
-
-  return res.status(200).json({ message: 'Product deleted successfully' });
+  if (saleDeleted.err) return res.status(HTTP.unprocessableEntity).json(saleDeleted);
+  return res.status(HTTP.ok).json({ message: 'Product deleted successfully' });
 };
 
 module.exports = {
