@@ -20,4 +20,6 @@ app.get('/products/:id', productsControllers.getById);
 
 app.put('/products/:id', productsControllers.updateProductById);
 
+app.delete('/products/:id', productsControllers.deleteOneProduct);
+
 app.listen(PORT, () => console.log(`listening ${PORT}`));
