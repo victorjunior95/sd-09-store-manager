@@ -40,7 +40,7 @@ const putSale = async (req, res) => {
   }
 };
 
-const deleteSale = async (req, res) => {
+const deleteSale = async (req, res, next) => {
   const { id } = req.params;
   try {
     const sale = await salesService.findSale(id);

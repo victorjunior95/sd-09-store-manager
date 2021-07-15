@@ -23,7 +23,7 @@ const updateSale = async (id, items) => {
     .then((db) => db.collection('sales').updateOne(
       { _id: id },
       { $set: { itensSold: items }},
-      { upsert: true }
+      { upsert: false }
     ));
 };
 

@@ -29,7 +29,7 @@ const updateProduct = async (id, name, quantity) => {
     .then((db) => db.collection('products').updateOne(
       {_id: id},
       {$set: { name, quantity }},
-      {upsert: true}));
+      {upsert: false}));
 };
 
 const deleteOneProduct = async (id) => {

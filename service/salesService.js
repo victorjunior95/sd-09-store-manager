@@ -34,6 +34,12 @@ const findSale =  async (id) => {
       message: 'Sale not found'
     }
   };
+  if (sale === null) throw {
+    err: { 
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'
+    }
+  };
   return sale;
 };
 
