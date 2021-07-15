@@ -1,39 +1,45 @@
 const productModel = require('../models/productModel');
 
-let objectErr = {
-  err: {
-    code: 'invalid_data',
-    message: ''
-  }
+let err = {
+  code: 'invalid_data',
+  message: ''
 };
 
-// confere de sem outro produdo igual
+// confere se tem outro produdo igual
 const checkProduct = async (name) => {
-  const selectProduct = await productModel.findProduct(name);
+  const selectProduct = await productModel.findName(name);
   if(selectProduct) {
-    objectErr.err.message = 'Product already exists';
-    return objectErr;
+    err.message = 'Product already exists';
+    return { err };
   }
 };
 
 const checkName = (name) => {
   const nameMin = 5;
   if(name.length < nameMin) {
-    objectErr.err.message = '"name" length must be at least 5 characters long';
-    return objectErr;
+    err.message = '"name" length must be at least 5 characters long';
+    return { err };
   }
 };
 
 const checkQuantity = (quantity) => {
   const minimal = 1;
   if(quantity < minimal) {
-    objectErr.err.message = '"quantity" must be larger than or equal to 1';
-    return objectErr;
+    err.message = '"quantity" must be larger than or equal to 1';
+    return { err };
   };
   if(typeof quantity !== 'number') {
-    objectErr.err.message = '"quantity" must be a number';    
-    return objectErr;
+    err.message = '"quantity" must be a number';    
+    return { err };
   };
+};
+
+const checkId = async (id) => {
+  const selectProduct = await productModel.findId(id);
+  if(!selectProduct){
+    err.message = 'Wrong id format';
+    return { err };
+  }
 };
 
 
@@ -51,6 +57,36 @@ const createProduct = async (name, quantity) => {
   return newProduct;
 };
 
+const productsList = async () => {
+  const products = await productModel.showAll();
+  return { products };
+};
+
+// procura produto por id
+const findProduct = async (id) => {
+  const validId = await checkId(id);
+  if(validId) return validId;
+
+  const product = await productModel.findId(id);
+  return product;
+};
+
+// atualiza um produto
+const updateProduct = async (id, name, quantity) => {
+
+  const validName = checkName(name);
+  if(validName) return validName;
+
+  const validQuantity = checkQuantity(quantity);
+  if(validQuantity) return validQuantity;
+
+  const newProduct = await productModel.update(id, name, quantity);
+  return newProduct;
+};
+
 module.exports = {
   createProduct,
+  productsList,
+  findProduct,
+  updateProduct,
 };
