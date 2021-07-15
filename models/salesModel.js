@@ -14,4 +14,11 @@ const createSale = async (products) => {
   return result.ops[0];
 };
 
-module.exports = { createSale, getAllSales };
+const getSaleById = async (id) => {
+  const connect = await connection();
+  const result = await connect
+    .collection('sales').findOne({_id: new ObjectId(id)});
+  return result;
+};
+
+module.exports = { createSale, getAllSales, getSaleById };
