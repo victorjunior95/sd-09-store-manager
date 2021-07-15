@@ -3,6 +3,7 @@ const {
   findSale,
   registerSales,
   deleteSale,
+  updateSale,
 } = require('../services/indexSales');
 
 const insertSales = async (req, res) => {
@@ -27,6 +28,15 @@ const findSalesById = async (req, res) => {
   res.status(code).json(message);
 };
 
+const updateSaleById = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  const { code, message } = await updateSale(id, body);
+
+  return res.status(code).json(message);
+};
+
 const deleteSaleById = async (req, res) => {
   const { id } = req.params;
 
@@ -40,4 +50,5 @@ module.exports = {
   allSales,
   findSalesById,
   deleteSaleById,
+  updateSaleById,
 };

@@ -17,6 +17,20 @@ const findSaleById = async (id) => {
     .then((db) => db.collection('sales').findOne({ _id: ObjectId(id)}));
 };
 
+const updateSaleById = async (id, itensSold) => {
+  return connection()
+    .then((db) => db.collection('sales')
+      .updateOne(
+        { _id: ObjectId(id) },
+        {
+          $set: {
+            itensSold: itensSold,
+          },
+        },
+      ))
+    .then(() => ({ _id: ObjectId(id), itensSold }));
+};
+
 const deleteById = async (id) => {
   return connection()
     .then((db) => db.collection('sales')
@@ -28,4 +42,5 @@ module.exports = {
   getAllSales,
   findSaleById,
   deleteById,
+  updateSaleById
 };

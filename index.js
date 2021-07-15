@@ -12,6 +12,7 @@ const {
   allSales,
   findSalesById,
   deleteSaleById,
+  updateSaleById,
 } = require('./controllers/salesController');
 
 // const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.delete('/products/:id', deleteById);
 app.post('/sales', insertSales);
 app.get('/sales', allSales);
 app.get('/sales/:id', findSalesById);
+app.put('/sales/:id', updateSaleById);
 app.delete('/sales/:id', deleteSaleById);
 
 // Começa o jogo

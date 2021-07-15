@@ -3,6 +3,7 @@ const {
   insertSales,
   findSaleById,
   deleteById,
+  updateSaleById,
 } = require('../models/salesModels');
 const { verifyQuantityArray } = require('./saleFormatValidator');
 const { NOT_FOUND_SALE, INVALID_SALE_ID } = require('../errors');
@@ -36,6 +37,14 @@ const findSale = async (id) => {
   return { code: 200, message: product };
 };
 
+const updateSale = async (id, body) => {
+  const formatIsValid = verifyQuantityArray(body);
+  if (formatIsValid !== true) return formatIsValid;
+  
+  const product = await updateSaleById(id, body);
+  return { code: 200, message: product };
+};
+
 const deleteSale = async (id) => {
   const { code, message } = await findSale(id);
 
@@ -51,4 +60,5 @@ module.exports = {
   findSale,
   registerSales,
   deleteSale,
+  updateSale,
 };
