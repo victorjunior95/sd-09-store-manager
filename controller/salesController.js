@@ -7,7 +7,6 @@ const not_found = 404;
 const postSale = async (req, res) => {
   try {
     const sale = await salesService.newSale(req.body);
-    if(sale.err) return res.status(unprocessable).json(sale);
     return res.status(status_ok).json(sale);
   } catch(err) {
     return res.status(unprocessable).json(err);
@@ -21,9 +20,12 @@ const getSales = async (req, res) => {
 
 const getSale = async (req, res) => {
   const { id } = req.params;
-  const sale = await salesService.findSale(id);
-  if(sale.err) return res.status(not_found).json(sale);
-  return res.status(status_ok).json(sale);
+  try {
+    const sale = await salesService.findSale(id);
+    return res.status(status_ok).json(sale);
+  } catch(err) {
+    return res.status(not_found).json(err);
+  }
 };
 
 const putSale = async (req, res) => {
@@ -31,7 +33,6 @@ const putSale = async (req, res) => {
   const itensSold = req.body;
   try {
     const sale = { id, itensSold };
-    console.log(`id no controller: ${id}`);
     await salesService.saleUpdate(id, itensSold);
     return res.status(status_ok).json(sale);
   } catch(err) {
@@ -39,4 +40,15 @@ const putSale = async (req, res) => {
   }
 };
 
-module.exports = { postSale, getSales, getSale, putSale };
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const sale = await salesService.findSale(id);
+    await salesService.deleteSaleById(id);
+    return res.status(status_ok).json(sale);
+  } catch(err) {
+    return res.status(unprocessable).json(err);
+  }
+};
+
+module.exports = { postSale, getSales, getSale, putSale, deleteSale };

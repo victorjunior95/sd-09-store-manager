@@ -32,7 +32,7 @@ const updateProduct = async (id, name, quantity) => {
       {upsert: true}));
 };
 
-const deleteOne = async (id) => {
+const deleteOneProduct = async (id) => {
   return await connection()
     .then((db) => db.collection('products')
       .deleteOne({ _id: ObjectId(id) }));
@@ -43,4 +43,4 @@ module.exports = {
   getProductByName,
   findProductById,
   updateProduct,
-  deleteOne };
+  deleteOneProduct };

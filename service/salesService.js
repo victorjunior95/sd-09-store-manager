@@ -28,13 +28,12 @@ const getAllSales = async () => {
 
 const findSale =  async (id) => {
   const sale = await salesModel.findSaleById(id);
-  if (!sale) return {
+  if (!sale) throw {
     err: { 
       code: 'not_found',
       message: 'Sale not found'
     }
   };
-
   return sale;
 };
 
@@ -48,9 +47,12 @@ const saleUpdate = async (id, items) => {
           code: 'invalid_data'
         }
       };
-      console.log(`id no service: ${id}`);
     })
   ).then(() => salesModel.updateSale(id, items));
 };
 
-module.exports = { newSale, getAllSales, findSale, saleUpdate };
+const deleteSaleById = async (id) => {
+  return await salesModel.deleteOneSale(id);
+};
+
+module.exports = { newSale, getAllSales, findSale, saleUpdate, deleteSaleById };
