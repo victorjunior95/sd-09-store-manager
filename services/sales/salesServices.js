@@ -77,8 +77,11 @@ const update = async (id, updatedSales) => {
   }
 
   try {
-    await salesModel.updateSales(id, updatedSales[0]);
-    return { _id: id, ...updatedSales[0] };
+    const resutl = await salesModel.updateSales(id, updatedSales[0]);
+
+    console.log(resutl);
+
+    return { _id: id, itensSold: [updatedSales[0]] };
   } catch (error) {
     console.log({ Erro: error.message });
   }
@@ -88,15 +91,11 @@ const deleteById = async (id) => {
   try {
     const searchedSale = await salesModel.getById(id);
 
-    console.log('searchedSale', searchedSale);
-
     if (searchedSale === null) {
       return { status: 422, code: 'invalid_data', message: 'Wrong sale ID format' };
     }
 
-    // await salesModel.deleteById(id);
-    const result = await salesModel.deleteById(id);
-    console.log(result);
+    await salesModel.deleteById(id);
 
     return { _id: id, ...searchedSale };
   } catch (error) {
