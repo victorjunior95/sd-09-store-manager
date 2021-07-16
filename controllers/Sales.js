@@ -18,8 +18,16 @@ const newSale = rescue(async (req, res) => {
   res.status(status).json(addSale);
 });
 
+const updateSale = rescue(async (req, res) => {
+  const { id } = req.params;
+  const sale = req.body;
+  const { status, updatedSale } = await Sales.updateSale(id, sale);
+  res.status(status).json(updatedSale);
+});
+
 module.exports = {
   getAll,
   findById,
-  newSale
+  newSale,
+  updateSale,
 };

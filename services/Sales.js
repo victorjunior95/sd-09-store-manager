@@ -28,6 +28,7 @@ const checkSale = (sale) => {
 
 const getAll = async () => {
   const sales = await Sales.getAll();
+  console.log(sales);
   return {
     status: 200,
     sales
@@ -52,9 +53,19 @@ const newSale = async (sale) => {
     addSale
   };
 };
+
+const updateSale = async (saleId, sale) => {
+  validateSaleQtts(sale);
+  const updatedSale = await Sales.updateSale(saleId, sale);
+  return {
+    status: 200,
+    updatedSale
+  };
+};
   
 module.exports = {
   getAll,
   findById,
   newSale,
+  updateSale,
 };

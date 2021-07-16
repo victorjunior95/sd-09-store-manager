@@ -23,6 +23,7 @@ app.post('/products', Products.create);
 app.post('/sales', Sales.newSale);
 
 app.put('/products/:id', Products.updateProduct);
+app.put('/sales/:id', Sales.updateSale);
 
 app.delete('/products/:id', Products.deleteProduct);
 
