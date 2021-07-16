@@ -22,14 +22,13 @@ const addNewSalesService = async (allSales) => {
   //     throw new Error('Wrong product ID or invalid quantity');
   //   }
   // });
-  const zero = 0;
-  const isError = allSales
-    .filter((sale) => (sale.quantity < 1 || typeof sale.quantity === 'string'));
-  isError.forEach(array => {
-    if(array.length !== zero ) throw new Error('Wrong product ID or invalid quantity');
-  });
-  await addNewSales(allSales);
-  console.log(newSales);
+  allSales
+    .filter((sale) =>{
+      if (sale.quantity < 1 || typeof sale.quantity === 'string'){
+        throw new Error('Wrong product ID or invalid quantity');
+      }
+    });
+  const newSales = await addNewSales(allSales);
   return newSales;
 };
 
