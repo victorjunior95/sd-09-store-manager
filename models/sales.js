@@ -25,8 +25,15 @@ const change = async (id, itensSold) => {
   return { _id: id, itensSold };
 };
 
+const del = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection().then((db) => db.collection('sales')
+    .deleteOne({ _id: ObjectId(id) })); 
+};
+
+
 module.exports = {
-  // del,
+  del,
   getAll,
   // findByName,
   getById,

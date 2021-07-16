@@ -4,6 +4,12 @@ const create = async (newSale) => {
   return await sales.create(newSale);
 };
 
+const del = async (id) => {
+  const sale = await sales.getById(id);
+  await sales.del(id);
+  return sale;
+};
+
 const getAll = async () => sales.getAll();
 
 const change = async (id, quantity) => {
@@ -15,9 +21,11 @@ const getById = async (id) => {
   const sale = await sales.getById(id);
   return sale;
 };
+
 module.exports = {
   getAll,
   getById,
   create,
+  del,
   change,
 };

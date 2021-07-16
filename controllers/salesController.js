@@ -58,53 +58,29 @@ const change = async (req, res) => {
   }
 };
 
-// const getById = async (req, res) => {
-//   const { id } = req.params;
-//   const product = await productsServices.getById(id);
-//   if (product !== null) {
-//     return res.status(STATUS_200).send(product);
-//   } else {
-//     res.status(STATUS_422).json({
-//       err: {
-//         code: 'invalid_data',
-//         message: 'Wrong id format',
-//       },
-//     });
-//   }
-// };
+const del = async (req, res) => {
+  const { id } = req.params;
+  const sale = await salesServices.del(id);
+  if (sale !== null) {
+    return res.status(STATUS_200).send(sale);
+  } else {
+    res.status(STATUS_422).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      },
+    });
+  }
+};
 
-// const del = async (req, res) => {
-//   const { id } = req.params;
-//   const product = await productsServices.del(id);
-//   if (product !== null) {
-//     return res.status(STATUS_200).send(product);
-//   } else {
-//     res.status(STATUS_422).json({
-//       err: {
-//         code: 'invalid_data',
-//         message: 'Wrong id format',
-//       },
-//     });
-//   }
-// };
-
-// const change = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, quantity } = req.body;
-//     const product = await productsServices.change(id, name, quantity);
-//     res.status(STATUS_200).send(product);
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
 
 
 
 module.exports = {
-  // del,
+  del,
   getById,
   change,
   getAll,
   create,
+
 };
