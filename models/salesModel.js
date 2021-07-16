@@ -33,10 +33,28 @@ const getSalesById = async (id) => {
   return data;
 };
 
+const upDateSale = async ({ id, itensSold }) => {
+  const newData = await connection().then((db) => 
+    db.collection(salesCollection).updateOne(
+      { _id: ObjectId(id) },
+      { $set: { itensSold } },
+    )
+  );
+  return { _id: id, itensSold };
+};
+
+const deleteSale = async (id) => {
+  const deletedData = await connection().then((db) => 
+    db.collection(salesCollection).deleteOne({ _id: ObjectId(id) })
+  );
+  return deletedData;
+};
 
 module.exports = {
   postNewSales,
   getAllSales,
   getSalesById,
   checkIfSalesExist,
+  upDateSale,
+  deleteSale,
 };

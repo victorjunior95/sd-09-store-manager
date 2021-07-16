@@ -21,7 +21,23 @@ const getSales = async (req, res) => {
   return res.status(HTTP_OK_STATUS).send(salesById);
 };
 
+const upDateSale = async (req, res) => {
+  const itensSold = req.body;
+  const { id } = req.params;
+
+  const saleUpDated = await salesService.upDateSale({ id, itensSold });
+  return res.status(HTTP_OK_STATUS).send(saleUpDated);
+};
+
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+  const saleDeleted = await salesService.deleteSale(id);
+  return res.status(HTTP_OK_STATUS).send(saleDeleted);
+};
+
 module.exports = {
   postNewSale,
   getSales,
+  upDateSale,
+  deleteSale,
 };
