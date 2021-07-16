@@ -1,5 +1,8 @@
 const salesModels = require('../../models/Sales');
-const { validateQuantity } = require('../salesServices/validateQuantity');
+const {
+  validateQuantity,
+  validateUpdatedSaleQuantity
+} = require('../salesServices/validateQuantity');
 const { validateFoundId } = require('../salesServices/validateFoundId');
 
 const insertOneSale = async (productsSold) => {
@@ -26,8 +29,16 @@ const getOneSaleById = async (id) => {
   return saleById;
 };
 
+const updateOneSale = async (id, productId, quantity) => {
+  const updatedSale = await salesModels.updateOneSale(id, productId, quantity);
+  const validateUpdatedSaleQuantityErr = validateUpdatedSaleQuantity(quantity);
+  if (validateUpdatedSaleQuantityErr) return validateUpdatedSaleQuantityErr;
+  return updatedSale;
+};
+
 module.exports = {
   insertOneSale,
   getAllSales,
-  getOneSaleById
+  getOneSaleById,
+  updateOneSale
 };

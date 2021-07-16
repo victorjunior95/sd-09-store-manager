@@ -26,8 +26,19 @@ const getOneSaleById = async (req, res) => {
   return res.status(okay).json(saleById);
 };
 
+const updateOneSale = async (req, res) => {
+  const { id } = req.params;
+  const { productId, quantity } = req.body[0];
+  const updatedSale = await salesServices.updateOneSale(id, productId, quantity);
+  if (updatedSale.err) {
+    return res.status(unprocessableEntity).json(updatedSale);
+  }
+  return res.status(okay).json(updatedSale);
+};
+
 module.exports = {
   insertOneSale,
   getAllSales,
-  getOneSaleById
+  getOneSaleById,
+  updateOneSale
 };
