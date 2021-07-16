@@ -17,7 +17,7 @@ const productExists = async ({ name }) => {
   };
 };
 
-const productId = async ({ id }) => {
+const productId = async (id) => {
   if (!ObjectID.isValid(id)) throw {
     code: 'invalid_data', message: 'Wrong id format'
   };
@@ -32,13 +32,13 @@ const sale = async (itensSold) => {
   };
 };
 
-const saleExists = async ({ id }) => {
+const saleExists = async (id) => {
   if (!ObjectID.isValid(id)) throw {
     code: 'not_found', message: 'Sale not found'
   };
 };
 
-const saleId = async ({ id }) => {
+const saleId = async (id) => {
   if (!ObjectID.isValid(id)) throw {
     code: 'invalid_data', message: 'Wrong sale ID format'
   };
