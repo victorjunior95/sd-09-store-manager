@@ -17,7 +17,7 @@ app.get('/products', rescue(productController.fetchProducts));
 app.get('/products/:id', rescue(productController.findById));
 
 app.get('/sales', rescue(salesController.fetchSales));
-app.get('/sales:id', rescue(salesController.findById));
+app.get('/sales/:id', rescue(salesController.findById));
 
 app.post('/products', rescue(productController.createProduct));
 app.post('/sales', rescue(salesController.newSale));
