@@ -1,15 +1,17 @@
 const model = require('../models/Sales');
 
 function saleValidation(sale) {
-  if (sale.quantity < 1 || typeof sale.quantity !== 'number') {
-    throw {
-      status: 422,
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong product ID or invalid quantity',
-      }
+  sale.forEach((sale) => {
+    if (sale.quantity < 1 || typeof sale.quantity !== 'number') {
+      throw {
+        status: 422,
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong product ID or invalid quantity',
+        },
+      };
     };
-  }
+  });
 }
 
 function findSale(sale) {
