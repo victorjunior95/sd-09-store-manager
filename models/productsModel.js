@@ -3,7 +3,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 const registerNewProduct = async (product) => {
   const newProduct = await mongoConnection().then((db) => {
-    return db.collection('Products').insertOne(product)
+    return db.collection('products').insertOne(product)
       .then(newProduct => newProduct.ops[0]);
   });
 
@@ -12,14 +12,14 @@ const registerNewProduct = async (product) => {
 
 const getProducts = async () => {
   return await mongoConnection().then(db => 
-    db.collection('Products').find().toArray()
+    db.collection('products').find().toArray()
   );
 };
 
 const getProductById = async (id) => {
   if(!ObjectId.isValid(id)){return null;}
   const product = await mongoConnection().then(db => 
-    db.collection('Products').find({_id:ObjectId(id)}).toArray()
+    db.collection('products').find({_id:ObjectId(id)}).toArray()
   );
   return product[0];
 };
