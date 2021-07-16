@@ -43,4 +43,23 @@ const getProductById = async (id) => {
   return {message: errorObject(code, message), status: 422};
 };
 
-module.exports = { registerNewProduct, getProducts, getProductById };
+const updateProductById = async (id, newDataProduct) => {
+  //  Validations
+  if(newDataProduct.name.length <= MIN_NUMB_LENGTH){
+    const code = 'invalid_data';
+    const message = '"name" length must be at least 5 characters long';
+    return {message: errorObject(code, message), status: 422};}
+  if(newDataProduct.quantity <= MIN_PRODUCT_QUANTITY){
+    const code = 'invalid_data';
+    const message = '"quantity" must be larger than or equal to 1';
+    return {message: errorObject(code, message), status: 422};}
+  if(typeof newDataProduct.quantity !== 'number'){
+    const code = 'invalid_data';
+    const message = '"quantity" must be a number';
+    return {message: errorObject(code, message), status: 422};}
+
+  const updatedProduct = await productModel.updateProductById(id, newDataProduct);
+  return {message: updatedProduct, status: 200};
+};
+
+module.exports = { registerNewProduct, getProducts, getProductById, updateProductById };
