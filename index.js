@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const rescue = require('express-rescue');
 const bodyParser = require('body-parser').json();
-const controller = require('./controllers/Products');
+const productController = require('./controllers/Products');
+const salesController = require('./controllers/Sales');
 const PORT = 3000;
 
 app.use(bodyParser);
@@ -12,11 +13,13 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/products', rescue(controller.fetchProducts));
-app.get('/products/:id', rescue(controller.findById));
-app.post('/products', rescue(controller.createProduct));
-app.put('/products/:id', rescue(controller.updateProduct));
-app.delete('/products/:id', rescue(controller.deleteProduct));
+app.get('/products', rescue(productController.fetchProducts));
+app.get('/products/:id', rescue(productController.findById));
+app.post('/products', rescue(productController.createProduct));
+app.put('/products/:id', rescue(productController.updateProduct));
+app.delete('/products/:id', rescue(productController.deleteProduct));
+
+app.post('/sales', rescue(salesController.newSale));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
