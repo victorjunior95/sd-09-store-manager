@@ -15,7 +15,7 @@ function dataValidation(data) {
 }
 
 async function nameValidation(name) {
-  const nameExists = await ProductModel.getByName(name);
+  const nameExists = await ProductModel.getDataByName(name);
   if (nameExists) {
     throw ({ code: 'invalid_data', message: 'Product already exists' });
   }
@@ -30,18 +30,18 @@ function idValidation(id) {
 async function createData(data) {
   dataValidation(data);
   await nameValidation(data.name);
-  const result = await ProductModel.create(data);
+  const result = await ProductModel.createData(data);
   return result;
 }
 
 async function getAllData() {
-  const result = await ProductModel.getAll();
+  const result = await ProductModel.getAllData();
   return result;
 }
 
 async function getDataById(id) {
   idValidation(id);
-  const result = await ProductModel.getById(new ObjectId(id));
+  const result = await ProductModel.getDataById(new ObjectId(id));
   if (!result) {
     throw ({ code: 'not_found', message: 'Product not found' });
   }
@@ -51,7 +51,7 @@ async function getDataById(id) {
 async function updateDataById(id, data) {
   idValidation(id);
   dataValidation(data);
-  const result = await ProductModel.updateById(new ObjectId(id), data);
+  const result = await ProductModel.updateDataById(new ObjectId(id), data);
   if (!result) {
     throw ({ code: 'not_found', message: 'Product not found' });
   }
@@ -60,7 +60,7 @@ async function updateDataById(id, data) {
 
 async function deleteDataById(id) {
   idValidation(id);
-  const result = await ProductModel.deleteById(new ObjectId(id));
+  const result = await ProductModel.deleteDataById(new ObjectId(id));
   if (!result) {
     throw ({ code: 'not_found', message: 'Product not found' });
   }
@@ -68,7 +68,7 @@ async function deleteDataById(id) {
 }
 
 async function checkDataStock(id, saleQuantity) {
-  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
   if (saleQuantity > quantity) {
     throw ({
       code: 'stock_problem',
@@ -78,15 +78,15 @@ async function checkDataStock(id, saleQuantity) {
 }
 
 async function increaseDataQuantity(id, saleQuantity) {
-  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
   const newQuantity = Number(quantity) + Number(saleQuantity);
-  await ProductModel.updateQuantity(new ObjectId(id), newQuantity);
+  await ProductModel.updateDataQuantity(new ObjectId(id), newQuantity);
 }
 
 async function deacreaseDataQuantity(id, saleQuantity) {
-  const { quantity } = await ProductModel.getById(new ObjectId(id));
+  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
   const newQuantity = Number(quantity) - Number(saleQuantity);
-  await ProductModel.updateQuantity(new ObjectId(id), newQuantity);
+  await ProductModel.updateDataQuantity(new ObjectId(id), newQuantity);
 }
 
 
