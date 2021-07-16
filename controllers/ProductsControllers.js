@@ -3,7 +3,8 @@ const {
   createService,
   getAllService,
   findByIdService,
-  updateProductData
+  updateProductData,
+  deleteProductService
 } = require('../services/ProductsService');
 
 const ProductsRouter = express.Router();
@@ -47,6 +48,16 @@ ProductsRouter.put('/:id', async (req, res) => {
   if(productUpdated.err) return res.status(numberStatusErr).json(productUpdated);
 
   return res.status(numberStatusOk).json({_id: id, name, quantity});
+});
+
+ProductsRouter.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const productDeleted = await deleteProductService(id);
+
+  if(productDeleted.err) return res.status(numberStatusErr).json(productDeleted);
+
+  return res.status(numberStatusOk).json(productDeleted);
 });
 
 module.exports = ProductsRouter;
