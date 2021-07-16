@@ -27,7 +27,18 @@ const getSales = async () => {
   return {message: {'sales': sales}, status: 200};
 };
 
+const getSaleById = async (id) => {
+  const sale = await salesModel.getSaleById(id);
+  if(!sale){
+    const code = 'not_found';
+    const message = 'Sale not found';
+    return {message: errorObject(code, message), status: 404};
+  }
+  return {message: sale, status: 200};
+};
+
 module.exports = {
   registerSale,
-  getSales
+  getSales,
+  getSaleById
 };
