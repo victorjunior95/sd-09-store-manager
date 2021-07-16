@@ -44,7 +44,7 @@ const editSale = async ({id, itensSold}) => {
 };
 const deleteSale = async (id) => {
   const sale = await SalesModel.deleteSale(id);
-  await increaseQuantities();
+  await increaseQuantities(sale.itensSold);
   return sale;
 };
 

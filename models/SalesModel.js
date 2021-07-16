@@ -42,8 +42,8 @@ const editSale = async ({id, itensSold}) => {
 
 const deleteSale = async (id) => {
   const deleted = await connection()
-    .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
-  return deleted;
+    .then((db) => db.collection('sales').findOneAndDelete({ _id: ObjectId(id) }));
+  return deleted.value;
 };
 
 module.exports = {

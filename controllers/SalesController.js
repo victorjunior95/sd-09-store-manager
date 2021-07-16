@@ -32,10 +32,9 @@ const editSale = async (req, res,) => {
 
 const deleteSale = async (req, res) => {
   const { id } = req.params;
+  const { sale } = await SalesService.deleteSale(id);
 
-  const deleteProduct = await SalesService.deleteSale(id);
-
-  return res.status(HTTP_OK_STATUS).send(deleteProduct);
+  return res.status(HTTP_OK_STATUS).send(sale);
 };
 
 module.exports = {
