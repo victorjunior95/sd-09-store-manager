@@ -39,6 +39,6 @@ module.exports = {
   notImplemented: 501,
   badGateway: 502,
   serviceUnavailable: 503,
-  gatewayTimeOut: 504,
+
   HTTPVersionNotSupported: 505,
 };
