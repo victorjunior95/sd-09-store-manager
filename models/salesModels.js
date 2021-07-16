@@ -1,4 +1,5 @@
 const connection = require('./connection');
+const { ObjectID } = require('mongodb');
 
 const registerSales = async (salesArray) => {
   const sales = await connection()
@@ -32,7 +33,7 @@ const deleteSale = async (id) => {
   console.log(id);
   const sale = await listSaleId(id);
   return await connection()
-    .then((db) => db.collection('sales').deleteOne({ _id: id }))
+    .then((db) => db.collection('sales').deleteOne({ _id: ObjectID(id) }))
     .then(() => sale);
 
 };

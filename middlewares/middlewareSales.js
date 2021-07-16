@@ -22,11 +22,11 @@ const validaQuantidade = (req, res, next) => {
 };
 
 const validaIdSale = (req, res, next) => {
-  const { id } = req.param;
+  const { id } = req.params;
   try{
     ObjectID(id);
   } catch(_err){
-    return res.status(HTTP_NOT_FOUND).json({
+    return res.status(HTTP_UNPROCESS_CLIENT).json({
       err: { 
         code: 'invalid_data',
         message: 'Wrong sale ID format',

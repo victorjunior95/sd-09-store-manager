@@ -26,7 +26,7 @@ const editSale = async (id, products) => {
 };
 
 const deleteSale = (id) => {
-  return salesModel.deleteSale(ObjectID(id));
+  return salesModel.deleteSale(id);
 };
 
 module.exports = {
