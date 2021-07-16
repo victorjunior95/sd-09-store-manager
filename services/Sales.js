@@ -14,6 +14,36 @@ const validateSaleQtts = (sale) => {
   });
 };
 
+const checkSale = (sale) => {
+  if (!sale) {
+    throw {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found'
+      },
+      status: 404,
+    };
+  }
+};
+
+const getAll = async () => {
+  const sales = await Sales.getAll();
+  return {
+    status: 200,
+    sales
+  };
+};
+
+const findById = async (id) => {
+  const sale = await Sales.findById(id);
+  checkSale(sale);
+  return {
+    status: 200,
+    sale
+  };
+};
+
+
 const newSale = async (sale) => {
   validateSaleQtts(sale);
   const addSale = await Sales.newSale(sale); 
@@ -24,5 +54,7 @@ const newSale = async (sale) => {
 };
   
 module.exports = {
+  getAll,
+  findById,
   newSale,
 };
