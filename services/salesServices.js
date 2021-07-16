@@ -22,6 +22,12 @@ const registerSale = async (sale) => {
   return {message: salesRegistered, status: 200};
 };
 
+const getSales = async () => {
+  const sales = await salesModel.getSales();
+  return {message: {'sales': sales}, status: 200};
+};
+
 module.exports = {
-  registerSale
+  registerSale,
+  getSales
 };
