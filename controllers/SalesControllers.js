@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  addNewSalesService, findByIdService
+  addNewSalesService, findByIdService, getAllService, updateSaleService
 } = require('../services/SalesService');
 
 const SalesRouter = express.Router();
@@ -14,20 +14,28 @@ const objErrorToReturn = {
   },
 };
 
-// SalesRouter.get('/', async (_req, res) => {
+const objNotFound = {
+  err: {
+    code: 'not_found',
+    message: 'Sale not found',
+  },
+};
 
-//   const sales = await getAllService();
-//   return res.status(numberStatusOk).json({ sales });
-// });
 
-// SalesRouter.get('/:id', async (req, res) => {
-//   const { id } = req.params;
+SalesRouter.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const numberErr404 = 404;
+  const sale = await findByIdService(id);
+  if(!sale) return res.status(numberErr404).json(objNotFound);
 
-//   const product = await findByIdService(id);
-//   if(product.err) return res.status(numberStatusErr).json(product);
+  return res.status(numberStatusOk).json(sale);
+});
 
-//   return res.status(numberStatusOk).json(product);
-// });
+SalesRouter.get('/', async (_req, res) => {
+
+  const sales = await getAllService();
+  return res.status(numberStatusOk).json({ sales });
+});
 
 
 SalesRouter.post('/', async (req, res) => {
@@ -38,6 +46,23 @@ SalesRouter.post('/', async (req, res) => {
   } catch (err) {
     return res.status(numberStatusErr).json(objErrorToReturn);
   }
+});
+
+SalesRouter.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { productId , quantity } = req.body[0];
+
+  const saleUpdate = await updateSaleService(id, quantity);
+
+  if(!saleUpdate) return res.status(numberStatusErr).json(objErrorToReturn);
+
+  const itensSold = [
+    {
+      productId,
+      quantity
+    }
+  ];
+  return res.status(numberStatusOk).json({_id: id, itensSold });
 });
 
 
