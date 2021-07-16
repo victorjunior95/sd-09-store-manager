@@ -1,5 +1,10 @@
 const express = require('express');
-const { createService, getAllService, findByIdService, updateProductData } = require('../services/ProductsService');
+const {
+  createService,
+  getAllService,
+  findByIdService,
+  updateProductData
+} = require('../services/ProductsService');
 
 const ProductsRouter = express.Router();
 const numberStatusOk = 200;
