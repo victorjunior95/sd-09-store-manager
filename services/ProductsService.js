@@ -28,9 +28,21 @@ const addProduct = async (name, quantity) => {
   return product;
 };
 
+const decreaseQuantity = async (id, quantity) => {
+  const product = await ProductsModel.getProductById(id);
+  const newQuantity = product.quantity - quantity;
+  await ProductsModel.updateQuantity(id, newQuantity);
+};
 
+const increaseQuantity = async (id, quantity) => {
+  const product = await ProductsModel.getProductById(id);
+  const newQuantity = product.quantity + quantity;
+  await ProductsModel.updateQuantity(id, newQuantity);
+};
 
 module.exports = {
+  decreaseQuantity,
+  increaseQuantity,
   deleteProduct,
   updateProduct,
   getProductById,
