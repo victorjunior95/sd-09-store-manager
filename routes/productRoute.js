@@ -14,5 +14,7 @@ productRoute.get('/:id', productController.findProductById);
 // atualiza produto
 productRoute.put('/:id', productController.updateProductData);
 
+// deleta produto
+productRoute.delete('/:id', productController.deleteProductData);
 
 module.exports = productRoute;

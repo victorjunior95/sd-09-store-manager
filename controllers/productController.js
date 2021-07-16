@@ -5,8 +5,8 @@ const stateOk = 200;
 
 const createNewProduct = async (req, res, _next) => {
   const { name, quantity } = req.body;
-  const newProduct = await productService.createProduct(name, quantity);
   const stateCreated = 201;
+  const newProduct = await productService.createProduct(name, quantity);
 
   if(newProduct.err) return res.status(stateFail).json(newProduct);
 
@@ -31,14 +31,20 @@ const findProductById = async (req, res, _next) => {
 const updateProductData = async (req, res, _next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
-
-
   const updatedProduct = await productService.updateProduct(id, name, quantity);
 
   if(updatedProduct.err) return res.status(stateFail).json(updatedProduct);
 
-
   return res.status(stateOk).json(updatedProduct);
+};
+
+const deleteProductData = async (req, res, _next) => {
+  const { id } = req.params;
+  const deletedProduct = await productService.deleteProduct(id);
+
+  if(deletedProduct.err) return res.status(stateFail).json(deletedProduct);
+
+  return res.status(stateOk).json(deletedProduct)
 };
 
 module.exports = {
@@ -46,4 +52,5 @@ module.exports = {
   listAllProducts,
   findProductById,
   updateProductData,
+  deleteProductData,
 };

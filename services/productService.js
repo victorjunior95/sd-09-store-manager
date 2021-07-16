@@ -71,9 +71,7 @@ const findProduct = async (id) => {
   return product;
 };
 
-// atualiza um produto
 const updateProduct = async (id, name, quantity) => {
-
   const validName = checkName(name);
   if(validName) return validName;
 
@@ -84,9 +82,19 @@ const updateProduct = async (id, name, quantity) => {
   return newProduct;
 };
 
+const deleteProduct = async (id) => {
+
+  const selectProduct = await findProduct(id);
+  if(selectProduct.err) return selectProduct;
+  
+  const product = await productModel.drop(id);
+  return product && selectProduct;
+};
+
 module.exports = {
   createProduct,
   productsList,
   findProduct,
   updateProduct,
+  deleteProduct,
 };

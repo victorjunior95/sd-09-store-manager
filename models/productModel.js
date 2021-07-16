@@ -1,6 +1,8 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
+const hexValue = 24;
+
 const findName = async (name) => {
   const product = await connection()
     .then((db) => db.collection('products').findOne({ name }));
@@ -23,7 +25,6 @@ const showAll = async () => {
 };
 
 const findId = async (id) => {
-  const hexValue = 24;
   if(id.length !== hexValue) return null;
 
   const product = await connection()
@@ -33,7 +34,6 @@ const findId = async (id) => {
 };
 
 const update = async (id, name, quantity) => {
-
   const product = await connection()
     .then((db) => db.collection('products')
       .updateOne({ _id: new ObjectId(id) }, { $set: { name, quantity } } ));
@@ -41,10 +41,16 @@ const update = async (id, name, quantity) => {
   const revisonProduct = await connection()  
     .then((db) => db.collection('products').findOne({ name }));
 
-
   return product && revisonProduct;
 };
 
+// apaga produto
+const drop = async (id) => {
+  const product = await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id)}));
+
+  return product;
+};
 
 module.exports = {
   create,
@@ -52,4 +58,5 @@ module.exports = {
   showAll,
   findId,
   update,
+  drop,
 };

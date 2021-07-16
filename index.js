@@ -12,6 +12,7 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
+// rota inicial de produtos
 app.use('/products', productRoute);
 
 app.listen(PORT, () => console.log(`funfando in the door ${PORT}`));
