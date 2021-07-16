@@ -35,9 +35,33 @@ const findById = async (id) => {
     .then(db => db.collection('sales').findOne(ObjectId(id)));
 };
 
+const update = async (id, items) => {
+  if (!ObjectId.isValid(id)) {
+    return false;
+  };
+  const updateProduct = await connection()
+    .then(db => 
+      db
+        .collection('sales')
+        .findOneAndUpdate({_id: ObjectId(id)}, 
+          {$set: {itensSold: [{productId: items.productId, quantity: items.quantity}]}})
+    );
+  return (updateProduct.value);
+};
+
+const deleteSaleById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    return false;
+  };
+  return await connection()
+    .then(db => db.collection('sales').deleteOne({_id: ObjectId(id)}));
+};
+
 module.exports = {
   create,
   validateProduct,
   findAll,
-  findById
+  findById,
+  update,
+  deleteSaleById,
 };

@@ -43,8 +43,39 @@ const getSales = async (_req, res) => {
   return res.status(OK).json({sales: getSale});
 };
 
+const updateSale = async (req, res) => {
+  const items = req.body;
+  const {id} = req.params;
+  const updateSale = await salesService.updateSale(id, items);
+  if(!updateSale){
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity'
+      }
+    });
+  }
+  return res.status(OK).json(updateSale);
+};
+
+const deleteSale = async (req, res) => {
+  const {id} = req.params;
+  const deleteSale = await salesService.deleteSale(id);
+  if(!deleteSale){
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format'
+      }
+    });
+  }
+  return res.status(OK).json(deleteSale);
+};
+
 module.exports = {
   newSale,
   getSaleById,
   getSales,
+  updateSale,
+  deleteSale,
 };
