@@ -1,6 +1,5 @@
 const express = require('express');
 const saleController = require('../controllers/saleController');
-const productRoute = require('./productRoute');
 const saleRoute = express.Router();
 
 // cria nova vendas
