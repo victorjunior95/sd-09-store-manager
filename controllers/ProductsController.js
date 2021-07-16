@@ -20,7 +20,7 @@ const updateProduct = async (req, res, _next) => {
   const product = await ProductsService.updateProduct({id, name, quantity});
 
   if (product) {
-    return res.status(HTTP_OK_STATUS).send({ id, name, quantity });
+    return res.status(HTTP_OK_STATUS).send({ name, quantity, id });
   }
 };
 

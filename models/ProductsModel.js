@@ -8,7 +8,7 @@ const deleteProduct = async (id) => {
   if (deleted) return deleted;
 };
 
-const updateProduct = async (id, name, quantity) => {
+const updateProduct = async ({id, name, quantity}) => {
   const product = await connection()
     .then((db) => db.collection('products')
       .updateOne({_id: ObjectId(id)},
