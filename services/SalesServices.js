@@ -8,9 +8,9 @@ const MIN_QUANTITY_ALLOWED = 0;
 
 const validateProductSale = async (product) => {
   const productFound = await ProductsServices.getById(product.productId);
-  const outOfStock = (
+  const outOfStock = productFound ? (
     (productFound.quantity - product.quantity) < MIN_QUANTITY_ALLOWED
-  );
+  ) : true;
   return { productNotFound: !productFound, outOfStock };
 };
 

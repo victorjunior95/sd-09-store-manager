@@ -21,7 +21,7 @@ describe('Testando models', () => {
     sinon.stub(MongoClient, 'connect').resolves(connectionMock);
   });
 
-  after(() => {
+  after(async () => {
     MongoClient.connect.restore();
   });
 
