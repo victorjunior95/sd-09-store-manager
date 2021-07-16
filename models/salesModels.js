@@ -7,6 +7,21 @@ const registerSales = async (salesArray) => {
   return sales.ops[0];
 };
 
+const listAll = async () => {
+  const sales = await connection()
+    .then((db) => db.collection('sales').find().toArray());
+  return sales;
+};
+
+const listSaleId = async (id) => {
+  const sale = await connection()
+    .then((db) => db.collection('sales').findOne({ _id: id }));
+
+  return sale;
+};
+
 module.exports = {
   registerSales,
+  listAll,
+  listSaleId,
 };

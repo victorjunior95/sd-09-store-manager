@@ -19,6 +19,22 @@ const validaQuantidade = (req, res, next) => {
   }
   next();
 };
+
+const validaIdParams = (req, res, next) => {
+  const { id } = req.params;
+  try{
+    ObjectID(id);
+  } catch(_err){
+    return res.status(HTTP_UNPROCESS_CLIENT).json({
+      err: { 
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    });
+  }
+  next();
+};
+
 const validaId = (req, res, next) => {
   const sales = req.body; 
   const zero = 0;
@@ -41,4 +57,5 @@ const validaId = (req, res, next) => {
 module.exports = {
   validaQuantidade,
   validaId,
+  validaIdParams,
 };

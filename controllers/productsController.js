@@ -19,7 +19,7 @@ ProductsRouter.get('/:id',
     const product = await productsService.listProductId(id);
     return res.status(HTTP_OK_STATUS).json(product);
   });
-
+  
 ProductsRouter.put('/:id',
   productsMiddlewares.validaId,
   productsMiddlewares.validaName,
