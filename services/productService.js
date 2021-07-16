@@ -11,7 +11,7 @@ const checkProduct = async (name) => {
   if(selectProduct) {
     err.message = 'Product already exists';
     return { err };
-  }
+  };
 };
 
 const checkName = (name) => {
@@ -19,7 +19,7 @@ const checkName = (name) => {
   if(name.length < nameMin) {
     err.message = '"name" length must be at least 5 characters long';
     return { err };
-  }
+  };
 };
 
 const checkQuantity = (quantity) => {
@@ -36,10 +36,10 @@ const checkQuantity = (quantity) => {
 
 const checkId = async (id) => {
   const selectProduct = await productModel.findId(id);
-  if(!selectProduct){
+  if(!selectProduct) {
     err.message = 'Wrong id format';
     return { err };
-  }
+  };
 };
 
 
