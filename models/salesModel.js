@@ -26,8 +26,23 @@ const getSaleById = async (id) => {
   console.log(sale[0]);
   return sale[0];
 };
+
+const updateSaleById = async (id, newData) => {
+  if(!ObjectId.isValid(id)){return null;}
+  const updatedSale = await mongoConnection().then(db => 
+    db.collection('sales').findOneAndUpdate(
+      { _id : ObjectId(id) },
+      { $set: {'itensSold': [newData]}},
+      {returnOriginal: false}
+    )
+  );
+  console.log(updatedSale.value);
+  return updatedSale.value;
+};
+
 module.exports = {
   registerSale,
   getSales,
-  getSaleById
+  getSaleById,
+  updateSaleById
 };
