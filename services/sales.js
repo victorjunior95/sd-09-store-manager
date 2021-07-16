@@ -1,13 +1,21 @@
 const sales = require('../models/sales');
+const productStock = require('../models/products');
 
 const create = async (newSale) => {
-  return await sales.create(newSale);
+  const ret =  await sales.create(newSale);
+  newSale.forEach(async (item) => {
+    await productStock.subtractQuantity(item.productId, item.quantity);
+  });
+  return ret;
 };
 
 const del = async (id) => {
-  const sale = await sales.getById(id);
-  await sales.del(id);
-  return sale;
+  const saleid = await sales.getById(id);
+  const delSale = await sales.del(id);
+  saleid.itensSold.forEach(async (item) => {
+    await productStock.sumQuantity(item.productId, item.quantity);
+  });
+  return delSale;
 };
 
 const getAll = async () => sales.getAll();

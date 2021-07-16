@@ -45,7 +45,23 @@ const findByName = async (name) => {
   return existeProduct;
 };
 
+const subtractQuantity = async (id, quantity) => await connection()
+  .then((db) => db.collection('products')
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: - quantity } }
+    ));
+
+const sumQuantity = async (id, quantity) => await connection()
+  .then((db) => db.collection('products')
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: quantity } },
+    ));
+
 module.exports = {
+  subtractQuantity,
+  sumQuantity,
   del,
   getAll,
   findByName,
