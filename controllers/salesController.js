@@ -66,7 +66,8 @@ const del = async (req, res) => {
   };
   const { id } = req.params;
   const sale = await salesServices.del(id);
-  if (sale === ret) {
+  console.log(JSON.stringify(sale) !== JSON.stringify(ret));
+  if (JSON.stringify(sale) !== JSON.stringify(ret)) {
     return res.status(STATUS_200).send(sale);
   } else {
     res.status(STATUS_422).json({

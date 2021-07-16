@@ -338,11 +338,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
       .expect('status', 404)
       .then((responseOne) => {
         const { body } = responseOne;
-        console.log(body, 'bodyaqui')
         const responseError = JSON.parse(body);
-        console.log(responseError, 'reponseaqui');
-        console.log(responseError.err.code, 'expect1');
-        console.log(responseError.err.message, 'expect2');
         expect(responseError.err.code).toEqual('not_found');
         expect(responseError.err.message).toEqual('Sale not found');
       });
