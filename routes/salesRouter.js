@@ -10,6 +10,7 @@ router.route('/')
 
 router.route('/:id')
   .get(salesController.findOne)
-  .put(salesController.updateSale);
+  .put(salesController.updateSale)
+  .delete(salesController.deleteSale);
 
 module.exports = router;

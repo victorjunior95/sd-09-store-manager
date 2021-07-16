@@ -84,9 +84,30 @@ const update = async (id, updatedSales) => {
   }
 };
 
+const deleteById = async (id) => {
+  try {
+    const searchedSale = await salesModel.getById(id);
+
+    console.log('searchedSale', searchedSale);
+
+    if (searchedSale === null) {
+      return { status: 422, code: 'invalid_data', message: 'Wrong sale ID format' };
+    }
+
+    // await salesModel.deleteById(id);
+    const result = await salesModel.deleteById(id);
+    console.log(result);
+
+    return { _id: id, ...searchedSale };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   create,
   findAll,
   findById,
   update,
+  deleteById,
 };
