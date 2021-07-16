@@ -26,9 +26,20 @@ const checkSale = (sale) => {
   }
 };
 
+const validateDeletedSale = (sale) => {
+  if (!sale) {
+    throw {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format'
+      },
+      status: 422,
+    };
+  }
+};
+
 const getAll = async () => {
   const sales = await Sales.getAll();
-  console.log(sales);
   return {
     status: 200,
     sales
@@ -62,10 +73,21 @@ const updateSale = async (saleId, sale) => {
     updatedSale
   };
 };
+
+const deleteSale = async (id) => {
+  const result = await Sales.deleteSale(id);
+  console.log(result);
+  validateDeletedSale(result);
+  return {
+    status: 200,
+    result
+  };
+};
   
 module.exports = {
   getAll,
   findById,
   newSale,
   updateSale,
+  deleteSale
 };

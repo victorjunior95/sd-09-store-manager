@@ -26,6 +26,7 @@ app.put('/products/:id', Products.updateProduct);
 app.put('/sales/:id', Sales.updateSale);
 
 app.delete('/products/:id', Products.deleteProduct);
+app.delete('/sales/:id', Sales.deleteSale);
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;

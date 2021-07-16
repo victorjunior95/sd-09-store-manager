@@ -28,7 +28,13 @@ const updateSale = async (saleId, sale) => {
         { _id: ObjectId(saleId) },
         { $set: { itensSold: sale }}))
     .then(() => ({ _id: saleId, itensSold: sale}));
+};
 
+const deleteSale = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection()
+    .then((db) => db.collection('sales').findOneAndDelete({ _id: ObjectId(id)}))
+    .then((result) => result.value);
 };
 
 module.exports = {
@@ -36,4 +42,5 @@ module.exports = {
   findById,
   newSale,
   updateSale,
+  deleteSale,
 };
