@@ -18,6 +18,16 @@ SalesRouter.get('/:id',
     return res.status(HTTP_OK_STATUS).json(sale);
   });
 
+SalesRouter.put('/:id',
+  salesMiddlewares.validaId,
+  salesMiddlewares.validaQuantidade,
+  async (req, res) => {
+    const { id } = req.params;
+    const [...products] = req.body;
+    const product = await salesService.editSale(id, products);
+    return res.status(HTTP_OK_STATUS).json(product);
+  });
+
 SalesRouter.post('/',
   salesMiddlewares.validaId,
   salesMiddlewares.validaQuantidade,

@@ -20,8 +20,17 @@ const listSaleId = async (id) => {
   return sale;
 };
 
+const editSale = async (id, productId, quantity) => {
+  const saleEdited = await connection()
+    .then((db) => db.collection('sales').updateOne({ _id: id },
+      { $set: { 'itensSold.$[item].quantity': quantity } },
+      { arrayFilters: [{'item.productId': productId}]}));
+  return saleEdited;
+};
+
 module.exports = {
   registerSales,
   listAll,
   listSaleId,
+  editSale,
 };
