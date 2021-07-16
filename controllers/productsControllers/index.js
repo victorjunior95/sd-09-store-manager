@@ -39,7 +39,6 @@ const updateProductById = async (req, res) => {
 const deleteOneProduct = async (req, res) => {
   const { id } = req.params;
   const productById = await productsServices.deleteOneProduct(id);
-  console.log(productById, 'CONTROLLERSSSSS');
   if (productById.err) {
     return res.status(unprocessableEntity).json(productById);
   }
