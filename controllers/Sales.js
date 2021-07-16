@@ -20,7 +20,7 @@ async function findById(req, res) {
 async function updateSale(req, res) {
   const { id } = req.params;
   const sale = req.body;
-  const { status, result } = await service.updateProduct(id, sale);
+  const { status, result } = await service.updateSale(id, sale);
   return res.status(status).json(result);
 }
 
