@@ -1,4 +1,5 @@
 const saleModel = require('../models/saleModel');
+const { findProduct } = require('./productService');
 
 let err = {
   code: 'invalid_data',
@@ -63,9 +64,23 @@ const updateSale = async (id, product) => {
   return newSale;
 };
 
+const deleteSale = async (id) => {
+  const selectSale = await findSale(id);
+  if(selectSale.err) return {  
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format'
+    }
+  };
+
+  const sale = await saleModel.drop(id);
+  return sale && selectSale;
+};
+
 module.exports = {
   createSale,
   salesList,
   findSale,
   updateSale,
+  deleteSale
 };

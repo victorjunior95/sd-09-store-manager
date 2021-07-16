@@ -1,5 +1,6 @@
 const express = require('express');
 const saleController = require('../controllers/saleController');
+const productRoute = require('./productRoute');
 const saleRoute = express.Router();
 
 // cria nova vendas
@@ -11,7 +12,10 @@ saleRoute.get('/', saleController.listAllSales);
 // procura venda por id
 saleRoute.get('/:id', saleController.findSaleById);
 
-// auliza venda
+// atuliza venda
 saleRoute.put('/:id', saleController.updateSaleData);
+
+// deleta produto
+saleRoute.delete('/:id', saleController.deleteSaleData);
 
 module.exports = saleRoute;

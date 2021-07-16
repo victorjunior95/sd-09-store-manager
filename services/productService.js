@@ -83,7 +83,6 @@ const updateProduct = async (id, name, quantity) => {
 };
 
 const deleteProduct = async (id) => {
-
   const selectProduct = await findProduct(id);
   if(selectProduct.err) return selectProduct;
   

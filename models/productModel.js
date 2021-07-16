@@ -47,7 +47,7 @@ const update = async (id, name, quantity) => {
 // apaga produto
 const drop = async (id) => {
   const product = await connection()
-    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id)}));
+    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id) }));
 
   return product;
 };

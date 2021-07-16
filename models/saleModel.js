@@ -29,12 +29,21 @@ const findId = async (id) => {
 const update = async (id, product) => {
   const sale = await connection()
     .then((db) => db.collection('sales')
-      .updateOne({ _id: new ObjectId(id)}, { $set: { itensSold: product } }));
+      .updateOne({ _id: new ObjectId(id) }, { $set: { itensSold: product } }));
 
   const revisionSale = await connection()
     .then((db) => db.collection('sales').findOne({ _id: new ObjectId(id) }));
 
+  // retorno de status são substituidos por outros retornos validos por padrao
   return sale && revisionSale;
+};
+
+// apaga venda
+const drop = async (id) => {
+  const sale = await connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: new ObjectId(id) }));
+
+  return sale;
 };
 
 module.exports = {
@@ -42,4 +51,5 @@ module.exports = {
   showAll,
   findId,
   update,
+  drop,
 };
