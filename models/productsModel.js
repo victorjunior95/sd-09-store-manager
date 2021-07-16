@@ -20,7 +20,6 @@ const getProduct = async (name) => {
 };
 
 const listProductId = async (id) => {
-  console.log(id);
   const product = await connection()
     .then((db) => db.collection('products').findOne({ _id: id }));
   return product;
@@ -36,7 +35,6 @@ const editProduct = async (id, name, quantity) => {
 
 const deleteProduct = async (id) => {
   const product = await listProductId(id);
-  console.log(product);
   return await connection()
     .then((db) => db.collection('products').deleteOne({ _id: id}))
     .then(() => product);

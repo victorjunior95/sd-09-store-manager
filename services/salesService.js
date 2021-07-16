@@ -20,10 +20,13 @@ const editSale = async (id, products) => {
   for(let index = zero; index < products.length; index++){
     const idProd = products[index].productId;
     const qtyProd = products[index].quantity;
-    const teste = await salesModel.editSale(ObjectID(id), idProd, qtyProd);
-    console.log('oi' + teste);
+    await salesModel.editSale(ObjectID(id), idProd, qtyProd);
   }
   return salesModel.listSaleId(ObjectID(id));
+};
+
+const deleteSale = (id) => {
+  return salesModel.deleteSale(ObjectID(id));
 };
 
 module.exports = {
@@ -31,4 +34,5 @@ module.exports = {
   listAll,
   listSaleId,
   editSale,
+  deleteSale,
 };

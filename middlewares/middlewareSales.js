@@ -21,6 +21,21 @@ const validaQuantidade = (req, res, next) => {
   next();
 };
 
+const validaIdSale = (req, res, next) => {
+  const { id } = req.param;
+  try{
+    ObjectID(id);
+  } catch(_err){
+    return res.status(HTTP_NOT_FOUND).json({
+      err: { 
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    });
+  }
+  next();
+};
+
 const validaIdParams = (req, res, next) => {
   const { id } = req.params;
   try{
@@ -59,4 +74,5 @@ module.exports = {
   validaQuantidade,
   validaId,
   validaIdParams,
+  validaIdSale,
 };

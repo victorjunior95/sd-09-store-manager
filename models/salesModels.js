@@ -28,9 +28,19 @@ const editSale = async (id, productId, quantity) => {
   return saleEdited;
 };
 
+const deleteSale = async (id) => {
+  console.log(id);
+  const sale = await listSaleId(id);
+  return await connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: id }))
+    .then(() => sale);
+
+};
+
 module.exports = {
   registerSales,
   listAll,
   listSaleId,
   editSale,
+  deleteSale,
 };
