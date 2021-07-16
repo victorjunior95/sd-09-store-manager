@@ -19,7 +19,11 @@ app.post('/products', rescue(productController.createProduct));
 app.put('/products/:id', rescue(productController.updateProduct));
 app.delete('/products/:id', rescue(productController.deleteProduct));
 
+app.get('/sales', rescue(salesController.fetchSales));
+app.get('/sales:id', rescue(salesController.findById));
 app.post('/sales', rescue(salesController.newSale));
+app.put('/sales/:id', rescue(salesController.updateSale));
+app.delete('/sales/:id', rescue(salesController.deleteSale));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;

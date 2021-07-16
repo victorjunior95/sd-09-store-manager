@@ -8,11 +8,9 @@ async function findByName(name) {
 }
 
 async function fetchProducts() {
-  const result = await connection()
-    .then((db) => db.collection('products').find().toArray());
-  return {
-    products: result
-  };
+  const db = await connection();
+  const result = await db.collection('products').find().toArray();
+  return { products: result };
 }
 
 async function findById(id) {
