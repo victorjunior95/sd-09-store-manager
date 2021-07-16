@@ -62,4 +62,21 @@ const updateProductById = async (id, newDataProduct) => {
   return {message: updatedProduct, status: 200};
 };
 
-module.exports = { registerNewProduct, getProducts, getProductById, updateProductById };
+const deleteProductById = async (id) => {
+  const product = await productModel.getProductById(id);
+  if(!product){
+    const code = 'invalid_data';
+    const message = 'Wrong id format';
+    return {message: errorObject(code, message), status: 422};
+  };
+  const deletedProduct = await productModel.deleteProductById(id);
+  return {message: deletedProduct, status: 200};
+};
+
+module.exports = {
+  registerNewProduct,
+  getProducts,
+  getProductById,
+  updateProductById,
+  deleteProductById
+};

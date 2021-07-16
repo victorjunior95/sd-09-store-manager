@@ -36,9 +36,20 @@ const updateProductById = async (id, newDataProduct) => {
   return updatedProduct.value;
 };
 
+const deleteProductById = async (id) => {
+  if(!ObjectId.isValid(id)){return null;}
+  const deletedProduct = await mongoConnection().then(db => 
+    db.collection('products').findOneAndDelete(
+      {_id:ObjectId(id)},
+    )
+  );
+  return deletedProduct.value;
+};
+
 module.exports = {
   registerNewProduct,
   getProducts,
   getProductById,
-  updateProductById
+  updateProductById,
+  deleteProductById
 };
