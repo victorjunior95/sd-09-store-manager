@@ -26,8 +26,22 @@ const findId = async (id) => {
   return sale;
 };
 
+const update = async (id, product) => {
+  const sale = await connection()
+    .then((db) => db.collection('sales')
+      .updateOne({ _id: new ObjectId(id)}, { $set: { itensSold: product } }));
+
+  const revisionSale = await connection()
+    .then((db) => db.collection('sales').findOne({ _id: new ObjectId(id) }));
+
+  console.log(revisionSale)
+
+  return sale && revisionSale;
+};
+
 module.exports = {
   create,
   showAll,
   findId,
+  update,
 };

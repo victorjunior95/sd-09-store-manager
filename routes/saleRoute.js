@@ -11,4 +11,7 @@ saleRoute.get('/', saleController.listAllSales);
 // procura venda por id
 saleRoute.get('/:id', saleController.findSaleById);
 
+// auliza venda
+saleRoute.put('/:id', saleController.updateSaleData);
+
 module.exports = saleRoute;

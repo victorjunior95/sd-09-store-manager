@@ -46,6 +46,7 @@ const salesList = async () => {
   return { sales };
 };
 
+// procura por id
 const findSale = async (id) => {
   const validId = await checkId(id);
   if(validId) return validId;
@@ -54,8 +55,17 @@ const findSale = async (id) => {
   return sale;
 };
 
+const updateSale = async (id, product) => {
+  const validSale = validQuantity(product);
+  if(validSale) return validSale;
+
+  const newSale = await saleModel.update(id, product);
+  return newSale;
+};
+
 module.exports = {
   createSale,
   salesList,
   findSale,
+  updateSale,
 };
