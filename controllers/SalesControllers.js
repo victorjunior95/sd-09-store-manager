@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  addNewSalesService, findByIdService, getAllService, updateSaleService
+  addNewSalesService, findByIdService, getAllService, updateSaleService,deleteSaleService
 } = require('../services/SalesService');
 
 const SalesRouter = express.Router();
@@ -18,6 +18,13 @@ const objNotFound = {
   err: {
     code: 'not_found',
     message: 'Sale not found',
+  },
+};
+
+const objReturnDelete = {
+  err: {
+    code: 'invalid_data',
+    message: 'Wrong sale ID format',
   },
 };
 
@@ -63,6 +70,16 @@ SalesRouter.put('/:id', async (req, res) => {
     }
   ];
   return res.status(numberStatusOk).json({_id: id, itensSold });
+});
+
+SalesRouter.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const saleDelete = await deleteSaleService(id);
+
+  if(!saleDelete) return res.status(numberStatusErr).json(objReturnDelete);
+
+  return res.status(numberStatusOk).json({_id: id });
 });
 
 

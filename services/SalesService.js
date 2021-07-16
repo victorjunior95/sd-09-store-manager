@@ -1,5 +1,5 @@
 const { findById } = require('../models/ProductsModel');
-const { getAll } = require('../models/SalesModel');
+const { getAll, deleteSale } = require('../models/SalesModel');
 const {
   addNewSales,
   updateSale,
@@ -36,9 +36,18 @@ const updateSaleService = async (id, quantity) => {
   return await updateSale(id, quantity);
 };
 
+const deleteSaleService = async (id) => {
+  const productDeleted = await deleteSale(id);
+
+  if(!productDeleted) return false;
+
+  return productDeleted;
+};
+
 module.exports = {
   addNewSalesService,
   getAllService,
   findByIdService,
-  updateSaleService
+  updateSaleService,
+  deleteSaleService
 };
