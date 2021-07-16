@@ -1,7 +1,7 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
-const MONGO_DB_URL = 'mongodb://127.0.0.1:27017';
+const MONGO_DB_URL = 'mongodb://mongodb::127.0.0.1:27017';
 const DB_NAME = 'StoreManager';
 const OPTIONS = {
   useNewUrlParser: true,
