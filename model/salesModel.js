@@ -12,8 +12,6 @@ const createSale = async (itensSold) => {
 };
 
 const findSaleById = async (id) => {
-  if(!ObjectId.isValid(id)) return null;
-
   return await connection()
     .then((db) => db.collection('sales').findOne({ _id: ObjectId(id) }));
 };
@@ -28,9 +26,11 @@ const updateSale = async (id, items) => {
 };
 
 const deleteOneSale = async (id) => {
-  return await connection()
+  const sale = await findSaleById(id);
+  await connection()
     .then((db) => db.collection('sales')
       .deleteOne({ _id: ObjectId(id) }));
+  return sale;
 };
 
 module.exports = { createSale, findSaleById, updateSale, deleteOneSale };

@@ -1,4 +1,5 @@
 const util = require('../model/util');
+const { ObjectId } = require('mongodb');
 const salesModel = require('../model/salesModel');
 const productService = require('../service/productService');
 
@@ -27,20 +28,8 @@ const getAllSales = async () => {
 };
 
 const findSale =  async (id) => {
-  const sale = await salesModel.findSaleById(id);
-  if (!sale) throw {
-    err: { 
-      code: 'not_found',
-      message: 'Sale not found'
-    }
-  };
-  if (sale === null) throw {
-    err: { 
-      code: 'invalid_data',
-      message: 'Wrong sale ID format'
-    }
-  };
-  return sale;
+  if(!ObjectId.isValid(id)) return null;
+  return await salesModel.findSaleById(id);
 };
 
 const saleUpdate = async (id, items) => {
@@ -58,7 +47,10 @@ const saleUpdate = async (id, items) => {
 };
 
 const deleteSaleById = async (id) => {
-  return await salesModel.deleteOneSale(id);
+  const sale = await salesModel.deleteOneSale(id);
+  console.log(`service: ${sale}`);
+
+  return sale;
 };
 
 module.exports = { newSale, getAllSales, findSale, saleUpdate, deleteSaleById };

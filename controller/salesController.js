@@ -22,6 +22,12 @@ const getSale = async (req, res) => {
   const { id } = req.params;
   try {
     const sale = await salesService.findSale(id);
+    if (!sale) throw {
+      err: { 
+        code: 'not_found',
+        message: 'Sale not found'
+      }
+    };
     return res.status(status_ok).json(sale);
   } catch(err) {
     return res.status(not_found).json(err);
@@ -43,6 +49,12 @@ const deleteSale = async (req, res) => {
   const { id } = req.params;
   try {
     const sale = await salesService.findSale(id);
+    if (sale === null) throw {
+      err: { 
+        code: 'invalid_data',
+        message: 'Wrong sale ID format'
+      }
+    };
     await salesService.deleteSaleById(id);
     return res.status(status_ok).json(sale);
   } catch(err) {
