@@ -21,7 +21,7 @@ const editSale = async (id, products) => {
     const idProd = products[index].productId;
     const qtyProd = products[index].quantity;
     const teste = await salesModel.editSale(ObjectID(id), idProd, qtyProd);
-    console.log("oi" + teste);
+    console.log('oi' + teste);
   }
   return salesModel.listSaleId(ObjectID(id));
 };
