@@ -27,7 +27,7 @@ async function updateDataById(id, data) {
 }
 
 async function deleteDataById(id) {
-  const salesData = await getById(id);
+  const salesData = await getDataById(id);
   return connection()
     .then((db) => db.collection('sales').deleteOne({ _id: id }))
     .then(() => salesData);

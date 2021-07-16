@@ -47,7 +47,7 @@ async function createData(data) {
 }
 
 async function getAllData() {
-  const result = await SaleModel.getAll();
+  const result = await SaleModel.getAllData();
   return result;
 }
 
@@ -57,7 +57,7 @@ async function getDataById(id) {
   } catch(err) {
     throw ({ code: 'not_found', message: 'Sale not found' });
   }
-  const result = await SaleModel.getById( new ObjectId(id));
+  const result = await SaleModel.getDataById( new ObjectId(id));
   if (!result) {
     throw ({ code: 'not_found', message: 'Sale not found' });
   }
@@ -68,7 +68,7 @@ async function updateDataById(id, data) {
   idFormatValidation(id);
   dataValidation(data);
   saleValidation(data);
-  const result = await SaleModel.updateById(new ObjectId(id), data);
+  const result = await SaleModel.updateDataById(new ObjectId(id), data);
   if (!result) {
     throw ({ code: 'not_found', message: 'Sale not found' });
   }
@@ -82,12 +82,12 @@ async function deleteDataById(id) {
     err.message = 'Wrong sale ID format';
     throw (err);
   }
-  const result = await SaleModel.deleteById(new ObjectId(id));
+  const result = await SaleModel.deleteDataById(new ObjectId(id));
   if (!result) {
     throw ({ code: 'not_found', message: 'Sale not found' });
   }
   for (const { productId, quantity } of result.itensSold) {
-    await ProductService.increaseQuantity(productId, quantity);
+    await ProductService.increaseDataQuantity(productId, quantity);
   }
   return result;
 }

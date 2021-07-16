@@ -33,7 +33,7 @@ async function updateDataById(id, { name, quantity }) {
 }
 
 async function deleteDataById(id) {
-  const productData = await getById(id);
+  const productData = await getDataById(id);
   return connection()
     .then((db) => db.collection('products').deleteOne({ _id: id }))
     .then(() => productData);
