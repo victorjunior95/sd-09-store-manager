@@ -17,8 +17,10 @@ app.post('/products', productsControllers.insertProduct);
 app.post('/sales', salesControllers.insertOneSale);
 
 app.get('/products', productsControllers.getAll);
+app.get('/sales', salesControllers.getAllSales);
 
 app.get('/products/:id', productsControllers.getById);
+app.get('/sales/:id', salesControllers.getOneSaleById);
 
 app.put('/products/:id', productsControllers.updateProductById);
 

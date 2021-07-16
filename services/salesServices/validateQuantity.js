@@ -13,4 +13,6 @@ const validateQuantity = (productsSold) => {
   }
 };
 
-module.exports = validateQuantity;
+module.exports = {
+  validateQuantity
+};
