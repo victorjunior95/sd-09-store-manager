@@ -6,31 +6,31 @@ const getAllSales = async (req, res) => {
 
   if (!id) {
 
-    const allSales = await SalesService.getAllSales();
-    return res.status(HTTP_OK_STATUS).send(allSales);
+    const sales = await SalesService.getAllSales();
+    return res.status(HTTP_OK_STATUS).send(sales);
   }
   const salesById = await SalesService.findById(id);
   return res.status(HTTP_OK_STATUS).send(salesById);
 
 };
 
-const addSale = async (req, res, _next) => {
+const addSale = async (req, res) => {
   const soldItens = req.body;
-  const sale = await SalesService.addSale(soldItens);
+  const salesInfo = await SalesService.addSale(soldItens);
 
-  return res.status(HTTP_OK_STATUS).send(sale);
+  return res.status(HTTP_OK_STATUS).send(salesInfo);
 };
 
-const editSale = async (req, res, _next) => {
+const editSale = async (req, res,) => {
   const { id } = req.params;
   const itensSold = req.body;
 
-  const sale = await SalesService.editSale(id, itensSold);
+  const sale = await SalesService.editSale({id, itensSold});
 
   return res.status(HTTP_OK_STATUS).send(sale);
 };
 
-const deleteSale = async (req, res, _next) => {
+const deleteSale = async (req, res) => {
   const { id } = req.params;
 
   const deleteProduct = await SalesService.deleteSale(id);

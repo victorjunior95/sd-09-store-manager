@@ -18,7 +18,7 @@ const findById = async (id) => {
 };
 
 const editSale = async ({id, itensSold}) => {
-  const sale = await SalesModel.editSale(id, itensSold);
+  const sale = await SalesModel.editSale({id, itensSold});
 
   return sale;
 };
