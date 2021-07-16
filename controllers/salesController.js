@@ -59,9 +59,14 @@ const change = async (req, res) => {
 };
 
 const del = async (req, res) => {
+  const ret = {
+    code: 'invalid_data',
+    error: { message: 'Wrong sale ID format' },
+    status: STATUS_422
+  };
   const { id } = req.params;
   const sale = await salesServices.del(id);
-  if (sale !== null) {
+  if (sale === ret) {
     return res.status(STATUS_200).send(sale);
   } else {
     res.status(STATUS_422).json({

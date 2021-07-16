@@ -1,8 +1,9 @@
 const sales = require('../models/sales');
 const productStock = require('../models/products');
+const STATUS_422 = 422;
 
 const create = async (newSale) => {
-  const ret =  await sales.create(newSale);
+  const ret = await sales.create(newSale);
   newSale.forEach(async (item) => {
     await productStock.subtractQuantity(item.productId, item.quantity);
   });
@@ -10,12 +11,20 @@ const create = async (newSale) => {
 };
 
 const del = async (id) => {
-  const saleid = await sales.getById(id);
-  const delSale = await sales.del(id);
-  saleid.itensSold.forEach(async (item) => {
-    await productStock.sumQuantity(item.productId, item.quantity);
-  });
-  return delSale;
+  const saleId = await sales.getById(id);
+  if (saleId === null) {
+    return {
+      code: 'invalid_data',
+      error: { message: 'Wrong sale ID format' },
+      status: STATUS_422
+    };
+  } else {
+    const delSale = await sales.del(id);
+    saleId.itensSold.forEach(async (item) => {
+      await productStock.sumQuantity(item.productId, item.quantity);
+    });
+    return saleId;
+  }
 };
 
 const getAll = async () => sales.getAll();
