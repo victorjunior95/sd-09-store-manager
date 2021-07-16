@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
-const productsModel = require('./models/productsModel');
+const productsController = require('./controllers/productController');
 
 const app = express();
 const PORT = 3000;
@@ -13,8 +13,8 @@ app.get('/', (_request, response) => {
 });
 
 // produtos
-app.post('/products', productsModel.newProduct);
+app.post('/products', productsController.newProduct);
 
 app.listen(PORT, () => {
-  console.log(`Aplicação ouvindo na porta ${PORT}`);
+  console.log(`Aplicação rodando na porta ${PORT}`);
 });

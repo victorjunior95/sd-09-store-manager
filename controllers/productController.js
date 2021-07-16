@@ -1,9 +1,13 @@
-const { newProduct } = require('../models/productsModel');
+const createProduct = require('../models/productsModel');
 
-const registerProduct = async (req, res) => {
-  const { body } = req;
-  const result = await newProduct(body);
-  const { code, response } = result;
-  return res.status(code).json(response);
+const OK_STATUS = 200;
 
-}
+const newProduct = async (req, res) => {
+  const { name, quantity } = req.body;
+  const result = await createProduct.dbProduct(name, quantity);
+
+  return res.status(OK_STATUS).json(result);
+
+};
+
+module.exports = newProduct;
