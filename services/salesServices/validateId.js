@@ -1,3 +1,14 @@
+const validateFoundId = async (id) => {
+  if (id === null) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found'
+      }
+    };
+  };
+};
+
 const validateFormatId = (id) => {
   if (id === null) {
     return {
@@ -10,5 +21,6 @@ const validateFormatId = (id) => {
 };
 
 module.exports = {
+  validateFoundId,
   validateFormatId
 };

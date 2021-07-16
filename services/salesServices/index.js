@@ -3,8 +3,7 @@ const {
   validateQuantity,
   validateUpdatedSaleQuantity
 } = require('../salesServices/validateQuantity');
-const { validateFoundId } = require('../salesServices/validateFoundId');
-const { validateFormatId } = require('../salesServices/validateFormatId');
+const { validateFoundId, validateFormatId } = require('../salesServices/validateId');
 
 const insertOneSale = async (productsSold) => {
   const validateQuantityErr = validateQuantity(productsSold);
