@@ -15,14 +15,17 @@ app.get('/', (_request, response) => {
 
 app.get('/products', rescue(productController.fetchProducts));
 app.get('/products/:id', rescue(productController.findById));
-app.post('/products', rescue(productController.createProduct));
-app.put('/products/:id', rescue(productController.updateProduct));
-app.delete('/products/:id', rescue(productController.deleteProduct));
 
 app.get('/sales', rescue(salesController.fetchSales));
 app.get('/sales:id', rescue(salesController.findById));
+
+app.post('/products', rescue(productController.createProduct));
 app.post('/sales', rescue(salesController.newSale));
+
+app.put('/products/:id', rescue(productController.updateProduct));
 app.put('/sales/:id', rescue(salesController.updateSale));
+
+app.delete('/products/:id', rescue(productController.deleteProduct));
 app.delete('/sales/:id', rescue(salesController.deleteSale));
 
 app.use((err, _req, res, _next) => {

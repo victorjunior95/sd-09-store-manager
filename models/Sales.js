@@ -8,9 +8,9 @@ async function newSale(sale) {
 }
 
 async function fetchSales() {
-  const db = await connection();
-  const result = await db.collection('sales').find().toArray();
-  return { sales: result };
+  return connection()
+    .then((db) => db.collection('sales').find().toArray())
+    .then((result) => ({ sales: result }));
 }
 
 async function findById(id) {
