@@ -1,7 +1,5 @@
 const Products = require('../services/Products');
 const rescue = require('express-rescue');
-const CREATED = 201;
-
 
 const create = rescue(async (req, res) => {
   const { name, quantity } = req.body;

@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser').json();
 
 const Products = require('./controllers/Products');
+const Sales = require('./controllers/Sales');
 
 app.use(bodyParser);
 
@@ -16,6 +17,7 @@ app.get('/products', Products.getAll);
 app.get('/products/:id', Products.findById);
 
 app.post('/products', Products.create);
+app.post('/sales', Sales.newSale);
 
 app.put('/products/:id', Products.updateProduct);
 
