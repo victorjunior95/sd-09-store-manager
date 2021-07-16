@@ -1,6 +1,7 @@
 const salesService = require('../services/salesService');
 const { ObjectID } = require('mongodb');
 const HTTP_UNPROCESS_CLIENT = 422;
+const HTTP_NOT_FOUND = 404
 
 const validaQuantidade = (req, res, next) => {
   const sales = req.body; 
@@ -25,7 +26,7 @@ const validaIdParams = (req, res, next) => {
   try{
     ObjectID(id);
   } catch(_err){
-    return res.status(HTTP_UNPROCESS_CLIENT).json({
+    return res.status(HTTP_NOT_FOUND).json({
       err: { 
         code: 'not_found',
         message: 'Sale not found',
