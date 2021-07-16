@@ -1,7 +1,7 @@
 const salesService = require('../services/salesService');
 const { ObjectID } = require('mongodb');
 const HTTP_UNPROCESS_CLIENT = 422;
-const HTTP_NOT_FOUND = 404
+const HTTP_NOT_FOUND = 404;
 
 const validaQuantidade = (req, res, next) => {
   const sales = req.body; 
