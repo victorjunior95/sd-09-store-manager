@@ -1,45 +1,50 @@
 const ProductsService = require('../services/ProductsService');
 
-const statusSucessCreate = 201;
-const statusSucess = 200;
+const {
+  HTTP_OK_STATUS,
+  HTTP_CREATED_STATUS,
+} = require('../httpResponse');
 
 const deleteProduct = async (req, res, _next) => {
   const { id } = req.params;
   const deletecProduct = await ProductsService.deleteProduct(id);
 
-  return res.status(statusSucess).json(deletecProduct);
+  if (deletecProduct) return res.status(HTTP_OK_STATUS).send(deletecProduct);
+
 };
 
 const updateProduct = async (req, res, _next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
 
-  const newProduct = await ProductsService.updateProduct(id, name, quantity);
+  const product = await ProductsService.updateProduct({id, name, quantity});
 
-  return res.status(statusSucess).json(newProduct);
+  if (product) {
+    return res.status(HTTP_OK_STATUS).send({ id, name, quantity });
+  }
 };
 
-const getAllProducts = async (_req, res, _next) => {
-  const allProducts = await ProductsService.getAllProducts();
-
-  return res.status(statusSucess).json({ products: allProducts });
-};
-
-const getProductById = async (req, res, _next) => {
+const getProducts = async (req, res, _next) => {
   const { id } = req.params;
-  const product = await ProductsService.getProductById(id);
 
-  return res.status(statusSucess).json(product);
+  if (!id) {
+    const data = await ProductsService.getAllProducts();
+
+    return res.status(HTTP_OK_STATUS).send(data);
+  }
+
+  const data = await ProductsService.getProductById(id);
+
+  res.status(HTTP_OK_STATUS).send(data);
 };
 
-const addProduct = async (req, res, next) => {
+
+const addProduct = async (req, res, _next) => {
   const { name, quantity } = req.body;
 
-  const product = await ProductsService.addProduct(name, quantity);
+  const product = await ProductsService.addProduct({name, quantity});
 
-  if (product.err) return next(product.err);
-
-  return res.status(statusSucessCreate).json(product);
+  return res.status(HTTP_CREATED_STATUS).send(product);
 };
 
 
@@ -47,8 +52,7 @@ const addProduct = async (req, res, next) => {
 module.exports = {
   deleteProduct,
   updateProduct,
-  getAllProducts,
-  getProductById,
+  getProducts,
   addProduct
 };
 

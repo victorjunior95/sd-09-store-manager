@@ -1,37 +1,33 @@
 const SalesService = require('../services/SalesService');
-const statusSucess = 200;
+const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS } = require('../httpResponse');
 
-const getAllSales = async (_req, res, _next) => {
-  const allSales = await SalesService.getAllSales();
+const getAllSales = async (req, res) => {
+  const { id } = req.body;
 
-  return res.status(statusSucess).json({ sales: allSales });
-};
+  if (!id) {
 
-const findById = async (req, res, next) => {
-  const { id } = req.params;
+    const allSales = await SalesService.getAllSales();
+    return res.status(HTTP_OK_STATUS).send(allSales);
+  }
+  const salesById = await SalesService.findById(id);
+  return res.status(HTTP_OK_STATUS).send(salesById);
 
-  const sale = await SalesService.findById(id);
-
-  if (sale.err) return next(sale.err);
-
-  return res.status(statusSucess).json(sale);
 };
 
 const addSale = async (req, res, _next) => {
-  const { body } = req;
+  const soldItens = req.body;
+  const sale = await SalesService.addSale(soldItens);
 
-  const sale = await SalesService.addSale(body);
-
-  return res.status(statusSucess).json(sale);
+  return res.status(HTTP_OK_STATUS).send(sale);
 };
 
 const editSale = async (req, res, _next) => {
   const { id } = req.params;
-  const { body } = req;
+  const itensSold = req.body;
 
-  const newSale = await SalesService.editSale(id, body);
+  const sale = await SalesService.editSale(id, itensSold);
 
-  return res.status(statusSucess).json(newSale);
+  return res.status(HTTP_OK_STATUS).send(sale);
 };
 
 const deleteSale = async (req, res, _next) => {
@@ -39,12 +35,11 @@ const deleteSale = async (req, res, _next) => {
 
   const deleteProduct = await SalesService.deleteSale(id);
 
-  return res.status(statusSucess).json(deleteProduct);
+  return res.status(HTTP_OK_STATUS).send(deleteProduct);
 };
 
 module.exports = {
   getAllSales,
-  findById,
   addSale,
   editSale,
   deleteSale

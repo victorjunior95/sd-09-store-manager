@@ -1,38 +1,26 @@
 const SalesModel = require('../models/SalesModel');
 
-const addSale = async (body) => {
+const addSale = async (soldItens) => {
 
-  const { insertedId } = await SalesModel.addSale(body);
-
-  return {
-    _id: insertedId,
-    itensSold: body,
-  };
+  const data = await SalesModel.addSale(soldItens);
+  return data.ops[0];
 };
+
 
 const getAllSales = async () => {
   const allSales = await SalesModel.getAllSales();
-
   return allSales;
 };
 
 const findById = async (id) => {
   const sale = await SalesModel.findById(id);
-
-  if (!sale) return {
-    err: {
-      code: 'not_found',
-      message: 'Sale not found'
-    }
-  };
-
   return sale;
 };
 
-const editSale = async (id, body) => {
-  const newSale = await SalesModel.editSale(id, body);
+const editSale = async ({id, itensSold}) => {
+  const sale = await SalesModel.editSale(id, itensSold);
 
-  return newSale;
+  return sale;
 };
 const deleteSale = async (id) => {
   const sale = await SalesModel.deleteSale(id);

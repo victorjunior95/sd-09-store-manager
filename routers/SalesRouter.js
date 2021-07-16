@@ -1,22 +1,18 @@
 const express = require('express');
-const {
-  validatorIdAndQuantity,
-  isValidId,
-  validatorId,
-  deleteSale,
-  buyProduct} = require('../middlewares/validatorSale');
 const SalesController = require('../controllers/SalesController');
+
+const checkIfSalesExist = require('../middlewares/checkIfSalesExist');
+const checkSalesInput = require('../middlewares/checkSalesInput');
+const salesNotExistError = require('../middlewares/saleDeleteMidW');
 
 const SalesRouter = express.Router();
 
-SalesRouter.get('/', SalesController.getAllSales);
+SalesRouter.get(['/', '/:id'], checkIfSalesExist, SalesController.getAllSales);
 
-SalesRouter.get('/:id', SalesController.findById);
+SalesRouter.post('/', checkSalesInput, SalesController.addSale);
 
-SalesRouter.post('/', SalesController.addSale);
+SalesRouter.put('/:id', checkSalesInput, SalesController.editSale);
 
-SalesRouter.put('/:id', SalesController.editSale);
-
-SalesRouter.delete('/:id', SalesController.deleteSale);
+SalesRouter.delete('/:id', salesNotExistError, SalesController.deleteSale);
 
 module.exports = SalesRouter;

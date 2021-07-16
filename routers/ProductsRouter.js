@@ -1,20 +1,18 @@
 const express = require('express');
 const ProductsController = require('../controllers/ProductsController');
-const {validatorNameQuant, validatorId} = require('../middlewares/validatorProduct');
+const { checkiD, checkNewProductInfo, checkifAlreadyExists } = require('../middlewares');
 
 const ProductsRouter = express.Router();
 
-ProductsRouter.get('/', ProductsController.getAllProducts);
+ProductsRouter.get(['/', '/:id'], checkiD, ProductsController.getProducts);
 
-ProductsRouter.get('/:id', validatorId, ProductsController.getProductById);
-
-ProductsRouter.post('/', validatorNameQuant, ProductsController.addProduct);
+ProductsRouter.post('/',
+  checkifAlreadyExists, checkNewProductInfo, ProductsController.addProduct);
 
 ProductsRouter.put('/:id',
-  validatorId,
-  validatorNameQuant,
+  checkiD, checkNewProductInfo,
   ProductsController.updateProduct);
 
-ProductsRouter.delete('/:id', validatorId, ProductsController.deleteProduct);
+ProductsRouter.delete('/:id', checkiD, ProductsController.deleteProduct);
 
 module.exports = ProductsRouter;
