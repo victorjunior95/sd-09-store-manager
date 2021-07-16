@@ -19,7 +19,7 @@ function findSale(sale) {
     throw {
       status: 404,
       err: {
-        code: 'invalid_data',
+        code: 'not_found',
         message: 'Sale not found',
       },
     };
