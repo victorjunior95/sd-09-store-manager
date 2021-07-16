@@ -1,36 +1,45 @@
 const connection = require('./connection');
+const { ObjectId } = require('mongodb');
 
-async function createData(data) {
-  return connection()
-    .then((db) => db.collection('sales').insertOne({ itensSold: data }))
-    .then(({ insertedId }) => ({ _id: insertedId, itensSold: data }));
-}
+const createSale = async (order) => {
+  const db = await connection();
+  const addOrder = await db.collection('sales').insertOne({ itensSold: order});
+  return addOrder.ops[0];
+};
 
-async function getAllData() {
-  return connection()
-    .then((db) => db.collection('sales').find().toArray())
-    .then((sales) => sales);
-}
+const getAllSales = async () => {
+  const db = await connection();
+  const sales = await db.collection('sales').find({}).toArray();
+  return sales;
+};
 
-async function getDataById(id) {
-  return connection()
-    .then((db) => db.collection('sales').findOne({ _id: id }))
-    .then((sales) => sales);
-}
+const getSaleById = async (id) => {
+  const db = await connection();
+  const sale = await db.collection('sales').findOne({ _id: ObjectId(id) });
+  return sale;
+};
 
-async function updateDataById(id, data) {
-  return connection()
-    .then((db) => db.collection('sales').updateOne({_id: id }, {
-      $set: { itensSold: data },
-    }))
-    .then(({ result }) => (!result.nModified) ? null : ({ _id: id, itensSold: data }));
-}
+const editSale = async (id, edit) => {
+  const { productId, quantity } = edit[0];
+  const db = await connection();
+  const newProd = await db.collection('sales').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { productId, quantity }},
+  );
+  return { _id: id, itensSold: edit };
+};
 
-async function deleteDataById(id) {
-  const salesData = await getDataById(id);
-  return connection()
-    .then((db) => db.collection('sales').deleteOne({ _id: id }))
-    .then(() => salesData);
-}
+const deleteSale = async (id) => {
+  const db = await connection();
+  const deletedSale = await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+  const checkDelete = await db.collection('sales').findOne({_id: ObjectId(id)});
+  return checkDelete;
+};
 
-module.exports = { createData, getAllData, getDataById, updateDataById, deleteDataById };
+module.exports = {
+  createSale,
+  getAllSales,
+  getSaleById,
+  editSale,
+  deleteSale,
+};

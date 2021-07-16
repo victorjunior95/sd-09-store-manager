@@ -1,102 +1,161 @@
-const Joi = require('joi');
-const ProductModel = require('../models/productsModel');
 const { ObjectId } = require('mongodb');
+const productsModel = require('../models/productsModel');
+const WRONG_ID_FORMAT = 'Wrong id format';
 
-const minLength = 5;
-
-function dataValidation(data) {
-  const { error } = Joi.object({
-    name: Joi.string().not().empty().min(minLength).required(),
-    quantity: Joi.number().integer().min(1).required(),
-  }).validate(data);
-  if (error) {
-    throw ({ code: 'invalid_data', message: error.details[0].message });
+const validateNameLength = async (name) => {
+  const minLength = 5;
+  if (name.length < minLength) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: '"name" length must be at least 5 characters long',
+      },
+    };
   }
-}
+};
 
-async function nameValidation(name) {
-  const nameExists = await ProductModel.getDataByName(name);
+const validateIfNameExists = async (name) => {
+  const nameExists = await productsModel.getProductByName(name);
   if (nameExists) {
-    throw ({ code: 'invalid_data', message: 'Product already exists' });
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
+    };
   }
-}
+};
 
-function idValidation(id) {
-  if (!ObjectId.isValid(id)) {
-    throw ({ code: 'invalid_data', message: 'Wrong id format' });
+const validateQuantity = (quantity) => {
+  const invalidQuantity = 0;
+  if (quantity <= invalidQuantity) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: '"quantity" must be larger than or equal to 1',
+      }
+    };
   }
-}
-
-async function createData(data) {
-  dataValidation(data);
-  await nameValidation(data.name);
-  const result = await ProductModel.createData(data);
-  return result;
-}
-
-async function getAllData() {
-  const result = await ProductModel.getAllData();
-  return result;
-}
-
-async function getDataById(id) {
-  idValidation(id);
-  const result = await ProductModel.getDataById(new ObjectId(id));
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Product not found' });
+  if (Number.isNaN(parseInt(quantity, 10))) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: '"quantity" must be a number',
+      }
+    };
   }
-  return result;
-}
+};
 
-async function updateDataById(id, data) {
-  idValidation(id);
-  dataValidation(data);
-  const result = await ProductModel.updateDataById(new ObjectId(id), data);
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Product not found' });
+const createProduct = async (product) => {
+  const { name, quantity } = product;
+  await validateNameLength(name);
+  await validateIfNameExists(name);
+  await validateQuantity(quantity);
+  const createdProduct = await productsModel.createProduct(product);
+  return {
+    status: 201,
+    createdProduct,
+  };
+};
+
+const getAllProducts = async () => {
+  const products = await productsModel.getAllProducts();
+  return {
+    status: 200,
+    products,
+  };
+};
+
+const validateId = (id) => (ObjectId.isValid(id));
+
+const getProductById = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
   }
-  return result;
-}
-
-async function deleteDataById(id) {
-  idValidation(id);
-  const result = await ProductModel.deleteDataById(new ObjectId(id));
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Product not found' });
+  const product = await productsModel.getProductById(id);
+  if (!product) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
   }
-  return result;
-}
+  return {
+    status: 200,
+    product,
+  };
+};
 
-async function checkDataStock(id, saleQuantity) {
-  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
-  if (saleQuantity > quantity) {
-    throw ({
-      code: 'stock_problem',
-      message: 'Such amount is not permitted to sell',
-    });
+const editProduct = async (id, product) => {
+  const { name, quantity } = product;
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
   }
-}
+  await validateNameLength(name);
+  await validateQuantity(quantity);
+  const editedProduct = await productsModel.editProduct(id, product);
+  return {
+    status: 200,
+    editedProduct,
+  };
+};
 
-async function increaseDataQuantity(id, saleQuantity) {
-  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
-  const newQuantity = Number(quantity) + Number(saleQuantity);
-  await ProductModel.updateDataQuantity(new ObjectId(id), newQuantity);
-}
+const validateIfProductExists = async (id) => {
+  const productExists = await productsModel.getProductById(id);
+  if (!productExists) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
+  }
+  return productExists;
+};
 
-async function deacreaseDataQuantity(id, saleQuantity) {
-  const { quantity } = await ProductModel.getDataById(new ObjectId(id));
-  const newQuantity = Number(quantity) - Number(saleQuantity);
-  await ProductModel.updateDataQuantity(new ObjectId(id), newQuantity);
-}
-
+const deleteProduct = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: WRONG_ID_FORMAT,
+      }
+    };
+  }
+  const deletedProduct = validateIfProductExists(id);
+  const checkDelete = await productsModel.deleteProduct(id);
+  if (!checkDelete) {
+    return {
+      status: 200,
+      deletedProduct,
+    };
+  }
+};
 
 module.exports = {
-  createData,
-  getAllData,
-  getDataById,
-  updateDataById,
-  deleteDataById,
-  increaseDataQuantity,
-  deacreaseDataQuantity,
-  checkDataStock,
+  createProduct,
+  getAllProducts,
+  getProductById,
+  editProduct,
+  deleteProduct,
 };

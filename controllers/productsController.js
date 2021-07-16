@@ -1,56 +1,39 @@
-const { Router } = require('express');
-const ProductService = require('../services/productsServices');
+const productsService = require('../services/productsServices');
 
-const ProductRouter = Router();
+const createProduct = async (req, res) => {
+  const product = req.body;
+  const { status, createdProduct } = await productsService.createProduct(product);
+  res.status(status).json(createdProduct);
+};
 
-const HTTP_OK = 200;
-const HTTP_CREATED = 201;
+const getAllProducts = async (_req, res) => {
+  const { status, products } = await productsService.getAllProducts();
+  res.status(status).json({ products: products });
+};
 
-ProductRouter.post('/', async (req, res, next) => {
-  try {
-    const dataBody = req.body;
-    const result = await ProductService.createData(dataBody);
-    return res.status(HTTP_CREATED).json(result);
-  } catch(err) {
-    next(err);
-  }
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+  const { status, product } = await productsService.getProductById(id);
+  res.status(status).json(product);
+};
 
-});
+const editProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = req.body;
+  const { status, editedProduct } = await productsService.editProduct(id, product);
+  res.status(status).json(editedProduct);
+};
 
-ProductRouter.get('/', async (_req, res) => {
-  const result = await ProductService.getAllData();
-  return res.status(HTTP_OK).json({ products: result });
-});
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const { status, deletedProduct } = await productsService.deleteProduct(id);
+  res.status(status).json(deletedProduct);
+};
 
-ProductRouter.get('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await ProductService.getDataById(id);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
-
-ProductRouter.put('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const dataBody = req.body;
-    const result = await ProductService.updateDataById(id, dataBody);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
-
-ProductRouter.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await ProductService.deleteDataById(id);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
-
-module.exports = ProductRouter;
+module.exports = {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  editProduct,
+  deleteProduct,
+};

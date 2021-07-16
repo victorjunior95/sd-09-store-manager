@@ -1,95 +1,136 @@
-const Joi = require('joi');
-const SaleModel = require('../models/salesModel');
-const ProductModel = require('../models/productsModel');
-const ProductService = require('../services/productsServices');
 const { ObjectId } = require('mongodb');
+const salesModel = require('../models/salesModel');
+const productsModel = require('../models/productsModel');
 
-function dataValidation(data) {
-  const { error } = Joi.array().items(
-    Joi.object({
-      productId: Joi.string().not().empty().required(),
-      quantity: Joi.number().integer().min(1).required(),
-    })
-  ).validate(data);
-  if (error) {
-    throw ({ code: 'invalid_data', message: 'Wrong product ID or invalid quantity' });
-  }
-}
-
-function idFormatValidation(id) {
-  if (!ObjectId.isValid(id)) {
-    throw ({ code: 'invalid_data', message: 'Wrong id format' });
-  }
-}
-
-async function saleValidation(data) {
-  for (const { productId } of data) {
-    idFormatValidation(productId);
-    const result = await ProductModel.getById(new ObjectId(productId));
-    if (!result) {
-      throw ({
+const validateQuantity = (quantity) => {
+  const invalidQuantity = 0;
+  // parseInt(string, base)
+  if (quantity <= invalidQuantity || Number.isNaN(parseInt(quantity, 10))) {
+    throw {
+      status: 422,
+      err: {
         code: 'invalid_data',
         message: 'Wrong product ID or invalid quantity',
-      });
+      }
+    };
+  }
+};
+
+// for (variavel of iteravel) pode ser utilizado em funções assíncronas
+const createSale = async (order) => {
+  for (const product of order) {
+    const validateId = await productsModel.getProductById(ObjectId(product.productId));
+    if (!validateId) {
+      throw {
+        status: 422,
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong product ID or invalid quantity',
+        }
+      };
     }
+    await validateQuantity(product.quantity);
   }
-}
+  const newSale = await salesModel.createSale(order);
+  return {
+    status: 200,
+    newSale,
+  };
+};
 
-async function createData(data) {
-  dataValidation(data);
-  await saleValidation(data);
-  const result = await SaleModel.create(data);
-  for (const { productId, quantity } of data) {
-    await ProductService.checkStock(productId, quantity);
-    await ProductService.deacreaseQuantity(productId, quantity);
-  }
-  return result;
-}
+const getAllSales = async () => {
+  const sales = await salesModel.getAllSales();
+  return {
+    status: 200,
+    sales,
+  };
+};
 
-async function getAllData() {
-  const result = await SaleModel.getAllData();
-  return result;
-}
+const validateId = (id) => (ObjectId.isValid(id));
 
-async function getDataById(id) {
-  try {
-    idFormatValidation(id);
-  } catch(err) {
-    throw ({ code: 'not_found', message: 'Sale not found' });
+const getSaleById = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
   }
-  const result = await SaleModel.getDataById( new ObjectId(id));
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Sale not found' });
+  const sale = await salesModel.getSaleById(ObjectId(id));
+  if (!sale) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
   }
-  return result;
-}
+  return {
+    status: 200,
+    sale,
+  };
+};
 
-async function updateDataById(id, data) {
-  idFormatValidation(id);
-  dataValidation(data);
-  saleValidation(data);
-  const result = await SaleModel.updateDataById(new ObjectId(id), data);
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Sale not found' });
+const editSale = async (id, edit) => {
+  const { productId, quantity } = edit[0];
+  if (!validateId(productId)) {
+    throw {
+      status: 404,
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    };
   }
-  return result;
-}
+  await validateQuantity(quantity);
+  const editedSale = await salesModel.editSale(id, edit);
+  return {
+    status: 200,
+    editedSale,
+  };
+};
 
-async function deleteDataById(id) {
-  try {
-    idFormatValidation(id);
-  } catch(err) {
-    err.message = 'Wrong sale ID format';
-    throw (err);
+const validateIfSaleExists = async (id) => {
+  const saleExists = await salesModel.getSaleById(id);
+  if (!saleExists) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    };
   }
-  const result = await SaleModel.deleteDataById(new ObjectId(id));
-  if (!result) {
-    throw ({ code: 'not_found', message: 'Sale not found' });
-  }
-  for (const { productId, quantity } of result.itensSold) {
-    await ProductService.increaseDataQuantity(productId, quantity);
-  }
-  return result;
-}
+  return saleExists;
+};
 
-module.exports = { createData, getAllData, getDataById, updateDataById, deleteDataById };
+const deleteSale = async (id) => {
+  if (!validateId(id)) {
+    throw {
+      status: 422,
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    };
+  }
+  const deletedSale = validateIfSaleExists(id);
+  const checkDelete = await salesModel.deleteSale(id);
+  if (!checkDelete) {
+    return {
+      status: 200,
+      deletedSale,
+    };
+  }
+};
+
+module.exports = {
+  createSale,
+  getAllSales,
+  getSaleById,
+  editSale,
+  deleteSale,
+};

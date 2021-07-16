@@ -1,54 +1,40 @@
-const { Router } = require('express');
-const SaleService = require('../services/salesServices');
+const salesService = require('../services/salesServices');
 
-const SaleRouter = Router();
+const createSale = async (req, res) => {
+  const order = req.body;
+  const { status, newSale } = await salesService.createSale(order);
+  res.status(status).json(newSale);
+};
 
-const HTTP_OK = 200;
+const getAllSales = async (_req, res) => {
+  const { status, sales } = await salesService.getAllSales();
+  res.status(status).json({ sales: sales });
+};
 
-SaleRouter.post('/', async (req, res, next) => {
-  try {
-    const salesData = req.body;
-    const result = await SaleService.createData(salesData);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
+const getSaleById = async (req, res) => {
+  const { id } = req.params;
+  const { status, sale } = await salesService.getSaleById(id);
+  res.status(status).json(sale);
+};
 
-SaleRouter.get('/', async (_req, res) => {
-  const result = await SaleService.getAllData();
-  return res.status(HTTP_OK).json({ sales: result });
-});
+const editSale = async (req, res) => {
+  const { id } = req.params;
+  const edit = req.body;
+  const { status, editedSale } = await salesService.editSale(id, edit);
+  res.status(status).json(editedSale);
+};
 
-SaleRouter.get('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await SaleService.getDataById(id);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+  const { status, deletedSale } = await salesService.deleteSale(id);
+  res.status(status).json(deletedSale);
+};
 
-SaleRouter.put('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const salesData = req.body;
-    const result = await SaleService.updateDataById(id, salesData);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
 
-SaleRouter.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await SaleService.deleteDataById(id);
-    return res.status(HTTP_OK).json(result);
-  } catch(err) {
-    next(err);
-  }
-});
-
-module.exports = SaleRouter;
+module.exports = {
+  createSale,
+  getAllSales,
+  getSaleById,
+  editSale,
+  deleteSale,
+};

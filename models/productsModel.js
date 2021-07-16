@@ -1,57 +1,54 @@
 const connection = require('./connection');
+const { ObjectId } = require('mongodb');
 
-async function createData({ name, quantity }) {
-  return connection()
-    .then((db) => db.collection('products').insertOne({ name, quantity }))
-    .then(({ insertedId }) => ({ _id: insertedId, name, quantity }));
-}
+const getProductByName = async (name) => {
+  const db = await connection();
+  const resultProduct = await db.collection('products').findOne({ name });
+  return resultProduct;
+};
 
-async function getAllData() {
-  return connection()
-    .then((db) => db.collection('products').find().toArray())
-    .then((products) => products);
-}
+const createProduct = async (product) => {
+  const db = await connection();
+  const insertProduct = await db.collection('products').insertOne(product);
+  // o insertProduct.ops retorna um array que na posiçao zero com o dado inserido
+  return insertProduct.ops[0];
+};
 
-async function getDataById(id) {
-  return connection()
-    .then((db) => db.collection('products').findOne({ _id: id }))
-    .then((product) => product);
-}
+const getAllProducts = async () => {
+  const db = await connection();
+  const products = await db.collection('products').find({}).toArray();
+  return products;
+};
 
-async function getDataByName(name) {
-  return connection()
-    .then((db) => db.collection('products').findOne({ name }))
-    .then((product) => product);
-}
+const getProductById = async (id) => {
+  const db = await connection();
+  const product = await db.collection('products').findOne({ _id: ObjectId(id) });
+  return product;
+};
 
-async function updateDataById(id, { name, quantity }) {
-  return connection()
-    .then((db) => db.collection('products').updateOne({_id: id }, {
-      $set: { name, quantity }
-    }))
-    .then(({ result }) => (!result.nModified) ? null : ({ _id: id, name, quantity }));
-}
+const editProduct = async (id, product) => {
+  const { name, quantity } = product;
+  const db = await connection();
+  const newProd = await db.collection('products').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { name, quantity }},
+  );
+  const editedProduct = await db.collection('products').findOne({_id: ObjectId(id)});
+  return editedProduct;
+};
 
-async function deleteDataById(id) {
-  const productData = await getDataById(id);
-  return connection()
-    .then((db) => db.collection('products').deleteOne({ _id: id }))
-    .then(() => productData);
-}
-
-async function updateDataQuantity(id, quantity) {
-  return connection()
-    .then((db) => db.collection('products'). updateOne({_id: id}, {
-      $set: { quantity }
-    }));
-}
+const deleteProduct = async (id) => {
+  const db = await connection();
+  const deletedProduct = await db.collection('products').deleteOne({ _id: ObjectId(id) });
+  const checkDelete = await db.collection('products').findOne({_id: ObjectId(id)});
+  return checkDelete;
+};
 
 module.exports = {
-  createData,
-  getAllData,
-  getDataById,
-  getDataByName,
-  updateDataById,
-  deleteDataById,
-  updateDataQuantity,
+  getProductByName,
+  createProduct,
+  getAllProducts,
+  getProductById,
+  editProduct,
+  deleteProduct,
 };
