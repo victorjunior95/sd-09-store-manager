@@ -1,6 +1,6 @@
 const productsServices = require('../services/products/productsServices');
 
-const code = 200;
+const ok = 200;
 
 const createProducts= async (req, res) => {
   const { name, quantity } = req.body;
@@ -23,7 +23,7 @@ const createProducts= async (req, res) => {
 const findAll = async (_req, res) => {
   const result = await productsServices.findAll();
 
-  return res.status(code).json({ products: result });
+  return res.status(ok).json({ products: result });
 };
 
 const findOne = async (req, res) => {
@@ -41,7 +41,7 @@ const findOne = async (req, res) => {
     });
   }
 
-  return res.status(code).json(result);
+  return res.status(ok).json(result);
 };
 
 const updateProduct = async (req, res) => {
@@ -50,7 +50,7 @@ const updateProduct = async (req, res) => {
 
   const result = await productsServices.update(id, updatedProduct);
 
-  return res.status(code).json(result);
+  return res.status(ok).json(result);
 };
 
 const deleteProduct = async (req, res) => {
@@ -68,7 +68,7 @@ const deleteProduct = async (req, res) => {
     });
   }
 
-  return res.status(code).json(result);
+  return res.status(ok).json(result);
 };
 
 module.exports = {

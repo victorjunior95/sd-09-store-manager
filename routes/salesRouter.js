@@ -4,6 +4,11 @@ const salesController = require('../controllers/salesController');
 
 const router = Router();
 
-router.route('/').post(salesController.createSales);
+router.route('/')
+  .post(salesController.createSales)
+  .get(salesController.findAll);
+
+router.route('/:id')
+  .get(salesController.findOne);
 
 module.exports = router;
