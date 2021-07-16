@@ -36,9 +36,19 @@ const updateOneSale = async (req, res) => {
   return res.status(okay).json(updatedSale);
 };
 
+const deleteOneSale = async (req, res) => {
+  const { id } = req.params;
+  const deletedSale = await salesServices.deleteOneSale(id);
+  if (deletedSale.err) {
+    return res.status(unprocessableEntity).json(deletedSale);
+  }
+  return res.status(okay).json(deletedSale);
+};
+
 module.exports = {
   insertOneSale,
   getAllSales,
   getOneSaleById,
-  updateOneSale
+  updateOneSale,
+  deleteOneSale
 };

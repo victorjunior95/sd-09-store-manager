@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const { ObjectId } = require('mongodb');
+const { ObjectId, connect } = require('mongodb');
 
 const getUpdatedSale = ({ _id, productId, quantity }) => {
   return {
@@ -42,9 +42,16 @@ const updateOneSale = async (id, productId, quantity) => {
     .then(() => getUpdatedSale({ _id: ObjectId(id), productId, quantity }));
 };
 
+const deleteOneSale = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return connection()
+    .then((db) => db.collection('sales').findOneAndDelete({ _id: ObjectId(id) }));
+};
+
 module.exports = {
   insertOneSale,
   getAllSales,
   getOneSaleById,
-  updateOneSale
+  updateOneSale,
+  deleteOneSale
 };
