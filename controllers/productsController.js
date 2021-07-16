@@ -31,6 +31,15 @@ ProductsRouter.put('/:id',
     return res.status(HTTP_OK_STATUS).json(product);
   });
 
+ProductsRouter.delete('/:id',
+  productsMiddlewares.validaId,
+  async (req, res) => {
+    const { id } = req.params;
+    const product = await productsService.deleteProduct(id);
+    return res.status(HTTP_OK_STATUS).json(product);
+  }
+);
+
 ProductsRouter.post('/', productsMiddlewares.validaName,
   productsMiddlewares.validaProduto,
   productsMiddlewares.validaQuantidade,

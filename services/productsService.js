@@ -22,10 +22,15 @@ const editProduct = (id, name, quantity) => {
   return productsModel.editProduct(ObjectID(id), name, quantity);
 };
 
+const deleteProduct = (id) => {
+  return productsModel.deleteProduct(ObjectID(id));
+};
+
 module.exports = {
   listAll,
   registerProduct,
   getProduct,
   listProductId,
   editProduct,
+  deleteProduct,
 };

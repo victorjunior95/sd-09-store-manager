@@ -33,10 +33,20 @@ const editProduct = async (id, name, quantity) => {
 
   return { _id: id, name, quantity };
 };
+
+const deleteProduct = async (id) => {
+  const product = await listProductId(id);
+  console.log(product);
+  return await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: id}))
+    .then(() => product);
+
+};
 module.exports = {
   listAll,
   registerProduct,
   getProduct,
   listProductId,
   editProduct,
+  deleteProduct,
 };
