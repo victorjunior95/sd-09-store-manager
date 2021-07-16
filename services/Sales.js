@@ -26,8 +26,7 @@ function findSale(sale) {
   };
 }
 
-async function idValidation(id) {
-  const sale = await model.findById(id);
+function idValidation(sale) {
   if (!sale) {
     throw {
       status: 422,
@@ -63,8 +62,8 @@ async function updateSale(id, sale) {
 }
 
 async function deleteSale(id) {
-  await idValidation(id);
   const result = await model.deleteSale(id);
+  idValidation(result);
   return { status: 200, result };
 }
 

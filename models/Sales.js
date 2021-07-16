@@ -30,6 +30,7 @@ async function updateSale(id, sale) {
 }
 
 async function deleteSale(id) {
+  if (!ObjectId.isValid(id)) return null;
   const db = await connection();
   const result = await db.collection('sales').findOneAndDelete({ _id: ObjectId(id) });
   return result.value;
