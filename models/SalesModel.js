@@ -5,9 +5,9 @@ const { ObjectId } = require('mongodb');
 //   return connection().then((db) => db.collection('sales').find().toArray());
 // };
 
-const addNewSales = async (itemsSold) => {
+const addNewSales = async (itensSold) => {
   const { insertedId } = await connection().then((db) =>
-    db.collection('sales').insertOne( {itemsSold} ),
+    db.collection('sales').insertOne( {itensSold} ),
   );
   return ({ _id: insertedId, itensSold });
 };

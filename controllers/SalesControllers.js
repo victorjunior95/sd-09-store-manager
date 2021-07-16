@@ -31,9 +31,9 @@ const objErrorToReturn = {
 
 
 SalesRouter.post('/', async (req, res) => {
-  const allSales = req.body;
+  const allNewSales = req.body;
   try{
-    const newSales = await addNewSalesService(allSales);
+    const newSales = await addNewSalesService(allNewSales);
     return res.status(numberStatusOk).json(newSales);
   } catch (err) {
     return res.status(numberStatusErr).json(objErrorToReturn);

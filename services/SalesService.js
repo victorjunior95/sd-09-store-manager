@@ -14,17 +14,10 @@ const {
 // };
 
 const addNewSalesService = async (allSales) => {
-  // allSales.map((sale) => {
-  //   if(sale.quantity < 1) {
-  //     throw new Error('Wrong product ID or invalid quantity');
-  //   }
-  //   if(typeof sale.quantity === 'string') {
-  //     throw new Error('Wrong product ID or invalid quantity');
-  //   }
-  // });
   allSales
     .filter((sale) =>{
       if (sale.quantity < 1 || typeof sale.quantity === 'string'){
+        console.log(sale.quantity);
         throw new Error('Wrong product ID or invalid quantity');
       }
     });
