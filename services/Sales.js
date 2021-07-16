@@ -20,7 +20,7 @@ function findSale(sale) {
       status: 404,
       err: {
         code: 'not_found',
-        message: 'Sale not found',
+        message: 'Sale not found'
       },
     };
   };

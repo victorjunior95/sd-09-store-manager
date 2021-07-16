@@ -16,7 +16,7 @@ async function fetchSales() {
 async function findById(id) {
   if (!ObjectId.isValid(id)) return null;
   const db = await connection();
-  const result = await db.collection('sales').findOne({ _id: ObjectId(id) });
+  const result = await db.collection('sales').findOne(new ObjectId(id));
   return result;
 }
 
