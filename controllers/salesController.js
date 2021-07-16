@@ -67,7 +67,7 @@ const del = async (req, res) => {
     res.status(STATUS_422).json({
       err: {
         code: 'invalid_data',
-        message: 'Wrong id format',
+        message: 'Wrong sale ID format',
       },
     });
   }
