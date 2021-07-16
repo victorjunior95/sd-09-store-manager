@@ -9,6 +9,7 @@ router.route('/')
   .get(salesController.findAll);
 
 router.route('/:id')
-  .get(salesController.findOne);
+  .get(salesController.findOne)
+  .put(salesController.updateSale);
 
 module.exports = router;

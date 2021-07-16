@@ -15,6 +15,15 @@ const checkIfTheQuantitiesIsValid = (products) => {
   return isValid && isNumber;
 };
 
+const checkIfTheQuantityIsValid = ({ quantity }) => {
+  const minValue = 0;
+
+  const isValid = quantity > minValue;
+  const isNumber = (typeof quantity) !== 'string';
+
+  return isValid && isNumber;
+};
+
 const create = async (productsSold) => {
   const productsFound = await checkIfTheProductsExist(productsSold);
   const isValidProducts = await productsFound.some((product) => product === null);
@@ -53,8 +62,31 @@ const findById = async (id) => {
   }
 };
 
+const update = async (id, updatedSales) => {
+
+  console.log('service');
+  console.log('updatedSales', updatedSales);
+
+  const isValidQuantities = checkIfTheQuantityIsValid(updatedSales[0]);
+  if (!isValidQuantities) {
+    return {
+      status: 422,
+      code: 'invalid_data',
+      message: 'Wrong product ID or invalid quantity'
+    };
+  }
+
+  try {
+    await salesModel.updateSales(id, updatedSales[0]);
+    return { _id: id, ...updatedSales[0] };
+  } catch (error) {
+    console.log({ Erro: error.message });
+  }
+};
+
 module.exports = {
   create,
   findAll,
   findById,
+  update,
 };
