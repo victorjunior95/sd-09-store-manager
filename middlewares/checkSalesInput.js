@@ -1,22 +1,20 @@
-const { ObjectId } = require('mongodb');
+const joi = require('joi');
 const { HTTP_INVALID_DATA } = require('../httpResponse');
 
 const checkSalesInput = (req, res, next) => {
-  const { quantity, id } = req.body;
-  const minQuantity = 1;
+  const validInput = joi.array().items({
+    productId: joi.string().required(),
+    quantity: joi.number().min(1).required() 
+  }).validate(req.body);
 
-  if (!id) next();
+  if (validInput.error) return res.status(HTTP_INVALID_DATA).send({
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong product ID or invalid quantity',
+    }
+  });
 
-  if (quantity < minQuantity || isNaN(quantity) || !ObjectId.isValid(id) ) {
-    return res.status(HTTP_INVALID_DATA).send({
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong product ID or invalid quantity',
-      }
-    });
-  }
-  
-  next();
+  return next();
 };
 
 module.exports = checkSalesInput;

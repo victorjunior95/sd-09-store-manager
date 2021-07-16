@@ -27,7 +27,8 @@ const checkNewProductInfo = async (req, res, next) => {
   const minNameLength = 5;
   const minQuantity = 1;
 
-  if (name.length < minNameLength) {
+
+  if (!name || name.length < minNameLength) {
     return res.status(HTTP_INVALID_DATA).json(errors.nameLengthError);
   }
 
