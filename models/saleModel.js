@@ -34,8 +34,6 @@ const update = async (id, product) => {
   const revisionSale = await connection()
     .then((db) => db.collection('sales').findOne({ _id: new ObjectId(id) }));
 
-  console.log(revisionSale)
-
   return sale && revisionSale;
 };
 
