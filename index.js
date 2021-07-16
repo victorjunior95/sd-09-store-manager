@@ -31,3 +31,10 @@ app.delete('/sales/:id', salesController.del);
 const PORT = 3000;
 
 app.listen( process.env.PORT || PORT, () => console.log('O Pai tá ON!!'));
+
+//  Consultei os repoitórios de meus colegas durante a desenvoltura.
+//  Arnaelcio : https://github.com/tryber/sd-08-store-manager/pull/67/files
+//  Rita de Cássia: 
+
+//  O requisito 9 foi adaptado á partir do commit de Ana-Karine;
+//  https://github.com/tryber/sd-08-store-manager/pull/70/commits/cdc5091c6399dda0e20cf3691a4a4391f78a44a8#diff-fc3cfb3eeca928b73865f704a03a17633a56ef92d28746322cdcb7a0653f41b8R2
