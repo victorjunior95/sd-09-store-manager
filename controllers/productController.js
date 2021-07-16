@@ -44,7 +44,7 @@ const deleteProductData = async (req, res, _next) => {
 
   if(deletedProduct.err) return res.status(stateFail).json(deletedProduct);
 
-  return res.status(stateOk).json(deletedProduct)
+  return res.status(stateOk).json(deletedProduct);
 };
 
 module.exports = {

@@ -1,5 +1,6 @@
 const express = require('express');
 const productRoute = require('./routes/productRoute');
+const saleRoute = require('./routes/saleRoute');
 const bodyParse = require('body-parser');
 
 const app = express();
@@ -14,5 +15,8 @@ app.get('/', (_request, response) => {
 
 // rota inicial de produtos
 app.use('/products', productRoute);
+
+// rota inicial de vendas
+app.use('/sales', saleRoute);
 
 app.listen(PORT, () => console.log(`funfando in the door ${PORT}`));
