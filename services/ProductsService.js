@@ -1,4 +1,10 @@
-const { createProduct, findByName, getAll } = require('../models/ProductsModel');
+const {
+  createProduct,
+  findByName,
+  getAll,
+  findById,
+  updateProduct,
+} = require('../models/ProductsModel');
 
 const objErrorToReturn = (typeError) => {
   return {
@@ -9,7 +15,15 @@ const objErrorToReturn = (typeError) => {
   };
 };
 
-const getAllService =  () => getAll();
+const getAllService = () => getAll();
+
+const findByIdService = async (id) => {
+  const product = await findById(id);
+
+  if (!product) return objErrorToReturn('Wrong id format');
+
+  return product;
+};
 const createService = async (name, quantity) => {
   const numberToComperName = 5;
 
@@ -19,7 +33,7 @@ const createService = async (name, quantity) => {
   if (quantity < 1) {
     return objErrorToReturn('"quantity" must be larger than or equal to 1');
   }
-  if(typeof quantity === 'string') {
+  if (typeof quantity === 'string') {
     return objErrorToReturn('"quantity" must be a number');
   }
   if (await findByName(name)) {
@@ -30,7 +44,27 @@ const createService = async (name, quantity) => {
   return newProduct;
 };
 
+const updateProductData = async (name, quantity, id) => {
+  const numberToComper = 5;
+
+  if (name.length < numberToComper) {
+    return objErrorToReturn('"name" length must be at least 5 characters long');
+  }
+
+  if (quantity < 1) {
+    return objErrorToReturn('"quantity" must be larger than or equal to 1');
+  }
+
+  if (typeof quantity === 'string') {
+    return objErrorToReturn('"quantity" must be a number');
+  }
+
+  return await updateProduct(name, quantity, id);
+};
+
 module.exports = {
   createService,
-  getAllService
+  getAllService,
+  findByIdService,
+  updateProductData,
 };
