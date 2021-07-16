@@ -14,8 +14,9 @@ function saleValidation(sale) {
   });
 }
 
-function findSale(sale) {
-  if (!sale) {
+async function findSale(id) {
+  const result = await model.findById(id);
+  if (!result) {
     throw {
       status: 404,
       err: {
@@ -24,6 +25,7 @@ function findSale(sale) {
       },
     };
   };
+  return result;
 }
 
 async function idValidation(id) {

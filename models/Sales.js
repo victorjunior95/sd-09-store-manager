@@ -31,8 +31,8 @@ async function updateSale(id, sale) {
 
 async function deleteSale(id) {
   const db = await connection();
-  const result = await db.collection('sales').deleteOne({ _id: ObjectId(id) });
-  return result;
+  const result = await db.collection('sales').findOneAndDelete({ _id: ObjectId(id) });
+  return result.value;
 }
 
 module.exports = {
