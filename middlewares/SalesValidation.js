@@ -1,6 +1,6 @@
 // Req 5 => Esse middleware vai fazer validações referentes a rota /services
 const rescue = require('express-rescue');
-const services = require('../services/Sales');
+
 const { status, message, code } = require('../schema/status');
 
 const validateQuantity = rescue((req, res, next) => {
@@ -22,13 +22,13 @@ const validateQuantity = rescue((req, res, next) => {
 });
 // Req 6 => Validação para ver se o id passado pela url existe e se tem mais de 24 caracteres
 const validateId = rescue(async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.params; // captura o que foi digitado no json
   const idLength = 24;
-  if (!id || id.length !== idLength) {
+  if (!id || id.length !== idLength) { // caso não tenha 24 caracteres ou não exista
     return res.status(status.notFound) // Ai cai no caso de erro
       .json({ err: { code: code.notFound, message: message.saleNotFound } });
   }
-  next();
+  next(); // se não cair no erro pode prosseguir para a função
 });
 
 module.exports = {

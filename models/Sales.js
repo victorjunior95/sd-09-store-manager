@@ -28,10 +28,17 @@ const updateById = async (id, itensSold) => {
       .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } }));
   return updateSale;
 };
+// Req 8 => query para fazer o delete do crud
+const deleteById = async (id) => {
+  const deleteSale = await connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+  return deleteSale;
+};
 
 module.exports = {
   register,
   findAll,
   findById,
-  updateById
+  updateById, 
+  deleteById
 };

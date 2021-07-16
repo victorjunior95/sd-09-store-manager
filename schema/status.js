@@ -16,6 +16,8 @@ const message = {
   invalidQuantity: 'Wrong product ID or invalid quantity',
   // Req 6
   saleNotFound: 'Sale not found',
+  // Req 8
+  wrongSaleIdFormat: 'Wrong sale ID format',
 };
 
 const code = {

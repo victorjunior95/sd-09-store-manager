@@ -16,15 +16,21 @@ const findById = async (id) => {
   const soldProductsById = await Sales.findById(id);
   return soldProductsById;
 };
-// Req 7
+// Req 7 conecta com a query de update na camada model
 const updateById = async (id, itensSold) => {
   const updateSale = await Sales.register(id, itensSold);
   return updateSale;
+};
+// Req 8 conecta com a query de delete na camada model
+const deleteById = async (id) => {
+  const deleteSale = await Sales.deleteById(id);
+  return deleteSale;
 };
 
 module.exports = {
   register,
   findAll,
   findById,
-  updateById
+  updateById,
+  deleteById
 };

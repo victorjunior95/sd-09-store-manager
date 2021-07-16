@@ -32,7 +32,7 @@ const updateById = async (id, name, quantity ) => {
   const updateProduct = await Products.create(id, name, quantity);
   return updateProduct;
 };
-// Req 4
+// Req 4 => 
 const deleteById = async (id) => {
   const deleteProduct = await Products.deleteById(id);
   return deleteProduct;
