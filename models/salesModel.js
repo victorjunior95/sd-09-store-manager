@@ -40,9 +40,20 @@ const updateSaleById = async (id, newData) => {
   return updatedSale.value;
 };
 
+const deleteSaleById = async (id) => {
+  if(!ObjectId.isValid(id)){return null;}
+  const deletedSale = await mongoConnection().then(db => 
+    db.collection('sales').findOneAndDelete(
+      { _id : ObjectId(id) },
+    )
+  );
+  return deletedSale.value;
+};
+
 module.exports = {
   registerSale,
   getSales,
   getSaleById,
-  updateSaleById
+  updateSaleById,
+  deleteSaleById
 };
