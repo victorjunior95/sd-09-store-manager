@@ -10,6 +10,41 @@ const addSale = async (body) => {
   };
 };
 
+const getAllSales = async () => {
+  const allSales = await SalesModel.getAllSales();
+
+  return allSales;
+};
+
+const findById = async (id) => {
+  const sale = await SalesModel.findById(id);
+
+  if (!sale) return {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found'
+    }
+  };
+
+  return sale;
+};
+
+const editSale = async (id, body) => {
+  const newSale = await SalesModel.editSale(id, body);
+
+  return newSale;
+};
+const deleteSale = async (id) => {
+  const sale = await SalesModel.deleteSale(id);
+  return sale;
+};
+
+
+
 module.exports = {
+  deleteSale,
+  getAllSales,
+  findById,
+  editSale,
   addSale,
 };

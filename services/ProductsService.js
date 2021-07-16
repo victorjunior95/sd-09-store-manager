@@ -1,5 +1,17 @@
 const ProductsModel = require('../models/ProductsModel');
 
+const buyProduct = async (id, quantity) => {
+  const product = await ProductsModel.buyProduct(id, quantity);
+
+  return product;
+};
+
+const deleteSale = async (id, quantity) => {
+  const product = await ProductsModel.deleteSale(id, quantity);
+
+  return product;
+};
+
 const deleteProduct = async (id) => {
   product = await ProductsModel.deleteProduct(id);
 
@@ -48,6 +60,8 @@ const addProduct = async (name, quantity) => {
 
 
 module.exports = {
+  buyProduct,
+  deleteSale,
   deleteProduct,
   updateProduct,
   getProductById,

@@ -1,19 +1,52 @@
-const express = require('express');
 const SalesService = require('../services/SalesService');
-const {validatorIdAndQuantity} = require('../middlewares/validatorSale');
-
-const statusSucessCreate = 201;
 const statusSucess = 200;
 
-const SalesRouter = express.Router();
+const getAllSales = async (_req, res, _next) => {
+  const allSales = await SalesService.getAllSales();
 
-SalesRouter.post('/', validatorIdAndQuantity, async (req, res, _next) => {
+  return res.status(statusSucess).json({ sales: allSales });
+};
+
+const findById = async (req, res, next) => {
+  const { id } = req.params;
+
+  const sale = await SalesService.findById(id);
+
+  if (sale.err) return next(sale.err);
+
+  return res.status(statusSucess).json(sale);
+};
+
+const addSale = async (req, res, _next) => {
   const { body } = req;
 
   const sale = await SalesService.addSale(body);
 
   return res.status(statusSucess).json(sale);
-});
+};
 
-module.exports = SalesRouter;
+const editSale = async (req, res, _next) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  const newSale = await SalesService.editSale(id, body);
+
+  return res.status(statusSucess).json(newSale);
+};
+
+const deleteSale = async (req, res, _next) => {
+  const { id } = req.params;
+
+  const deleteProduct = await SalesService.deleteSale(id);
+
+  return res.status(statusSucess).json(deleteProduct);
+};
+
+module.exports = {
+  getAllSales,
+  findById,
+  addSale,
+  editSale,
+  deleteSale
+};
 

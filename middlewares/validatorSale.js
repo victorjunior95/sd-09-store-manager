@@ -1,31 +1,33 @@
-const ProductsService = require('../services/ProductsService');
+const Joi = require('joi');
 
-const checkQuantity = (value, min) => {
-  return value > min;
+
+const validatorNameQuant = (req, _res, next) => {
+  const min = 5;
+  const { error } = Joi.object({
+    name: Joi.string().min(min).required(),
+    quantity: Joi.number().integer().min(1).required(),
+  }).validate(req.body);
+
+  if (error) return next(error);
+
+  next();
 };
 
-const validatorIdAndQuantity = (req, _res, next) => {
-  const {body} = req;
+const validatorId = (req, _res, next) => {
+  const { id } = req.params;
   const regexId = /[0-9A-Fa-f]{6}/g;
-  const number = 0;
 
-  const regexTest = body.find(({ productId }) => regexId.test(productId));
-
-  const quantityTest = body.find(({ quantity }) => checkQuantity(quantity, number));
-
-  const searchProduct = body.find( async ({ productId }) =>
-    await ProductsService.getProductById(productId));
-
-  if (!regexTest || !quantityTest || !searchProduct ) {
-    return next ({
+  if (!regexId.test(id)) {
+    return next({
       code: 'invalid_data',
-      message: 'Wrong product ID or invalid quantity',
+      message: 'Wrong id format',
     });
-  };
+  }
+
   next();
 };
 
 module.exports = {
-  validatorIdAndQuantity,
+  validatorId,
+  validatorNameQuant,
 };
-
