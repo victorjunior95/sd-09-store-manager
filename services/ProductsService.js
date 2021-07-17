@@ -1,5 +1,6 @@
 const ProductsModel = require('../models/ProductsModel');
 
+
 const deleteProduct = async (id) => {
   const product = await ProductsModel.deleteProduct(id);
   if (product) return product;
@@ -7,7 +8,6 @@ const deleteProduct = async (id) => {
 
 const updateProduct = async ({id, name, quantity}) => {
   const product = await ProductsModel.updateProduct({name, quantity, id });
-
   return product;
 };
 
@@ -24,7 +24,6 @@ const getProductById = async (id) => {
 
 const addProduct = async (name, quantity) => {
   const product = await ProductsModel.addProduct({name, quantity});
-
   return product;
 };
 

@@ -5,6 +5,8 @@ const checkIfSalesExist = require('../middlewares/checkIfSalesExist');
 const checkSalesInput = require('../middlewares/checkSalesInput');
 const salesNotExistError = require('../middlewares/saleDeleteMidW');
 
+
+
 const SalesRouter = express.Router();
 
 SalesRouter.get(['/', '/:id'], checkIfSalesExist, SalesController.getAllSales);
