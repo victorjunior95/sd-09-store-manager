@@ -42,9 +42,18 @@ const validNumber = (quantity) => {
   };
 };
 
+const validSearch = (result) => {
+  if (!result) throw { status: UNPROCESSABLE_ENTITY_STATUS,
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    } };
+};
+
 module.exports = {
   alreadyExists,
   validName,
   validNumber,
   validQuantity,
+  validSearch,
 };
