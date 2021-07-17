@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const { MongoClient } = require('mongodb');
 const { getConnection } = require('./connectionMock');
 const productsModel = require('../../models/ProductsModel');
-const salesModel = require('../../models//SalesModel');
+const salesModel = require('../../models/SalesModel');
 const newProduct = {
   name: 'Produto Silva',
   quantity: 10,
@@ -238,7 +238,7 @@ describe('Delete a product', () => {
   it('Should delete a sale with the ID', async () => {
     const { insertedId } = await productsModel.addProduct(newProduct);
     const response = await productsModel.deleteProduct(insertedId);
-    expect(response.deletedCount).to.be.equal(1);
+    expect(response.deleted).to.be.equal(1);
   });
 });
 
@@ -255,7 +255,7 @@ describe('Delete a sale', () => {
   it('Should delete a sale with the ID', async () => {
     const { insertedId } = await salesModel.addSale(newSale);
     const response = await salesModel.deleteSale(insertedId);
-    expect(response.deletedCount).to.be.equal(1);
+    expect(response.deleted).to.be.equal(1);
   });
 
 });
