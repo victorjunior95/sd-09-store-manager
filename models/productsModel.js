@@ -11,9 +11,9 @@ const createProduct = async (name, quantity) => {
 };
 
 const getAllProducts = async () => {
-  const allProducts = await connection().then((db) =>
+  const products = await connection().then((db) =>
     db.collection('products').find().toArray());
-  return { product: allProducts };
+  return { products: products };
 };
 
 const getByIdProduct = async (id) => {
