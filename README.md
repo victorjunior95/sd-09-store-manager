@@ -41,7 +41,7 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
     - [10 - Valide a quantidade de produtos](#10---valide-a-quantidade-de-produtos)
 
     `Bônus`
-    
+
     - [11 - Escreva testes para seus models](#11---escreva-testes-para-seus-models)
     - [12 - Escreva testes para seus services](#12---escreva-testes-para-seus-services)
     - [13 - Escreva testes para seus controllers](#13---escreva-testes-para-seus-controllers)
@@ -328,11 +328,11 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 
 ### 1 - Crie um endpoint para o cadastro de produtos
 
-- O endpoint deve ser acessível através do caminho (`/products`);
+- O endpoint deve ser acessível através do caminho (`/products`); ✅
 
-- Os produtos enviados devem ser salvos em uma **collection** do MongoDB;
+- Os produtos enviados devem ser salvos em uma **collection** do MongoDB; ✅
 
-- O endpoint deve receber a seguinte estrutura:
+- O endpoint deve receber a seguinte estrutura: ✅
 
 ```json
 {
@@ -341,7 +341,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 }
 ```
 
-O retorno da API de um produto cadastrado com sucesso deverá ser:
+O retorno da API de um produto cadastrado com sucesso deverá ser: ✅
 
 ```json
 {
@@ -351,7 +351,7 @@ O retorno da API de um produto cadastrado com sucesso deverá ser:
 }
 ```
 
-#### Requisição de Cadastro de Produtos:
+#### Requisição de Cadastro de Produtos: ✅
 
 O projeto deve rodar na porta `http://localhost:3000`
 
@@ -359,50 +359,50 @@ O projeto deve rodar na porta `http://localhost:3000`
 
 #### Observações Técnicas:
 
-- `name` deve ser uma _string_ com mais de 5 caracteres e deve ser único;
+- `name` deve ser uma _string_ com mais de 5 caracteres e deve ser único; ✅
 
-- `quantity` deve ser um número inteiro maior que 0;
+- `quantity` deve ser um número inteiro maior que 0; ✅
 
-- Cada produto deve ter um id que seja único e gerado no momento em que o recurso for criado. Você pode utilizar o ID gerado pelo MongoDB
+- Cada produto deve ter um id que seja único e gerado no momento em que o recurso for criado. Você pode utilizar o ID gerado pelo MongoDB ✅
 
-- A resposta do endpoint em caso de sucesso deve ser o produto criado.
+- A resposta do endpoint em caso de sucesso deve ser o produto criado. ✅
 
 **O que será verificado:**
 
-- Será validado que não é possível criar um produto com o nome menor que 5 caracteres
+- Será validado que não é possível criar um produto com o nome menor que 5 caracteres ✅
   - Se o produto tiver o nome menor que cinco caracteres o resultado retornado deverá ser conforme exibido abaixo, com um status http `422`:
 
 ![Nome menor que 5](./public/nomeMenorQue5.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível criar um produto com o mesmo nome de outro já existente
+- Será validado que não é possível criar um produto com o mesmo nome de outro já existente ✅
 
   -  Se o produto tiver o mesmo nome o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
 
 ![Mesmo nome](./public/mesmonome.png)
 
-- Será validado que não é possível criar um produto com quantidade menor que zero
+- Será validado que não é possível criar um produto com quantidade menor que zero ✅
 
     - Se o produto tiver uma quantidade menor que zero o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
 
 ![Menor que 0](./public/menorque0.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível criar um produto com quantidade igual a zero
+- Será validado que não é possível criar um produto com quantidade igual a zero ✅
 
   - Se o produto tiver uma quantidade igual a zero o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
 
 ![Igual a zero](./public/igualazero.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível criar um produto com uma string no campo quantidade
+- Será validado que não é possível criar um produto com uma string no campo quantidade ✅
 
   - Se o produto tiver uma quantidade com o valor em string o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
 
 ![Quantidade como string](./public/quantidadecomostring.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que é possível criar um produto com sucesso
+- Será validado que é possível criar um produto com sucesso ✅
 
   - Se o produto for cadastrado com sucesso o resultado retornado deverá ser conforme exibido abaixo, com status http `201`:
 
