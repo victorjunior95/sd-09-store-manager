@@ -8,6 +8,7 @@ const {
 const app = express();
 
 const PORT_NUMBER = 3000;
+const PORT = process.env.PORT || PORT_NUMBER;
 
 app.use(bodyParser.json());
 app.use(express.json());
@@ -20,4 +21,4 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.listen(PORT_NUMBER, () => console.log(`Server is running on port ${PORT_NUMBER}!`));
+app.listen(PORT_NUMBER, () => console.log(`Server is running on port ${PORT}!`));
