@@ -43,4 +43,11 @@ router.get('/products/:id', async (req, res) => {
   return res.ok(product);
 });
 
+router.put('/products/:id', createProductValidator, async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const updatedProduct = await productModel.update({ id, name, quantity });
+  return res.ok(updatedProduct);
+});
+
 module.exports = router;

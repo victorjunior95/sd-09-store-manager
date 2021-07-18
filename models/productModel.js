@@ -31,9 +31,22 @@ async function findById(id) {
   return product;
 }
 
+async function update({ id, name, quantity }) {
+  const productCollection = await connection('products');
+  if (!ObjectId.isValid(id)) {
+    return;
+  }
+  const result = await productCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { name, quantity } },
+  );
+  return { id, name, quantity };
+}
+
 module.exports = {
   save,
   findByName,
   findAll,
   findById,
+  update,
 };
