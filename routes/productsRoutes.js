@@ -3,23 +3,16 @@ const productsRoutes = express.Router();
 
 const {
   registerProductController,
+  listAllProductsController,
   findProductController,
   updateProductController,
   deleteProductController,
-} = require('./controllers/productsControllers');
+} = require('../controllers/productsControllers');
 
-const {
-  registerProduct,
-  listAllProducts,
-  findProduct,
-  updateProduct,
-  deleteProduct,
-} = require('./services');
-
-productsRoutes.post('/products', registerProduct, registerProductController);
-productsRoutes.get('/products', listAllProducts);
-productsRoutes.get('/products/:id', findProduct, findProductController);
-productsRoutes.put('/products/:id', updateProduct, updateProductController);
-productsRoutes.delete('/products/:id', deleteProduct, deleteProductController);
+productsRoutes.post('/', registerProductController);
+productsRoutes.get('/', listAllProductsController);
+productsRoutes.get('/:id', findProductController);
+productsRoutes.put('/:id', updateProductController);
+productsRoutes.delete('/:id', deleteProductController);
 
 module.exports = productsRoutes;
