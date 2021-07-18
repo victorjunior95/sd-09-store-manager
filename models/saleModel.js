@@ -29,9 +29,16 @@ async function update({ id, productId, quantity }) {
   return true;
 }
 
+async function remove(id) {
+  const salesCollection = await connection('sales');
+  await salesCollection.deleteOne({_id: new ObjectId(id)});
+  return true;
+}
+
 module.exports = {
   save,
   findAll,
   findById,
   update,
+  remove,
 };

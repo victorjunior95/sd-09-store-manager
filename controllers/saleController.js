@@ -43,4 +43,14 @@ router.put('/:id', createSaleValidator, async (req, res) => {
   return res.ok({ _id: id, itensSold: [{ productId, quantity }] });
 });
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const sale = await saleModel.findById(id);
+  if (!sale) {
+    return res.invalidData('Wrong sale ID format');
+  }
+  await saleModel.remove(id);
+  return res.ok();
+});
+
 module.exports = router;
