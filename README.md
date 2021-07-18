@@ -482,21 +482,21 @@ O projeto deve rodar na porta `http://localhost:3000`
 
 ### 4 - Crie um endpoint para deletar um produto
 
-- O endpoint deve ser acessível através do caminho (`/products/:id`);
+- O endpoint deve ser acessível através do caminho (`/products/:id`); ✅
 
-- Apenas o produto com o `id` presente na URL deve ser deletado;
+- Apenas o produto com o `id` presente na URL deve ser deletado; ✅
 
 **O que será verificado:**
 
-- Será validado que é possível deletar um produto com sucesso
+- Será validado que é possível deletar um produto com sucesso ✅
 
-  - Se o produto deletado com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se o produto deletado com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Deletar um produto](./public/deletarumproduto.png)
 
-- Será validado que não é possível deletar um produto que não existe
+- Será validado que não é possível deletar um produto que não existe ✅
 
-  - Se o produto não for deletado com sucesso, o resultado retornado deverá ser esse e com status http `422`:
+  - Se o produto não for deletado com sucesso, o resultado retornado deverá ser esse e com status http `422`: ✅
 
 ![Deletar um produto que não existe](./public/deletarumprodutoquenaoexiste.png)
 

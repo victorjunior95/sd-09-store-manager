@@ -1,6 +1,7 @@
-const { createProduct, getAllProducts,
-  getByIdProduct, updateProduct } = require('../models/productsModel');
-const { alreadyExists, validName, validNumber,
+const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
+  updateProduct } = require('../models/productsModel');
+
+const { alreadyExists, validId, validName, validNumber,
   validQuantity, validSearch } = require('./validations');
 
 const OK_STATUS = 200;
@@ -34,9 +35,16 @@ const updateService = async (id, name, quantity) => {
   return { status: OK_STATUS, result: { _id: id, name, quantity } };
 };
 
+const deleteService = async (id) => {
+  await validId(id);
+  const result = await deleteProduct(id);
+  return { status: OK_STATUS, result };
+};
+
 module.exports = {
-  create,
   allProducts,
+  create,
+  deleteService,
   getById,
-  updateService
+  updateService,
 };
