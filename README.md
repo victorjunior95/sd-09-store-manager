@@ -671,19 +671,19 @@ O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 
 ### 9 - Atualize a quantidade de produtos
 
-- Ao realizar uma venda, atualizá-la ou deletá-la, você deve também atualizar a quantidade do produto em questão presente na `collection` responsável pelos produtos;
+- Ao realizar uma venda, atualizá-la ou deletá-la, você deve também atualizar a quantidade do produto em questão presente na `collection` responsável pelos produtos; ✅
 
-- Por exemplo: suponha que haja um produto chamado _Bola de Futebol_ e a sua propriedade `quantity` tenha o valor _10_. Caso seja feita uma venda com _8_ unidades desse produto, a quantidade do produto deve ser atualizada para _2_ , pois 10 - 8 = 2;
+- Por exemplo: suponha que haja um produto chamado _Bola de Futebol_ e a sua propriedade `quantity` tenha o valor _10_. Caso seja feita uma venda com _8_ unidades desse produto, a quantidade do produto deve ser atualizada para _2_ , pois 10 - 8 = 2; ✅
 
 **O que será verificado:**
 
-- Será validado que é possível a quantidade do produto atualize ao fazer uma compra
+- Será validado que é possível a quantidade do produto atualize ao fazer uma compra ✅
 
-  - Ao fazer uma determinada venda, a quantidade do produto deverá ser atualizada.
+  - Ao fazer uma determinada venda, a quantidade do produto deverá ser atualizada. ✅
 
-- Será validado que é possível a quantidade do produto atualize ao deletar uma compra
+- Será validado que é possível a quantidade do produto atualize ao deletar uma compra ✅
 
-  - Ao fazer deletar uma determinada venda, a quantidade do produto deverá ser atualizada para a quantidade que tinha antes de ter feito essa venda.
+  - Ao fazer deletar uma determinada venda, a quantidade do produto deverá ser atualizada para a quantidade que tinha antes de ter feito essa venda. ✅
 
 ### 10 - Valide a quantidade de produtos
 
