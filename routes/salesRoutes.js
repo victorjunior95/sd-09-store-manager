@@ -3,23 +3,16 @@ const salesRoutes = express.Router();
 
 const {
   registerSaleController,
+  listAllSalesController,
   findSaleController,
   updateSaleController,
   deleteSaleController,
-} = require('./controllers/salesController');
+} = require('../controllers/salesControllers');
 
-const {
-  registerSale,
-  listAllSales,
-  findSale,
-  updateSale,
-  deleteSale,
-} = require('./services');
-
-salesRoutes.post('/', registerSale, registerSaleController);
-salesRoutes.get('/', listAllSales);
-salesRoutes.get('/:id', findSale, findSaleController);
-salesRoutes.put('/:id', updateSale, updateSaleController);
-salesRoutes.delete('/:id', deleteSale, deleteSaleController);
+salesRoutes.post('/', registerSaleController);
+salesRoutes.get('/:id', findSaleController);
+salesRoutes.get('/', listAllSalesController);
+salesRoutes.put('/:id', updateSaleController);
+salesRoutes.delete('/:id', deleteSaleController);
 
 module.exports = salesRoutes;
