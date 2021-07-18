@@ -19,7 +19,7 @@ function createProductValidator(req, res, next) {
   return next();
 }
 
-router.post('/products', createProductValidator, async (req, res) => {
+router.post('/', createProductValidator, async (req, res) => {
   const { name, quantity } = req.body;
   const productWithSameName = await productModel.findByName(name);
   if (productWithSameName) {
@@ -29,12 +29,12 @@ router.post('/products', createProductValidator, async (req, res) => {
   return res.created(createdProduct);
 });
 
-router.get('/products', async (_req, res) => {
+router.get('/', async (_req, res) => {
   const products = await productModel.findAll();
   return res.ok({ products });
 });
 
-router.get('/products/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const product = await productModel.findById(id);
   if (!product) {
@@ -43,14 +43,14 @@ router.get('/products/:id', async (req, res) => {
   return res.ok(product);
 });
 
-router.put('/products/:id', createProductValidator, async (req, res) => {
+router.put('/:id', createProductValidator, async (req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   const updatedProduct = await productModel.update({ id, name, quantity });
   return res.ok(updatedProduct);
 });
 
-router.delete('/products/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const {id} = req.params;
   const product = await productModel.findById(id);
   if (!product) {
