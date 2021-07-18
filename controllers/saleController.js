@@ -22,4 +22,18 @@ router.post('/', createSaleValidator, async (req, res) => {
   return res.ok(createdSale);
 });
 
+router.get('/', async (_req, res) => {
+  const sales = await saleModel.findAll();
+  res.ok({ sales });
+});
+
+router.get('/:id', async (req, res) => {
+  const {id} = req.params;
+  const sale = await saleModel.findById(id);
+  if (!sale) {
+    return res.notFound('Sale not found');
+  }
+  return res.ok(sale);
+});
+
 module.exports = router;

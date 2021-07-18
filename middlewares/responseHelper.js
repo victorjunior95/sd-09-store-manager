@@ -3,6 +3,7 @@ function responseHelperMiddleware(_req, res, next) {
     invalidData: 422,
     created: 201,
     ok: 200,
+    notFound: 404,
   };
   res.invalidData = (message) =>
     res.status(httpCodes.invalidData).json({
@@ -13,7 +14,12 @@ function responseHelperMiddleware(_req, res, next) {
     });
   res.created = (json) => res.status(httpCodes.created).json(json);
   res.ok = (json) => res.status(httpCodes.ok).json(json);
-
+  res.notFound = (message) => res.status(httpCodes.notFound).json({
+    err: {
+      code: 'not_found',
+      message: message,
+    }
+  });
   return next();
 }
 
