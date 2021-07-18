@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { minLenght, min } = require('./validators');
 const { productModel } = require('./models');
+const { responseHelperMiddleware } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,22 +13,6 @@ const PORT = process.env.PORT || DEFAULT_PORT;
 app.get('/', (_request, response) => {
   response.send();
 });
-
-function responseHelperMiddleware(_req, res, next) {
-  const httpCodes = {
-    invalidData: 422,
-    created: 201,
-  };
-  res.invalidData = (message) =>
-    res.status(httpCodes.invalidData).json({
-      err: {
-        code: 'invalid_data',
-        message: message,
-      },
-    });
-  res.created = (json) => res.status(httpCodes.created).json(json);
-  return next();
-}
 
 app.use(responseHelperMiddleware);
 
@@ -57,4 +42,6 @@ app.post('/products', createProductValidator, async (req, res) => {
   return res.created(createdProduct);
 });
 
-app.listen(PORT, () => console.log(`Api run in port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Api run in port ${PORT}, mongoEnv: ${process.env.MONGO_DB_URL}`),
+);
