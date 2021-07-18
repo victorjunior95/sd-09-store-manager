@@ -28,12 +28,19 @@ router.get('/', async (_req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const sale = await saleModel.findById(id);
   if (!sale) {
     return res.notFound('Sale not found');
   }
   return res.ok(sale);
+});
+
+router.put('/:id', createSaleValidator, async (req, res) => {
+  const { id } = req.params;
+  const [{ productId, quantity }] = req.body;
+  await saleModel.update({ id, productId, quantity });
+  return res.ok({ _id: id, itensSold: [{ productId, quantity }] });
 });
 
 module.exports = router;
