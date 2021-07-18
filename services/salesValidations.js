@@ -32,7 +32,17 @@ const validSearch = (search) => {
     } };
 };
 
+const validId = (id) => {
+  if (!id) throw {
+    status: UNPROCESSABLE_ENTITY_STATUS,
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format',
+    } };
+};
+
 module.exports = {
+  validId,
   validNumber,
   validQuantity,
   validSearch,

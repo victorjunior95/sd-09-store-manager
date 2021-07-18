@@ -651,21 +651,21 @@ O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 
 ### 8 - Crie um endpoint para deletar uma venda
 
-- O endpoint deve ser acessível através do caminho (`/sales/:id`);
+- O endpoint deve ser acessível através do caminho (`/sales/:id`); ✅
 
-- Apenas a venda com o `id` presente na URL deve ser deletado;
+- Apenas a venda com o `id` presente na URL deve ser deletado; ✅
 
 **O que será verificado:**
 
-- Será validado que é possível deletar uma venda com sucesso
+- Será validado que é possível deletar uma venda com sucesso ✅
 
-  - Se a venda foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200` e será verificado depois que a venda não existe e deverar retornar http `404`:
+  - Se a venda foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200` e será verificado depois que a venda não existe e deverar retornar http `404`: ✅
 
 ![Deletar uma venda com sucesso](./public/deletarumavendacomsucesso.png)
 
-- Será validado que não é possível deletar uma venda que não existe
+- Será validado que não é possível deletar uma venda que não existe ✅
 
-  - Se a venda não foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda não foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Deletar uma venda que não existe](./public/deletarumavendaquenaoexiste.png)
 

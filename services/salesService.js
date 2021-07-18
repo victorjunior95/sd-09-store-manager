@@ -1,7 +1,8 @@
-const { createSales, getAllSales, getByIdSale,
+const { createSales, deleteSale, getAllSales, getByIdSale,
   updateSale } = require('../models/salesModel');
 
-const { validNumber, validQuantity, validSearch } = require('./salesValidations');
+const { validId, validNumber, validQuantity,
+  validSearch } = require('./salesValidations');
 
 const OK_STATUS = 200;
 
@@ -30,9 +31,16 @@ const updateService = async (id, updates) => {
   return { status: OK_STATUS, result };
 };
 
+const deleteService = async (id) => {
+  const result = await deleteSale(id);
+  validId(result);
+  return { status: OK_STATUS, result };
+};
+
 module.exports = {
   allSales,
   create,
+  deleteService,
   getById,
   updateService,
 };
