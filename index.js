@@ -5,6 +5,8 @@ const rescue = require('express-rescue');
 const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
   updateProduct } = require('./controllers/productsController');
 
+const { createSales } = require('./controllers/salesController');
+
 const PORT = 3000;
 
 app.use(bodyParser);
@@ -19,6 +21,7 @@ app.get('/products', rescue(getAllProducts));
 app.get('/products/:id', rescue(getByIdProduct));
 app.put('/products/:id', rescue(updateProduct));
 app.delete('/products/:id', rescue(deleteProduct));
+app.post('/sales', rescue(createSales));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
