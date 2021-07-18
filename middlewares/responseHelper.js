@@ -2,6 +2,7 @@ function responseHelperMiddleware(_req, res, next) {
   const httpCodes = {
     invalidData: 422,
     created: 201,
+    ok: 200,
   };
   res.invalidData = (message) =>
     res.status(httpCodes.invalidData).json({
@@ -11,6 +12,8 @@ function responseHelperMiddleware(_req, res, next) {
       },
     });
   res.created = (json) => res.status(httpCodes.created).json(json);
+  res.ok = (json) => res.status(httpCodes.ok).json(json);
+
   return next();
 }
 

@@ -29,4 +29,18 @@ router.post('/products', createProductValidator, async (req, res) => {
   return res.created(createdProduct);
 });
 
+router.get('/products', async (_req, res) => {
+  const products = await productModel.findAll();
+  return res.ok({ products });
+});
+
+router.get('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const product = await productModel.findById(id);
+  if (!product) {
+    return res.invalidData('Wrong id format');
+  }
+  return res.ok(product);
+});
+
 module.exports = router;

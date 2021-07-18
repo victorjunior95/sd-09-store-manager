@@ -3,18 +3,19 @@ const { MongoClient } = require('mongodb');
 const MONGO_DB_URL = process.env.MONGO_DB_URL || 'mongodb://mongodb:27017';
 const DB_NAME = 'StoreManager';
 
+/** @type { import('mongodb').Db } */
 let connectionPool;
 
-/**
- * @returns { Promise<mongo.Db> }
- */
-async function connection() {
+async function connection(collectionName) {
   if (!connectionPool) {
-    connectionPool = await MongoClient
-      .connect(MONGO_DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-      .then((connection) => connection.db(DB_NAME));
+    const mongoConnection = await MongoClient.connect(MONGO_DB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    const db = mongoConnection.db(DB_NAME);
+    connectionPool = db;
   }
-  return connectionPool;
+  return connectionPool.collection(collectionName);
 }
 
 module.exports = connection;
