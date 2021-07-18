@@ -438,45 +438,45 @@ O projeto deve rodar na porta `http://localhost:3000`
 
 ### 3 - Crie um endpoint para atualizar um produto
 
-- O endpoint deve ser acessível através do caminho (`/products/:id`);
+- O endpoint deve ser acessível através do caminho (`/products/:id`); ✅
 
-- O corpo da requisição deve seguir a mesma estrutura do método responsável por adicionar um produto;
+- O corpo da requisição deve seguir a mesma estrutura do método responsável por adicionar um produto; ✅
 
-- Apenas o produto com o `id` presente na URL deve ser atualizado;
+- Apenas o produto com o `id` presente na URL deve ser atualizado; ✅
 
 **O que será verificado:**
 
-- Será validado que não é possível atualizar um produto com o nome menor que 5 caracteres
+- Será validado que não é possível atualizar um produto com o nome menor que 5 caracteres ✅
 
-  - Se o produto tiver o nome menor que cinco caracteres, o resultado retornado deverá ser conforme exibido abaixo, com status `422`:
+  - Se o produto tiver o nome menor que cinco caracteres, o resultado retornado deverá ser conforme exibido abaixo, com status `422`: ✅
 
 ![Atualizar com nome menor que cinco](./public/atualizarcomnomemenorque5.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível atualizar um produto com quantidade menor que zero
+- Será validado que não é possível atualizar um produto com quantidade menor que zero ✅
 
-  - Se o produto tiver o quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se o produto tiver o quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar menor que zero](./public/atualizarmenorque0.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível atualizar um produto com quantidade igual a zero
+- Será validado que não é possível atualizar um produto com quantidade igual a zero ✅
 
-  - Se o produto tiver o quantidade igual a zero, o resultado mostrado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se o produto tiver o quantidade igual a zero, o resultado mostrado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar igual a zero](./public/atualizarigual0.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que não é possível atualizar um produto com uma string no campo quantidade
+- Será validado que não é possível atualizar um produto com uma string no campo quantidade ✅
 
-  - Se o produto tiver o quantidade como string, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se o produto tiver o quantidade como string, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar com string](./public/atualizarcomostring.png)
 (As contrabarras `\` estão escapando as aspas de dentro da string)
 
-- Será validado que é possível atualizar um produto com sucesso]**
+- Será validado que é possível atualizar um produto com sucesso]** ✅
 
-  - Se o produto atualizado com sucesso, o resultado mostrretornadoado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se o produto atualizado com sucesso, o resultado mostrretornadoado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Atualizado com sucesso](./public/atualizarcomsucesso.png)
 

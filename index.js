@@ -2,7 +2,7 @@ const app = require('express')();
 const bodyParser = require('body-parser').json();
 const rescue = require('express-rescue');
 const { createProduct, getAllProducts,
-  getByIdProduct} = require('./controllers/productsController');
+  getByIdProduct, updateProduct} = require('./controllers/productsController');
 const PORT = 3000;
 
 app.use(bodyParser);
@@ -15,6 +15,7 @@ app.get('/', (_request, response) => {
 app.post('/products', rescue(createProduct));
 app.get('/products', rescue(getAllProducts));
 app.get('/products/:id', rescue(getByIdProduct));
+app.put('/products/:id', rescue(updateProduct));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
