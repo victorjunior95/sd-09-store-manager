@@ -50,4 +50,14 @@ router.put('/products/:id', createProductValidator, async (req, res) => {
   return res.ok(updatedProduct);
 });
 
+router.delete('/products/:id', async (req, res) => {
+  const {id} = req.params;
+  const product = await productModel.findById(id);
+  if (!product) {
+    return res.invalidData('Wrong id format');
+  }
+  await productModel.remove(id);
+  return res.ok(product);
+});
+
 module.exports = router;
