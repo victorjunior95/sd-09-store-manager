@@ -2,7 +2,7 @@ const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
   updateProduct } = require('../models/productsModel');
 
 const { alreadyExists, validId, validName, validNumber,
-  validQuantity, validSearch } = require('./validations');
+  validQuantity, validSearch } = require('./productsValidations');
 
 const OK_STATUS = 200;
 const CREATED_STATUS = 201;

@@ -1,4 +1,4 @@
-const { create } = require('../services/salesService');
+const { allSales, create, getById  } = require('../services/salesService');
 
 const createSales = async (req, res, _next) => {
   const newSales = req.body;
@@ -6,6 +6,19 @@ const createSales = async (req, res, _next) => {
   return res.status(status).json(result);
 };
 
+const getAllSales = async (_req, res, _next) => {
+  const { status, result } = await allSales();
+  return res.status(status).json(result);
+};
+
+const getByIdSale = async (req, res, _next) => {
+  const { id } = req.params;
+  const { status, result } = await getById(id);
+  return res.status(status).json(result);
+};
+
 module.exports = {
   createSales,
+  getAllSales,
+  getByIdSale,
 };

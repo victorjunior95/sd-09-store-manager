@@ -502,13 +502,13 @@ O projeto deve rodar na porta `http://localhost:3000`
 
 ### 5 - Crie um endpoint para cadastrar vendas
 
-- O endpoint deve ser acessível através do caminho (`/sales`);
+- O endpoint deve ser acessível através do caminho (`/sales`); ✅
 
-- As vendas enviadas devem ser salvas em uma `collection` do MongoDB;
+- As vendas enviadas devem ser salvas em uma `collection` do MongoDB; ✅
 
-- Deve ser possível cadastrar a venda de vários produtos através da uma mesma requisição;
+- Deve ser possível cadastrar a venda de vários produtos através da uma mesma requisição; ✅
 
-- O endpoint deve receber a seguinte estrutura:
+- O endpoint deve receber a seguinte estrutura: ✅
 
 ```json
 [
@@ -520,7 +520,7 @@ O projeto deve rodar na porta `http://localhost:3000`
 ]
 ```
 
-O retorno de uma venda cadastrada com sucesso deverá ser:
+O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 
 ```json
 {
@@ -536,71 +536,71 @@ O retorno de uma venda cadastrada com sucesso deverá ser:
 
 #### Observações Técnicas:
 
-- O `productId` devem ser igual ao `id` de um produto anteriormente cadastrado;
+- O `productId` devem ser igual ao `id` de um produto anteriormente cadastrado; ✅
 
-- `quantity` deve ser um número inteiro maior que 0;
+- `quantity` deve ser um número inteiro maior que 0; ✅
 
-- Cada venda deve ter um id que seja único e gerado no momento em que o recurso for criado;
+- Cada venda deve ter um id que seja único e gerado no momento em que o recurso for criado; ✅
 
-- A resposta do endpoint em caso de sucesso deve ser a(s) venda(s) criada(s).
+- A resposta do endpoint em caso de sucesso deve ser a(s) venda(s) criada(s). ✅
 
 **O que será verificado:**
 
-- Será validado que não é possível cadastrar vendas com quantidade menor que zero
+- Será validado que não é possível cadastrar vendas com quantidade menor que zero ✅
 
-  - Se a venda tiver uma quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Vendas menor que zero](./public/comprasmenorquezero.png)
 
-- Será validado que não é possível cadastrar vendas com quantidade igual a zero
+- Será validado que não é possível cadastrar vendas com quantidade igual a zero ✅
 
-  - Se a venda tiver uma quantidade igual a zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade igual a zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Vendas igual a zero](./public/comprasigualazero.png)
 
-- Será validado que não é possível cadastrar vendas com uma string no campo quantidade
+- Será validado que não é possível cadastrar vendas com uma string no campo quantidade ✅
 
-  - Se a venda tiver uma quantidade com valor, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade com valor, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Vendas com string](./public/comprascomstring.png)
 
-- Será validado que é possível criar uma venda com sucesso
+- Será validado que é possível criar uma venda com sucesso ✅
 
-  - Se a venda foi feita com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se a venda foi feita com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Cadastro de venda com sucesso](./public/cadastrodevendacomsucesso.png)
 
-- Será validado que é possível criar várias vendas com sucesso
+- Será validado que é possível criar várias vendas com sucesso ✅
 
-  - Se as vendas foi feita com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se as vendas foi feita com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Cadastrar varias compras](./public/variascompras.png)
 
 ### 6 - Crie um endpoint para listar as vendas
 
-- O endpoint deve ser acessível através do caminho (`/sales`) ou (`/sales/:id`);
+- O endpoint deve ser acessível através do caminho (`/sales`) ou (`/sales/:id`); ✅
 
-- Através do caminho `/sales`, todas as vendas devem ser retornadas;
+- Através do caminho `/sales`, todas as vendas devem ser retornadas; ✅
 
-- Através do caminho `/sales/:id`, apenas a venda com o `id` presente na URL deve ser retornada;
+- Através do caminho `/sales/:id`, apenas a venda com o `id` presente na URL deve ser retornada; ✅
 
 **O que será verificado:**
 
-- Será validado que todas as vendas estão sendo retornadas
+- Será validado que todas as vendas estão sendo retornadas ✅
 
-  - Se todas vendas estão sendo listadas, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se todas vendas estão sendo listadas, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Listar todas as vendas](./public/todasvendas.png)
 
-- Será validado que é possível listar uma determinada venda
+- Será validado que é possível listar uma determinada venda ✅
 
- - Se a venda esta sendo listada, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+ - Se a venda esta sendo listada, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Listar uma venda](./public/listaumavenda.png)
 
-- Será validado que não é possível listar uma venda inexistente
+- Será validado que não é possível listar uma venda inexistente ✅
 
-  - Se a venda não esta sendo listada, o resultado retornado deverá ser conforme exibido abaixo, com status http `404`:
+  - Se a venda não esta sendo listada, o resultado retornado deverá ser conforme exibido abaixo, com status http `404`: ✅
 
 ![Listar uma venda que não existe](./public/vendanaoexiste.png)
 
