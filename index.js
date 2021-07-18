@@ -42,4 +42,4 @@ app.post('/products', createProductValidator, async (req, res) => {
   return res.created(createdProduct);
 });
 
-app.listen(PORT, () => console.log(process.env));
+app.listen(PORT, () => console.log(`Api run in port ${PORT}`));
