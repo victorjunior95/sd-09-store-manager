@@ -1,4 +1,4 @@
-const { saleModel } = require('../models');
+const { saleModel, productModel } = require('../models');
 const { min } = require('../validators');
 
 const router = require('express').Router();
@@ -19,6 +19,9 @@ function createSaleValidator(req, res, next) {
 router.post('/', createSaleValidator, async (req, res) => {
   const { body } = req;
   const createdSale = await saleModel.save(body);
+  body.map(async ({productId, quantity}) => {
+    await productModel.updateQuantity(productId, -quantity);
+  });
   return res.ok(createdSale);
 });
 
@@ -49,6 +52,9 @@ router.delete('/:id', async (req, res) => {
   if (!sale) {
     return res.invalidData('Wrong sale ID format');
   }
+  sale.itensSold.map(async ({productId, quantity}) => {
+    await productModel.updateQuantity(productId, quantity);
+  });
   await saleModel.remove(id);
   return res.ok();
 });

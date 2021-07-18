@@ -48,8 +48,17 @@ async function remove(id) {
   if (!ObjectId.isValid(id)) {
     return;
   }
-  const result = await productCollection.deleteOne({_id: new ObjectId(id)});
+  const result = await productCollection.deleteOne({ _id: new ObjectId(id) });
   return true;
+}
+
+async function updateQuantity(id, quantityToAdd) {
+  const productCollection = await connection('products');
+  await productCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $inc: { quantity: quantityToAdd } },
+  );
+  return productCollection.findOne({ _id: new ObjectId(id) });
 }
 
 module.exports = {
@@ -59,4 +68,5 @@ module.exports = {
   findById,
   update,
   remove,
+  updateQuantity,
 };
