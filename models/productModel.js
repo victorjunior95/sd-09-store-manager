@@ -1,18 +1,19 @@
-const products = [];
+const connection = require('./connection');
 
 async function save({ name, quantity }) {
-  const id = '123';
+  const products = await connection().then((conn) => conn.collection('products'));
   const product = {
-    _id: id,
     name,
     quantity,
   };
-  products.push(product);
-  return product;
+  const { ops } = await products.insertOne(product);
+  return ops[0];
 }
 
 async function findByName(name) {
-  return products.find((product) => product.name === name);
+  const products = await connection().then((conn) => conn.collection('products'));
+  const product = await products.findOne({name});
+  return product;
 }
 
 module.exports = {
