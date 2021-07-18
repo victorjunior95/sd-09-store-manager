@@ -606,9 +606,9 @@ O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 
 ### 7 - Crie um endpoint para atualizar uma venda
 
-- O endpoint deve ser acessível através do caminho (`/sales/:id`);
+- O endpoint deve ser acessível através do caminho (`/sales/:id`); ✅
 
-- O corpo da requisição deve receber a seguinte estrutura:
+- O corpo da requisição deve receber a seguinte estrutura: ✅
 
 ```json
 [
@@ -619,33 +619,33 @@ O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 ]
 ```
 
-- `quantity` deve ser um número inteiro maior que 0;
+- `quantity` deve ser um número inteiro maior que 0; ✅
 
-- Apenas a venda com o `id` presente na URL deve ser atualizada;
+- Apenas a venda com o `id` presente na URL deve ser atualizada; ✅
 
 **O que será verificado:**
 
-- Será validado que não é possível atualizar vendas com quantidade menor que zero
+- Será validado que não é possível atualizar vendas com quantidade menor que zero ✅
 
-  - Se a venda tiver uma quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar venda menor que zero](./public/atualizarvendamenorquezero.png)
 
-- Será validado que não é possível atualizar vendas com quantidade igual a zero
+- Será validado que não é possível atualizar vendas com quantidade igual a zero ✅
 
-  - Se a venda tiver uma quantidade igual a zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade igual a zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar venda igual zero](./public/atualizarvendaigualzero.png)
 
-- Será validado que não é possível atualizar vendas com uma string no campo quantidade
+- Será validado que não é possível atualizar vendas com uma string no campo quantidade ✅
 
-  - Se a venda tiver uma quantidade do tipo string, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
+  - Se a venda tiver uma quantidade do tipo string, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`: ✅
 
 ![Atualizar venda com string](./public/atualizarvendacomstring.png)
 
-- Será validado que é possível atualizar uma vendas com sucesso
+- Será validado que é possível atualizar uma vendas com sucesso ✅
 
-  - Se a venda for atualizada com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
+  - Se a venda for atualizada com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`: ✅
 
 ![Atualizar uma venda com sucesso](./public/atualizarvendacomsucesso.png)
 

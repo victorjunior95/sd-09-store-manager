@@ -5,8 +5,8 @@ const rescue = require('express-rescue');
 const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
   updateProduct } = require('./controllers/productsController');
 
-const { createSales, getAllSales,
-  getByIdSale } = require('./controllers/salesController');
+const { createSales, getAllSales, getByIdSale,
+  updateSale } = require('./controllers/salesController');
 
 const PORT = 3000;
 
@@ -25,6 +25,7 @@ app.delete('/products/:id', rescue(deleteProduct));
 app.post('/sales', rescue(createSales));
 app.get('/sales', rescue(getAllSales));
 app.get('/sales/:id', rescue(getByIdSale));
+app.put('/sales/:id', rescue(updateSale));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
