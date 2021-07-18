@@ -42,6 +42,4 @@ app.post('/products', createProductValidator, async (req, res) => {
   return res.created(createdProduct);
 });
 
-app.listen(PORT, () =>
-  console.log(`Api run in port ${PORT}, mongoEnv: ${process.env.MONGO_DB_URL}`),
-);
+app.listen(PORT, () => console.log(process.env));
