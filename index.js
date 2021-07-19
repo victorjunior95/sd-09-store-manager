@@ -3,9 +3,10 @@ const products = require('./routes/productRoute');
 const sales = require('./routes/saleRoute');
 
 const app = express();
-const PORTA = 3000;
+const PORT = 3000;
 
 app.use(express.json());
+
 app.use(products);
 app.use(sales);
 
@@ -15,5 +16,5 @@ app.get('/', (_request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`PAI TA ON NA PORTA: ${PORTA}`);
+  console.log(`TAMO ON NA PORTA: ${PORT}`);
 });

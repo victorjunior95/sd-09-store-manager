@@ -34,6 +34,7 @@ const sales = (req, res, next) => {
 
   values.forEach(({name, quantity}) => {
     const quantityChecker = validateQuantity(quantity);
+  
     if(quantityChecker) {
       return res.status(code.post_error).json(quantityChecker);
     }      

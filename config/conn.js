@@ -1,7 +1,8 @@
 const mongoClient = require('mongodb').MongoClient;
 const DB_URL = 'mongodb://mongodb:27017/StoreManager';
+
 const DB_NAME = 'StoreManager';
-//dados do readme do projeto
+
 const connection = async () => {
   return mongoClient
     .connect(DB_URL, {
@@ -14,5 +15,5 @@ const connection = async () => {
       process.exit(1); 
     });
 };
-
+//base de dados do readme
 module.exports = connection;
