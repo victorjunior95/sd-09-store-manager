@@ -22,11 +22,9 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
   beforeEach(async () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
       { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
+      { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
@@ -52,8 +50,8 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: -1,
@@ -80,8 +78,8 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 0,
@@ -108,8 +106,8 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 'String',
@@ -136,8 +134,8 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -148,7 +146,6 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         const { json } = secondResponse;
         const idFirstItenSold = json.itensSold[0].productId;
         const quantityFirstItenSold = json.itensSold[0].quantity;
-        expect(json).toHaveProperty('_id');
         expect(idFirstItenSold).toBe(resultProductId);
         expect(quantityFirstItenSold).toBe(2);
       });
@@ -167,8 +164,8 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -185,7 +182,6 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         const quantityFirstItenSold = json.itensSold[0].quantity;
         const idSecondItenSold = json.itensSold[1].productId;
         const quantitySecondItenSold = json.itensSold[1].quantity;
-        expect(json).toHaveProperty('_id');
         expect(idFirstItenSold).toBe(resultProductId);
         expect(quantityFirstItenSold).toBe(2);
         expect(idSecondItenSold).toBe(resultProductId);
@@ -211,11 +207,9 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
   beforeEach(async () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
       { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
+      { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
@@ -243,8 +237,8 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -261,8 +255,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .get(`${url}/sales/`)
+    await frisby.get(`${url}/sales/`)
       .expect('status', 200)
       .then((responseAll) => {
         const { body } = responseAll;
@@ -294,8 +287,8 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
         result = JSON.parse(body);
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: result.products[0]._id,
           quantity: 2,
@@ -312,8 +305,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .get(`${url}/sales/`)
+    await frisby.get(`${url}/sales/`)
       .expect('status', 200)
       .then((responseOne) => {
         const { body } = responseOne;
@@ -333,8 +325,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
   });
 
   it('Será validado que não é possível listar uma venda inexistente', async () => {
-    await frisby
-      .get(`${url}/sales/9999`)
+    await frisby.get(`${url}/sales/9999`)
       .expect('status', 404)
       .then((responseOne) => {
         const { body } = responseOne;
@@ -362,11 +353,9 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
   beforeEach(async () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
       { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
+      { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
@@ -394,8 +383,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -408,8 +397,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .put(`${url}/sales/${resultSales._id}`, [
+    await frisby.put(`${url}/sales/${resultSales._id}`,
+      [
         {
           productId: resultProductId,
           quantity: -1,
@@ -441,8 +430,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -455,8 +444,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .put(`${url}/sales/${resultSalesId}`, [
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
         {
           productId: resultProductId,
           quantity: 0,
@@ -488,8 +477,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -502,8 +491,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .put(`${url}/sales/${resultSalesId}`, [
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
         {
           productId: resultProductId,
           quantity: 'String',
@@ -535,8 +524,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -549,8 +538,8 @@ describe('7 - Crie um endpoint para atualizar uma venda', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby
-      .put(`${url}/sales/${resultSalesId}`, [
+    await frisby.put(`${url}/sales/${resultSalesId}`,
+      [
         {
           productId: resultProductId,
           quantity: 5,
@@ -587,11 +576,9 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
   beforeEach(async () => {
     await db.collection('products').deleteMany({});
     await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
       { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
+      { name: 'Escudo do Capitão América', quantity: 30 }];
     await db.collection('products').insertMany(products);
   });
 
@@ -619,8 +606,8 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
         resultProductId = result.products[0]._id;
       });
 
-    await frisby
-      .post(`${url}/sales/`, [
+    await frisby.post(`${url}/sales/`,
+      [
         {
           productId: resultProductId,
           quantity: 2,
@@ -633,10 +620,10 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
         resultSalesId = resultSales._id;
       });
 
-    await frisby.delete(`${url}/sales/${resultSalesId}`).expect('status', 200);
+    await frisby.delete(`${url}/sales/${resultSalesId}`)
+      .expect('status', 200);
 
-    await frisby
-      .get(`${url}/sales/${resultSalesId}`)
+    await frisby.get(`${url}/sales/${resultSalesId}`)
       .expect('status', 404)
       .expect((resultGet) => {
         const { body } = resultGet;
@@ -649,8 +636,7 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
   });
 
   it('Será validado que não é possível deletar uma venda que não existe', async () => {
-    await frisby
-      .delete(`${url}/sales/${invalidId}`)
+    await frisby.delete(`${url}/sales/${invalidId}`)
       .expect('status', 422)
       .expect((resultDelete) => {
         const { body } = resultDelete;
@@ -659,179 +645,6 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
         const { message } = resultDeleteBody.err;
         expect(error).toBe('invalid_data');
         expect(message).toBe('Wrong sale ID format');
-      });
-  });
-});
-
-describe('9 - Atualize a quantidade de produtos', () => {
-  let connection;
-  let db;
-
-  beforeAll(async () => {
-    connection = await MongoClient.connect(mongoDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    db = connection.db('StoreManager');
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-  });
-
-  beforeEach(async () => {
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
-      { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
-    await db.collection('products').insertMany(products);
-  });
-
-  afterEach(async () => {
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-  });
-
-  afterAll(async () => {
-    await connection.close();
-  });
-
-  it('Será validado que é possível a quantidade do produto atualize ao fazer uma compra', async () => {
-    let result;
-    let responseProductId;
-
-    await frisby
-      .get(`${url}/products/`)
-      .expect('status', 200)
-      .then((response) => {
-        const { body } = response;
-        result = JSON.parse(body);
-        responseProductId = result.products[0]._id;
-      });
-
-    await frisby
-      .post(`${url}/sales/`, [
-        {
-          productId: responseProductId,
-          quantity: 2,
-        },
-      ])
-      .expect('status', 200);
-
-    await frisby
-      .get(`${url}/products/${responseProductId}`)
-      .expect('status', 200)
-      .expect((responseProducts) => {
-        const { body } = responseProducts;
-        const resultProducts = JSON.parse(body);
-        const quantityProducts = resultProducts.quantity;
-        expect(quantityProducts).toBe(8);
-      });
-  });
-
-  it('Será validado que é possível a quantidade do produto atualize ao deletar uma compra', async () => {
-    let result;
-    let resultSales;
-    let responseProductId;
-    let responseSalesId;
-
-    await frisby
-      .get(`${url}/products/`)
-      .expect('status', 200)
-      .then((response) => {
-        const { body } = response;
-        result = JSON.parse(body);
-        responseProductId = result.products[0]._id;
-      });
-
-    await frisby
-      .post(`${url}/sales/`, [
-        {
-          productId: responseProductId,
-          quantity: 2,
-        },
-      ])
-      .expect('status', 200)
-      .then((responseSales) => {
-        const { body } = responseSales;
-        resultSales = JSON.parse(body);
-        responseSalesId = resultSales._id;
-      });
-
-    await frisby.delete(`${url}/sales/${responseSalesId}`).expect('status', 200);
-
-    await frisby
-      .get(`${url}/products/${responseProductId}`)
-      .expect('status', 200)
-      .expect((responseProducts) => {
-        const { body } = responseProducts;
-        const resultProducts = JSON.parse(body);
-        const quantityProducts = resultProducts.quantity;
-        expect(quantityProducts).toBe(10);
-      });
-  });
-});
-
-describe('10 - Valide a quantidade de produtos', () => {
-  let connection;
-  let db;
-
-  beforeAll(async () => {
-    connection = await MongoClient.connect(mongoDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    db = connection.db('StoreManager');
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-  });
-
-  beforeEach(async () => {
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-    const products = [
-      { name: 'Martelo de Thor', quantity: 10 },
-      { name: 'Traje de encolhimento', quantity: 20 },
-      { name: 'Escudo do Capitão América', quantity: 30 },
-    ];
-    await db.collection('products').insertMany(products);
-  });
-
-  afterEach(async () => {
-    await db.collection('products').deleteMany({});
-    await db.collection('sales').deleteMany({});
-  });
-
-  afterAll(async () => {
-    await connection.close();
-  });
-
-  it('Será validado que o estoque do produto nunca fique com a quantidade menor que zero', async () => {
-    let result;
-    let responseProductId;
-
-    await frisby
-      .get(`${url}/products/`)
-      .expect('status', 200)
-      .then((response) => {
-        const { body } = response;
-        result = JSON.parse(body);
-        responseProductId = result.products[0]._id;
-      });
-
-    await frisby
-      .post(`${url}/sales/`, [
-        {
-          productId: responseProductId,
-          quantity: 100,
-        },
-      ])
-      .expect('status', 404)
-      .then((responseSales) => {
-        const { json } = responseSales;
-        expect(json.err.code).toBe('stock_problem');
-        expect(json.err.message).toBe('Such amount is not permitted to sell');
       });
   });
 });

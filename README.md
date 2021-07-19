@@ -27,7 +27,7 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
 - [Requisitos do projeto](#requisitos-do-projeto)
   - [Linter](#linter)
   - [Lista de requisitos](#lista-de-requisitos)
-
+ 
     `Obrigatórios`
     - [1 - Crie um endpoint para o cadastro de produtos](#1---crie-um-endpoint-para-o-cadastro-de-produtos)
     - [2 - Crie um endpoint para listar os produtos](#2---crie-um-endpoint-para-listar-os-produtos)
@@ -37,14 +37,10 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
     - [6 - Crie um endpoint para listar as vendas](#6---crie-um-endpoint-para-listar-as-vendas)
     - [7 - Crie um endpoint para atualizar uma venda](#7---crie-um-endpoint-para-atualizar-uma-venda)
     - [8 - Crie um endpoint para deletar uma venda](#8---crie-um-endpoint-para-deletar-uma-venda)
-    - [9 - Atualize a quantidade de produtos](#9---atualize-a-quantidade-de-produtos)
-    - [10 - Valide a quantidade de produtos](#10---valide-a-quantidade-de-produtos)
 
     `Bônus`
-    
-    - [11 - Escreva testes para seus models](#11---escreva-testes-para-seus-models)
-    - [12 - Escreva testes para seus services](#12---escreva-testes-para-seus-services)
-    - [13 - Escreva testes para seus controllers](#13---escreva-testes-para-seus-controllers)
+    - [9 - Atualize a quantidade de produtos](#9---atualize-a-quantidade-de-produtos)
+    - [10 - Valide a quantidade de produtos](#10---valide-a-quantidade-de-produtos)
 - [Depois de terminar o desenvolvimento](#depois-de-terminar-o-desenvolvimento)
 - [Revisando um pull request](#revisando-um-pull-request)
 - [Avisos Finais](#avisos-finais)
@@ -57,7 +53,7 @@ Nesse projeto, você será capaz de:
 
 - Entender o funcionamento da camada de Model;
 - Delegar responsabilidades específicas para essa camada;
-- Conectar sua aplicação com diferentes `collections` do bancos de dados;
+- Conectar sua aplicação com diferentes bancos de dados;
 - Estruturar uma aplicação em camadas;
 - Delegar responsabilidades específicas para cada parte do seu app;
 - Melhorar manutenibilidade e reusabilidade do seu código;
@@ -83,23 +79,23 @@ A API a ser construída trata-se de um sistema de gerenciamento de vendas, onde 
 
 ## Desenvolvimento
 
-Você vai desenvolver todas as camadas da API (Models, Services caso necessário, e Controllers).
+Você vai desenvolver todas as camadas da API (Models, Service caso necessário, e Controllers).
 
-Através dessa aplicação, será possível realizar as operações básicas que se pode fazer em um determinado banco de dados: Criação, Leitura, Atualização e Exclusão (ou `CRUD`, para as pessoas mais mais íntimas 😜).
+Através dessa aplicação, será possível realizar as operações básicas que se pode fazer em um determinado banco de dados: Criação, Leitura, Atualização e Exclusão (ou `CRUD`, pros mais íntimos 😜).
 
 Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API deve ser RESTful.
 
 ⚠️ **Dicas Importantes** ⚠️:
 
-- Deve ser possível que a pessoa usuária, independente de cadastramento ou login, possa adicionar, ler, deletar e atualizar produtos no seu estoque. O usuário deve poder também enviar vendas para o sistema. Essas vendas devem validar se o produto em questão existe. Deve, também, ser possível ler, deletar e atualizar vendas.
+- Deve ser possível que o usuário, independente de cadastramento ou login, possa adicionar, ler, deletar e atualizar produtos no seu estoque. O usuário deve poder também enviar vendas para o sistema. Essas vendas devem validar se o produto em questão existe. Deve, também, ser possível ler, deletar e atualizar vendas.
 
 - Para **todos os endpoints** garanta que:
 
   - Caso o recurso não seja encontrado, sua API retorne o status HTTP adequado com o body `{ message: '<recurso> não encontrado' }`.
-  - Em caso de erro, sua API retorne o status HTTP adequado com o body `{ err: { message: <mensagem de erro>, code: <código do erro> } }`.
+  - Em caso de erro, sua API retorne o status HTTP adequado com o body `{ error: { message: <mensagem de erro>, code: <código do erro> } }`.
     - O código do erro deve ser determinado por você e deve seguir o mesmo padrão para toda a aplicação. Por exemplo: `'not_found'`, `'invalid_data'` e afins.
-  - Em caso de dados inválidos, sua API retorne o status HTTP adequado, com o body `{ err: { message: 'Dados inválidos', code: <código do erro> } }`.
-  - Todos os retornos de erro devem seguir o mesmo formato. Para erros que requerem dados adicionais (por exemplo, para informar quais campos estão incorretos) utilize a propriedade `data` dentro do objeto `err`.
+  - Em caso de dados inválidos, sua API retorne o status HTTP adequado, com o body `{ error: { message: 'Dados inválidos', code: <código do erro> } }`.
+  - Todos os retornos de erro devem seguir o mesmo formato. Para erros que requerem dados adicionais (por exemplo, para informar quais campos estão incorretos) utilize a propriedade `data` dentro do objeto `error`.
   - Para gerar os objetos de erro personalizados, você pode utilizar uma biblioteca de erros, como o [`boom`](https://www.npmjs.com/package/@hapi/boom).
 
 - Você pode utilizar middlewares e objetos de erro personalizados para que não tenha que repetir a lógica de tratamento de erro em vários lugares. Não se esqueça também do [express-rescue](https://www.npmjs.com/package/express-rescue), ele pode facilitar muito o trabalho de tratar erros.
@@ -112,8 +108,8 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 
 ## Data de Entrega
 
-  - Serão `3` dias de projeto.
-  - Data de entrega para avaliação final do projeto: `16/07/2021 - 14:00h`.
+  - Serão `2` dias de projeto.
+  - Data de entrega para avaliação final do projeto: `21/04/2021 - 14:00h`.
 
 ---
 
@@ -123,9 +119,9 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 
 1. Clone o repositório
 
-- `git clone https://github.com/tryber/sd-09-store-manager.git`.
+- `git clone https://github.com/tryber/sd-07-store-manager.git`.
 - Entre na pasta do repositório que você acabou de clonar:
-  - `cd sd-09-store-manager`
+  - `cd sd-07-store-manager`
 
 2. Instale as dependências [**Caso existam**]
 
@@ -141,7 +137,7 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
   - Exemplo: `git checkout master`
 - Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
   - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-  - Exemplo: `git checkout -b joaozinho-sd-09-store-manager`
+  - Exemplo: `git checkout -b joaozinho-sd-07-store-manager`
 
 4. Adicione as mudanças ao _stage_ do Git e faça um `commit`
 
@@ -158,17 +154,17 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 
 5. Adicione a sua branch com o novo `commit` ao repositório remoto
 
-- Usando o exemplo anterior: `git push -u origin joaozinho-sd-09-store-manager`
+- Usando o exemplo anterior: `git push -u origin joaozinho-sd-07-store-manager`
 
 6. Crie um novo `Pull Request` _(PR)_
 
-- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-09-store-manager/pulls)
+- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-07-store-manager/pulls)
 - Clique no botão verde _"New pull request"_
 - Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
 - Clique no botão verde _"Create pull request"_
 - Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
 - **Não se preocupe em preencher mais nada por enquanto!**
-- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-09-store-manager/pulls) e confira que o seu _Pull Request_ está criado
+- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-07-store-manager/pulls) e confira que o seu _Pull Request_ está criado
 
 ---
 
@@ -205,15 +201,7 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 
 - Retorne os códigos de status corretos (recurso criado, erro de validação, autorização, etc).
 
-### Cada camada da sua API deve estar em sua respectiva pasta
-
-- Models devem estar na pasta `models`, **na raiz do projeto**
-
-- Services devem estar na pasta `services`, **na raiz do projeto**
-
-- Controllers devem estar na pasta `controllers`, **na raiz do projeto**
-
-### Arquivo index.js
+## ⚠️ Leia-os atentamente e siga à risca o que for pedido. ⚠️
 
 Há um arquivo `index.js` no repositório. Não remova, nele, o seguinte trecho de código:
 
@@ -227,7 +215,7 @@ Isso está configurado para o avaliador funcionar.
 
 ### Conexão com o Banco:
 
-A conexão do banco local deverá conter os seguintes parâmetros:
+A conexão do banco local devera conter os seguintes parâmetros:
 
 ```javascript
 const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
@@ -253,7 +241,7 @@ Os campos da tabela `products` terão esse formato:
 { "name": "Produto Silva", "quantity": 10 }
 ```
 
-A resposta do insert que deve retornar após a criação é parecida essa:
+A resposta do insert deve retornar após a criação é essa:
 
 ```json
 { "_id": ObjectId("5f43cbf4c45ff5104986e81d"), "name": "Produto Silva", "quantity": 10 }
@@ -269,7 +257,7 @@ Os campos da tabela `sales` terão esse formato:
 { "itensSold": [{ "productId": "5f43cbf4c45ff5104986e81d", "quantity": 2 }] }
 ```
 
-A resposta do insert que deve retornar após a criação é parecida essa:
+A resposta do insert deve retornar após a criação é essa:
 
 ```json
 {
@@ -300,7 +288,7 @@ Usaremos o [Jest]() e o [Frisby] para fazer os testes de api.
 
 Este projeto já vem configurado e com suas dependências
 
-Para poder executar os testes basta executar comando `npm test` e o resultado será igual o abaixo:
+Para poder executar os testes basta executar comando `npm tests` e o resultado será igual o abaixo:
 
 ![Testes](./public/testejestfrisby.png)
 
@@ -353,7 +341,7 @@ O retorno da API de um produto cadastrado com sucesso deverá ser:
 
 #### Requisição de Cadastro de Produtos:
 
-O projeto deve rodar na porta `http://localhost:3000`
+O projeto deve rodar na porta `http://localhost/3000`
 
 ![Criar produtos](./public/criarProdutos.png)
 
@@ -488,7 +476,7 @@ O projeto deve rodar na porta `http://localhost:3000`
 
 **O que será verificado:**
 
-- Será validado que é possível deletar um produto com sucesso
+- Será validado que não é possível deletar um produto com sucesso
 
   - Se o produto deletado com sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
 
@@ -592,7 +580,7 @@ O retorno de uma venda cadastrada com sucesso deverá ser:
 
 ![Listar todas as vendas](./public/todasvendas.png)
 
-- Será validado que é possível listar uma determinada venda
+- Será validado que é possível listar uma determinada vendas
 
  - Se a venda esta sendo listada, o resultado retornado deverá ser conforme exibido abaixo, com status http `200`:
 
@@ -659,7 +647,7 @@ O retorno de uma venda cadastrada com sucesso deverá ser:
 
 - Será validado que é possível deletar uma venda com sucesso
 
-  - Se a venda foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200` e será verificado depois que a venda não existe, com um GET nesse `id`, e este deverá retornar status http `404`:
+  - Se a venda foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `200` e será verificado depois que a venda não existe e deverar retornar http `404`:
 
 ![Deletar uma venda com sucesso](./public/deletarumavendacomsucesso.png)
 
@@ -668,6 +656,8 @@ O retorno de uma venda cadastrada com sucesso deverá ser:
   - Se a venda não foi deletada sucesso, o resultado retornado deverá ser conforme exibido abaixo, com status http `422`:
 
 ![Deletar uma venda que não existe](./public/deletarumavendaquenaoexiste.png)
+
+## Bônus
 
 ### 9 - Atualize a quantidade de produtos
 
@@ -698,32 +688,6 @@ O retorno de uma venda cadastrada com sucesso deverá ser:
   - Um produto não poderá ficar com a quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `404`:
 
 ![Compra maior que a quantidade](./public/compramaiorqueaquantidade.png)
-
-## Bônus
-
-## 11 - Escreva testes para seus models
-
-- Utilize o mocha, chai e sinon para escrever seus testes
-
-- Coloque todos os testes de models no arquivo `test/unit/models.js`
-
-- Será validado que cobertura total das linhas dos arquivos na pasta `models` é maior ou igual a 80%
-
-## 12 - Escreva testes para seus services
-
-- Utilize o mocha, chai e sinon para escrever seus testes
-
-- Coloque todos os testes de services no arquivo `test/unit/services.js`
-
-- Será validado que cobertura total das linhas dos arquivos na pasta `services` é maior ou igual a 80%
-
-## 13 - Escreva testes para seus controllers
-
-- Utilize o mocha, chai e sinon para escrever seus testes
-
-- Coloque todos os testes de controllers no arquivo `test/unit/controllers.js`
-
-- Será validado que cobertura total das linhas dos arquivos na pasta `controllers` é maior ou igual a 80%
 
 ---
 

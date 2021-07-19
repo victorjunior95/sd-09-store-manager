@@ -1,61 +1,172 @@
-const fs = require('fs').promises;
-const util = require('util');
-const { exec: callbackExec } = require('child_process');
-const path = require('path');
-
-const exec = util.promisify(callbackExec);
+const frisby = require('frisby');
+const { MongoClient } = require('mongodb');
 
 const mongoDbUrl = 'mongodb://localhost:27017';
 const url = 'http://localhost:3000';
-const NPX_NYC_COMMAND =
-  (unit) => `npx nyc --all --include ${unit} --reporter json-summary mocha test/unit/${unit}.js --exit`;
 
-function readCoverageFile() {
-  const COVERAGE_FILE_PATH = path.join(__dirname, '..', 'coverage', 'coverage-summary.json');
-  return fs.readFile(COVERAGE_FILE_PATH).then(JSON.parse);
-}
+describe('9 - Atualize a quantidade de produtos', () => {
+  let connection;
+  let db;
 
-describe('11 - Escreva testes para seus models', () => {
   beforeAll(async () => {
-    await exec(NPX_NYC_COMMAND('models'));
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('StoreManager');
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
+
+  beforeEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
+      { name: 'Traje de encolhimento', quantity: 20 },
+      { name: 'Escudo do Capitão América', quantity: 30 }];
+    await db.collection('products').insertMany(products);
+  });
+
+  afterEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
   });
 
   afterAll(async () => {
-    await exec('rm -rf coverage .nyc_output');
+    await connection.close();
   });
 
-  it('Será validado que cobertura total das linhas dos arquivos na pasta `models` é maior ou igual a 80%', async () => {
-    const coverageResults = await readCoverageFile();
-    expect(coverageResults.total.lines.pct).toBeGreaterThanOrEqual(80);
+  it('Será validado que é possível a quantidade do produto atualize ao fazer uma compra', async () => {
+    let result;
+    let responseProductId;
+
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        responseProductId = result.products[0]._id;
+      });
+
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: responseProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200);
+
+    await frisby.get(`${url}/products/${responseProductId}`)
+      .expect('status', 200)
+      .expect((responseProducts) => {
+        const { body } = responseProducts;
+        const resultProducts = JSON.parse(body);
+        const quantityProducts = resultProducts.quantity;
+        expect(quantityProducts).toBe(8);
+      });
+  });
+
+  it('Será validado que é possível a quantidade do produto atualize ao deletar uma compra', async () => {
+    let result;
+    let resultSales;
+    let responseProductId;
+    let responseSalesId;
+
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        responseProductId = result.products[0]._id;
+      });
+
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: responseProductId,
+          quantity: 2,
+        },
+      ])
+      .expect('status', 200)
+      .then((responseSales) => {
+        const { body } = responseSales;
+        resultSales = JSON.parse(body);
+        responseSalesId = resultSales._id;
+      });
+
+    await frisby.delete(`${url}/sales/${responseSalesId}`).expect('status', 200);
+
+    await frisby.get(`${url}/products/${responseProductId}`)
+      .expect('status', 200)
+      .expect((responseProducts) => {
+        const { body } = responseProducts;
+        const resultProducts = JSON.parse(body);
+        const quantityProducts = resultProducts.quantity;
+        expect(quantityProducts).toBe(10);
+      });
   });
 });
 
-describe('12 - Escreva testes para seus services', () => {
+describe('10 - Valide a quantidade de produtos', () => {
+  let connection;
+  let db;
+
   beforeAll(async () => {
-    await exec(NPX_NYC_COMMAND('services'));
+    connection = await MongoClient.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = connection.db('StoreManager');
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+  });
+
+  beforeEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
+    const products = [{ name: 'Martelo de Thor', quantity: 10 },
+      { name: 'Traje de encolhimento', quantity: 20 },
+      { name: 'Escudo do Capitão América', quantity: 30 }];
+    await db.collection('products').insertMany(products);
+  });
+
+  afterEach(async () => {
+    await db.collection('products').deleteMany({});
+    await db.collection('sales').deleteMany({});
   });
 
   afterAll(async () => {
-    await exec('rm -rf coverage .nyc_output');
+    await connection.close();
   });
 
-  it('Será validado que cobertura total das linhas dos arquivos na pasta `services` é maior ou igual a 80%', async () => {
-    const coverageResults = await readCoverageFile();
-    expect(coverageResults.total.lines.pct).toBeGreaterThanOrEqual(80);
-  });
-});
+  it('Será validado que o estoque do produto nunca fique com a quantidade menor que zero', async () => {
+    let result;
+    let responseProductId;
 
-describe('13 - Escreva testes para seus controllers', () => {
-  beforeAll(async () => {
-    await exec(NPX_NYC_COMMAND('controllers'));
-  });
+    await frisby
+      .get(`${url}/products/`)
+      .expect('status', 200)
+      .then((response) => {
+        const { body } = response;
+        result = JSON.parse(body);
+        responseProductId = result.products[0]._id;
+      });
 
-  afterAll(async () => {
-    await exec('rm -rf coverage .nyc_output');
-  });
-
-  it('Será validado que cobertura total das linhas dos arquivos na pasta `controllers` é maior ou igual a 80%', async () => {
-    const coverageResults = await readCoverageFile();
-    expect(coverageResults.total.lines.pct).toBeGreaterThanOrEqual(80);
+    await frisby.post(`${url}/sales/`,
+      [
+        {
+          productId: responseProductId,
+          quantity: 100,
+        },
+      ])
+      .expect('status', 404)
+      .then((responseSales) => {
+        const { json } = responseSales;
+        expect(json.err.code).toBe('stock_problem');
+        expect(json.err.message).toBe('Such amount is not permitted to sell');
+      });
   });
 });

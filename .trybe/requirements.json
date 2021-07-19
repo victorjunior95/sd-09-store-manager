@@ -34,22 +34,10 @@
     },
     {
       "description": "9 - Atualize a quantidade de produtos",
-      "bonus": false
+      "bonus": true
     },
     {
       "description": "10 - Valide a quantidade de produtos",
-      "bonus": false
-    },
-    {
-      "description": "11 - Escreva testes para seus models",
-      "bonus": true
-    },
-    {
-      "description": "12 - Escreva testes para seus services",
-      "bonus": true
-    },
-    {
-      "description": "13 - Escreva testes para seus controllers",
       "bonus": true
     }
   ]
