@@ -5,9 +5,8 @@ const STATUS_422 = 422;
 
 const getAllProducts = async (_req, res) => {
   const prod = await products.getAllProducts();
-  let data = { prod };
 
-  res.status(STATUS_200).json(data);
+  res.status(STATUS_200).json(prod);
 };
 
 const getProductById = async (req, res) => {
