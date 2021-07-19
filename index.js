@@ -23,6 +23,7 @@ app.post('/sales', Sale.create);
 app.get('/sales', Sale.getAll);
 app.get('/sales/:id', Sale.getOne);
 app.put('/sales/:id', Sale.edit);
+app.delete('/sales/:id', Sale.deleteOne);
 
 app.use(erro);
 

@@ -32,7 +32,7 @@ const getAll = async () => {
 const findById = async (id) => {
   const sale = await Sale.findById(id);
   if (!sale) return { error: { code: 'not_found', message: 'Sale not found' } };
-  return product;
+  return sale;
 };
 
 const edit = async (id, itens) => {
@@ -45,4 +45,12 @@ const edit = async (id, itens) => {
   return await Sale.edit(id, itens);
 };
 
-module.exports = { create, getAll, findById, edit };
+const deleteOne = async (id) => {
+  const existSale = await Sale.findById(id);
+  if (!existSale) return { error:
+    { code: 'invalid_data', message: 'Wrong sale ID format' }
+  };
+  return Sale.deleteOne(id);
+};
+
+module.exports = { create, getAll, findById, edit, deleteOne };

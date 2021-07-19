@@ -33,4 +33,12 @@ const edit = rescue (async(req, res, next) => {
   return res.status(OK).json(editedSale);
 });
 
-module.exports = { create, getAll, getOne, edit };
+const deleteOne = rescue (async (req, res, next) => {
+  const OK = 200;
+  const { id } = req.params;
+  const deleted = await service.deleteOne(id);
+  if (deleted.error) return next(deleted.error);
+  return res.status(OK).json(deleted);
+});
+
+module.exports = { create, getAll, getOne, edit, deleteOne };
