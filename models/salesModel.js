@@ -3,14 +3,22 @@ const { ObjectId } = require('mongodb');
 
 const { getByIdProduct, updateProduct } = require('./productsModel');
 
+const NOT_FOUND_STATUS = 404;
+
 const createSales = async (newSales) => {
   const zero = 0;
   const { productId, quantity } = newSales[0];
-
   const product = await getByIdProduct(productId);
-  if (!product) return null;
   const newQuantity = product.quantity - quantity;
-  if (newQuantity < zero) return null;
+
+  if (!product || quantity > product.quantity || newQuantity < zero)
+    throw {
+      status: NOT_FOUND_STATUS,
+      err: {
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
+      } };
+
   await updateProduct(productId, product.name, newQuantity);
 
   const result = await connection()

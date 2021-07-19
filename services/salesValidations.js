@@ -1,4 +1,4 @@
-const NOT_FOUND = 404;
+const NOT_FOUND_STATUS = 404;
 const UNPROCESSABLE_ENTITY_STATUS = 422;
 
 const validNumber = (newSale) => {
@@ -25,7 +25,7 @@ const validQuantity = (newSales) => {
 
 const validSearch = (search) => {
   if (!search) throw {
-    status: NOT_FOUND,
+    status: NOT_FOUND_STATUS,
     err: {
       code: 'not_found',
       message: 'Sale not found'

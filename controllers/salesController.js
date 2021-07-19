@@ -1,5 +1,5 @@
 const { allSales, create, deleteService, getById,
-  updateService  } = require('../services/salesService');
+  updateService } = require('../services/salesService');
 
 const createSales = async (req, res, _next) => {
   const newSales = req.body;

@@ -687,15 +687,15 @@ O retorno de uma venda cadastrada com sucesso deverá ser: ✅
 
 ### 10 - Valide a quantidade de produtos
 
-- Um produto nunca deve ter a quantidade em estoque menor que 0;
+- Um produto nunca deve ter a quantidade em estoque menor que 0; ✅
 
-- Quando uma venda for realizada, garanta que a quantidade sendo vendida está disponível no estoque
+- Quando uma venda for realizada, garanta que a quantidade sendo vendida está disponível no estoque ✅
 
 **O que será verificado:**
 
-- Será validado que o estoque do produto nunca fique com a quantidade menor que zero
+- Será validado que o estoque do produto nunca fique com a quantidade menor que zero ✅
 
-  - Um produto não poderá ficar com a quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `404`:
+  - Um produto não poderá ficar com a quantidade menor que zero, o resultado retornado deverá ser conforme exibido abaixo, com status http `404`: ✅
 
 ![Compra maior que a quantidade](./public/compramaiorqueaquantidade.png)
 
