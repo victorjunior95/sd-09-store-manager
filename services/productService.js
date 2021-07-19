@@ -1,60 +1,49 @@
-const ProductModel = require('../model/Products');
+const { ObjectId } = require('mongodb');
+const productModel = require('../models/productModel');
 
-const add = async (name, quantity) => {
-  const existProduct = await exists(name);
-  // console.log(existProduct);
-  if(! existProduct ) {
-    const product = await ProductModel.add(name, quantity);
-
-    return product;
-  }
-
-  return [];
+const create = async (name, quantity) => {
+  const { ops } = await productModel.create(name, quantity);
+  return ops[0];
 };
 
-const exists = async (name) => {
-  const product = await ProductModel.getByName(name);
-  const empty = 0;
-
-  if(product.length === empty) {
+const hasAnotherProductWithName = async (name, id = null) => {
+  const product = await productModel.getProductByName(name);
+  if (id && product && product['_id'].toString() === id) {
     return false;
   }
 
-  return true;
+  return product !== null;
 };
 
-const listAll = async () => {
-  const products = await ProductModel.getAll();
-
-  return { products: products};
+const getAll = async () => {
+  return {
+    products: [...await productModel.getAll()],
+  };
 };
 
-const list = async (id) => {
-  if(id){
-    const product = await ProductModel.getById(id);    
-
-    return product;
-  }
-  const allProducts = await listAll();
-
-  return allProducts;
+const getProductById = (id) => {
+  return productModel.getProductById(id);
 };
 
-const remove = async (id) => {
-  const product = await ProductModel.getById(id);
-  
-  if(product){    
-    await ProductModel.remove(id);
+const updateProduct = (id, name, quantity) => {
+  return productModel.updateProduct(id, name, quantity);
+};
 
-    return product;    
-  }
+const deleteProduct = (id) => {
+  return productModel.deleteProduct(id);
+};
 
-  return null;
+const getProductsByIds = (ids) => {
+  const objectIds = ids.map((id) => ObjectId(id));
+  return productModel.getProductsByIds(objectIds);
 };
 
 module.exports = {
-  add,
-  exists,
-  list,
-  remove
+  create,
+  deleteProduct,
+  getAll,
+  getProductById,
+  getProductsByIds,
+  hasAnotherProductWithName,
+  updateProduct,
 };

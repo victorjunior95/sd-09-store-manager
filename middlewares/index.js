@@ -1,7 +1,17 @@
-const products = require('./products');
-const sales = require('./sales');
+const idValidation = require('./idValidation');
+const idValidationInArray = require('./idValidationInArray');
+const nameValidation = require('./nameValidation');
+const quantityValidation = require('./quantityValidation');
+const quantityValidationInArray = require('./quantityValidationInArray');
+const saleIdValidation = require('./saleIdValidation');
+const uniqueNameValidation = require('./uniqueNameValidation');
 
 module.exports = {
-  products,
-  sales
+  idValidation,
+  idValidationInArray,
+  nameValidation,
+  quantityValidation,
+  quantityValidationInArray,
+  saleIdValidation,
+  uniqueNameValidation,
 };

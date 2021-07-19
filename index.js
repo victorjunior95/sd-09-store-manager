@@ -1,20 +1,21 @@
 const express = require('express');
-const products = require('./routes/productRoute');
-const sales = require('./routes/saleRoute');
+const bodyParser = require('body-parser');
+
+const productRouter = require('./routes/productRouter');
+const salesRouter = require('./routes/salesRouter');
 
 const app = express();
+app.use(bodyParser.json());
 const PORT = 3000;
-
-app.use(express.json());
-
-app.use(products);
-app.use(sales);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
 
+app.use('/products', productRouter);
+app.use('/sales', salesRouter);
+
 app.listen(PORT, () => {
-  console.log(`TAMO ON NA PORTA: ${PORT}`);
+  console.log(`PAI TA ON NA PORTA ${PORT}`);
 });

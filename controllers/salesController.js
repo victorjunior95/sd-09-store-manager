@@ -1,67 +1,88 @@
-const SalesModel = require('../model/Sales');
-const SalesService = require('../services/saleService');
-const code = require('../utils/httpCodes');
+const salesService = require('../services/salesService');
+const productService = require('../services/productService');
+const { ObjectId } = require('mongodb');
 
-const add = async (req, res) => {
-  const values = req.body;
-  const empty = 0;
+const STATUS_200_OK = 200;
+const ERR_404 = 404;
+const FIRST_INDEX = 0;
+const MIN_QUANTITY = 0;
 
-  const sale = await SalesService.add(values);
+const create = async (req, res) => {
+  const sales = req.body;
+  const productsToUpdate = [];
+  for (let index = FIRST_INDEX; index < sales.length; index += 1) {
+    const { productId, quantity: soldQuantity } = sales[index];
+    const productObjectId = ObjectId(productId);
+    const { name, quantity } = await productService.getProductById(productObjectId);
+    const newQuantity = quantity - soldQuantity;
 
-  return res.status(code.get_success).json(sale);
+    if (newQuantity < MIN_QUANTITY) {
+      return res.status(ERR_404).json({
+        err: {
+          code: 'stock_problem',
+          message: 'Such amount is not permitted to sell',
+        },
+      });
+    }
+
+    productsToUpdate.push({ productObjectId, name, soldQuantity });
+  }
+
+  for (let index = FIRST_INDEX; index < productsToUpdate.length; index += 1) {
+    const { productObjectId, name, soldQuantity } = productsToUpdate[index];
+    const { quantity } = await productService.getProductById(productObjectId);
+    await productService.updateProduct(productObjectId, name, quantity - soldQuantity);
+  }
+
+  const createdSales = await salesService.create(sales);
+  return res.status(STATUS_200_OK).json(createdSales);
 };
 
-const list = async (req, res) => {
+const getAllSales = async (_req, res) => {
+  const allSales = await salesService.getAllSales();
+  return res.status(STATUS_200_OK).json(allSales);
+};
+
+const getSaleById = async (req, res) => {
   const { id } = req.params;
-
-  const products = await SalesService.list(id);
-  
-  if(products){
-    return res.status(code.get_success).json(products);
+  const sale = await salesService.getSaleById(id);
+  if (sale) {
+    return res.status(STATUS_200_OK).json(sale);
   }
-  
-  return res.status(code.not_found).json({err: {
-    code: 'not_found',
-    message: 'Sale not found'}
-  });    
+  return res.status(ERR_404).json({
+    err: {
+      code: 'not_found',
+      message: 'Sale not found',
+    },
+  });
 };
 
-const update = async (req, res) => {  
+const updateSale = async (req, res) => {
   const { id } = req.params;
-  const values = req.body;
-
-  const sale = await SalesModel.update(id, values);
-  
-  if(sale){
-    return res.status(code.get_success).json(sale);
-  }
-  
-  return res.status(code.post_error).json({err: {
-    code: 'invalid_data',
-    message: 'Wrong product ID or invalid quantity'}
-  });    
-
+  const data = req.body;
+  const updatedSale = await salesService.updateSale(id, data);
+  return res.status(STATUS_200_OK).json(updatedSale);
 };
 
-const remove = async (req, res) => {  
-  const { id } = req.params;  
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+  const deletedSale = await salesService.deleteSale(id);
+  const { itensSold } = deletedSale;
 
-  const result = await SalesModel.remove(id);
-  
-  if(result){
-    return res.status(code.get_success).json(result);
-  }
-  
-  return res.status(code.post_error).json({err: {
-    code: 'invalid_data',
-    message: 'Wrong sale ID format'}
-  });    
+  for (let index = FIRST_INDEX; index < itensSold.length; index += 1) {
+    const { productId, quantity: soldQuantity } = itensSold[index];
+    const productObjectId = ObjectId(productId);
+    const { name, quantity } = await productService.getProductById(productObjectId);
+    await productService.updateProduct(productObjectId, name, quantity + soldQuantity);
+  };
 
+  return res.status(STATUS_200_OK).json(deletedSale);
 };
 
 module.exports = {
-  add,
-  list,
-  update,
-  remove
+  create,
+  deleteSale,
+  getAllSales,
+  getSaleById,
+  updateSale,
 };
