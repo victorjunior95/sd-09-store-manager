@@ -48,4 +48,13 @@ const edit = async (id, name, quantity) => {
   return formatProduct(edited);
 };
 
-module.exports = { create, findByName, getAll, findById, edit };
+const deleteOne = async (id) => {
+  const db = await connection();
+  const _id = ObjectId(id);
+  const deleted = await findById(id);
+  const deleting = await db.collection('products')
+    .deleteOne({_id}); 
+  return formatProduct(deleted);
+};
+
+module.exports = { create, findByName, getAll, findById, edit, deleteOne };

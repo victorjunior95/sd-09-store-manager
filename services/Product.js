@@ -28,4 +28,12 @@ const edit = async (id, name, quantity) => {
   return await Product.edit(id, name, quantity);
 };
 
-module.exports = { create, getAll, findById, edit };
+const deleteOne = async (id) => {
+  const existProduct = await Product.findById(id);
+  if (!existProduct) return { error:
+    { code: 'invalid_data', message: 'Wrong id format' }
+  };
+  return Product.deleteOne(id);
+};
+
+module.exports = { create, getAll, findById, edit, deleteOne };
