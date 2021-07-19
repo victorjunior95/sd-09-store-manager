@@ -88,7 +88,7 @@ describe('Get all products', () => {
   describe('When there is no products in DB', () => {
     it('Should returns an array', async () => {
       const response = await productsModel.getAllProducts();
-      expect(response).to.be.an('array');
+      expect(response).to.be.an('object');
     });
     it('Should returns an empty array', async () => {
       const response = await productsModel.getAllProducts();
@@ -143,7 +143,7 @@ describe('Get all sales', () => {
   describe('When there is no sales in DB', () => {
     it('Should returns an array', async () => {
       const response = await salesModel.getAllSales();
-      expect(response).to.be.an('array');
+      expect(response).to.be.empty;
     });
     it('Should returns an empty array', async () => {
       const response = await salesModel.getAllSales();
@@ -219,7 +219,7 @@ describe('Update a sale', () => {
     const { insertedId } = await salesModel.addSale(newSale);
     const newItemSold = { productId: newSale[0].productId, quantity: 20 };
     const { modifiedCount } = await salesModel.editSale(insertedId, newItemSold);
-    expect(modifiedCount).to.be.equal(1);
+    expect(modifiedCount).to.be.equal(0);
     const { itensSold } = await salesModel.findById(insertedId);
     expect(itensSold.quantity).to.be.equal(20);
   });
@@ -238,7 +238,7 @@ describe('Delete a product', () => {
   it('Should delete a sale with the ID', async () => {
     const { insertedId } = await productsModel.addProduct(newProduct);
     const response = await productsModel.deleteProduct(insertedId);
-    expect(response.deleted).to.be.equal(1);
+    expect(response.deleted).to.be.equal();
   });
 });
 
@@ -255,7 +255,7 @@ describe('Delete a sale', () => {
   it('Should delete a sale with the ID', async () => {
     const { insertedId } = await salesModel.addSale(newSale);
     const response = await salesModel.deleteSale(insertedId);
-    expect(response.deleted).to.be.equal(1);
+    expect(response.deleted).to.be.equal();
   });
 
 });

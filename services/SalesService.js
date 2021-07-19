@@ -1,4 +1,5 @@
 const SalesModel = require('../models/SalesModel');
+const ProductsModel = require('../models/ProductsModel');
 const ProductsService = require('../services/ProductsService');
 
 const validateQuantities = async (soldItens) => {
@@ -17,6 +18,7 @@ const validateQuantities = async (soldItens) => {
     };
   }
 };
+
 
 const addSale = async (soldItens) => {
   validateQuantities(soldItens);
