@@ -14,9 +14,9 @@ function responseHelperMiddleware(_req, res, next) {
     });
   res.created = (json) => res.status(httpCodes.created).json(json);
   res.ok = (json) => res.status(httpCodes.ok).json(json);
-  res.notFound = (message) => res.status(httpCodes.notFound).json({
+  res.notFound = (message, code) => res.status(httpCodes.notFound).json({
     err: {
-      code: 'not_found',
+      code: code || 'not_found',
       message: message,
     }
   });

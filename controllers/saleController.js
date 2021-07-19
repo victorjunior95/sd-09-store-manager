@@ -1,4 +1,5 @@
 const { saleModel, productModel } = require('../models');
+const CreateSaleService = require('../services/createSaleService');
 const { min } = require('../validators');
 
 const router = require('express').Router();
@@ -17,27 +18,13 @@ function createSaleValidator(req, res, next) {
 }
 
 router.post('/', createSaleValidator, async (req, res) => {
-  const { body } = req;
   try {
-    const promises = body.map(async ({productId, quantity}) => {
-      const product = await productModel.findById(productId);
-      const minimunOfProducts = 0;
-      if (product.quantity - quantity < minimunOfProducts) {
-        throw new Error();
-      }
-      await productModel.updateQuantity(productId, -quantity);
-    });
-    await Promise.all(promises);
-    const createdSale = await saleModel.save(body);
+    const { body } = req;
+    const createSaleService = new CreateSaleService(productModel, saleModel);
+    const createdSale = await createSaleService.execute(body);
     return res.ok(createdSale);
   } catch (error) {
-    const notFound = 404;
-    return res.status(notFound).json({
-      err: {
-        code: 'stock_problem',
-        message: 'Such amount is not permitted to sell',
-      },
-    });
+    return res.notFound('Such amount is not permitted to sell', 'stock_problem');
   }
 });
 
@@ -68,7 +55,7 @@ router.delete('/:id', async (req, res) => {
   if (!sale) {
     return res.invalidData('Wrong sale ID format');
   }
-  sale.itensSold.map(async ({productId, quantity}) => {
+  sale.itensSold.map(async ({ productId, quantity }) => {
     await productModel.updateQuantity(productId, quantity);
   });
   await saleModel.remove(id);
