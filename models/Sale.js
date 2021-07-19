@@ -31,4 +31,13 @@ const getAll = async () => {
   return result.map(formatSale);
 };
 
-module.exports = { create, findById, getAll };
+const edit = async (id, itens) => {
+  const db = await connection();
+  const _id = ObjectId(id);
+  const edit = await db.collection('sales')
+    .updateOne({_id}, {$set: {itensSold: itens}}); 
+  const edited = await findById(id);
+  return formatSale(edited);
+};
+
+module.exports = { create, findById, getAll, edit };

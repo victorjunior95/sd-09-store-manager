@@ -35,4 +35,14 @@ const findById = async (id) => {
   return product;
 };
 
-module.exports = { create, getAll, findById};
+const edit = async (id, itens) => {
+  let invalid = validateSoldProducts(itens);
+  if (invalid) return invalid;
+  const existSale = await Sale.findById(id);
+  if (!existSale) return { error:
+    { code: 'invalid_data', message: 'Wrong id format' }
+  };
+  return await Sale.edit(id, itens);
+};
+
+module.exports = { create, getAll, findById, edit };

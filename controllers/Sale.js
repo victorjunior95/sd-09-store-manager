@@ -24,4 +24,13 @@ const getOne = rescue (async (req, res, next) => {
   return res.status(OK).json(sale);
 });
 
-module.exports = { create, getAll, getOne };
+const edit = rescue (async(req, res, next) => {
+  const itens = req.body;
+  const { id } = req.params;
+  const OK = 200;
+  const editedSale = await service.edit(id, itens);
+  if (editedSale.error) return next(editedSale.error);
+  return res.status(OK).json(editedSale);
+});
+
+module.exports = { create, getAll, getOne, edit };
