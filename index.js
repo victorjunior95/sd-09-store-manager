@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productRouter);
-app.use('/sales', salesRouter);
+
 
 app.listen(PORT, () => {
   console.log(`PAI TA ON NA PORTA ${PORT}`);

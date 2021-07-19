@@ -31,7 +31,6 @@ router.put(
 
 router.delete(
   '/:id',
-  middlewares.saleIdValidation,
   salesController.deleteSale,
 );
 

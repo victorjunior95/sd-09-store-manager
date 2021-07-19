@@ -2,7 +2,6 @@ const { ObjectId } = require('mongodb');
 const salesModel = require('../models/salesModel');
 
 const create = async (sales) => {
-  const createdSales = await salesModel.createSales(sales);
   return createdSales.ops[0];
 };
 
@@ -12,9 +11,6 @@ const getAllSales = async () => {
 };
 
 const getSaleById = (id) => {
-  if (!ObjectId.isValid(id)) {
-    return null;
-  }
   const validId = ObjectId(id);
   return salesModel.getSaleById(validId);
 };
