@@ -16,6 +16,6 @@ const connection = async () => {
       process.exit();
     }
     );
-}
+};
 
 module.exports = connection;
