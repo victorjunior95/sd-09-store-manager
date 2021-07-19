@@ -13,6 +13,8 @@ app.get('/', (_request, response) => {
   response.send();
 });
 app.post('/products', Product.create);
+app.get('/products', Product.getAll);
+app.get('/products/:id', Product.getOne);
 
 app.use(erro);
 

@@ -18,4 +18,18 @@ const create = rescue (async(req, res, next) => {
   return res.status(CREATED).json(newProduct);
 });
 
-module.exports = { create };
+const getAll = async (req, res) => {
+  const OK = 200;
+  const products = await service.getAll();
+  res.status(OK).json(products);
+};
+
+const getOne = rescue (async (req, res, next) => {
+  const OK = 200;
+  const { id } = req.params;
+  const product = await service.findById(id);
+  if (product.error) return next(product.error);
+  return res.status(OK).json(product);
+});
+
+module.exports = { create, getAll, getOne };
