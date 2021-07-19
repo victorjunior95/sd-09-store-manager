@@ -1,7 +1,7 @@
 const { createProduct } = require('../models/products');
 const joi = require('joi');
 const minChar = 5;
-const { getProductByName } = require('../models/products');
+const { getProductByName, listAllProducts } = require('../models/products');
 
 const userSchema = joi.object({
   name: joi.string().min(minChar).required(),
@@ -38,6 +38,18 @@ const productCreate = async (productData) => {
   return data;
 };
 
+const listProducts = async () => {
+  const list = await listAllProducts();
+  return list;
+};
+
+const productDetails = async (id) => {
+  const details = await getProductById(id);
+  return details;
+};
+
 module.exports = {
   productCreate,
+  listProducts,
+  productDetails,
 };

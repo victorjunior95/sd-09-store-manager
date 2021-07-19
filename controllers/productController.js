@@ -21,6 +21,14 @@ const productInsert = rescue(async (req, res, _next) => {
   return res.status(success).json(result);
 });
 
+const listProducts = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  if (id) {
+    const details = await productDetails(id);
+  }
+  const list = await listProducts();
+});
+
 module.exports = {
   productInsert,
 };
