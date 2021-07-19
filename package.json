@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --runInBand",
     "test:mocha": "nyc --all --include models --include services --include controllers mocha test/unit/*.js --exit",
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
   },
   "repository": {
@@ -29,6 +30,7 @@
     "faker": "^4.1.0",
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
+    "joi": "^17.4.1",
     "mongodb": "^3.6.10",
     "nodemon": "^2.0.10"
   },
