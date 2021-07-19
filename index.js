@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Product = require('./controllers/Product');
+const Sale = require('./controllers/Sale');
 const erro = require('./middlewares/error');
 require('dotenv').config();
 const PORT_NUMBER = 3000;
@@ -17,6 +18,8 @@ app.get('/products', Product.getAll);
 app.get('/products/:id', Product.getOne);
 app.put('/products/:id', Product.edit);
 app.delete('/products/:id', Product.deleteOne);
+
+app.post('/sales', Sale.create);
 
 app.use(erro);
 
