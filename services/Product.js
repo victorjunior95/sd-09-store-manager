@@ -16,9 +16,16 @@ const getAll = async () => {
 
 const findById = async (id) => {
   const product = await Product.findById(id);
-  console.log('product na service: ' + product);
   if (!product) return { error: { code: 'invalid_data', message: 'Wrong id format' } };
   return product;
 };
 
-module.exports = { create, getAll, findById };
+const edit = async (id, name, quantity) => {
+  const existProduct = await Product.findById(id);
+  if (!existProduct) return { error:
+    { code: 'invalid_data', message: 'Wrong id format' }
+  };
+  return await Product.edit(id, name, quantity);
+};
+
+module.exports = { create, getAll, findById, edit };

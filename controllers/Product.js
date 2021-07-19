@@ -18,6 +18,23 @@ const create = rescue (async(req, res, next) => {
   return res.status(CREATED).json(newProduct);
 });
 
+const edit = rescue (async(req, res, next) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  const FIVE = 5;
+  const OK = 200;
+  const { error } = Joi.object({
+    name: Joi.string().min(FIVE).not().empty().required(),
+    quantity: Joi.number().integer().min(1).not().empty().required(),
+  }).validate(req.body);
+  if (error) {
+    return next(error);
+  }
+  const editedProduct = await service.edit(id, name, quantity);
+  if (editedProduct.error) return next(editedProduct.error);
+  return res.status(OK).json(editedProduct);
+});
+
 const getAll = async (req, res) => {
   const OK = 200;
   const products = await service.getAll();
@@ -32,4 +49,4 @@ const getOne = rescue (async (req, res, next) => {
   return res.status(OK).json(product);
 });
 
-module.exports = { create, getAll, getOne };
+module.exports = { create, getAll, getOne, edit };

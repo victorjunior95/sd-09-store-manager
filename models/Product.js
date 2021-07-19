@@ -28,7 +28,6 @@ const findById = async (id) => {
   const _id = ObjectId(id);
   const product = await connection()
     .then((db) => db.collection('products').findOne({_id}));
-  console.log('product na model: ' + product);
   if (!product) return null;
   return formatProduct(product);
 };
@@ -37,9 +36,16 @@ const getAll = async () => {
   const products = await connection()
     .then((db) => db.collection('products').find());
   const result = await products.toArray();
-  console.log('result: ' + result);
-  console.log('products: ' + products);
   return result.map(formatProduct);
 };
 
-module.exports = { create, findByName, getAll, findById };
+const edit = async (id, name, quantity) => {
+  const db = await connection();
+  const _id = ObjectId(id);
+  const edit = await db.collection('products')
+    .updateOne({_id}, {$set: {name, quantity}}); 
+  const edited = await findById(id);
+  return formatProduct(edited);
+};
+
+module.exports = { create, findByName, getAll, findById, edit };
