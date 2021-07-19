@@ -15,4 +15,20 @@ const create = async (soldProducts) => {
   return formatSale(result);
 };
 
-module.exports = { create };
+const findById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  const _id = ObjectId(id);
+  const sale = await connection()
+    .then((db) => db.collection('sales').findOne({_id}));
+  if (!sale) return null;
+  return formatSale(sale);
+};
+
+const getAll = async () => {
+  const sales = await connection()
+    .then((db) => db.collection('sales').find());
+  const result = await sales.toArray();
+  return result.map(formatSale);
+};
+
+module.exports = { create, findById, getAll };
