@@ -5,7 +5,6 @@ const create = async (name, quantity) => {
   if (existProduct) return {
     error: { code: 'invalid_data', message: 'Product already exists' }
   };
-  const retorno = await Product.create(name, quantity);
   return await Product.create(name, quantity);
 };
 

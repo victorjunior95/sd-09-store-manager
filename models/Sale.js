@@ -8,11 +8,49 @@ const formatSale = ({ itensSold, _id }) => {
   };
 };
 
+const updateProductQuantityNewSale = async(itensSold) => {
+  const LESS_ONE = -1;
+  itensSold.forEach(async (item) => {
+    const quantitySold = item.quantity * LESS_ONE;
+    const _id = ObjectId(item.productId);
+    const db = await connection();
+    return await db.collection('products')
+      .updateOne({_id}, {$inc: { quantity: quantitySold}}).then((aa) => console.log(aa)); 
+  });
+};
+
+const updateProductQuantitySaleUpdate = async(id, itens) => {
+  itens.forEach(async (item) => {
+    const quantityUpdated = item.quantity;
+    const sale = await findById(id);
+    const oDeAgora = sale.itensSold
+      .find((toUpdate) => toUpdate.productId == item.productId);
+    const oldQuantity = oDeAgora.quantity;
+    const newQuantity = oldQuantity - quantityUpdated;
+    const _id = ObjectId(item.productId);
+    const db = await connection();
+    await db.collection('products')
+      .updateOne({_id}, {$inc: { quantity: newQuantity}}); 
+  });
+};
+
+const updateProductQuantitySaleDelete = async(deleted) => {
+  deleted.itensSold.forEach(async (item) => {
+    const oldQuantity = item.quantity;
+    const _id = ObjectId(item.productId);
+    const db = await connection();
+    await db.collection('products')
+      .updateOne({_id}, {$inc: { quantity: oldQuantity}}); 
+  });
+};
+
 const create = async (soldProducts) => {
   const db = await connection();
   const createNew = await db.collection('sales').insertOne({itensSold: soldProducts}); 
   const result = await createNew.ops[0];
-  return formatSale(result);
+  const newSale =  formatSale(result);
+  await updateProductQuantityNewSale(newSale.itensSold);
+  return newSale;
 };
 
 const findById = async (id) => {
@@ -34,10 +72,12 @@ const getAll = async () => {
 const edit = async (id, itens) => {
   const db = await connection();
   const _id = ObjectId(id);
+  await updateProductQuantitySaleUpdate(id, itens);
   const edit = await db.collection('sales')
     .updateOne({_id}, {$set: {itensSold: itens}}); 
   const edited = await findById(id);
-  return formatSale(edited);
+  const editedFormated = formatSale(edited);
+  return editedFormated;
 };
 
 const deleteOne = async (id) => {
@@ -46,7 +86,9 @@ const deleteOne = async (id) => {
   const deleted = await findById(id);
   const deleting = await db.collection('sales')
     .deleteOne({_id}); 
-  return formatSale(deleted);
+  const formatDelete = formatSale(deleted);
+  await updateProductQuantitySaleDelete(formatDelete);
+  return formatDelete;
 };
 
 module.exports = { create, findById, getAll, edit, deleteOne };
