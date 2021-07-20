@@ -19,8 +19,16 @@ const findById = rescue(async (req, res) => {
   res.status(status).json(product);
 });
 
+const updateProduct = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const { status, updatedProduct } = await Products.updateProduct(id, name, quantity);
+  res.status(status).json(updatedProduct);
+});
+
 module.exports = {
   createNewProduct,
   getAll,
   findById,
+  updateProduct,
 };

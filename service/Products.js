@@ -13,7 +13,7 @@ const checkNameLength = (name) => {
     };
   }
 };
-
+ 
 const checkQuantity = (quantity) => {
   if (quantity < 1) {
     throw { 
@@ -107,8 +107,27 @@ const findById = async (id) => {
   };
 };
 
+const updateProduct = async (id, name, quantity) => {
+  if (!ObjectId.isValid(id)) {
+    throw {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      },
+      status: 422,
+    };
+  }
+  checkProductIsValid(name, quantity);
+  const updatedProduct = await Products.updateProduct(id, name, quantity);
+  return {
+    status: 200,
+    updatedProduct
+  };
+};
+
 module.exports = {
   createNewProduct,
 	 getAll,
 	 findById,
+  updateProduct,
 };

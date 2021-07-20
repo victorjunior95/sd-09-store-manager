@@ -14,6 +14,7 @@ app.get('/products', Products.getAll);
 app.get('/products/:id', Products.findById);
 
 app.post('/products', Products.createNewProduct);
+app.put('/products/:id', Products.updateProduct);
 
 
 app.use((err, _req, res, _next) => {
