@@ -1,5 +1,6 @@
 // const express = require('express');
 const connection = require('./connections');
+const { ObjectId } = require('mongodb');
 
 const createProduct = async (productData) => {
   const { name, quantity } = productData;
@@ -10,7 +11,8 @@ const createProduct = async (productData) => {
 
 const listAllProducts = async () => {
   return await connection()
-    .then(db => db.collection('products').find().toArray());
+    .then(db => db.collection('products').find().toArray())
+    .then((result) => result);
 };
 
 const getProductByName = async (productData) => {
@@ -21,7 +23,7 @@ const getProductByName = async (productData) => {
 
 const getProductById = async (searchId) => {
   return await connection()
-    .then(db => db.collection('products').findOne({ id: searchId }));
+    .then(db => db.collection('products').findOne(ObjectId(searchId)));
 };
 
 module.exports = {

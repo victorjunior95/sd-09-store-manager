@@ -1,9 +1,14 @@
 const { createProduct } = require('../models/products');
 const joi = require('joi');
 const minChar = 5;
-const { getProductByName, listAllProducts } = require('../models/products');
+const {
+  getProductByName,
+  listAllProducts,
+  getProductById
+} = require('../models/products');
+const { ObjectId } = require('mongodb');
 
-const userSchema = joi.object({
+const createValidation = joi.object({
   name: joi.string().min(minChar).required(),
   quantity: joi.number().min(1).required()
     .messages({ 'number.min': '"quantity" must be larger than or equal to 1'}),
@@ -19,7 +24,7 @@ const duplicatedProduct = async (productData) => {
 };
 
 const productCreate = async (productData) => {
-  const { error } = userSchema.validate(productData);
+  const { error } = createValidation.validate(productData);
   if (error) {
     return {
       status: 422,
@@ -38,12 +43,26 @@ const productCreate = async (productData) => {
   return data;
 };
 
+
+
 const listProducts = async () => {
   const list = await listAllProducts();
+  if (!list) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
   return list;
 };
 
 const productDetails = async (id) => {
+  if (!ObjectId.isValid(id)) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
   const details = await getProductById(id);
   return details;
 };
