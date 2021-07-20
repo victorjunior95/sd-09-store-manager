@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser').json();
 const Products = require('./controller/Products');
+const Sales = require('./controller/Sales');
 app.use(bodyParser);
 const PORT = 3000;
 
@@ -13,11 +14,17 @@ app.get('/', (_request, response) => {
 app.get('/products', Products.getAll);
 app.get('/products/:id', Products.findById);
 
+app.get('/sales', Sales.getAll);
+app.get('/sales/:id', Sales.findById);
+
 app.post('/products', Products.createNewProduct);
+app.post('/sales', Sales.createNewSale);
+
 app.put('/products/:id', Products.updateProduct);
+app.put('/sales/:id', Sales.updateSale);
 
 app.delete('/products/:id', Products.deleteProduct);
-
+app.delete('/sales/:id', Sales.deleteSale);
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
