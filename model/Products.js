@@ -24,7 +24,7 @@ const getAll = async () =>
     .then((db) => db.collection('products').find().toArray())
     .then((result) => listProducts(result));
   
-
+ 
 const findById = async (id) =>
   connection()
     .then((db) => db.collection('products'))
@@ -37,10 +37,19 @@ const updateProduct = async (id, name, quantity) =>
       .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
     .then(() => ({ _id: id, name, quantity }));
 
+const deleteProduct = async (id) => 
+  connection()
+    .then((db) => db.collection('products')
+      .findOneAndDelete({ _id: ObjectId(id)}))
+    .then(({ value: { name, quantity } }) => ({ _id: id, name, quantity }))
+    .catch(() => null);
+
+
 module.exports = {
   createNewProduct,
   findByName,
   getAll,
   findById,
   updateProduct,
+  deleteProduct,
 };

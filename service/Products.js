@@ -89,7 +89,7 @@ const checkProduct = (product) => {
   }
 };
 
-const findById = async (id) => {
+const checkId = (id) => {
   if (!ObjectId.isValid(id)) {
     throw {
       err: {
@@ -99,6 +99,10 @@ const findById = async (id) => {
       status: 422,
     };
   }
+};
+
+const findById = async (id) => {
+  checkId(id);
 	 const product = await Products.findById(id);
   checkProduct(product);
   return {
@@ -108,15 +112,7 @@ const findById = async (id) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  if (!ObjectId.isValid(id)) {
-    throw {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format'
-      },
-      status: 422,
-    };
-  }
+  checkId(id);
   checkProductIsValid(name, quantity);
   const updatedProduct = await Products.updateProduct(id, name, quantity);
   return {
@@ -125,9 +121,20 @@ const updateProduct = async (id, name, quantity) => {
   };
 };
 
+const deleteProduct = async (id) => {
+  checkId(id);
+  const deletedProduct = await Products.deleteProduct(id);
+  checkProduct(deletedProduct);
+  return {
+    status: 200,
+    deletedProduct
+  };
+};
+
 module.exports = {
   createNewProduct,
 	 getAll,
 	 findById,
   updateProduct,
+  deleteProduct,
 };
