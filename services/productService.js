@@ -1,4 +1,4 @@
-const { createProduct } = require('../models/products');
+const { createProduct, updateProductInfo } = require('../models/products');
 const joi = require('joi');
 const minChar = 5;
 const {
@@ -47,12 +47,12 @@ const productCreate = async (productData) => {
 
 const listProducts = async () => {
   const list = await listAllProducts();
-  if (!list) return {
-    err: {
-      code: 'invalid_data',
-      message: 'Wrong id format'
-    }
-  };
+  // if (!list) return {
+  //   err: {
+  //     code: 'invalid_data',
+  //     message: 'Wrong id format'
+  //   }
+  // };
   return list;
 };
 
@@ -67,8 +67,31 @@ const productDetails = async (id) => {
   return details;
 };
 
+const updateProduct = async (updateInfo) => {
+  const { id, productData } = updateInfo;
+  if (!ObjectId.isValid(id)) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+  const { error } = createValidation.validate(productData);
+  if (error) {
+    return {
+      status: 422,
+      code: 'invalid_data',
+      message: error.message,
+    };
+  }
+  
+  const update = await updateProductInfo(updateInfo);
+  return update;
+
+};
+
 module.exports = {
   productCreate,
   listProducts,
   productDetails,
+  updateProduct,
 };

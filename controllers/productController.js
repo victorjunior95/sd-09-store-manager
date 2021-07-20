@@ -1,7 +1,8 @@
 const {
   productCreate,
   listProducts,
-  productDetails
+  productDetails,
+  updateProduct,
 } = require('../services/productService');
 const rescue = require('express-rescue');
 
@@ -41,7 +42,6 @@ const productDetail = rescue(async (req, res, _next) => {
   const GET_PRODUCT_ERROR = 422;
 
   const product = await productDetails(id);
-  console.log(product);
   if (product.err) {
     return res.status(GET_PRODUCT_ERROR).json(product);
   }
@@ -49,8 +49,24 @@ const productDetail = rescue(async (req, res, _next) => {
   return res.status(GET_PRODUCT_SUCCESS).json(product);
 });
   
+const productUpdate = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  const productData = req.body;
+  const updateInfo = { id, productData };
+  const UPDATED_STATUS = 200;
+  const UPDATE_PRODUCT_ERROR = 422;
+
+  const product = await updateProduct(updateInfo);
+  
+  if (product.err) {
+    return res.status(UPDATE_PRODUCT_ERROR).json(product);
+  }
+  return res.status(UPDATED_STATUS).json(product);
+});
+
 module.exports = {
   productInsert,
   productsList,
   productDetail,
+  productUpdate,
 };

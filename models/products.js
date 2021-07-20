@@ -26,9 +26,27 @@ const getProductById = async (searchId) => {
     .then(db => db.collection('products').findOne(ObjectId(searchId)));
 };
 
+//Substitui o método updateOne pelo findOneAndUpdate que verifiquei no PR https://github.com/tryber/sd-09-store-manager/blob/d6410b1d48737c7314824e66aa8dae42c78928b0/models/Product.js#L37
+//Pesquisei sobre no Google para entender o funcionamento: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+
+const updateProductInfo = async (updateInfo) => {
+  const { id, productData } = updateInfo;
+  const result = await connection()
+    .then(db => db.collection('products').findOneAndUpdate({ _id: ObjectId(id) }, {
+      $set: {
+        name: productData.name,
+        quantity: productData.quantity,
+      }
+    },
+    { returnNewDocument: true }
+    ));
+  return result.value;
+};
+
 module.exports = {
   createProduct,
   listAllProducts,
   getProductByName,
   getProductById,
+  updateProductInfo,
 };
