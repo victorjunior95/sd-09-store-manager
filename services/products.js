@@ -19,4 +19,18 @@ const getProductById = async (id) => {
   return prod;
 };
 
-module.exports = { getAllProducts, getProductById, postProduct };
+const putProduct = async (id, name, quantity) => {
+  return await products.putProduct(id, name, quantity);
+};
+
+const deleteProduct = async (id) => {
+  return await products.deleteProduct(id);
+};
+
+module.exports = {
+  getAllProducts,
+  getProductById,
+  postProduct,
+  putProduct,
+  deleteProduct
+};

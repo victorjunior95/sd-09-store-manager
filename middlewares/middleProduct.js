@@ -6,7 +6,7 @@ const productName = (req, res, next) => {
   const name = req.body.name;
 
   if (name.length < minChar) {
-    res.status(STATUS_422).json({
+    return res.status(STATUS_422).json({
       err: {
         code: 'invalid_data',
         message: '"name" length must be at least 5 characters long',
@@ -21,7 +21,7 @@ const productQtd = (req, res, next) => {
   const qtd = req.body.quantity;
 
   if (typeof (qtd) !== 'number') {
-    res.status(STATUS_422).json({
+    return res.status(STATUS_422).json({
       err: {
         code: 'invalid_data',
         message: '"quantity" must be a number',
@@ -30,7 +30,7 @@ const productQtd = (req, res, next) => {
   }
 
   if (qtd <= minQtd|| qtd % 1 !== minQtd) {
-    res.status(STATUS_422).json({
+    return res.status(STATUS_422).json({
       err: {
         code: 'invalid_data',
         message: '"quantity" must be larger than or equal to 1',
