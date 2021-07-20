@@ -1,7 +1,25 @@
 const products = require('../services/products');
 
+const STATUS_201 = 201;
 const STATUS_200 = 200;
 const STATUS_422 = 422;
+
+const postProduct = async (req, res) => {
+  const { name, quantity } = req.body;
+  const newProd = await products.postProduct(name, quantity);
+
+  if (newProd !== null) {
+    return res.status(STATUS_201).json(newProd);
+  } else {
+    return res.status(STATUS_422).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
+    });
+  }
+  
+};
 
 const getAllProducts = async (_req, res) => {
   const prod = await products.getAllProducts();
@@ -26,4 +44,4 @@ const getProductById = async (req, res) => {
   }
 };
 
-module.exports = { getAllProducts, getProductById };
+module.exports = { getAllProducts, getProductById, postProduct };
