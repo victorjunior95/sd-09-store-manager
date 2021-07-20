@@ -38,9 +38,9 @@ const updateProductInfo = async (updateInfo) => {
         quantity: productData.quantity,
       }
     },
-    { returnNewDocument: true }
+    { returnOriginal: false }
     ));
-  return result.value;
+  return result;
 };
 
 module.exports = {

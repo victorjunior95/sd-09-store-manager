@@ -42,9 +42,8 @@ const productDetail = rescue(async (req, res, _next) => {
   const GET_PRODUCT_ERROR = 422;
 
   const product = await productDetails(id);
-  if (product.status) {
-    const { code, message } = product;
-    return res.status(UPDATE_PRODUCT_ERROR).json({ err: { code, message } });
+  if (product.err) {
+    return res.status(GET_PRODUCT_ERROR).json(product);
   }
 
   return res.status(GET_PRODUCT_SUCCESS).json(product);
