@@ -10,8 +10,12 @@ const PORT = 3000;
 app.get('/', (_request, response) => {
   response.send();
 });
+app.get('/products', Products.getAll);
+app.get('/products/:id', Products.findById);
 
 app.post('/products', Products.createNewProduct);
+
+
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;
   res.status(status).json({ err: { code, message } });

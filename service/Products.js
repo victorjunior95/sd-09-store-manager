@@ -1,4 +1,5 @@
 const Products = require('../model/Products');
+const { ObjectId } = require('mongodb');
 
 const checkNameLength = (name) => {
   const minNameLength = 5;
@@ -68,6 +69,46 @@ const createNewProduct = async (name, quantity) => {
   };
 };
 
+const getAll = async () => {
+  const result = await Products.getAll();
+  return {
+    status: 200,
+    result
+  };
+};
+
+const checkProduct = (product) => {
+  if (!product) {
+    throw {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      },
+      status: 422,
+    };
+  }
+};
+
+const findById = async (id) => {
+  if (!ObjectId.isValid(id)) {
+    throw {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      },
+      status: 422,
+    };
+  }
+	 const product = await Products.findById(id);
+  checkProduct(product);
+  return {
+    status: 200,
+    product,
+  };
+};
+
 module.exports = {
   createNewProduct,
+	 getAll,
+	 findById,
 };
