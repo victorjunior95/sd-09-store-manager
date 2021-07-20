@@ -1,4 +1,8 @@
-const { createProduct, updateProductInfo } = require('../models/products');
+const {
+  createProduct,
+  updateProductInfo,
+  deleteProductModel
+} = require('../models/products');
 const joi = require('joi');
 const minChar = 5;
 const {
@@ -89,9 +93,21 @@ const updateProduct = async (updateInfo) => {
 
 };
 
+const deleteProduct = async (id) => {
+  if (ObjectId.isValid(id) === false) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }
+  };
+  const remove = await deleteProductModel(id);
+  return remove;
+};
+
 module.exports = {
   productCreate,
   listProducts,
   productDetails,
   updateProduct,
+  deleteProduct,
 };

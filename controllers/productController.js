@@ -3,6 +3,7 @@ const {
   listProducts,
   productDetails,
   updateProduct,
+  deleteProduct,
 } = require('../services/productService');
 const rescue = require('express-rescue');
 
@@ -64,9 +65,28 @@ const productUpdate = rescue(async (req, res, _next) => {
   return res.status(UPDATED_STATUS).json(product);
 });
 
+const productDelete = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  const DELETED_STATUS = 200;
+  const DELETED_PRODUCT_ERROR = 422;
+  const deletedInfo = await productDetails(id);
+
+  if (deletedInfo === null) return res.status(DELETED_PRODUCT_ERROR).json({
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong id format'
+    }});
+  
+  const deleted = await deleteProduct(id);
+    
+  if (deleted.err) return res.status(DELETED_PRODUCT_ERROR).json(deleted);
+  return res.status(DELETED_STATUS).json(deletedInfo);
+});
+
 module.exports = {
   productInsert,
   productsList,
   productDetail,
   productUpdate,
+  productDelete,
 };
