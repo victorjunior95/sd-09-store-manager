@@ -12,5 +12,9 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/products', Products.createNewProduct);
+app.use((err, _req, res, _next) => {
+  const { status, err: { code, message } } = err;
+  res.status(status).json({ err: { code, message } });
+});
 
-app.listen(PORT, () => console.log('Houston, everything is OK'));
+app.listen(PORT, () => console.log(`Houston, everything is OK on port ${PORT}`));
