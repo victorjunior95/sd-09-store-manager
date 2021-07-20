@@ -40,7 +40,7 @@ const updateProductInfo = async (updateInfo) => {
     },
     { returnOriginal: false }
     ));
-  return result;
+  return result.value;
 };
 
 module.exports = {
