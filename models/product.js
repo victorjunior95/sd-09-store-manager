@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const { ObjectId } = require('mongodb');
+const { ObjectId, ObjectID } = require('mongodb');
 
 const createProduct = async (name, quantity) => {
   return connection()
@@ -12,24 +12,6 @@ const nameProduct = async (name) => {
   const findName = db.collection('products').findOne({name});
   return findName;
 };
-
-const isValidName = (name) => {
-  const tamanhoName = 5;
-  console.log(typeof name);
-  if(!name || typeof name !== 'string' || name.length < tamanhoName) return false;
-  return true;
-};
-
-const isValidQuantitPositivo = (quantity) => {
-  if(parseInt(quantity) < 1 ) return false;
-  return true;
-};
-
-const isvalidQuantityIsNumber = (quantity) => {
-  if(!quantity || typeof quantity !== 'number') return false;
-  return true; 
-};
-
 
 const getProducts = async () => {
   const db = await connection();
@@ -44,12 +26,32 @@ const productsId = async (_id) => {
   return findById;
 };
 
+const editProducts = async(_id, name, quantity) => {
+  if(!ObjectId.isValid(_id)) return null;
+  const db = await connection();
+  const editProduct = db.collection('products').updateMany(
+    {
+      _id: ObjectID(_id)}, 
+    { $set: {name, quantity}},
+  );
+  return editProduct;
+};
+
+const deleteProduct = async(_id) =>{
+  const db = await connection();
+  const deleteProduct = db.collection('products').deleteOne(
+    {
+      _id: ObjectId(_id)
+    }, 
+  );
+  return deleteProduct;
+};
+
 module.exports = { 
   createProduct, 
-  getProducts, 
-  isValidName, 
+  getProducts,  
   nameProduct, 
-  isvalidQuantityIsNumber,
-  isValidQuantitPositivo,
-  productsId 
+  productsId,
+  editProducts,
+  deleteProduct
 };

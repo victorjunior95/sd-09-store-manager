@@ -6,78 +6,34 @@ const app = express();
 app.use(bodyParser.json());
 
 const port = 3000;
-const create = 201;
-const sucess = 200;
-const notProduct = 422;
 
 const product = require('./models/product');
+const productControllers = require('./conntrollers/product');
+const validations  = require('./midlawwares/validations');
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', async(req, res) => {
-  const { name, quantity } = req.body;
-  console.log(product.isValidName(name));
-  if(!product.isValidName(name)) {
-    console.log(name);
-    return res.status(notProduct).json(
-      { err: {
-        code: 'invalid_data',
-        message: '\"name\" length must be at least 5 characters long',
-      }
-      });
-  }
-  if( await product.nameProduct(name)) {
-    return res.status(notProduct).json(
-      { err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      }
-      });
-  }
+app.post('/products',
+  validations.isValidName,
+  validations.existName, 
+  validations.isValidQuantitPositivo, 
+  validations.isvalidQuantityIsNumber, 
+  productControllers.create); 
 
-  if(!product.isValidQuantitPositivo(quantity)) {
-    return res.status(notProduct).json(
-      { err: {
-        code: 'invalid_data',
-        message: '"quantity" must be larger than or equal to 1',
-      }
-      });
-  }
+app.get('/products', productControllers.getAllProduct);
 
-  if(!product.isvalidQuantityIsNumber(quantity)) {
-    return res.status(notProduct).json(
-      { err: {
-        code: 'invalid_data',
-        message: '"quantity" must be a number',
-      }
-      });
-  } 
-  const cadastroProduto = await product.createProduct(name, quantity);
-  res.status(create).json(cadastroProduto);
-});
+app.get('/products/:_id', validations.isValidId, productControllers.findById );
 
-app.get('/products', async(req, res) => {
-  const products  = await product.getProducts();
-  res.status(sucess).json({ products });
-});
+app.put('/products/:_id', 
+  validations.isValidName, 
+  validations.isValidQuantitPositivo, 
+  validations.isvalidQuantityIsNumber, 
+  productControllers.editProduct);
 
-app.get('/products/:_id', async(req, res) => {
-  const { _id } = req.params;
-  const findById = await product.productsId(_id);
-  if(!findById) {
-    return res.status(notProduct).json(
-      { err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      }
-      });
-  }
-  res.status(sucess).json(findById);
-  
-});
+app.delete('/products/:_id', validations.isValidId, productControllers.deleteProduct);
 
 app.listen(port, () => {
   console.log(`Ouvindo a porta ${port}`);
