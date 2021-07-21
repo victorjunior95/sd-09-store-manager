@@ -1,4 +1,9 @@
-const { createSalesModel, listSalesModel, saleByIdModel } = require('../models/sales');
+const {
+  createSalesModel,
+  listSalesModel,
+  saleByIdModel,
+  saleUpdateModel,
+} = require('../models/sales');
 const joi = require('joi');
 const { ObjectId } = require('mongodb');
 
@@ -45,11 +50,42 @@ const saleListById = async (id) => {
     }
   };
   const saleById = await saleByIdModel(id);
+  if (!saleById) return {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found'
+    }
+  };
   return saleById;
+};
+
+const saleUpdate = async (saleData) => {
+  const { id, itensSold } = saleData;
+
+  if (!ObjectId.isValid(id)) return {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found'
+    }
+  };
+  const { error } = createValidation.validate(itensSold);
+
+  if (error) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: error.message,
+      }
+    };
+  };
+  
+  const updated = await saleUpdateModel(saleData);
+  return updated;
 };
 
 module.exports = {
   createSales,
   salesList,
   saleListById,
+  saleUpdate,
 };

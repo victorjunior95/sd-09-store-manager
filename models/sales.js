@@ -18,8 +18,20 @@ const saleByIdModel = async (id) => {
     .then(db => db.collection('sales').findOne({ _id: ObjectId(id) }));
 };
 
+const saleUpdateModel = async (saleData) => {
+  const { id, itensSold } = saleData;
+  return await connection()
+    .then(db => db.collection('sales').findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { itensSold: itensSold } },
+      { returnOriginal: false }
+    ))
+    .then(result => result.value);
+};
+
 module.exports = {
   createSalesModel,
   listSalesModel,
   saleByIdModel,
+  saleUpdateModel,
 };

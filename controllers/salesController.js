@@ -1,4 +1,9 @@
-const { createSales, salesList, saleListById } = require('../services/salesService');
+const {
+  createSales,
+  salesList,
+  saleListById,
+  saleUpdate,
+} = require('../services/salesService');
 
 const STATUS_SUCCESS = 200;
 const STATUS_ERROR = 422;
@@ -25,12 +30,25 @@ const listAllSales = async (_req, res, _next) => {
 const listSaleById = async (req, res, _next) => {
   const { id } = req.params;
   const saleById = await saleListById(id);
+  if (!saleById) return res.status(STATUS_NOT_FOUND).json(saleById);
   if (saleById.err) return res.status(STATUS_NOT_FOUND).json(saleById);
   return res.status(STATUS_SUCCESS).json(saleById);
+};
+
+const updateSale = async (req, res, _next) => {
+  const { id } = req.params;
+  const itensSold = req.body;
+
+  const saleData = { id, itensSold };
+  const updated = await saleUpdate(saleData);
+  console.log(updated);
+  if (updated.err) return res.status(STATUS_ERROR).json(updated);
+  return res.status(STATUS_SUCCESS).json(updated);
 };
 
 module.exports = {
   salesCreation,
   listAllSales,
   listSaleById,
+  updateSale,
 };
