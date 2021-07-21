@@ -58,7 +58,6 @@ const checkId = (id) => {
 };
 
 const findById = async (id) => {
-  checkId(id);
 	 const sale = await Sales.findById(id);
   checkSale(sale);
   return {
@@ -68,7 +67,6 @@ const findById = async (id) => {
 };
 
 const updateSale = async (id, sale) => {
-  checkId(id);
   validateSale(sale);
   const updatedSale = await Sales.updateSale(id, sale);
   return {

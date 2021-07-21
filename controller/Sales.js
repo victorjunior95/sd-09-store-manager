@@ -3,7 +3,7 @@ const rescue = require('express-rescue');
 
 const createNewSale = rescue( async (req, res) => {
   const sale = req.body;
-  const { status, newSale } = await Sales.createNewSale(newSale);
+  const { status, newSale } = await Sales.createNewSale(sale);
 
   res.status(status).json(newSale);
 });
@@ -21,8 +21,8 @@ const findById = rescue(async (req, res) => {
 
 const updateSale = rescue(async (req, res) => {
   const { id } = req.params;
-  const { sale } = req.body;
-  const { status, updatedSale} = await Products.updateSale(id, sale);
+  const sale  = req.body;
+  const { status, updatedSale} = await Sales.updateSale(id, sale);
   res.status(status).json(updatedSale);
 });
 

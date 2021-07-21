@@ -15,7 +15,8 @@ const getAll = async () =>
 const findById = async (id) =>
   connection()
     .then((db) => db.collection('sales'))
-    .then((sales) => sales.findOne(ObjectId(id)));
+    .then((sales) => sales.findOne(ObjectId(id)))
+    .catch(() => null);
 
 const updateSale = async (id, sale) => 
   connection()
