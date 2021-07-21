@@ -3,6 +3,7 @@ const {
   salesList,
   saleListById,
   saleUpdate,
+  saleDelete,
 } = require('../services/salesService');
 
 const STATUS_SUCCESS = 200;
@@ -46,9 +47,18 @@ const updateSale = async (req, res, _next) => {
   return res.status(STATUS_SUCCESS).json(updated);
 };
 
+const deleteSale = async (req, res, _next) => {
+  const { id } = req.params;
+  const deletedInfo = await saleListById(id);
+  const deleted = await saleDelete(id);
+  if (deleted.err) return res.status(STATUS_ERROR).json(deleted);
+  return res.status(STATUS_SUCCESS).json(deletedInfo);
+};
+
 module.exports = {
   salesCreation,
   listAllSales,
   listSaleById,
   updateSale,
+  deleteSale,
 };

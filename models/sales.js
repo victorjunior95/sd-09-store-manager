@@ -29,9 +29,15 @@ const saleUpdateModel = async (saleData) => {
     .then(result => result.value);
 };
 
+const saleDeleteModel = async (id) => {
+  return await connection()
+    .then(db => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+};
+
 module.exports = {
   createSalesModel,
   listSalesModel,
   saleByIdModel,
   saleUpdateModel,
+  saleDeleteModel,
 };

@@ -3,6 +3,7 @@ const {
   listSalesModel,
   saleByIdModel,
   saleUpdateModel,
+  saleDeleteModel,
 } = require('../models/sales');
 const joi = require('joi');
 const { ObjectId } = require('mongodb');
@@ -83,9 +84,21 @@ const saleUpdate = async (saleData) => {
   return updated;
 };
 
+const saleDelete = async (id) => {
+  if (!ObjectId.isValid(id)) return {
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format',
+    }
+  };
+  const deleted = await saleDeleteModel(id);
+  return deleted;
+};
+
 module.exports = {
   createSales,
   salesList,
   saleListById,
   saleUpdate,
+  saleDelete,
 };
