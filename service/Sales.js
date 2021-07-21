@@ -19,6 +19,15 @@ const validateSale = (sale) => {
 const createNewSale = async (sale) => {
 	 validateSale(sale); 
  	const newSale = await Sales.createNewSale(sale);
+  if (!newSale) {
+    throw {
+      err: {
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell'
+      },
+      status: 404,
+    };
+  }
   return {
     status: 200,
     newSale

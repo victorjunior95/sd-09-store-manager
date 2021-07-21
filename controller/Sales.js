@@ -21,7 +21,7 @@ const findById = rescue(async (req, res) => {
 
 const updateSale = rescue(async (req, res) => {
   const { id } = req.params;
-  const sale  = req.body;
+  const sale = req.body;
   const { status, updatedSale} = await Sales.updateSale(id, sale);
   res.status(status).json(updatedSale);
 });
