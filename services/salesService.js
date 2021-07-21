@@ -1,5 +1,6 @@
-const { createSalesModel } = require('../models/sales');
+const { createSalesModel, listSalesModel, saleByIdModel } = require('../models/sales');
 const joi = require('joi');
+const { ObjectId } = require('mongodb');
 
 // Criar as verificações para o requisito 5.
 // Verificar push no github
@@ -31,6 +32,24 @@ const createSales = async (salesData) => {
   return create;
 };
 
+const salesList = async () => {
+  const list = await listSalesModel();
+  return list;
+};
+
+const saleListById = async (id) => {
+  if (!ObjectId.isValid(id)) return {
+    err: {
+      code: 'not_found',
+      message: 'Sale not found'
+    }
+  };
+  const saleById = await saleByIdModel(id);
+  return saleById;
+};
+
 module.exports = {
   createSales,
+  salesList,
+  saleListById,
 };
