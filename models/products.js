@@ -17,6 +17,6 @@ const update = (id, product) => connection().then((db) =>
   db.collection('products').updateOne({ _id: ObjectID(id) }, { $set: product }));
 
 const remove = (id) => connection().then((db) =>
-  db.collection('products').deleteOne({ _id: ObjectID(id) }));
+  db.collection('products').findOneAndDelete({ _id: ObjectID(id) }));
 
 module.exports = { create, getAll, getById, getByName, update, remove };

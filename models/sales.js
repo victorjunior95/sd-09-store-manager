@@ -14,7 +14,7 @@ const update = (id, itensSold) => connection().then((db) =>
   db.collection('sales').updateOne({ _id: ObjectID(id) }, { $set: { itensSold } }));
 
 const remove = (id) => connection().then((db) =>
-  db.collection('sales').deleteOne({ _id: ObjectID(id) }));
+  db.collection('sales').findOneAndDelete({ _id: ObjectID(id) }));
 
 const updateStock = (id, quantity) => connection().then((db) =>
   db.collection('products').updateOne({ _id: ObjectID(id) }, { $inc: { quantity } }));
