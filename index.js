@@ -8,7 +8,8 @@ const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
 const { createSales, deleteSale, getAllSales, getByIdSale,
   updateSale } = require('./controllers/salesController');
 
-const PORT = 3000;
+const magicNumPort = 3000;
+const PORT = process.env.PORT || magicNumPort;
 
 app.use(bodyParser);
 

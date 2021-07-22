@@ -3,7 +3,7 @@ const UNPROCESSABLE_ENTITY_STATUS = 422;
 
 const validNumber = (newSale) => {
   newSale.forEach((sale) => {
-    if (typeof sale.quantity !== 'number') throw {
+    if (typeof sale.quantity !== 'number' || sale.quantity === undefined) throw {
       status: UNPROCESSABLE_ENTITY_STATUS,
       err: {
         code: 'invalid_data',
