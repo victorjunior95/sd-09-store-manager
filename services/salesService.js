@@ -4,14 +4,11 @@ const {
   saleByIdModel,
   saleUpdateModel,
   saleDeleteModel,
+  verifyStockModel,
 } = require('../models/sales');
 const joi = require('joi');
 const { ObjectId } = require('mongodb');
 
-// Criar as verificações para o requisito 5.
-// Verificar push no github
-// menor ou igual zero
-// string
 const minChar = 5;
 
 // Validação de arrays com Joi verificado no link https://stackoverflow.com/questions/42656549/joi-validation-of-array
@@ -34,8 +31,33 @@ const createSales = async (salesData) => {
       message: error.message,
     };
   }
+  // ao passar sem erro, após a criação da sale deverá aguardar a redução da quantidade em products.
+  // const reduceStock = await functionToReduce();
   const create = await createSalesModel(salesData);
+  
   return create;
+};
+
+// Referência do promise.all https://stackoverflow.com/questions/39452083/using-promise-function-inside-javascript-array-map
+
+const verifyStock = async (salesData) => {
+  return await Promise.all(salesData.map(async product => {
+    const soldItems = product.quantity;
+    const stock = await (verifyStockModel(product));
+    console.log(stock);
+    console.log(soldItems);
+    if (stock < soldItems) return {
+      err: {
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
+      } };
+    return;
+  }));
+
+  // return testes;
+  // const { productId } = salesData;
+  // const availableStock = await verifyStockModel();
+  // return availableStock;
 };
 
 const salesList = async () => {
@@ -101,4 +123,5 @@ module.exports = {
   saleListById,
   saleUpdate,
   saleDelete,
+  verifyStock,
 };

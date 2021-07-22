@@ -43,6 +43,41 @@ const updateProductInfo = async (updateInfo) => {
   return result.value;
 };
 
+const updateProductSale = async (saleInfo) => {
+  const { product: { productId }, action } = saleInfo;
+  const productStock = await connection()
+    .then(db => db.collection('products')
+      .findOne(ObjectId(productId))
+      .then(product => product.quantity));
+ 
+  const soldQuantity = saleInfo.product.quantity;
+  if (action === 'remove') {
+    const result = await connection()
+      .then(db => db.collection('products')
+        .findOneAndUpdate({ _id: ObjectId(productId) },
+          {
+            $set: {
+              quantity: productStock-soldQuantity
+            }
+          }
+        ));
+    return result;
+  };
+  if (action === 'add') {
+    const result = await connection()
+      .then(db => db.collection('products')
+        .findOneAndUpdate({ _id: ObjectId(productId) },
+          {
+            $set: {
+              quantity: productStock+soldQuantity
+            }
+          }
+        ));
+    return result;
+  }
+  return null;
+};
+
 const deleteProductModel = async (id) => {
   return await connection()
     .then(db => db.collection('products').deleteOne({ _id: ObjectId(id) }));
@@ -55,4 +90,5 @@ module.exports = {
   getProductById,
   updateProductInfo,
   deleteProductModel,
+  updateProductSale,
 };

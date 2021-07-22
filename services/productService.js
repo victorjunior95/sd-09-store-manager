@@ -51,12 +51,6 @@ const productCreate = async (productData) => {
 
 const listProducts = async () => {
   const list = await listAllProducts();
-  // if (!list) return {
-  //   err: {
-  //     code: 'invalid_data',
-  //     message: 'Wrong id format'
-  //   }
-  // };
   return list;
 };
 

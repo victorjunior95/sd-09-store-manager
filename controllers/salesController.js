@@ -4,15 +4,20 @@ const {
   saleListById,
   saleUpdate,
   saleDelete,
+  verifyStock,
 } = require('../services/salesService');
+const rescue = require('express-rescue');
 
 const STATUS_SUCCESS = 200;
 const STATUS_ERROR = 422;
 // const STATUS_CREATED = 201;
 const STATUS_NOT_FOUND = 404;
 
-const salesCreation = async (req, res, _next) => {
+const salesCreation = rescue (async (req, res, _next) => {
   const salesData = req.body;
+  const stockAvailable = await verifyStock(salesData);
+
+  if (stockAvailable[0]) return res.status(STATUS_NOT_FOUND).json(stockAvailable[0]);
   const salesCreated = await createSales(salesData);
   if (salesCreated.code) return res.status(STATUS_ERROR).json({
     err: {
@@ -20,8 +25,8 @@ const salesCreation = async (req, res, _next) => {
       message: salesCreated.message,
     }
   });
-  return res.status(STATUS_SUCCESS).json(salesCreated);
-};
+  return res.status(STATUS_SUCCESS).json(salesCreated); // tirar as aspas
+});
 
 const listAllSales = async (_req, res, _next) => {
   const allSales = await salesList();
@@ -42,7 +47,6 @@ const updateSale = async (req, res, _next) => {
 
   const saleData = { id, itensSold };
   const updated = await saleUpdate(saleData);
-  console.log(updated);
   if (updated.err) return res.status(STATUS_ERROR).json(updated);
   return res.status(STATUS_SUCCESS).json(updated);
 };
