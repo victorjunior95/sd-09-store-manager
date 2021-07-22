@@ -1,10 +1,25 @@
 const connection = require('./connection');
 
-const listAll = async () => {
-  const all = await connection().then((db) => db.collection('products').findOne());
-  return all;
+const createProduct = async (name, quantity) => {
+  const insertedProduct = await connection()
+    .then((db) => db.collection('products').insertOne({
+      name,
+      quantity
+    }));
+
+  return insertedProduct;
+};
+
+const searchProducts = async (prodName) => {
+  const searchedProduct = await connection()
+    .then((db) => db.collection('products').findOne({
+      name: prodName
+    }));
+
+  return searchedProduct;
 };
 
 module.exports = {
-  listAll,
+  createProduct,
+  searchProducts,
 };
