@@ -1,4 +1,5 @@
 const products = require('../models/products');
+const sales = require('../models/sales');
 const { ObjectID } = require('mongodb');
 
 const err = (code, message) => ({ code, message });
@@ -30,6 +31,8 @@ const sale = async (itensSold) => {
 
 const saleExists = async (id) => {
   if (!ObjectID.isValid(id)) throw err('not_found', 'Sale not found');
+  const exists = await sales.getById(id);
+  if (!exists) throw err('not_found', 'Sale not found');
 };
 
 const saleId = async (id) => {
