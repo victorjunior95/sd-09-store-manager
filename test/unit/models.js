@@ -207,6 +207,38 @@ describe('Create an endpoint to delete a product', () => {
   });
 });
 
+describe('Create an endpoint to register sales', () => {
+  const DBServer = new MongoMemoryServer();
+  let connectionMock;
+  let ID;
+  let body;
+
+  before(async () => {
+    const URLMock = await DBServer.getUri();
+    connectionMock = await MongoClient.connect(URLMock,
+      { useNewUrlParser: true, useUnifiedTopology: true });
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    const { insertedId } = await connectionMock.db('StoreManager').collection('products')
+      .insertOne({ name: 'Product1', quantity: 35 });
+    ID = insertedId;
+    body = [{ productId: ID, quantity: 30 }];
+  });
+
+  after(async () => {
+    await connectionMock.db('StoreManager').collection('products').deleteMany({});
+    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    MongoClient.connect.restore();
+    await DBServer.stop();
+  });
+
+  describe('Register a successful sale', () => {
+    it('Returns an object', async () => {
+      const res = await salesModel.createSales(body);
+      expect(res).to.be.an('object');
+    });
+  });
+});
+
 describe('Update the quantity of products', () => {
   const DBServer = new MongoMemoryServer();
   let connectionMock;
@@ -231,34 +263,6 @@ describe('Update the quantity of products', () => {
   describe('Decreases the amount after the sale', () => {
     it('returns an object', async () => {
       const res = await productsModel.updateProduct(ID, 2);
-      expect(res).to.be.an('object');
-    });
-  });
-});
-
-describe('Create an endpoint to register sales', () => {
-  const DBServer = new MongoMemoryServer();
-  let connectionMock;
-
-  before(async () => {
-    const URLMock = await DBServer.getUri();
-    connectionMock = await MongoClient.connect(URLMock,
-      { useNewUrlParser: true, useUnifiedTopology: true });
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(async () => {
-    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
-    MongoClient.connect.restore();
-    await DBServer.stop();
-  });
-
-  describe('Register a successful sale', async () => {
-    const body = await connectionMock.db('StoreManager').collection('products')
-      .insertOne({ _id: '60e770a1f03f7e8cab42578a', name:'Produto1', quantity: 30 });
-
-    it('Returns an object', async () => {
-      const res = await salesModel.createSales(body);
       expect(res).to.be.an('object');
     });
   });
