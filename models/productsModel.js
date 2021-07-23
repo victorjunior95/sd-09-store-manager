@@ -43,9 +43,17 @@ const updateProducts = async (mongoId, {name, quantity}) => {
   return update.acknowledged;
 };
 
+const deleteProducts = async (mongoId) => {
+  const cnt = await connection();
+  const deleteStatus = cnt.collection('products').deleteOne({ _id: ObjectId(mongoId) });
+
+  return deleteStatus;
+};
+
 module.exports = {
   createProduct,
   updateProducts,
+  deleteProducts,
   searchProductsByName,
   searchProductsByID,
   listAllProducts,

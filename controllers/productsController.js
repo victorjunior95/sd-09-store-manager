@@ -5,6 +5,7 @@ const {
   createProductService,
   listProductByID,
   updateProductSevice,
+  deleteProductService,
 } = require('../services/productServices');
 
 const router = express.Router();
@@ -65,6 +66,23 @@ router.put('/:id', async (req, res) => {
 
   } catch (err) {
 
+    return res.status(err.status).json({
+      err: {
+        code: 'invalid_data',
+        message: err.message
+      }
+    });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const { params: { id } } = req;
+
+  try {
+    const deletedProd = await deleteProductService(id);
+
+    return res.status(OK_STATUS).json(deletedProd);
+  } catch (err) {
     return res.status(err.status).json({
       err: {
         code: 'invalid_data',
