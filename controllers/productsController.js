@@ -1,6 +1,11 @@
 const express = require('express');
+
 const { listAllProducts } = require('../models/productsModel');
-const { createProductService, listProductByID } = require('../services/productServices');
+const {
+  createProductService,
+  listProductByID,
+  updateProductSevice,
+} = require('../services/productServices');
 
 const router = express.Router();
 const OK_STATUS = 200;
@@ -41,6 +46,25 @@ router.get('/:id', async (req, res) => {
     return res.status(OK_STATUS).json(product);
   } catch (err) {
     
+    return res.status(err.status).json({
+      err: {
+        code: 'invalid_data',
+        message: err.message
+      }
+    });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const { params: { id }, body } = req;
+
+  try {
+    await updateProductSevice(id, body);
+
+    return res.status(OK_STATUS).json({ _id: id, ...body });
+
+  } catch (err) {
+
     return res.status(err.status).json({
       err: {
         code: 'invalid_data',

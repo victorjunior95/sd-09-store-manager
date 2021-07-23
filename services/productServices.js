@@ -5,6 +5,7 @@ const {
   createProduct,
   searchProductsByName,
   searchProductsByID,
+  updateProducts,
 } = require('../models/productsModel');
 
 const minNameSize = 5;
@@ -57,7 +58,20 @@ const listProductByID = async (prodID) => {
   return searchedProd;
 };
 
+const updateProductSevice = async (mongoId, prodObj) => {
+  const validID = ObjectId.isValid(mongoId);
+  const { error } = productSchema.validate(prodObj);
+  if (error) {
+    const { details: [{ message }] } = error;
+    throw validationError(UnprocessableEntity, message);
+  }
+  if (!validID) throw validationError(UnprocessableEntity, invalidID);
+
+  await updateProducts(mongoId, prodObj);
+};
+
 module.exports = {
   createProductService,
+  updateProductSevice,
   listProductByID,
 };

@@ -35,8 +35,17 @@ const listAllProducts = async () => {
   return products;
 };
 
+const updateProducts = async (mongoId, {name, quantity}) => {
+  const cnt = await connection();
+  const update = cnt.collection('products')
+    .updateOne({ _id: ObjectId(mongoId) },{ $set: { name, quantity } });
+
+  return update.acknowledged;
+};
+
 module.exports = {
   createProduct,
+  updateProducts,
   searchProductsByName,
   searchProductsByID,
   listAllProducts,
