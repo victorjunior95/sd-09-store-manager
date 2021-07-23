@@ -26,8 +26,32 @@ const getByName = async (name) => {
 const getAll = async () => {
   const products = await connection()
     .then((db) => db.collection('products').find().toArray())
-    .then((data) => data);
+    .then((data) => {
+      return {
+        result: {
+          products: data,
+        },
+        code: 200,
+      };
+    });
   return products;
 };
 
-module.exports = { create, getAll, getByName };
+const getById = async (id) => {
+  const product = await connection()
+    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
+    .then((data) =>{
+      return {
+        result: data,
+        code: 200,
+      };
+    });
+  return product;
+};
+
+module.exports = {
+  create,
+  getAll,
+  getByName,
+  getById
+};

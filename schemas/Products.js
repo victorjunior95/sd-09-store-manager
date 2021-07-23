@@ -1,4 +1,4 @@
-const { getByName } = require('../models/Products');
+const { getByName, getById } = require('../models/Products');
 
 const MIN_NAME_LENGTH = 5;
 const MIN_QUANTITY = 1;
@@ -10,6 +10,7 @@ const errors = {
   INVALID_TYPE_NAME: '"name" must be a string',
   INVALID_QUANTITY: '"quantity" must be larger than or equal to 1',
   INVALID_TYPE_QUANTITY: '"quantity" must be a number',
+  INVALID_ID: 'Wrong id format'
 };
 
 const errorObject = (code, message) => {
@@ -40,4 +41,13 @@ const createValidator = async (name, quantity) => {
   }
 };
 
-module.exports = { createValidator };
+const idValidator = async (id) => {
+  try {
+    await getById(id);
+    return true;
+  } catch {
+    return errorObject(INVALID_DATA, errors.INVALID_ID);
+  }
+};
+
+module.exports = { createValidator, idValidator };
