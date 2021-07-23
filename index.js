@@ -5,8 +5,8 @@ const productsRouter = require('./rotes/Products');
 require('dotenv').config();
 
 const app = express();
-// eslint-disable-next-line no-magic-numbers
-const PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT;
 
 app.use(bodyParser.json());
 
