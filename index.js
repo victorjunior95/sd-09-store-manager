@@ -1,4 +1,19 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const productsRouter = require('./rotes/Products');
+
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT;
+
+app.use(bodyParser.json());
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
+
+app.use('/products', productsRouter);
+
+app.listen(PORT, () => console.log(`Listening at port ${PORT}!`));
