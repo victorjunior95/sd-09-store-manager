@@ -23,7 +23,9 @@ const alreadyExists = async (name) => {
   return true;
 };
 
-const createValidator = async (name, quantity) => {
+const productValidator = async (name, quantity) => {
+  console.log(name);
+  console.log(quantity);
   const exists = await alreadyExists(name);
   switch(true) {
   case !name || name.length < MIN_NAME_LENGTH:
@@ -50,4 +52,4 @@ const idValidator = async (id) => {
   }
 };
 
-module.exports = { createValidator, idValidator };
+module.exports = { productValidator, idValidator };
