@@ -7,4 +7,11 @@ const saleValidator = async (req, res, next) => {
   next();
 };
 
-module.exports = { saleValidator };
+const idValidator = async (req, res, next) => {
+  const { id } = req.params;
+  const isValid = await salesSchema.idValidator(id);
+  if(isValid.message) return res.status(isValid.code).json(isValid.message);
+  next();
+};
+
+module.exports = { saleValidator, idValidator };
