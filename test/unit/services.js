@@ -1,10 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const productsModel = require('../../models/productsModel');
 const productsService = require('../../services/productsService');
-const salesModel = require('../../models/salesModel');
 const salesService = require('../../services/salesService');
+const productsModel = require('../../models/productsModel');
+const salesModel = require('../../models/salesModel');
 
 describe('Create an endpoint for product registration', () => {
   describe('Failed to register', () => {
@@ -277,90 +277,6 @@ describe('Create an endpoint to register sales', () => {
   });
 });
 
-describe('Create an endpoint to list sales', () => {
-  describe('Successful', () => {
-    describe('There is no sale', () => {
-      it('Returns an array', async () => {
-        const response = await salesService.allSales();
-        expect(response).to.be.an('array');
-      });
-
-      it('Empty array ', async () => {
-        const response = await salesService.allSales();
-        expect(response).to.be.empty;
-      });
-    });
-
-    const sales = { sales: [
-      { 'productId': '60f920317d5d542c8129aa59', 'quantity': 200 },
-      { 'productId': '60f92c8966315e5c551a33dd', 'quantity': 150 }
-    ]};
-
-    before(() => sinon.stub(salesModel, 'getAllSales').resolves(sales));
-    after(() => salesModel.getAllSales.restore());
-
-    it('Returns an object: key sales', async () => {
-      const res = await salesService.allSales();
-      expect(res).to.be.an('object').to.have.key('sales');
-    });
-  });
-
-  describe('Search by id', () => {
-
-    describe('Successful', async () => {
-      const obj = {
-        _id: '60f920317d5d542c8129aa59',
-        itensSold: [{ 'productId': '60f920317d5d542c8129aa59', 'quantity': 10 }],
-      }
-      before(() => sinon.stub(salesModel, 'getByIdSale').resolves(obj));
-      after(() => salesModel.getByIdSale.restore());
-
-      it('Returns an object: keys "_id" e "itensSold"', async () => {
-        const res = await salesService.getById('60f920317d5d542c8129aa59');
-        expect(res).to.be.an('object').to.have.all.keys('_id', 'itensSold');
-      });
-    });
-
-    describe('Returns an object successful', () => {
-      const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
-      const sale = { insertedId: '60e72ce912fb02363cd340e5', itensSold: prod };
-      const id = '60e72ce912fb02363cd340e4';
-
-      before(async () => sinon.stub(salesModel, 'getByIdSale').resolves(sale));
-      after(async () => salesModel.getByIdSale.restore());
-
-      it('Returns an object', async () => {
-        const res = await salesService.getById(id);
-        expect(res).to.be.an('object');
-      });
-    });
-
-    describe('Unsuccess', async () => {
-      const id = '60f920317d5d542c8129aa59';
-      before(() => sinon.stub(salesModel, 'getByIdSale').resolves(null));
-      afterEach(() => salesModel.getByIdSale.restore());
-
-      it('Return an object error', async () => {
-        const res = await salesService.getById(id);
-        expect(res).to.be.an('object').to.have.keys('err');
-      });
-    });
-
-    describe('ID not found', () => {
-      const sale = { err: { code: 'not_found', message: 'Sale not found' } };
-      const id = '60e72ce912fb02363cd340e4';
-
-      before(async () => sinon.stub(salesModel, 'getByIdSale').resolves(sale));
-      after(async () => salesModel.getByIdSale.restore());
-
-      it('Returns an object error', async () => {
-        const res = await salesService.getById(id);
-        expect(res).to.be.an('object');
-      });
-    });
-  });
-});
-
 describe('Create an endpoint to update a sale', () => {
   describe('Successful update', () => {
     const upd = [{ productId: '60f920317d5d542c8129aa59', quantity: 10 }];
@@ -431,19 +347,19 @@ describe('Create an endpoint to delete a sale', () => {
     });
   });
 
-describe('Delete sale', () => {
-  const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
-  const sale = { insertedId: '60e72ce912fb02363cd340e5', itensSold: prod };
-  const id = '60e72ce912fb02363cd340e5';
+  describe('Delete sale', () => {
+    const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
+    const sale = { insertedId: '60e72ce912fb02363cd340e5', itensSold: prod };
+    const id = '60e72ce912fb02363cd340e5';
 
-  before(async () => sinon.stub(salesModel, 'updateSale').resolves(sale));
-  after(async () => salesModel.updateSale.restore());
+    before(async () => sinon.stub(salesModel, 'deleteSale').resolves(sale));
+    after(async () => salesModel.deleteSale.restore());
 
-  it('Return an object', async () => {
-    const res = await salesService.deleteSale(id);
-    expect(res).to.equal(sale);
+    it('Return an object', async () => {
+      const res = await salesService.deleteService(id);
+      expect(res.status).to.equal(422);
+    });
   });
-});
 
   describe('Unsuccessful', () => {
     before(() => sinon.stub(salesModel, 'deleteSale').resolves(null));
