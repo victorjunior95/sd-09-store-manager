@@ -25,4 +25,16 @@ const edit = rescue(async (req,res) => {
   return res.status(response.code).json(response.result);
 });
 
-module.exports = { create, getAll, getById, edit };
+const deleteProduct = rescue(async (req, res) => {
+  const { id } = req.params;
+  const response = await productsService.deleteProduct(id);
+  return res.status(response.code).json(response.result);
+});
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  edit,
+  deleteProduct
+};

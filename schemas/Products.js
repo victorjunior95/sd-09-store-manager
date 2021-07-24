@@ -24,8 +24,6 @@ const alreadyExists = async (name) => {
 };
 
 const productValidator = async (name, quantity) => {
-  console.log(name);
-  console.log(quantity);
   const exists = await alreadyExists(name);
   switch(true) {
   case !name || name.length < MIN_NAME_LENGTH:

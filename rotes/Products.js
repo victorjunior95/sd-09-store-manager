@@ -7,5 +7,6 @@ Router.post('/', productsMidleware.productValidator, productsController.create);
 Router.get('/', productsController.getAll);
 Router.get('/:id', productsMidleware.idValidator, productsController.getById);
 Router.put('/:id', productsMidleware.productValidator, productsController.edit);
+Router.delete('/:id', productsMidleware.idValidator, productsController.deleteProduct);
 
 module.exports = Router;
