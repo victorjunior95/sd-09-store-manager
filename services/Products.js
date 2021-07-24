@@ -1,15 +1,15 @@
 const productsModel = require('../models/Products');
 
-const create = (name, quantity) => productsModel.create(name, quantity);
-const getAll = () => productsModel.getAll();
-const getById = (id) => productsModel.getById(id);
-const edit = (id, name, quantity) => productsModel.edit(id, name, quantity);
+const createProduct = (name, quantity) => productsModel.createProduct(name, quantity);
+const getAllProducts = () => productsModel.getAllProducts();
+const getProductById = (id) => productsModel.getProductById(id);
+const editProduct = (id, name, quantity) => productsModel.editProduct(id, name, quantity);
 const deleteProduct = (id) => productsModel.deleteProduct(id);
 
 module.exports = {
-  create,
-  getAll,
-  getById,
-  edit,
+  createProduct,
+  getAllProducts,
+  getProductById,
+  editProduct,
   deleteProduct
 };

@@ -1,4 +1,4 @@
-const { getByName, getById } = require('../models/Products');
+const { getProductByName, getProductById } = require('../models/Products');
 
 const MIN_NAME_LENGTH = 5;
 const MIN_QUANTITY = 1;
@@ -18,7 +18,7 @@ const errorObject = (code, message) => {
 };
 
 const alreadyExists = async (name) => {
-  const exists = await getByName(name);
+  const exists = await getProductByName(name);
   if(exists) return false;
   return true;
 };
@@ -43,7 +43,7 @@ const productValidator = async (name, quantity) => {
 
 const idValidator = async (id) => {
   try {
-    await getById(id);
+    await getProductById(id);
     return true;
   } catch {
     return errorObject(INVALID_DATA, errors.INVALID_ID);

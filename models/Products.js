@@ -1,7 +1,7 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const create = async (name, quantity) => {
+const createProduct = async (name, quantity) => {
   return await connection()
     .then((db) => db.collection('products').insertOne({ name, quantity }))
     .then((result) => {
@@ -16,14 +16,14 @@ const create = async (name, quantity) => {
     });
 };
 
-const getByName = async (name) => {
+const getProductByName = async (name) => {
   const product = await connection()
     .then((db) => db.collection('products').findOne({ name }))
     .then((data) => data);
   return product;
 };
 
-const getAll = async () => {
+const getAllProducts = async () => {
   const products = await connection()
     .then((db) => db.collection('products').find().toArray())
     .then((data) => {
@@ -37,7 +37,7 @@ const getAll = async () => {
   return products;
 };
 
-const getById = async (id) => {
+const getProductById = async (id) => {
   const product = await connection()
     .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
     .then((data) =>{
@@ -49,7 +49,7 @@ const getById = async (id) => {
   return product;
 };
 
-const edit = async (id, name, quantity) => {
+const editProduct = async (id, name, quantity) => {
   return await connection()
     .then((db) => {
       db.collection('products')
@@ -68,7 +68,7 @@ const edit = async (id, name, quantity) => {
 };
 
 const deleteProduct = async (id) => {
-  const product = await getById(id);
+  const product = await getProductById(id);
   return await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }))
     .then((data) => {
@@ -77,10 +77,10 @@ const deleteProduct = async (id) => {
 };
 
 module.exports = {
-  create,
-  getAll,
-  getByName,
-  getById,
-  edit,
+  createProduct,
+  getAllProducts,
+  getProductByName,
+  getProductById,
+  editProduct,
   deleteProduct
 };
