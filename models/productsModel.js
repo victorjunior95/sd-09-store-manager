@@ -3,11 +3,11 @@ const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 
 const createProduct = async (name, quantity) => {
-  const insertedProduct = await connection()
-    .then((db) => db.collection('products').insertOne({
-      name,
-      quantity
-    }));
+  const cnt = await connection();
+  const insertedProduct = cnt.collection('products').insertOne({
+    name,
+    quantity
+  });
 
   return insertedProduct;
 };
