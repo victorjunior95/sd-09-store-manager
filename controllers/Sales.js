@@ -18,4 +18,11 @@ const getSaleById = rescue(async (req, res) => {
   return res.status(response.code).json(response.result);
 });
 
-module.exports = { createSale, getAllSales, getSaleById };
+const editSale = rescue(async (req, res) => {
+  const { id } =  req.params;
+  const sale = req.body;
+  const response = await salesService.editSale(id, sale);
+  return res.status(response.code).json(response.result);
+});
+
+module.exports = { createSale, getAllSales, getSaleById, editSale };

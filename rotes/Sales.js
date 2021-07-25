@@ -6,5 +6,10 @@ const salesMiddleware = require('../middlewares/Sales');
 Router.post('/', salesMiddleware.saleValidator, salesController.createSale);
 Router.get('/', salesController.getAllSales);
 Router.get('/:id', salesMiddleware.idValidator, salesController.getSaleById);
+Router.put('/:id',
+  salesMiddleware.idValidator,
+  salesMiddleware.saleValidator,
+  salesController.editSale
+);
 
 module.exports = Router;

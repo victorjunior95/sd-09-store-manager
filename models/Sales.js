@@ -39,4 +39,21 @@ const getSaleById = async (id) => {
     });
 };
 
-module.exports = { createSale, getAllSales, getSaleById };
+const editSale = async (id, sale) => {
+  return await connection()
+    .then((db) => {
+      db.collection('sales')
+        .updateOne({ _id: ObjectId(id) },{ $set: { itensSold: sale } });
+    })
+    .then(() => {
+      return {
+        result: {
+          _id: id,
+          itensSold: sale
+        },
+        code: 200
+      };
+    });
+};
+
+module.exports = { createSale, getAllSales, getSaleById, editSale };
