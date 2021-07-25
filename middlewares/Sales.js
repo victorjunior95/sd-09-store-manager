@@ -14,4 +14,11 @@ const idValidator = async (req, res, next) => {
   next();
 };
 
-module.exports = { saleValidator, idValidator };
+const deleteValidator = async (req, res, next) => {
+  const { id } = req.params;
+  const isValid = await salesSchema.deleteValidator(id);
+  if(isValid.message) return res.status(isValid.code).json(isValid.message);
+  next();
+};
+
+module.exports = { saleValidator, idValidator, deleteValidator };

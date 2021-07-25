@@ -56,4 +56,19 @@ const editSale = async (id, sale) => {
     });
 };
 
-module.exports = { createSale, getAllSales, getSaleById, editSale };
+const deleteSale = async (id) => {
+  const sale = await getSaleById(id);
+  return await connection()
+    .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }))
+    .then((data) => {
+      return sale;
+    });
+};
+
+module.exports = {
+  createSale,
+  getAllSales,
+  getSaleById,
+  editSale,
+  deleteSale
+};

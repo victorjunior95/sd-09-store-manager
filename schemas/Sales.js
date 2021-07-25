@@ -1,8 +1,9 @@
 const { getSaleById } = require('../models/Sales');
 
 const errors = {
-  INVALID_REQUEST: 'Wrong product ID or invalid quantity',
-  SALE_NOTFOUND: 'Sale not found'
+  INVALID_SALE: 'Wrong product ID or invalid quantity',
+  SALE_NOTFOUND: 'Sale not found',
+  INVALID_ID: 'Wrong sale ID format'
 };
 
 const MIN_QUANTITY = 1;
@@ -22,17 +23,28 @@ const saleValidator = (sale) => {
       error = true;
     }
   });
-  if (error) return errorObject(INVALID_DATA, errors.INVALID_REQUEST, CODE_422);
+  if (error) return errorObject(INVALID_DATA, errors.INVALID_SALE, CODE_422);
   return {};
 };
 
 const idValidator = async (id) => {
   try {
-    await getSaleById(id);
+    const sale = await getSaleById(id);
+    if(!sale.result) return errorObject(NOT_FOUND, errors.SALE_NOTFOUND, CODE_404);
     return true;
   } catch {
     return errorObject(NOT_FOUND, errors.SALE_NOTFOUND, CODE_404);
   }
 };
 
-module.exports = { saleValidator, idValidator };
+const deleteValidator = async (id) => {
+  try {
+    const sale = await getSaleById(id);
+    if(!sale.result) return errorObject(INVALID_DATA, errors.INVALID_ID, CODE_422);
+    return true;
+  } catch {
+    return errorObject(INVALID_DATA, errors.INVALID_ID, CODE_422);
+  }
+};
+
+module.exports = { saleValidator, idValidator, deleteValidator };

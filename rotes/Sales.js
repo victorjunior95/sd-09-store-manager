@@ -11,5 +11,6 @@ Router.put('/:id',
   salesMiddleware.saleValidator,
   salesController.editSale
 );
+Router.delete('/:id', salesMiddleware.deleteValidator, salesController.deleteSale);
 
 module.exports = Router;
