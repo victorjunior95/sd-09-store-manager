@@ -5,17 +5,6 @@ const { getConnection } = require('./connectionMock');
 const productsModel = require('../../model/Products');
 const salesModel = require('../../model/Sales');
 
-const newProduct = {
-    name: 'Cadeira Gamer',
-    quantity: 100,
-};
-
-const newSale = [
-    {
-        productId: '60ff103d690317d08dd3f26d',
-        quantity: 5
-    }
-];
 
 describe('Teste do ProductModel', () => {
     let connectionMock;
@@ -34,7 +23,7 @@ describe('Teste do ProductModel', () => {
       let response;
 
       before(async () => {
-      response = await productsModel.createNewProduct(newProduct);
+      response = await productsModel.createNewProduct('Cadeira Gamer', 100);
       });
 
       after(async () => {
@@ -53,13 +42,13 @@ describe('Teste do ProductModel', () => {
           expect(response).to.have.property('_id');
       });
       it('"name" deve ser uma string com mais de 5 caracteres', () => {
-          const { name } = newProduct;
+          const { name } = response;
   
           expect(name).to.be.a('string');
           expect(name.length).to.be.greaterThanOrEqual(5);
       });
       it('"quantity" deve ser um número maior que 0', () => {
-          const { quantity } = newProduct;
+          const { quantity } = response;
   
           expect(quantity).to.be.a('number');
           expect(quantity).to.be.greaterThan(0);
@@ -88,7 +77,7 @@ describe('Teste do ProductModel', () => {
           let response;
 
           before(async () => {
-              response = await productsModel.createNewProduct(newProduct);
+              response = await productsModel.createNewProduct('Cadeira Gamer', 100);
           });
 
           after(async () => {
@@ -121,7 +110,7 @@ describe('Teste do ProductModel', () => {
     describe('Testa a atualização de produtos', () => {
       let productToBeUpdated
       before(async () => {
-        productToBeUpdated = await productsModel.createNewProduct(newProduct);
+        productToBeUpdated = await productsModel.createNewProduct('Cadeira Gamer',);
 
       });
     
@@ -143,7 +132,7 @@ describe('Teste do ProductModel', () => {
     describe('Testa a deleção de produtos', () => {
       let productToBeDeleted
       before(async () => {
-        productToBeDeleted = await productsModel.createNewProduct(newProduct);
+        productToBeDeleted = await productsModel.createNewProduct('Cadeira Gamer', 100);
 
       });
   
@@ -158,3 +147,46 @@ describe('Teste do ProductModel', () => {
     });
 });
 
+describe('Testando SaleModel', () => {
+  let connectionMock;
+
+  before(async () => {
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+  });
+
+  after(async () => {
+    MongoClient.connect.restore();
+    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+  });
+
+  describe('Testando a inserção de compras', () => {
+    let existentProduct;
+
+    before(async () => {
+      existentProduct = await productsModel.createNewProduct('Cadeira Gamer', 100);
+    });
+  
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+    
+    describe('testa a inserçao de compra de produto existente', () => {
+
+      it('deve-se retornar um objeto', async () => {
+    
+        const { _id } = existentProduct;
+        const insertedSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
+
+        expect(insertedSale).to.be.a('object');
+      });
+
+      it('o objeto retornado deve possuir as chaves "_id", "itensSold"', async () => {
+        const {_id} = existentProduct;
+        const insertedSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
+
+        expect(insertedSale).to.include.all.keys('_id', 'itensSold');
+      });
+    });
+  });
+});
