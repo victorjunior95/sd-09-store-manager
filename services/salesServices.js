@@ -48,11 +48,6 @@ const createSaleService = async (soldItens) => {
   return newSale.ops;
 };
 
-// Observações Técnicas:
-// O productId devem ser igual ao id de um produto anteriormente cadastrado;
-// A resposta do endpoint em caso de sucesso deve ser a(s) venda(s) criada(s).
-
-
 module.exports = {
   createSaleService
 };

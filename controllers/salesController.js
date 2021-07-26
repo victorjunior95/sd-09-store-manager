@@ -1,4 +1,5 @@
 const express = require('express');
+const { listAllSales } = require('../models/salesModel');
 const { createSaleService } = require('../services/salesServices');
 
 const router = express.Router();
@@ -18,5 +19,20 @@ router.post('/', async (req, res) => {
     return res.status(err.status).json({ err: { code, message } });
   }
 });
+
+router.get('/', async (_req, res) => {
+  const sales = await listAllSales();
+
+  res.status(OK_STATUS).json({ sales });
+});
+
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const sale = '';
+    
+//   } catch (error) {
+    
+//   }
+// });
 
 module.exports = router;

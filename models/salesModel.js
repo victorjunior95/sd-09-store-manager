@@ -9,6 +9,14 @@ const createSale = async (prodArray) => {
   return sale;
 };
 
+const listAllSales = async () => {
+  const cnt = await connection();
+  const products = cnt.collection('sales').find().toArray();
+
+  return products;
+};
+
 module.exports = {
   createSale,
+  listAllSales,
 };
