@@ -1,4 +1,4 @@
-const Sales = require('../service/Sales');
+const Sales = require('../services/Sales');
 const rescue = require('express-rescue');
 
 const createNewSale = rescue( async (req, res) => {

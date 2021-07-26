@@ -2,8 +2,8 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { MongoClient } = require('mongodb');
 const { getConnection } = require('./connectionMock');
-const productsModel = require('../../model/Products');
-const salesModel = require('../../model/Sales');
+const productsModel = require('../../models/Products');
+const salesModel = require('../../models/Sales');
 
 
 describe('Teste do ProductModel', () => {

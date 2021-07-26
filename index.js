@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser').json();
-const Products = require('./controller/Products');
-const Sales = require('./controller/Sales');
+const Products = require('./controllers/Products');
+const Sales = require('./controllers/Sales');
 app.use(bodyParser);
 const PORT = 3000;
 

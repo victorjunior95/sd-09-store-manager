@@ -1,4 +1,4 @@
-const Sales = require('../model/Sales');
+const Sales = require('../models/Sales');
 const { ObjectId } = require('mongodb');
 
 

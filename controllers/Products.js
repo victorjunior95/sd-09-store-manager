@@ -1,4 +1,4 @@
-const Products = require('../service/Products');
+const Products = require('../services/Products');
 const rescue = require('express-rescue');
 
 const createNewProduct = rescue( async (req, res) => {
