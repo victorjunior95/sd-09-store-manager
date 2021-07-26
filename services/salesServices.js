@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const Joi = require('joi');
-const { createSale } = require('../models/salesModel');
+const { createSale, searchSaleByID } = require('../models/salesModel');
 const { listAllProducts } = require('../models/productsModel');
 
 const unprocessableEntity = 422;
@@ -48,6 +48,17 @@ const createSaleService = async (soldItens) => {
   return newSale.ops;
 };
 
+const listSaleByIdService = async (saleID) => {
+  const validID = ObjectId.isValid(saleID);
+  if (!validID) throw validationError(notFound, 'Sale not found');
+
+  const searchedProd = await searchSaleByID(saleID);
+  if (!searchedProd[0]) throw validationError(notFound, 'Sale not found');
+
+  return searchedProd;
+};
+
 module.exports = {
-  createSaleService
+  createSaleService,
+  listSaleByIdService,
 };

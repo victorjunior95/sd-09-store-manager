@@ -11,12 +11,21 @@ const createSale = async (prodArray) => {
 
 const listAllSales = async () => {
   const cnt = await connection();
-  const products = cnt.collection('sales').find().toArray();
+  const sales = cnt.collection('sales').find().toArray();
 
-  return products;
+  return sales;
+};
+
+const searchSaleByID = async (saleID) => {
+  const cnt = await connection();
+  const searchedSale = cnt.collection('sales')
+    .find({ _id: ObjectId(saleID) }).toArray();
+
+  return searchedSale;
 };
 
 module.exports = {
   createSale,
   listAllSales,
+  searchSaleByID,
 };

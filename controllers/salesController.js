@@ -1,6 +1,6 @@
 const express = require('express');
 const { listAllSales } = require('../models/salesModel');
-const { createSaleService } = require('../services/salesServices');
+const { createSaleService, listSaleByIdService } = require('../services/salesServices');
 
 const router = express.Router();
 const code = 'invalid_data';
@@ -23,16 +23,21 @@ router.post('/', async (req, res) => {
 router.get('/', async (_req, res) => {
   const sales = await listAllSales();
 
-  res.status(OK_STATUS).json({ sales });
+  return res.status(OK_STATUS).json({ sales });
 });
 
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const sale = '';
-    
-//   } catch (error) {
-    
-//   }
-// });
+router.get('/:id', async (req, res) => {
+  const { params: { id } } = req;
+
+  try {
+    const [sale] = await listSaleByIdService(id);
+
+    return res.status(OK_STATUS).json( sale );
+  } catch (err) {
+    const { message } = err;
+
+    return res.status(err.status).json({ err: { code: 'not_found', message } });
+  }
+});
 
 module.exports = router;
