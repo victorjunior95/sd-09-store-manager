@@ -24,6 +24,7 @@ const addSale = async (soldItens) => {
   validateQuantities(soldItens);
   const data = await SalesModel.addSale(soldItens);
   await decreaseQuantities(soldItens);
+
   return data.ops[0];
 };
 

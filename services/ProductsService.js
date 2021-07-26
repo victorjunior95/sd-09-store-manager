@@ -1,5 +1,5 @@
 const ProductsModel = require('../models/ProductsModel');
-
+const { HTTP_NOT_FOUND_STATUS } = require('../httpResponse');
 
 const deleteProduct = async (id) => {
   const product = await ProductsModel.deleteProduct(id);
@@ -28,8 +28,21 @@ const addProduct = async (name, quantity) => {
 };
 
 const decreaseQuantity = async (id, quantity) => {
+  const zero = 0;
   const product = await ProductsModel.getProductById(id);
   const newQuantity = product.quantity - quantity;
+  if (newQuantity < zero) {
+    return {
+      status: 404,
+      result: {
+        err: {
+          code: 'stock_problem',
+          message: 'Such amount is not permitted to sell'
+        }
+      }
+
+    };
+  }
   await ProductsModel.updateQuantity(id, newQuantity);
 };
 

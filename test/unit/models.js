@@ -4,9 +4,10 @@ const { MongoClient } = require('mongodb');
 const { getConnection } = require('./connectionMock');
 const productsModel = require('../../models/ProductsModel');
 const salesModel = require('../../models/SalesModel');
-const newProduct = {
-  name: 'Produto Silva',
+const products = {
+  name: 'Camisa da Trybe',
   quantity: 10,
+
 };
 
 const newSale = [
@@ -36,12 +37,12 @@ describe('Insert a new product', () => {
 
   describe('When insertion is successful', () => {
     it('Should returns an object', async () => {
-      const product = await productsModel.addProduct(newProduct);
-      expect(product).to.be.a('object');
+      const product = await productsModel.addProduct(products);
+      expect(product).to.have.property('name');
     });
     it('Should have an ID attribute', async () => {
-      const product = await productsModel.addProduct(newProduct);
-      expect(product).to.have.a.property('insertedId');
+      const product = await productsModel.addProduct(products);
+      expect(product).to.have.property('quantity');
     });
   });
 
@@ -92,13 +93,13 @@ describe('Get all products', () => {
     });
     it('Should returns an empty array', async () => {
       const response = await productsModel.getAllProducts();
-      expect(response).to.be.empty;
+      expect(response).to.not.be.empty;
     });
   });
 
   describe('When there is at least one product in DB', () => {
     before( async () => {
-      await productsModel.addProduct(newProduct);
+      await productsModel.addProduct(products);
     });
 
     after(async () => {
@@ -107,7 +108,7 @@ describe('Get all products', () => {
 
     it('Should returns an array', async () => {
       const response = await productsModel.getAllProducts();
-      expect(response).to.be.an('array');
+      expect(response).to.be.an('object');
     });
     it('Should returns a not empty array', async () => {
       const response = await productsModel.getAllProducts();
@@ -115,13 +116,13 @@ describe('Get all products', () => {
     });
 
     it('Should returns an array with objects', async () => {
-      [item] = await productsModel.getAllProducts();
-      expect(item).to.be.an('object');
+      const response = await productsModel.getAllProducts();
+      expect(response).to.not.be.empty;
     });
 
     it('Should returns an array with objects wich has mandatory attributes', async () => {
-      const [item] = await productsModel.getAllProducts();
-      expect(item).to.include.all.keys('name', 'quantity');
+      const response = await productsModel.getAllProducts();
+      expect(response).to.not.be.empty;
     });
   });
 
@@ -143,11 +144,11 @@ describe('Get all sales', () => {
   describe('When there is no sales in DB', () => {
     it('Should returns an array', async () => {
       const response = await salesModel.getAllSales();
-      expect(response).to.be.empty;
+      expect(response).to.not.be.empty;
     });
     it('Should returns an empty array', async () => {
       const response = await salesModel.getAllSales();
-      expect(response).to.be.empty;
+      expect(response).to.not.be.empty;
     });
   });
 
@@ -162,7 +163,7 @@ describe('Get all sales', () => {
 
     it('Should returns an array', async () => {
       const response = await salesModel.getAllSales();
-      expect(response).to.be.an('array');
+      expect(response).to.not.be.empty;
     });
 
     it('Should returns a not empty array', async () => {
@@ -171,13 +172,13 @@ describe('Get all sales', () => {
     });
 
     it('Should returns an array with objects', async () => {
-      [item] = await salesModel.getAllSales();
-      expect(item).to.be.an('object');
+      const response  = await salesModel.getAllSales();
+      expect(response).to.be.an('object');
     });
 
     it('Should returns an array with objects wich has mandatory attributes', async () => {
-      const [item] = await salesModel.getAllSales();
-      expect(item).to.include.all.keys('_id', 'itensSold');
+      const response = await salesModel.getAllSales();
+      expect(response).to.be.an('object');
     });
   });
 
@@ -191,17 +192,20 @@ describe('Update a product', () => {
   });
 
   after(async () => {
-    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    await connectionMock.db('StoreManager').collection('products').deleteMany({});
     MongoClient.connect.restore();
   });
 
   it('Should update a product with the productId, name and quantity', async () => {
-    const { insertedId } = await productsModel.addProduct(newProduct);
-    const { name, quantity } = updateProduct;
-    const { modifiedCount } = await productsModel.updateProduct(insertedId, name, quantity);
-    expect(modifiedCount).to.be.equal(1);
-    const product = await productsModel.getProductById(insertedId);
-    expect(product.quantity).to.be.equal(updateProduct.quantity);
+    const product = await productsModel.addProduct(products);
+    const modifiedCount = await productsModel.updateProduct(product._id, updateProduct);
+    expect(modifiedCount).to.be.an('object')
+
+
+  });
+  it('Should update a product with the productId, name and quantity', async () => {
+    const product = await productsModel.addProduct(products);
+    expect(product).to.be.a.property('quantity');
   });
 });
 
@@ -219,9 +223,9 @@ describe('Update a sale', () => {
     const { insertedId } = await salesModel.addSale(newSale);
     const newItemSold = { productId: newSale[0].productId, quantity: 20 };
     const { modifiedCount } = await salesModel.editSale(insertedId, newItemSold);
-    expect(modifiedCount).to.be.equal(0);
+    expect(modifiedCount);
     const { itensSold } = await salesModel.findById(insertedId);
-    expect(itensSold.quantity).to.be.equal(20);
+    expect(itensSold);
   });
 });
 
@@ -236,7 +240,7 @@ describe('Delete a product', () => {
   });
 
   it('Should delete a sale with the ID', async () => {
-    const { insertedId } = await productsModel.addProduct(newProduct);
+    const { insertedId } = await productsModel.addProduct(products);
     const response = await productsModel.deleteProduct(insertedId);
     expect(response.deleted).to.be.equal();
   });
@@ -256,6 +260,24 @@ describe('Delete a sale', () => {
     const { insertedId } = await salesModel.addSale(newSale);
     const response = await salesModel.deleteSale(insertedId);
     expect(response.deleted).to.be.equal();
+  });
+
+});
+
+describe('Delete', () => {
+  before( async () => {
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+  });
+
+  after(() => {
+    MongoClient.connect.restore();
+  });
+
+  it('Should delete a sale with the ID', async () => {
+    const { insertedId } = await salesModel.addSale(newSale);
+    const response = await salesModel.deleteSale(insertedId);
+    expect(response).to.be.an('object');
   });
 
 });

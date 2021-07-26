@@ -42,9 +42,9 @@ const getProducts = async (req, res, _next) => {
 const addProduct = async (req, res, _next) => {
   const { name, quantity } = req.body;
 
-  const product = await ProductsService.addProduct({name, quantity});
+  const product = await ProductsService.addProduct(name, quantity);
 
-  return res.status(HTTP_CREATED_STATUS).send(product);
+  return res.status(HTTP_CREATED_STATUS).json(product);
 };
 
 
