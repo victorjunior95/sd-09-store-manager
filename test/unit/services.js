@@ -1,376 +1,191 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const productsService = require('../../services/productsService');
-const salesService = require('../../services/salesService');
 const productsModel = require('../../models/productsModel');
+const productsService = require('../../services/productsService');
 const salesModel = require('../../models/salesModel');
+const salesService = require('../../services/salesService');
 
-describe('Create an endpoint for product registration', () => {
-  describe('Failed to register', () => {
-    const { name, quantity } = { name: "Prod", quantity: 10 };
+/* =======> VARIÁVEIS UTILIZADAS <======= */
+const _id = '60fe9a24c2a6f0ab990f524c';
+const getProd = { status: 200, result: { products: [{
+  _id, name: "Produto1", quantity: 50
+}] } };
+const prod1 = { name: "Produto1", quantity: 50 };
+const getProdEmpty = { status: 200, result: { products: [] } };
+const errId = { status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } };
+const errName = { err: { code: "invalid_data",
+  message: "\"name\" length must be at least 5 characters long" }, status: 422 };
+const errQuantSale = { status: 422, err: {
+  code: "invalid_data",  message: "Wrong product ID or invalid quantity" } };
 
-    before(() => sinon.stub(productsModel, 'createProduct').resolves(null));
-    after(() => productsModel.createProduct.restore());
-
-    it('Returns an object', async () => {
-      const res = await productsService.create(name, quantity);
-      expect(res).to.be.an('object');
-    });
-
-    it('Returns an error object with curly braces: err, code and message', async () => {
-      const res = await productsService.create(name, quantity);
-      expect(res).to.exist;
-      expect(res).to.be.an('object').to.have.key('err');
-      expect(res.err).to.be.an('object').to.have.all.keys('code', 'message');
-    });
-  });
-
-  describe('Success when registering', () => {
-    const obj = { name: 'Product1', quantity: 100, _id: '60f920317d5d542c8129aa59' };
-    before(() => sinon.stub(productsModel, 'createProduct').resolves(obj));
-    after(() => productsModel.createProduct.restore());
-
-    it('Return an object containing: _id, name, quantity', async () => {
-      const res = await productsService.create(obj.name, obj.quantity);
-      expect(res).to.be.an('object').to.have.all.keys('_id', 'name', 'quantity');
-    });
-  });
-});
-
+/* =======> BUSCAR TODOS OS PRODUTOS (Empty) <======= */
 describe('Create an endpoint to list products', () => {
   describe('There are no registered products', () => {
-    const obj = { status: 200, result: { products: [] } };
-
-    before(async () => sinon.stub(productsModel, 'getAllProducts').resolves(obj));
-    after(async () => productsModel.getAllProducts.restore());
+    before(() => sinon.stub(productsModel, 'getAllProducts').resolves(getProdEmpty));
+    after(() => productsModel.getAllProducts.restore());
 
     it('Returns an object', async () => {
       const res = await productsService.allProducts();
       expect(res).to.be.an('object');
-    });
-
-    it('The array is empty', async () => {
-      const res = await productsService.allProducts();
-      expect(res.result.products).to.empty;
-    });
-  });
-
-  describe('List all products successfully', () => {
-    const obj = { 'products': [
-      { name: 'Product1', quantity: 100, _id: '60f920317d5d542c8129aa59' },
-      { name: 'Product2', quantity: 50, _id: '60f92c8966315e5c551a33dd' },
-    ] };
-
-    before(() => sinon.stub(productsModel, 'getAllProducts').resolves(obj));
-    after(() => productsModel.getAllProducts.restore());
-
-    it('Return an object with key products', async () => {
-      const res = await productsService.allProducts();
-      expect(res).to.be.an('object').to.have.key('products');
-      expect(res.products).to.be.an('array');
-    });
-
-    it('Contains an array with all registered products', async () => {
-      const res = await productsService.allProducts();
-      expect(res.products).to.be.an('array').to.have.length(2);
-      expect(res.products[0]).to.be.an('object');
-    });
-  });
-
-  describe('Search products by Id', () => {
-    describe('Search unsuccessful', () => {
-      const id = '60f920317d5d542c8129aa59';
-      before(() => sinon.stub(productsModel, 'getByIdProduct').resolves(null));
-      after(() => productsModel.getByIdProduct.restore());
-
-      it('Return an error-type object with the keys: err, code and message', async () => {
-        const res = await productsService.getById(id);
-        expect(res).to.exist;
-        expect(res).to.be.an('object').to.have.key('err');
-        expect(res.err).to.be.an('object').to.have.all.keys('code', 'message');
-      });
-    });
-
-    describe('Return search successfully', () => {
-      const obj = { name: 'Product1', quantity: 100, _id: '60f920317d5d542c8129aa59' };
-
-      before(() => sinon.stub(productsModel, 'getByIdProduct').resolves(obj));
-      after(() => productsModel.getByIdProduct.restore());
-
-      it('Returns an object with the keys: _id, name, quantity', async () => {
-        const res = await productsService.getById(obj._id);
-        expect(res).to.exist;
-        expect(res).to.be.an('object').to.have.all.keys('_id', 'name', 'quantity');
-      });
-    });
-  });
-
-  describe('Create an endpoint to update a product', () => {
-    describe('Update successful', () => {
-      const obj = { name: 'Product1', quantity: 200, _id: '60f920317d5d542c8129aa59' };
-
-      before(() => sinon.stub(productsModel, 'updateProduct').resolves({}));
-      after(() => productsModel.updateProduct.restore());
-
-      it('Returns an object', async () => {
-      const res = await productsService.updateService(obj._id, obj.name, obj.quantity);
-      expect(res).to.be.an('object');
-      });
-    });
-
-    describe('Unsuccessful update', () => {
-      const obj = { name: 'Prod', quantity: 200, _id: '60f920317d5d542c8129aa59' };
-      const error = { err:
-        { code: 'invalid_data', message: '"name" length must be at least 5 characters long' },
-      };
-      before(() => sinon.stub(productsModel, 'updateProduct').resolves({}));
-      after(() => productsModel.updateProduct.restore());
-
-      it('Return an error-type object with the key: err', async () => {
-        const res = await productsService.updateService(obj._id, obj.name, obj.quantity);
-        // expect(res).to.exist;
-        expect(res.status).to.equal(422);
-        // expect(res).to.equal(error);
-        // expect(res).to.be.an('object').to.have.key('err');
-      });
+      expect(res.result).to.have.key('products');
+      expect(res.result.products).to.be.an('array');
+      expect(res.status).to.be.equal(200);
     });
   });
 });
+/*====================================================*/
+/* ============> BUSCAR PRODUTOS POR ID <============ */
+describe('Search products by Id', () => {
+  describe('Return search successfully', () => {
+    before(() => sinon.stub(productsModel, 'getByIdProduct')
+      .resolves(getProd.result.products));
+    after(() => productsModel.getByIdProduct.restore());
 
+    it('Returns an status: 200 and object with the keys: _id, name, quantity',
+      async () => {
+        const res = await productsService.getById(_id);
+        expect(res).to.exist;
+        expect(res.result).to.be.an('object').to.have.all.keys('_id', 'name', 'quantity');
+        expect(res.status).to.equal(200);
+      },
+    );
+  });
+});
+/*====================================================*/
+/* ==============> ATUALIZAR PRODUTOS <============== */
+describe('Create an endpoint to update a product', () => {
+  describe('Update successful', () => {
+    before(() => sinon.stub(productsModel, 'updateProduct').resolves(getProd.result.products));
+    after(() => productsModel.updateProduct.restore());
+
+    it('return update successfully', async () => {
+      const res = await productsService.updateService(_id, 'Produto1', 35);
+      expect(res.result).to.be.an('object');
+      expect(res.result).to.be.all.keys('_id', 'name', 'quantity');
+      expect(res.status).to.equal(200);
+    });
+  });
+});
+/*====================================================*/
+/* ===============> CADASTRAR VENDAS <=============== */
+describe('Create an endpoint to register sales', () => {
+  describe('Unsuccessful', () => {
+
+    it('Returns an error', async () => {
+      try { await salesService.create([{ productId: _id, quantity: -10 }]) } catch(err) {
+        expect(err).to.have.property('err');
+        expect(err).to.have.property('err').to.be.all.keys('code', 'message');
+        expect(err).to.have.property('err').to.have.include({
+          code: errQuantSale.err.code, message: errQuantSale.err.message,
+        });
+        expect(err).to.have.property('status').to.equal(errQuantSale.status);
+      };
+    });
+  });
+});
+/*====================================================*/
+/* ===============> APAGAR PRODUTOS <================ */
 describe('Create an endpoint to delete a product', () => {
   describe('Successfully deleted', () => {
-    const obj = { _id: '60fa806df53e00f0cf88955c', name: 'Product2', quantity: 50 };
-
-    before(() => sinon.stub(productsModel, 'deleteProduct').resolves(obj));
+    before(() => sinon.stub(productsModel, 'deleteProduct')
+      .resolves(getProd.result.products));
     after(() => productsModel.deleteProduct.restore());
 
     it('Return an object with the product deleted', async () => {
-      const res = await productsService.deleteService(obj._id);
+      const res = await productsService.deleteService(_id);
       expect(res).to.be.an('object');
-    });
-
-    it('Return the product deleted', async () => {
-      const res = await productsService.deleteService(obj._id);
-      expect(res).to.equal({ status: 200, result });
-    });
-
-    it('Return the product deleted', async () => {
-      const res = await productsService.deleteService(obj._id);
-      expect(res).to.have.all.keys('_id', 'name', 'quantity')
+      expect(res).to.have.include({ status: 200 });
+      expect(res.result).to.have.all.keys('_id', 'name', 'quantity');
     });
   });
 
   describe('Failed to delete', () => {
-    const obj = { status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } };
-    const id = '60fa830188b8870332e39a10';
-    before(() => sinon.stub(productsModel, 'deleteProduct').resolves(obj));
-    after(() => productsModel.deleteProduct.restore());
-
     it('Returns an error object', async () => {
-      const res = await productsService.deleteService(id);
-
-      expect(res).to.exist;
-      expect(res).to.be.an('object').to.have.key('err');
-      expect(res.err).to.be.an('object').to.have.all.keys('code', 'message');
-      expect(res.err.code).to.be.equal('invalid_data');
-      expect(res.err.message).to.be.equal('Wrong id format');
+      try { await productsService.deleteService('9999') }
+        catch(err) {
+          expect(err).to.exist;
+          expect(err).to.be.an('object').to.have.key('err', 'status');
+          expect(err).to.have.property('err').to.be.all.keys('code', 'message');
+          expect(err.err.code).to.equal('invalid_data');
+          expect(err.err.message).to.be.equal('Wrong id format');
+          expect(err).to.have.property('err').to.have
+            .include({ code: errId.err.code, message: errId.err.message });
+        };
     });
   });
 });
+/*====================================================*/
+/* ==============> CADASTRAR PRODUTOS <============== */
+describe('Create an endpoint for product registration', () => {
+  describe('Success when registering', () => {
+    before(() => sinon.stub(productsModel, 'createProduct').resolves(prod1));
+    after(() => productsModel.createProduct.restore());
 
-describe('Validation tests', () => {
-  describe('Successful', () => {
-    before(() => sinon.stub(productsModel, 'getByIdProduct')
-      .resolves({ name: 'Product1', quantity: 100, _id: '60f920317d5d542c8129aa59' }));
-    after(() => productsModel.getByIdProduct.restore());
-
-    it('Returns null', async () => {
-      const res  = await salesModel.createSales([{
-        'productId': '60f920317d5d542c8129aa59',
-        'quantity': 10,
-      }]);
-
-      expect(res).to.be.an('object').to.be.empty;
+    it('Returns status 201 and ids: _id, name, quantity', async () => {
+      const res = await productsService.create(prod1.name, prod1.quantity);
+      expect(res.result).to.be.a('object').to.be.all.key('_id', 'name', 'quantity');
+      expect(res.status).to.be.equal(201);
     });
   });
 
-  describe('Product not found', () => {
-    before(() => sinon.stub(productsModel, 'getByIdProduct').resolves(null));
-    after(() => productsModel.getByIdProduct.restore());
-
-    it('Return erro: code e message', async () => {
-      const res  = await salesModel.createSales([{ 'productId': '60f920317d5d542c8129aa59', 'quantity': 10 }]);
-
-      expect(res).to.be.an('object').to.have.keys('err')
-      expect(res.err).to.be.an('object').to.have.all.keys('code', 'message');
-      expect(res.err.code).to.be.equal('invalid_data');
-    });
-  });
-
-  describe('Insufficient product quantity', () => {
-    before(() => sinon.stub(productsModel, 'getByIdProduct')
-      .resolves({ name: 'Product1', quantity: 100, _id: '60f920317d5d542c8129aa59' }));
-
-    it('Returns code error', async () => {
-      const res  = await salesModel.createSales([{ 'productId': '60f920317d5d542c8129aa59', 'quantity': 300 }]);
-
-      expect(res).to.be.an('object').to.have.keys('err')
-      expect(res.err).to.be.an('object').to.have.all.keys('code', 'message');
-      expect(res.err.code).to.be.equal('stock_problem');
-      expect(res.err.message).to.be.equal('Such amount is not permitted to sell');
+  describe('Failed to register', () => {
+    it('Returns an error', async () => {
+      try { await productsService.create("Prod", prod1.quantity) } catch(err) {
+        expect(err).to.have.property('err');
+        expect(err).to.have.property('err').to.be.all.keys('code', 'message');
+        expect(err).to.have.property('err').to.have.include({
+          code: errName.err.code, message: errName.err.message,
+        });
+        expect(err).to.have.property('status').to.equal(errName.status);
+      };
     });
   });
 });
+/*====================================================*/
+/* ===========> BUSCAR TODOS OS PRODUTOS <=========== */
+describe('Create an endpoint to list products', () => {
+  describe('List all products successfully', () => {
+    before(() => sinon.stub(productsModel, 'getAllProducts')
+      .resolves(getProd));
+    after(() => productsModel.getAllProducts.restore());
 
-describe('Create an endpoint to register sales', () => {
-  describe('Unsuccessful', () => {
-    before(() => {
-      sinon.stub(salesModel, 'createSales')
-        .resolves({err:{}});
-    });
-    after(() => {
-      salesModel.createSales.restore();
-    })
-    it('deve retornar um objeto com o erro', async () => {
-      const res = await salesService.create([
-        { 'productId': '60f920317d5d542c8129aa59', 'quantity': 10 },
-      ]);
-
-      expect(res).to.be.an('object');
-    });
-  });
-
-  describe('Successful', () => {
-    const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
-    const sale = { insertedId: '60e72ce912fb02363cd340e4', itensSold: prod };
-
-    before(async () => sinon.stub(salesModel, 'createSales').resolves(sale));
-    after(async () => salesModel.createSales.restore());
-
-    it('retorna um object', async () => {
-      const res = await salesService.create(prod);
-      expect(res).to.be.an('object');
-    });
-  });
-
-  describe('Successful registration', () => {
-    before(() => {
-      sinon.stub(salesModel, 'createSales')
-        .resolves('60fa86e7562aec249938dc02');
-      sinon.stub(salesModel, 'createSales')
-        .resolves({});
-      sinon.stub(productsModel,'updateProduct')
-        .resolves({});
-    });
-    after(() => {
-      salesModel.createSales.restore();
-      productsModel.updateProduct.restore();
+    it('Returns an object with key product', async () => {
+      const res = await productsService.allProducts();
+      expect(res.result).to.be.a('object').to.have.key('products');
+      expect(res.result.products).to.be.an('array');
+      expect(res.result.products).to.be.an('array').to.have.length(1);
+      expect(res.result.products[0]).to.be.an('object');
+      expect(res.status).to.equal(200);
     });
 
-    it('Returns Id from sale', async () => {
-      const res = await salesService.create([
-        { 'productId': '60fa86e7562aec249938dc02', 'quantity': 10 },
-      ]);
-      expect(res).to.be.an('string').to.have.length(24);
-    })
+    it('The products object contains an array of 1 object', async () => {
+      const res = await productsService.allProducts();
+      expect(res.result.products).to.be.an('array').to.have.length(1);
+      expect(res.result.products[0]).to.be.an('object');
+    });
+
+    it('Return status 200', async () => {
+      const res = await productsService.allProducts();
+      expect(res.status).to.equal(200);
+    });
   });
 });
+/*====================================================*/
+/* ============> BUSCAR TODAS AS VENDAS <============ */
+describe('Create an endpoint to list sales', () => {
+  describe('Search all sales', () => {
+    describe('When there is no sale', () => {
+      before(() => sinon.stub(salesModel, 'getAllSales').resolves({ sales: [] }));
+      after(() => salesModel.getAllSales.restore());
 
-describe('Create an endpoint to update a sale', () => {
-  describe('Successful update', () => {
-    const upd = [{ productId: '60f920317d5d542c8129aa59', quantity: 10 }];
-    before(() => sinon.stub(salesModel, 'updateSale').resolves(1));
-    after(() => salesModel.updateSale.restore());
-
-    it('Receive 1 response', async () => {
-      const res = await salesService.updateService(upd.productId, upd.quantity);
-      expect(res).to.be.equal(1);
-    });
-
-    describe('Returns an object successful update', () => {
-      const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
-      const sale = { insertedId: '60e72ce912fb02363cd340e4', itensSold: prod };
-      const id = '60e72ce912fb02363cd340e4';
-
-      before(async () => sinon.stub(salesModel, 'updateSale').resolves(sale));
-      after(async () => salesModel.updateSale.restore());
-
-      it('Returns an object', async () => {
-        const res = await salesService.updateService(id, prod);
+      it('Return an object', async () => {
+        const res = await salesService.allSales();
         expect(res).to.be.an('object');
-      })
-    });
-  });
-
-  describe('Unsuccessful update', () => {
-    describe('Fail update sale', () => {
-      const upd = [{ productId: '60f920317d5d542c8129aa59', quantity: 10 }];
-      before(() => sinon.stub(salesModel, 'updateSale').resolves(null));
-      after(() => salesModel.updateSale.restore());
-
-      it('Returns null', async () => {
-        const res = await salesService.updateService(upd.productId, upd.quantity);
-        expect(res).to.be.null;
-      });
-    });
-
-    describe('There is no change', () => {
-      const upd = [{ productId: '60f920317d5d542c8129aa59', quantity: 10 }];
-      before(() => sinon.stub(salesModel, 'updateSale').resolves(0));
-      after(() => salesModel.updateSale.restore());
-
-      it('Returns null', async () => {
-        const res = await salesService.updateService(upd.productId, upd.quantity);
-        expect(res).to.be.equal(0);
+        expect(res).to.be.all.keys('result', 'status');
+        expect(res.status).to.equal(200);
       });
     });
   });
 });
-
-describe('Create an endpoint to delete a sale', () => {
-  describe('Successful deletion ', () => {
-    const obj = {
-      _id: '60f920317d5d542c8129aa59',
-      itensSold: [{ 'productId': '60f920317d5d542c8129aa59', 'quantity': 10 }],
-    }
-
-    before(() => {
-      sinon.stub(salesModel, 'deleteSale').resolves(obj);
-      sinon.stub(salesModel, 'deleteSale').resolves({});
-    });
-    after(() => { salesModel.deleteSale.restore() });
-
-    it('Returns an object', async () => {
-      const res = await salesService.deleteService();
-      expect(res).to.be.an('object');
-    });
-  });
-
-  describe('Delete sale', () => {
-    const prod = [{ productId: '60e72ce912fb02363cd340e4', quantity: 10 }];
-    const sale = { insertedId: '60e72ce912fb02363cd340e5', itensSold: prod };
-    const id = '60e72ce912fb02363cd340e5';
-
-    before(async () => sinon.stub(salesModel, 'deleteSale').resolves(sale));
-    after(async () => salesModel.deleteSale.restore());
-
-    it('Return an object', async () => {
-      const res = await salesService.deleteService(id);
-      expect(res.status).to.equal(422);
-    });
-  });
-
-  describe('Unsuccessful', () => {
-    before(() => sinon.stub(salesModel, 'deleteSale').resolves(null));
-    after(() => { salesModel.deleteSale.restore() });
-
-    it('Returns object error', async () => {
-      const res = await salesService.deleteService();
-      expect(res).to.be.an('object').to.have.key('err');
-      expect(res.err).to.be.an('object').to.have.all.keys('code','message');
-      expect(res.err.code).to.be.equal('invalid_data');
-      expect(res.err.message).to.be.equal('Wrong sale ID format');
-    });
-  });
-});
+/*====================================================*/
