@@ -128,6 +128,13 @@ describe('Teste do ProductModel', () => {
           expect(quantity).to.be.equal(10);
         });
       });
+      describe('Quando a atualização dá erro', async () => {
+        it('deve retornar null', async () => {
+          const invalidId = null;
+          const updatedProduct = await productsModel.updateProduct(invalidId);
+          expect(updatedProduct).to.be.a('object');
+        });
+      });
     });
     describe('Testa a deleção de produtos', () => {
       let productToBeDeleted
@@ -142,6 +149,13 @@ describe('Teste do ProductModel', () => {
           await productsModel.deleteProduct(_id);
           const { products } = await productsModel.getAll();
           expect(products.length).to.be.equal(0);
+        });
+      });
+      describe('Quando a deleção dá erro', async () => {
+        it('quando o produto não existe', async () => {
+          const invalidId = null;
+          const deletedProduct = await productsModel.deleteProduct(invalidId);
+          expect(deletedProduct).to.be.null;
         });
       });
     });
@@ -160,7 +174,7 @@ describe('Testando SaleModel', () => {
     await connectionMock.db('StoreManager').collection('sales').deleteMany({});
   });
 
-  describe('Testando a inserção de compras', () => {
+  describe('Testando a inserção de vendas', () => {
     let existentProduct;
 
     before(async () => {
@@ -171,7 +185,7 @@ describe('Testando SaleModel', () => {
       await connectionMock.db('StoreManager').collection('sales').deleteMany({});
     });
     
-    describe('testa a inserçao de compra de produto existente', () => {
+    describe('testa a inserçao de venda de produto existente', () => {
 
       it('deve-se retornar um objeto', async () => {
     
@@ -187,6 +201,47 @@ describe('Testando SaleModel', () => {
 
         expect(insertedSale).to.include.all.keys('_id', 'itensSold');
       });
+    });
+  });
+  describe('Testa a leitura das vendas no banco de dados', () => {
+    describe('Quando a leitura é feita com sucesso', () => {
+    let response;
+
+    before(async () => {
+        response = await salesModel.getAll();
+    });
+
+    it('O resultado deve ser um array', () => {
+        const sales = response.sales;
+        expect(sales).to.be.a('array');
+    });
+
+    it('O resultado deve ser um array que contenha apenas objetos', () => {
+        const sales = response.sales;
+        sales.forEach((product) => expect(product).to.be.a('object'));
+    });
+    });
+  });
+  describe('Deletando uma venda', () => {
+    describe('Quando a deleção é feita com sucesso', () => {
+      let existentProduct;
+
+      before(async () => {
+        existentProduct = await productsModel.createNewProduct('Cadeira Gamer', 100);
+      });
+    
+      after(async () => {
+        await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+      });
+
+    it('Deve ser deletado a partir do Id', async () => {
+
+      const { _id } = existentProduct;
+      const newSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
+
+      const response = await salesModel.deleteSale(newSale._id);
+      expect(response.deleted).to.be.equal();
+    });
     });
   });
 });
