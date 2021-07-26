@@ -7,12 +7,15 @@ const salesModel = require('../../models/salesModel');
 const salesService = require('../../services/salesService');
 
 /* =======> VARIÁVEIS UTILIZADAS <======= */
-const _id = '60fe9a24c2a6f0ab990f524c';
+const _id = '60fea8a7bed297d2dc7b76d5';
 const getProd = { status: 200, result: { products: [{
   _id, name: "Produto1", quantity: 50
 }] } };
 const prod1 = { name: "Produto1", quantity: 50 };
 const getProdEmpty = { status: 200, result: { products: [] } };
+const sale = { sales: [{ _id: "60fe8d8ef4498a83242e0da2", itensSold: [{
+  productId: _id, quantity: 5,
+}] }] };
 const errId = { status: 422, err: { code: 'invalid_data', message: 'Wrong id format' } };
 const errName = { err: { code: "invalid_data",
   message: "\"name\" length must be at least 5 characters long" }, status: 422 };
@@ -81,6 +84,20 @@ describe('Create an endpoint to register sales', () => {
         });
         expect(err).to.have.property('status').to.equal(errQuantSale.status);
       };
+    });
+  });
+
+  describe('Successful', () => {
+    before(() => {
+      sinon.stub(salesModel, 'createSales').resolves(sale.sales[0]);
+    });
+    after(() => salesModel.createSales.restore());
+
+    it('returns the sale successfully', async () => {
+      const res  = await salesService.create(sale.sales[0].itensSold);
+      expect(res.result).to.be.an('object');
+      expect(res.result).to.be.all.keys('_id', 'itensSold');
+      expect(res.status).to.be.equal(200);
     });
   });
 });
