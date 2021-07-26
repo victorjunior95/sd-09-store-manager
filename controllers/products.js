@@ -9,4 +9,10 @@ const getAll = (_req, res) => products.getAll()
 const getById = (req, res) => products.getById(req.params.id)
   .then(({ status, data }) => res.status(status).json(data));
 
-module.exports = { create, getAll, getById };
+const update = (req, res) => products.update(req.params.id, req.body)
+  .then(({ status }) => res.status(status).json({ _id: req.params.id, ...req.body }));
+
+const remove = (req, res) => products.remove(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
+
+module.exports = { create, getAll, getById, update, remove };
