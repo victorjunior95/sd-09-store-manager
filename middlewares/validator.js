@@ -12,4 +12,20 @@ const productId = (req, _res, next) => validate.productId(req.params.id)
   .then(() => next())
   .catch((err) => next({ status: 422, err }));
 
-module.exports = { product, productExists, productId };
+const sale = (req, _res, next) => validate.sale([...req.body])
+  .then(() => next())
+  .catch((err) => next({ status: 422, err }));
+
+const saleExists = (req, _res, next) => validate.saleExists(req.params.id)
+  .then(() => next())
+  .catch((err) => next({ status: 404, err }));
+
+const saleId = (req, _res, next) => validate.saleId(req.params.id)
+  .then(() => next())
+  .catch((err) => next({ status: 422, err }));
+
+const stock = async (req, _res, next) => validate.stock([...req.body])
+  .then(() => next())
+  .catch((err) => next({ status: 404, err }));
+
+module.exports = { product, productExists, productId, sale, saleExists, saleId, stock };
