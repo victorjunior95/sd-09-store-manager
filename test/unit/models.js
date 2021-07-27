@@ -2,282 +2,246 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { MongoClient } = require('mongodb');
 const { getConnection } = require('./connectionMock');
-const productsModel = require('../../models/ProductsModel');
-const salesModel = require('../../models/SalesModel');
-const products = {
-  name: 'Camisa da Trybe',
-  quantity: 10,
-
-};
-
-const newSale = [
-  {
-    productId: '5f43ba273200020b101fe49f',
-    quantity: 2
-  }
-];
-
-const updateProduct = {
-  name: 'Produto do Batista',
-  quantity: 20,
-};
-
-describe('Insert a new product', () => {
-  let connectionMock;
-
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(async () => {
-    await connectionMock.db('StoreManager').collection('products').deleteMany({});
-    MongoClient.connect.restore();
-  });
-
-  describe('When insertion is successful', () => {
-    it('Should returns an object', async () => {
-      const product = await productsModel.addProduct(products);
-      expect(product).to.have.property('name');
-    });
-    it('Should have an ID attribute', async () => {
-      const product = await productsModel.addProduct(products);
-      expect(product).to.have.property('quantity');
-    });
-  });
+const productsModel = require('../../models/Products');
+const salesModel = require('../../models/Sales');
 
 
-});
+describe('Teste do ProductModel', () => {
+    let connectionMock;
 
-describe('Insert a new sale', () => {
-  let connectionMock;
-
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(async () => {
-    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
-    MongoClient.connect.restore();
-  });
-  describe('When insertion is successful', () => {
-    it('Should returns an object', async () => {
-      sale = await salesModel.addSale(newSale);
-      expect(sale).to.be.a('object');
-    });
-    it('Should have an ID attribute', async () => {
-      sale = await salesModel.addSale(newSale);
-      expect(sale).to.have.a.property('insertedId');
-    });
-  });
-
-});
-
-describe('Get all products', () => {
-  let connectionMock;
-
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after( () => {
-    MongoClient.connect.restore();
-  });
-
-  describe('When there is no products in DB', () => {
-    it('Should returns an array', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.be.an('object');
-    });
-    it('Should returns an empty array', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.not.be.empty;
-    });
-  });
-
-  describe('When there is at least one product in DB', () => {
     before( async () => {
-      await productsModel.addProduct(products);
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
     });
 
     after(async () => {
+    await connectionMock.db('StoreManager').collection('products').deleteMany({});
+    MongoClient.connect.restore();
+    });
+
+    describe('Se a inserção foi feita com sucesso', () => {
+      let response;
+
+      before(async () => {
+      response = await productsModel.createNewProduct('Cadeira Gamer', 100);
+      });
+
+      after(async () => {
       await connectionMock.db('StoreManager').collection('products').deleteMany({});
-    });
+      });
+      it('Deve retornar um objeto', async () => {
+      expect(response).to.be.a('object');
+      });
+      it('Deve retornar um objeto com a chave `name`', async () => {
+          expect(response).to.have.property('name');
+      });
+      it('Deve retornar um objeto com a chave `quantity`', async () => {
+      expect(response).to.have.property('quantity');
+      });
+      it('Deve retornar um objeto com a chave `_id`', async () => {
+          expect(response).to.have.property('_id');
+      });
+      it('"name" deve ser uma string com mais de 5 caracteres', () => {
+          const { name } = response;
 
-    it('Should returns an array', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.be.an('object');
-    });
-    it('Should returns a not empty array', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.not.be.empty;
-    });
+          expect(name).to.be.a('string');
+          expect(name.length).to.be.greaterThanOrEqual(5);
+      });
+      it('"quantity" deve ser um número maior que 0', () => {
+          const { quantity } = response;
 
-    it('Should returns an array with objects', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.not.be.empty;
+          expect(quantity).to.be.a('number');
+          expect(quantity).to.be.greaterThan(0);
+      });
     });
+    describe('Testa a leitura dos produtos no banco de dados', () => {
+      describe('Quando a leitura é feita com sucesso', () => {
+      let response;
 
-    it('Should returns an array with objects wich has mandatory attributes', async () => {
-      const response = await productsModel.getAllProducts();
-      expect(response).to.not.be.empty;
+      before(async () => {
+          response = await productsModel.getAll();
+      });
+
+      it('O resultado deve ser um array', () => {
+          const products = response.products;
+          expect(products).to.be.a('array');
+      });
+
+      it('O resultado deve ser um array que contenha apenas objetos', () => {
+          const products = response.products;
+          products.forEach((product) => expect(product).to.be.a('object'));
+      });
+      });
+      describe('Testa a busca de produtos por id', () => {
+        describe('Quando a busca é feita com sucesso', () => {
+          let response;
+
+          before(async () => {
+              response = await productsModel.createNewProduct('Cadeira Gamer', 100);
+          });
+
+          after(async () => {
+              await connectionMock.db('StoreManager').collection('products').deleteMany({});
+          });
+
+          it('O resultado deve ser um objeto', async () => {
+              const foundProduct = await productsModel.findById(response._id);
+
+              expect(foundProduct).to.be.a('object');
+          });
+
+          it('O resultado deve conter as chaves "_id", "name", "quantity"', async () => {
+              const foundProduct = await productsModel.findById(response._id);
+
+              expect(foundProduct).to.include.all.keys('_id', 'name', 'quantity');
+          });
+        });
+        describe('Quando a busca por Id falha', () => {
+
+          it('deve retornar null', async () => {
+            const invalidId = null;
+            const foundProduct = await productsModel.findById(invalidId);
+
+            expect(foundProduct).to.be.null;
+          });
+        });
+      })
     });
-  });
+    describe('Testa a atualização de produtos', () => {
+      let productToBeUpdated
+      before(async () => {
+        productToBeUpdated = await productsModel.createNewProduct('Cadeira Gamer',);
 
+      });
 
+      after(async () => {
+          await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      });
+
+      describe('Quando a atualização é realizada com sucesso', async () => {
+        it('O retorno deve ter as caracteristicas desejadas', async () => {
+          const { _id } = productToBeUpdated;
+          await productsModel.updateProduct(_id, 'Mouse Gamer', 10);
+          const updatedProduct = await productsModel.findById(_id);
+          const { name, quantity } = updatedProduct;
+          expect(name).to.be.equal('Mouse Gamer');
+          expect(quantity).to.be.equal(10);
+        });
+      });
+      describe('Quando a atualização dá erro', async () => {
+        it('deve retornar null', async () => {
+          const invalidId = null;
+          const updatedProduct = await productsModel.updateProduct(invalidId);
+          expect(updatedProduct).to.be.a('object');
+        });
+      });
+    });
+    describe('Testa a deleção de produtos', () => {
+      let productToBeDeleted
+      before(async () => {
+        productToBeDeleted = await productsModel.createNewProduct('Cadeira Gamer', 100);
+
+      });
+
+      describe('Quando a deleção é realizada com sucesso', async () => {
+        it('O retorno deve ter as caracteristicas desejadas', async () => {
+          const { _id } = productToBeDeleted;
+          await productsModel.deleteProduct(_id);
+          const { products } = await productsModel.getAll();
+          expect(products.length).to.be.equal(0);
+        });
+      });
+      describe('Quando a deleção dá erro', async () => {
+        it('quando o produto não existe', async () => {
+          const invalidId = null;
+          const deletedProduct = await productsModel.deleteProduct(invalidId);
+          expect(deletedProduct).to.be.null;
+        });
+      });
+    });
 });
 
-describe('Get all sales', () => {
+describe('Testando SaleModel', () => {
   let connectionMock;
 
-  before( async () => {
+  before(async () => {
     connectionMock = await getConnection();
     sinon.stub(MongoClient, 'connect').resolves(connectionMock);
   });
 
-  after(() => {
-    MongoClient.connect.restore;
+  after(async () => {
+    MongoClient.connect.restore();
+    await connectionMock.db('StoreManager').collection('sales').deleteMany({});
   });
 
-  describe('When there is no sales in DB', () => {
-    it('Should returns an array', async () => {
-      const response = await salesModel.getAllSales();
-      expect(response).to.not.be.empty;
-    });
-    it('Should returns an empty array', async () => {
-      const response = await salesModel.getAllSales();
-      expect(response).to.not.be.empty;
-    });
-  });
+  describe('Testando a inserção de vendas', () => {
+    let existentProduct;
 
-  describe('When there is at least one sale in DB', () => {
-    before( async () => {
-      await salesModel.addSale(newSale);
+    before(async () => {
+      existentProduct = await productsModel.createNewProduct('Cadeira Gamer', 100);
     });
+
     after(async () => {
       await connectionMock.db('StoreManager').collection('sales').deleteMany({});
-      MongoClient.connect.restore();
     });
 
-    it('Should returns an array', async () => {
-      const response = await salesModel.getAllSales();
-      expect(response).to.not.be.empty;
-    });
+    describe('testa a inserçao de venda de produto existente', () => {
 
-    it('Should returns a not empty array', async () => {
-      const response = await salesModel.getAllSales();
-      expect(response).to.not.be.empty;
-    });
+      it('deve-se retornar um objeto', async () => {
 
-    it('Should returns an array with objects', async () => {
-      const response  = await salesModel.getAllSales();
-      expect(response).to.be.an('object');
-    });
+        const { _id } = existentProduct;
+        const insertedSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
 
-    it('Should returns an array with objects wich has mandatory attributes', async () => {
-      const response = await salesModel.getAllSales();
-      expect(response).to.be.an('object');
+        expect(insertedSale).to.be.a('object');
+      });
+
+      it('o objeto retornado deve possuir as chaves "_id", "itensSold"', async () => {
+        const {_id} = existentProduct;
+        const insertedSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
+
+        expect(insertedSale).to.include.all.keys('_id', 'itensSold');
+      });
     });
   });
+  describe('Testa a leitura das vendas no banco de dados', () => {
+    describe('Quando a leitura é feita com sucesso', () => {
+    let response;
 
+    before(async () => {
+        response = await salesModel.getAll();
+    });
 
-});
+    it('O resultado deve ser um array', () => {
+        const sales = response.sales;
+        expect(sales).to.be.a('array');
+    });
 
-describe('Update a product', () => {
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    it('O resultado deve ser um array que contenha apenas objetos', () => {
+        const sales = response.sales;
+        sales.forEach((product) => expect(product).to.be.a('object'));
+    });
+    });
   });
+  describe('Deletando uma venda', () => {
+    describe('Quando a deleção é feita com sucesso', () => {
+      let existentProduct;
 
-  after(async () => {
-    await connectionMock.db('StoreManager').collection('products').deleteMany({});
-    MongoClient.connect.restore();
+      before(async () => {
+        existentProduct = await productsModel.createNewProduct('Cadeira Gamer', 100);
+      });
+
+      after(async () => {
+        await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+      });
+
+    it('Deve ser deletado a partir do Id', async () => {
+
+      const { _id } = existentProduct;
+      const newSale = await salesModel.createNewSale([{ productId: _id, quantity: 10 }]);
+
+      const response = await salesModel.deleteSale(newSale._id);
+      expect(response.deleted).to.be.equal();
+    });
+    });
   });
-
-  it('Should update a product with the productId, name and quantity', async () => {
-    const product = await productsModel.addProduct(products);
-    const modifiedCount = await productsModel.updateProduct(product._id, updateProduct);
-    expect(modifiedCount).to.be.an('object')
-
-
-  });
-  it('Should update a product with the productId, name and quantity', async () => {
-    const product = await productsModel.addProduct(products);
-    expect(product).to.be.a.property('quantity');
-  });
-});
-
-describe('Update a sale', () => {
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(() => {
-    MongoClient.connect.restore();
-  });
-
-  it('Should update a sale with the ID and the item sold', async () => {
-    const { insertedId } = await salesModel.addSale(newSale);
-    const newItemSold = { productId: newSale[0].productId, quantity: 20 };
-    const { modifiedCount } = await salesModel.editSale(insertedId, newItemSold);
-    expect(modifiedCount);
-    const { itensSold } = await salesModel.findById(insertedId);
-    expect(itensSold);
-  });
-});
-
-describe('Delete a product', () => {
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(() => {
-    MongoClient.connect.restore();
-  });
-
-  it('Should delete a sale with the ID', async () => {
-    const { insertedId } = await productsModel.addProduct(products);
-    const response = await productsModel.deleteProduct(insertedId);
-    expect(response.deleted).to.be.equal();
-  });
-});
-
-describe('Delete a sale', () => {
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(() => {
-    MongoClient.connect.restore();
-  });
-
-  it('Should delete a sale with the ID', async () => {
-    const { insertedId } = await salesModel.addSale(newSale);
-    const response = await salesModel.deleteSale(insertedId);
-    expect(response.deleted).to.be.equal();
-  });
-
-});
-
-describe('Delete', () => {
-  before( async () => {
-    connectionMock = await getConnection();
-    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
-  });
-
-  after(() => {
-    MongoClient.connect.restore();
-  });
-
-  it('Should delete a sale with the ID', async () => {
-    const { insertedId } = await salesModel.addSale(newSale);
-    const response = await salesModel.deleteSale(insertedId);
-    expect(response).to.be.an('object');
-  });
-
 });
