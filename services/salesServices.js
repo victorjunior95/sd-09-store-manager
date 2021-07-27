@@ -1,12 +1,11 @@
 const { ObjectId } = require('mongodb');
 const Joi = require('joi');
-const { createSale, searchSaleByID } = require('../models/salesModel');
+const { createSale, searchSaleByID, updateSale } = require('../models/salesModel');
 const { listAllProducts } = require('../models/productsModel');
 
 const unprocessableEntity = 422;
 const notFound = 404;
-const nameAlreadyInUse = 'Product already exists';
-const invalidID = 'Wrong id format';
+const invalidIDOrQuantity = 'Wrong product ID or invalid quantity';
 
 const saleSchema = Joi.object({
   productId: Joi.string().required(),
@@ -40,7 +39,7 @@ const createSaleService = async (soldItens) => {
   const anyInvalidProduct = await validateExistence(soldItens);
 
   if (validationResult || anyInvalidProduct) {
-    throw validationError(unprocessableEntity, 'Wrong product ID or invalid quantity');
+    throw validationError(unprocessableEntity, invalidIDOrQuantity);
   }
 
   const newSale = await createSale(soldItens);
@@ -58,7 +57,20 @@ const listSaleByIdService = async (saleID) => {
   return searchedProd;
 };
 
+const updateSaleService = async (mongoId, soldItens) => {
+  const validID = ObjectId.isValid(mongoId);
+  const validationResult = validateSaleArraySchema(soldItens);
+  const anyInvalidProduct = await validateExistence(soldItens);
+
+  if (!validID || validationResult || anyInvalidProduct) {
+    throw validationError(unprocessableEntity, invalidIDOrQuantity);
+  }
+
+  await updateSale(mongoId, soldItens);
+};
+
 module.exports = {
   createSaleService,
   listSaleByIdService,
+  updateSaleService,
 };

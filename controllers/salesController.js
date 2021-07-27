@@ -1,6 +1,10 @@
 const express = require('express');
 const { listAllSales } = require('../models/salesModel');
-const { createSaleService, listSaleByIdService } = require('../services/salesServices');
+const {
+  createSaleService,
+  listSaleByIdService,
+  updateSaleService,
+} = require('../services/salesServices');
 
 const router = express.Router();
 const code = 'invalid_data';
@@ -36,7 +40,30 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     const { message } = err;
 
-    return res.status(err.status).json({ err: { code: 'not_found', message } });
+    return res.status(err.status).json({
+      err: {
+        code: 'not_found',
+        message
+      }
+    });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const { params: { id }, body } = req;
+
+  try {
+    await updateSaleService(id, body);
+
+    return res.status(OK_STATUS).json({ _id: id, itensSold: [...body] });
+  } catch (err) {
+
+    return res.status(err.status).json({
+      err: {
+        code: 'invalid_data',
+        message: err.message
+      }
+    });
   }
 });
 

@@ -24,8 +24,17 @@ const searchSaleByID = async (saleID) => {
   return searchedSale;
 };
 
+const updateSale = async (mongoId, itensSold)=> {
+  const cnt = await connection();
+  const update = cnt.collection('sales')
+    .updateOne({ _id: ObjectId(mongoId) },{ $set: { itensSold } });
+
+  return update.acknowledged;
+};
+
 module.exports = {
   createSale,
   listAllSales,
+  updateSale,
   searchSaleByID,
 };
