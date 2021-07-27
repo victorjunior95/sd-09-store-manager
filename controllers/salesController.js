@@ -15,9 +15,10 @@ const STATUS_NOT_FOUND = 404;
 
 const salesCreation = rescue (async (req, res, _next) => {
   const salesData = req.body;
-  const stockAvailable = await verifyStock(salesData);
 
+  const stockAvailable = await verifyStock(salesData);
   if (stockAvailable[0]) return res.status(STATUS_NOT_FOUND).json(stockAvailable[0]);
+
   const salesCreated = await createSales(salesData);
   if (salesCreated.code) return res.status(STATUS_ERROR).json({
     err: {
@@ -25,6 +26,7 @@ const salesCreation = rescue (async (req, res, _next) => {
       message: salesCreated.message,
     }
   });
+  
   return res.status(STATUS_SUCCESS).json(salesCreated); // tirar as aspas
 });
 

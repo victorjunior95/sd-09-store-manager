@@ -44,8 +44,7 @@ const verifyStock = async (salesData) => {
   return await Promise.all(salesData.map(async product => {
     const soldItems = product.quantity;
     const stock = await (verifyStockModel(product));
-    console.log(stock);
-    console.log(soldItems);
+
     if (stock < soldItems) return {
       err: {
         code: 'stock_problem',
@@ -66,6 +65,7 @@ const salesList = async () => {
 };
 
 const saleListById = async (id) => {
+  console.log(id);
   if (!ObjectId.isValid(id)) return {
     err: {
       code: 'not_found',

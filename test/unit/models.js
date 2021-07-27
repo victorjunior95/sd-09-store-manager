@@ -5,7 +5,6 @@ const sales = require('../../models/sales');
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require('mongodb');
-const { object } = require('joi');
 
 describe('Product Models function', () => {
   const DBServer = new MongoMemoryServer();
