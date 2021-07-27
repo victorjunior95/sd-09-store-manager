@@ -80,20 +80,34 @@ describe('Models function', () => {
       await connectionMock.db('StoreManager').collection('products').deleteMany({});
     });
 
-    // https://stackoverflow.com/questions/38497731/mocha-chai-uncaught-assertionerror-expected-to-equal-expected-actua -> referência para o Deep Equal
-    it('Should have the same ID', async () => {
-      const productId = await products.listAllProducts().then(result => result[0]._id);
-      const response = await products.getProductById(productId).then(result => result._id);
-
-      expect(response).to.be.deep.equal(productId);
-    });
-
-    it('Should have the "_id", "name" and "quantity" properties', async () => {
-      const productId = await products.listAllProducts().then(result => result[0]._id);
-      const response = await products.getProductById(productId);
+    describe('When a product is found', () => {
       
-      expect(response).to.include.all.keys('_id', 'name', 'quantity');
+      // https://stackoverflow.com/questions/38497731/mocha-chai-uncaught-assertionerror-expected-to-equal-expected-actua -> referência para o Deep Equal
+      
+      it('Should have the same ID', async () => {
+        const productId = await products.listAllProducts().then(result => result[0]._id);
+        const response = await products.getProductById(productId).then(result => result._id);
+    
+        expect(response).to.be.deep.equal(productId);
+      });
+    
+      it('Should have the "_id", "name" and "quantity" properties', async () => {
+        const productId = await products.listAllProducts().then(result => result[0]._id);
+        const response = await products.getProductById(productId);
+        
+        expect(response).to.include.all.keys('_id', 'name', 'quantity');
+      });
     });
+    
+    describe('When no product is found', () => {
+      it('Should return null', async () => {
+        const product = "60f9da8764d6e55f34048eac"
+        const response = await products.getProductById(product);
+
+        expect(response).to.be.null;
+      })
+    })
+    
   });
 
   describe('Get product by name', () => {
@@ -125,6 +139,14 @@ describe('Models function', () => {
 
       })
     })
+    describe('When no product is found', () => {
+      it('Should return null', async () => {
+        const product = "Produto não existente"
+        const response = await products.getProductByName(product);
+
+        expect(response).to.be.null;
+      })
+    })
   });
 
   describe('Update product info', () => {
@@ -154,12 +176,13 @@ describe('Models function', () => {
         expect(updatedData.quantity).to.be.equals(newData.quantity)
       });
     });
+
+    
   });
 
-  describe('Delete product model', () => {
+  describe('Update product sync with sales', () => {
     before(async () => {
       await connectionMock.db('StoreManager').collection('products').insertOne({
-        _id: '60f9da8764d6e55f34048eac',
         name: "Nome do produto",
         quantity: 10,
       })
@@ -169,20 +192,53 @@ describe('Models function', () => {
       await connectionMock.db('StoreManager').collection('products').deleteMany({});
     });
 
+    describe('When a sale is cancelled', () => {
+      it('Should add the items back', async () => {
+        const oldData = await products.listAllProducts().then(result => result[0]);
+        // console.log(oldData);
+        const id = oldData._id;
+        const saleInfo = {
+          product: {
+            productId: id,
+            quantity: 20
+          },
+          action: 'add',
+        };
+        const newQuantity = oldData.quantity + 20;
+        await products.updateProductSale(saleInfo);
+        const updatedData = await products.listAllProducts().then(result => result[0]);
+        expect(updatedData.quantity).to.be.equals(newQuantity)
+          });
+    })
+  });
+
+  describe('Delete product model', () => {
+      before(async () => {
+        await connectionMock.db('StoreManager').collection('products').insertOne({
+          name: "Nome do produto",
+          quantity: 10,
+        })
+      });
+      
+      after(async () => {
+        await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      });
+
     describe('If the product exists', () => {
       it('Should be removed from the list', async () => {
-        const id = '60f9da8764d6e55f34048eac';
-        console.log(product);
+        const product = await products.listAllProducts().then(result => result[0]);
+        const id = product._id;
+        
         const response = await products.deleteProductModel(id);
-        const product = await products.listAllProducts().then(result => result[0])
+
         expect(response.deletedCount).to.be.equals(1);
       });
     });
     describe('If the product does not exist', () => {
-      it('Should return 422 status', async () => {
-        const id = '60f9da8764d6e55f34048fac';
+      it('Should not delete anything', async () => {
+        const id = '610017c401e81f1895710f25';
         const response = await products.deleteProductModel(id);
-
+       
         expect(response.deletedCount).to.be.equals(0);
       });
     })
@@ -202,18 +258,14 @@ describe('Models function', () => {
     describe('If the product is created', () => {
       
       it('Should be added to the list', async () => {
-        const response = await products.getProductByName({ name: "Nome do produto novo" });
-        expect(response).to.be.null;
-  
+
         const newProduct = {
           name: "Nome do produto novo",
           quantity: 20,
         }
-  
-        await products.createProduct(newProduct);
-  
-        const newResponse = await products.getProductByName({ name: "Nome do produto novo" });
-        expect(newResponse.name).to.be.equals("Nome do produto novo");
+        const response = await products.createProduct(newProduct);
+   
+        expect(response.name).to.be.equals("Nome do produto novo");
       });
 
       it('Should be an object', async () => {
