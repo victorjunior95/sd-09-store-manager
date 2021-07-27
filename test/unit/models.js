@@ -169,7 +169,7 @@ describe('Test url remove "products"', () => {
       await connect.db('StoreManager').collection('products').deleteMany({});
     });
 
-    it('product must have to be result null', () => products.remove(_id)
+    it('product must have to result null', () => products.remove(_id)
         .then(() => products.getById(_id)
         .then((res) => expect(res).to.be.null)));
   });
@@ -335,7 +335,7 @@ describe('Test url remove "sales"', () => {
       await connect.db('StoreManager').collection('sales').deleteMany({});
     });
 
-    it('call result must have to be null', () => sales.remove(_id)
+    it('result must have to be null', () => sales.remove(_id)
         .then(() => products.getById(_id)
         .then((res) => expect(res).to.be.null)));
   });
