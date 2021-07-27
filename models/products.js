@@ -49,11 +49,29 @@ const deleteProduct = async (id) => {
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
 };
 
+const validateQtd = async (id, qtd) => {
+  return await connection().then((db) => db.collection('products')
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: - qtd } }
+    ));
+};
+
+const ValidateSum = async (id, qtd) => {
+  return await connection().then((db) => db.collection('products')
+  .updateMany(
+    { _id: ObjectId(id) },
+    { $inc: { quantity: qtd } },
+  ));
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   postProduct,
   findOne,
   putProduct,
-  deleteProduct 
+  deleteProduct,
+  validateQtd,
+  ValidateSum
 };
