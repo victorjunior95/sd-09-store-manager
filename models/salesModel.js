@@ -32,9 +32,17 @@ const updateSale = async (mongoId, itensSold)=> {
   return update.acknowledged;
 };
 
+const deleteSale = async (saleId) => {
+  const cnt = await connection();
+  const deleteStatus = cnt.collection('sales').deleteOne({ _id: ObjectId(saleId) });
+
+  return deleteStatus;
+};
+
 module.exports = {
   createSale,
   listAllSales,
   updateSale,
+  deleteSale,
   searchSaleByID,
 };

@@ -1,11 +1,17 @@
 const { ObjectId } = require('mongodb');
 const Joi = require('joi');
-const { createSale, searchSaleByID, updateSale } = require('../models/salesModel');
 const { listAllProducts } = require('../models/productsModel');
+const {
+  createSale,
+  searchSaleByID,
+  updateSale,
+  deleteSale
+} = require('../models/salesModel');
 
 const unprocessableEntity = 422;
 const notFound = 404;
 const invalidIDOrQuantity = 'Wrong product ID or invalid quantity';
+const invalidSaleId = 'Wrong sale ID format';
 
 const saleSchema = Joi.object({
   productId: Joi.string().required(),
@@ -69,8 +75,20 @@ const updateSaleService = async (mongoId, soldItens) => {
   await updateSale(mongoId, soldItens);
 };
 
+const deleteSaleService = async (saleId) => {
+  try {
+    const saleData = await listSaleByIdService(saleId);
+    
+    await deleteSale(saleId);
+    return saleData;
+  } catch (err) {
+    throw validationError(unprocessableEntity, invalidSaleId);
+  }
+};
+
 module.exports = {
   createSaleService,
   listSaleByIdService,
   updateSaleService,
+  deleteSaleService,
 };

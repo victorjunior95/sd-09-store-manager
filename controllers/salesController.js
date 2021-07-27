@@ -4,6 +4,7 @@ const {
   createSaleService,
   listSaleByIdService,
   updateSaleService,
+  deleteSaleService,
 } = require('../services/salesServices');
 
 const router = express.Router();
@@ -58,6 +59,23 @@ router.put('/:id', async (req, res) => {
     return res.status(OK_STATUS).json({ _id: id, itensSold: [...body] });
   } catch (err) {
 
+    return res.status(err.status).json({
+      err: {
+        code: 'invalid_data',
+        message: err.message
+      }
+    });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const { params: { id } } = req;
+
+  try {
+    const deletedSale = await deleteSaleService(id);
+
+    return res.status(OK_STATUS).json(deletedSale);
+  } catch (err) {
     return res.status(err.status).json({
       err: {
         code: 'invalid_data',
