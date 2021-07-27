@@ -7,9 +7,10 @@ const STATUS_404 = 404;
 const postSales = async (req, res) => {
   const newSale = req.body;
   const data = await sales.postSales(newSale);
+  const zero = 0;
   // console.log(data.itensSold[0].quantity)
 
-  if (data.itensSold[0].quantity < 0) {
+  if (data.itensSold[0].quantity < zero) {
     return res.status(STATUS_404).json({
       err: {
         code: 'stock_problem',
@@ -68,7 +69,9 @@ const putSales = async (req, res) => {
 
     return res.status(STATUS_200).send(data);
   } catch (err) {
-    return res.status(STATUS_422).send({ message: 'Wrong product ID or invalid quantity' });
+    return res.status(STATUS_422).send({
+      message: 'Wrong product ID or invalid quantity'
+    });
   }
 };
 
@@ -82,7 +85,6 @@ const deleteSales = async (req, res) => {
     status: STATUS_422
   };
 
-  console.log("Data: ", data);
   if (JSON.stringify(data) !== JSON.stringify(dataError)) {
     return res.status(STATUS_200).send(data);
 

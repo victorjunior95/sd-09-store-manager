@@ -12,11 +12,11 @@ const getAllSales = async () => {
       status: notFound,
       message: 'Sale not found',
       code: 'not_found'
-    }
-  }
+    };
+  };
 
   return getAll;
-}
+};
 
 const postSales = async (newSale) => {
   const result = await sales.postSales(newSale);

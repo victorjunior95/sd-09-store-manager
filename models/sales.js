@@ -36,8 +36,8 @@ const deleteSales = async (id) => {
   }
 
   return connection()
-  .then((db) => db.collection('sales')
-  .deleteOne({ _id: ObjectId(id) }));
+    .then((db) => db.collection('sales')
+      .deleteOne({ _id: ObjectId(id) }));
 };
 
 module.exports = {

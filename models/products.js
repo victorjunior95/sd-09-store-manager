@@ -59,10 +59,10 @@ const validateQtd = async (id, qtd) => {
 
 const ValidateSum = async (id, qtd) => {
   return await connection().then((db) => db.collection('products')
-  .updateMany(
-    { _id: ObjectId(id) },
-    { $inc: { quantity: qtd } },
-  ));
+    .updateMany(
+      { _id: ObjectId(id) },
+      { $inc: { quantity: qtd } },
+    ));
 };
 
 module.exports = {
