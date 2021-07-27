@@ -41,9 +41,4 @@ const validId = (id) => {
     } };
 };
 
-module.exports = {
-  validId,
-  validNumber,
-  validQuantity,
-  validSearch,
-};
+module.exports = { validId, validNumber, validQuantity, validSearch };

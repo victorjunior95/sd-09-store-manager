@@ -2,11 +2,9 @@ const app = require('express')();
 const bodyParser = require('body-parser').json();
 const rescue = require('express-rescue');
 
-const { createProduct, deleteProduct, getAllProducts, getByIdProduct,
-  updateProduct } = require('./controllers/productsController');
+const productsController = require('./controllers/productsController');
 
-const { createSales, deleteSale, getAllSales, getByIdSale,
-  updateSale } = require('./controllers/salesController');
+const salesController = require('./controllers/salesController');
 
 const magicNumPort = 3000;
 const PORT = process.env.PORT || magicNumPort;
@@ -18,16 +16,16 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', rescue(createProduct));
-app.get('/products', rescue(getAllProducts));
-app.get('/products/:id', rescue(getByIdProduct));
-app.put('/products/:id', rescue(updateProduct));
-app.delete('/products/:id', rescue(deleteProduct));
-app.post('/sales', rescue(createSales));
-app.get('/sales', rescue(getAllSales));
-app.get('/sales/:id', rescue(getByIdSale));
-app.put('/sales/:id', rescue(updateSale));
-app.delete('/sales/:id', rescue(deleteSale));
+app.post('/products', rescue(productsController.createProduct));
+app.get('/products', rescue(productsController.getAllProducts));
+app.get('/products/:id', rescue(productsController.getByIdProduct));
+app.put('/products/:id', rescue(productsController.updateProduct));
+app.delete('/products/:id', rescue(productsController.deleteProduct));
+app.post('/sales', rescue(salesController.createSales));
+app.get('/sales', rescue(salesController.getAllSales));
+app.get('/sales/:id', rescue(salesController.getByIdSale));
+app.put('/sales/:id', rescue(salesController.updateSale));
+app.delete('/sales/:id', rescue(salesController.deleteSale));
 
 app.use((err, _req, res, _next) => {
   const { status, err: { code, message } } = err;

@@ -39,11 +39,5 @@ const deleteProduct = async (id) => {
     .then(() => product);
 };
 
-module.exports = {
-  createProduct,
-  deleteProduct,
-  findByName,
-  getAllProducts,
-  getByIdProduct,
-  updateProduct,
-};
+module.exports = { createProduct, deleteProduct, findByName,
+  getAllProducts, getByIdProduct, updateProduct };

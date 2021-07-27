@@ -1,4 +1,4 @@
-const { findByName, getByIdProduct } = require('../models/productsModel');
+const productsModel = require('../models/productsModel');
 
 const UNPROCESSABLE_ENTITY_STATUS = 422;
 
@@ -13,7 +13,7 @@ const validName = (name) => {
 };
 
 const alreadyExists = async (name) => {
-  const result = await findByName(name);
+  const result = await productsModel.findByName(name);
 
   if (result) throw { status: UNPROCESSABLE_ENTITY_STATUS,
     err: {
@@ -47,7 +47,7 @@ const validSearch = (result) => {
 };
 
 const validId = async (id) => {
-  const product = await getByIdProduct(id);
+  const product = await productsModel.getByIdProduct(id);
   if (!product) throw { status: UNPROCESSABLE_ENTITY_STATUS,
     err: {
       code: 'invalid_data',
@@ -55,11 +55,5 @@ const validId = async (id) => {
     } };
 };
 
-module.exports = {
-  alreadyExists,
-  validId,
-  validName,
-  validNumber,
-  validQuantity,
-  validSearch,
-};
+module.exports = { alreadyExists, validId,
+  validName, validNumber, validQuantity, validSearch };
