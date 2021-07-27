@@ -49,9 +49,32 @@ describe('Service do produto', () => {
     });
 
     describe('criar objeto ja existente', async () => {
+        before(() => {
+          sinon.stub(productModels, 'createNewProduct')
+            .resolves(productMock);
+        });
+  
+        after(() => {
+          productModels.createNewProduct.restore();
+          sinon.restore();
+        });
+  
+        it('retorna um erro', async () => {
+          const payloadProduct = { name: 'cubomagicos', quantity: 50 };
+          const result = await productServices.createNewProduct(payloadProduct);
+          expect(result).to.be.an('object');
+        });
+      });
+
+    describe('criar produto com propriedades inválidas', async () => {
+      const productInvalid = {
+        _id: '60d8956c668e7230515e77b8',
+        name: '',
+        quantity: -1
+     }; 
       before(() => {
         sinon.stub(productModels, 'createNewProduct')
-          .resolves(productMock);
+          .resolves(productInvalid);
       });
 
       after(() => {
@@ -60,10 +83,8 @@ describe('Service do produto', () => {
       });
 
       it('retorna um erro', async () => {
-        const payloadProduct = { name: 'Martelo de Thor', quantity: 100 };
-        const result = await productServices.createNewProduct(payloadProduct);
-        expect(result).to.be.an('object');
-        expect(result).to.not.have.a.property('_id');
+        const result = await productServices.createNewProduct(productInvalid);
+        expect(result).to.be.null;
       });
     });
 
@@ -99,6 +120,7 @@ describe('Service do produto', () => {
         const { _id } = productMock;
         const response = await productServices.findById(_id )
 
+        expect(response).to.be.not.empty;
         expect(response).to.be.an('object');
         expect(response).to.have.a.property('_id');
       });
@@ -183,6 +205,7 @@ describe('Service das sales', () => {
     it('retorna um objeto com id', async () => {
       const response = await saleServices.createNewSale(saleMock);
 
+      expect(response).to.be.not.empty;
       expect(response).to.be.an('object');
       expect(response).to.have.a.property('_id');
     });
@@ -207,6 +230,7 @@ describe('Service das sales', () => {
     it('retorna uma lista de vendas', async() => {
       const response = await saleServices.getAll();
 
+      expect(response).to.be.not.empty;
       expect(response).to.be.an('array')
       expect(response[0]).to.be.an('object');
     });
