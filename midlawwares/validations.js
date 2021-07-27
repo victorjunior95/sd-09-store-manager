@@ -1,6 +1,8 @@
 const { nameProduct, productsId } = require('../models/product');
+const { getIdSales } = require('../models/sales');
 
 const notProduct = 422; 
+const notFound = 404;
 const isValidName = (req, res, next) => {
   const { name } = req.body;
   const tamanhoName = 5;
@@ -68,10 +70,54 @@ const isValidId = async (req, res, next) => {
   next();
 };
 
+const isValidSales = (req, res, next) =>{
+  const minimumQuantity = 1;
+  const { quantity } = req.body[0];
+  
+  if(quantity < minimumQuantity || typeof quantity !== 'number') {
+    return res.status(notProduct).json(
+      { err: {
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
+      }
+      });
+  }
+  next();
+};
+
+const isValidSaleId = async (req, res, next) => {
+  const { _id } = req.params;
+  if(!await getIdSales(_id)) {
+    return res.status(notFound).json(
+      { err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+      });
+  }
+  next();
+};
+
+const isValidNotId = async (req, res, next) => {
+  const { _id } = req.params;
+  if(!await getIdSales(_id)) {
+    return res.status(notProduct).json(
+      { err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+      });
+  }
+  next();
+};
+
 module.exports = { 
   isValidName, 
   existName, 
   isValidQuantitPositivo, 
   isvalidQuantityIsNumber,
-  isValidId 
+  isValidId,
+  isValidSales,
+  isValidSaleId,
+  isValidNotId
 };

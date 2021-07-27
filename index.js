@@ -9,6 +9,7 @@ const port = 3000;
 
 const product = require('./models/product');
 const productControllers = require('./conntrollers/product');
+const salesContollers = require('./conntrollers/sales');
 const validations  = require('./midlawwares/validations');
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -35,7 +36,18 @@ app.put('/products/:_id',
 
 app.delete('/products/:_id', validations.isValidId, productControllers.deleteProduct);
 
+app.post('/sales', 
+  validations.isValidSales, 
+  salesContollers.create);
+
+app.get('/sales', salesContollers.getAllSales);
+
+app.get('/sales/:_id', validations.isValidSaleId, salesContollers.getIdSales);
+
+app.put('/sales/:_id', validations.isValidSales, salesContollers.editSale);
+
+app.delete('/sales/:_id', validations.isValidNotId, salesContollers.deleteSale);
+
 app.listen(port, () => {
   console.log(`Ouvindo a porta ${port}`);
 });
-

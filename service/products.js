@@ -11,6 +11,7 @@ const createProduct = async(name, quantity) => {
 };
 
 const findById = async(_id) => {
+  console.log('service product');
   const findId = await productModel.productsId(_id);
   return findId;
 };
