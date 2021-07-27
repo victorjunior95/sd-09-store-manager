@@ -1,4 +1,8 @@
-const { getProductByName, getProductById } = require('../models/Products');
+const { getProductByName,
+  getProductById,
+  updateQuantity
+} = require('../models/Products');
+const { getSaleById } = require('../models/Sales');
 
 const MIN_NAME_LENGTH = 5;
 const MIN_QUANTITY = 1;
@@ -50,4 +54,26 @@ const idValidator = async (id) => {
   }
 };
 
-module.exports = { productValidator, idValidator };
+const increaseQuantity = async (sale) => {
+  sale.forEach(async ({ productId, quantity }) => {
+    const product = await getProductById(productId);
+    const newQuantity = product.result.quantity + quantity;
+    await updateQuantity(productId, newQuantity);
+  });
+};
+
+const decreaseQuantity = async (id) => {
+  const sale = await getSaleById(id).result;
+  sale.forEach(async (item) => {
+    const product = await getProductById(item.id);
+    const newQuantity = product.result.quantity - quantity;
+    await updateQuantity(productId, newQuantity);
+  });
+};
+
+module.exports = {
+  productValidator,
+  idValidator,
+  increaseQuantity,
+  decreaseQuantity
+};

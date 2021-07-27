@@ -14,4 +14,7 @@ const idValidator = async (req, res, next) => {
   next();
 };
 
-module.exports = { productValidator, idValidator };
+module.exports = {
+  productValidator,
+  idValidator,
+};

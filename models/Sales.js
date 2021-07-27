@@ -55,7 +55,7 @@ const editSale = async (id, sale) => {
       };
     });
 };
-
+ 
 const deleteSale = async (id) => {
   const sale = await getSaleById(id);
   return await connection()
@@ -65,10 +65,22 @@ const deleteSale = async (id) => {
     });
 };
 
+const updateStock = async (id, quantity) => {
+  console.log(quantity);
+  if (quantity) {
+    await connection()
+      .then((db) => {
+        db.collection('products')
+          .updateOne({ _id: ObjectId(id) }, { $inc: { quantity } });
+      });
+  }
+};
+
 module.exports = {
   createSale,
   getAllSales,
   getSaleById,
   editSale,
-  deleteSale
+  deleteSale,
+  updateStock
 };
