@@ -32,19 +32,19 @@ describe('Service do produto', () => {
         const { name, quantity } = productMock2;
         const result = await productServices.createNewProduct(name, quantity);
         expect(result).to.be.an('object');
-        expect(result).to.have.a.property('_id');
+        expect(result.newProduct).to.have.a.property('_id');
       });
       it('retorna um objeto com name', async () => {
         const { name, quantity } = productMock2;
         const result = await productServices.createNewProduct(name, quantity);
         expect(result).to.be.an('object');
-        expect(result).to.have.a.property('name');
+        expect(result.newProduct).to.have.a.property('name');
       });
       it('retorna um objeto com quantity', async () => {
         const { name, quantity } = productMock2;
         const result = await productServices.createNewProduct(name, quantity);
         expect(result).to.be.an('object');
-        expect(result).to.have.a.property('quantity');
+        expect(result.newProduct).to.have.a.property('quantity');
       });
     });
 
@@ -60,9 +60,9 @@ describe('Service do produto', () => {
         });
   
         it('retorna um erro', async () => {
-          const payloadProduct = { name: 'cubomagicos', quantity: 50 };
-          const result = await productServices.createNewProduct(payloadProduct);
-          expect(result).to.be.an('object');
+          await productServices.createNewProduct('cubomagicos', 50);
+          const error = await productServices.createNewProduct('cubomagicos', 50);
+          expect(error).to.be.a('object');
         });
       });
 
@@ -83,8 +83,8 @@ describe('Service do produto', () => {
       });
 
       it('retorna um erro', async () => {
-        const result = await productServices.createNewProduct(productInvalid);
-        expect(result).to.be.null;
+        const response = await productServices.createNewProduct(productInvalid);
+        expect(response).not.to.be.a('object');
       });
     });
 
@@ -101,8 +101,8 @@ describe('Service do produto', () => {
       it('retorna um array com todos objetos', async() => {
         const response = await productServices.getAll();
 
-        expect(response).to.be.an('array')
-        expect(response[0]).to.be.an('object');
+        expect(response.result).to.be.an('array')
+        expect(response.result[0]).to.be.an('object');
       });
     });
 
@@ -121,15 +121,15 @@ describe('Service do produto', () => {
         const response = await productServices.findById(_id )
 
         expect(response).to.be.not.empty;
-        expect(response).to.be.an('object');
-        expect(response).to.have.a.property('_id');
+        expect(response.product).to.be.a('object');
+        expect(response.product).to.have.a.property('_id');
       });
       it('deve incluir as chaves `name` e `quantity`', async() => {
         const { _id } = productMock;
         const response = await productServices.findById(_id )
 
         expect(response).to.be.an('object');
-        expect(response).to.include.all.keys('name', 'quantity');
+        expect(response.product).to.include.all.keys('name', 'quantity');
       });
     });
     describe('deletar produto', async() => {
@@ -179,15 +179,18 @@ describe('Service do produto', () => {
 
 describe('Service das sales', () => {
   const saleMock = [
-    { productId: '1', quantity: 100 },
-    { productId: '2', quantity: 250 }
+    { 
+      productId: '5f43ba273200020b101fe49f', 
+      quantity: 100,
+    },
   ];
 
   const productMock = {
-    _id: '1',
+    _id: '5f43ba273200020b101fe49f',
     name: 'headset',
     quantity: 500
   };
+
   describe('criar uma venda', async () => {
     before(() => {
       sinon.stub(saleModels, 'createNewSale')
@@ -207,13 +210,13 @@ describe('Service das sales', () => {
 
       expect(response).to.be.not.empty;
       expect(response).to.be.an('object');
-      expect(response).to.have.a.property('_id');
+      expect(response.newSale).to.have.a.property('_id');
     });
     it('retorna um objeto com itensSold', async () => {
         const response = await saleServices.createNewSale(saleMock);
   
         expect(response).to.be.an('object');
-        expect(response).to.have.a.property('itensSold');
+        expect(response.newSale).to.have.a.property('itensSold');
       });
   });
 
@@ -231,19 +234,18 @@ describe('Service das sales', () => {
       const response = await saleServices.getAll();
 
       expect(response).to.be.not.empty;
-      expect(response).to.be.an('array')
-      expect(response[0]).to.be.an('object');
+      expect(response.sales).to.be.an('array')
     });
   });
 
   describe('ao atualizar uma venda', async () => {
     const vendaAtualizada = [
-      { productId: '1', quantity: 99 },
+      { productId: '5f43ba273200020b101fe49f', quantity: 99 },
     ]
 
     before(() => {
       sinon.stub(saleModels, 'updateSale')
-        .resolves({ _id: '1', itensSold: vendaAtualizada });
+        .resolves({ _id: '5f43ba333200020b101fe4a0', itensSold: vendaAtualizada });
       sinon.stub(productModels, 'findById')
         .resolves(productMock);
     });
@@ -256,9 +258,10 @@ describe('Service das sales', () => {
 
     it('retorna obejto atualizado', async() => {
       const sale = await saleServices.createNewSale(saleMock);
-      const response = await saleServices.updateSale(sale._id, vendaAtualizada);
+      const { _id } = sale;
+      const response = await saleServices.updateSale(_id, vendaAtualizada);
 
-      expect(response.itensSold[0]).to.have.a.property('quantity', 99);
+      expect(response.updatedSale).to.have.a.property('quantity', 99);
     });
   });
 
@@ -282,7 +285,8 @@ describe('Service das sales', () => {
 
     it('retorna obejto de erro', async() => {
       const sale = await saleServices.createNewSale(saleMock);
-      const response = await saleServices.updateSale(sale._id, vendaAtualizada);
+      const { _id } = sale;
+      const response = await saleServices.updateSale(_id, vendaAtualizada);
       expect(response).to.be.a('object');
     });
   });
@@ -301,17 +305,17 @@ describe('Service das sales', () => {
       const response = await saleServices.findById('1');
 
       expect(response).to.be.an('object');
-      expect(response).to.have.a.property('_id');
+      expect(response.sale).to.have.a.property('_id');
     });
   });
   describe('deletar uma venda', async() => {
     const vendaDeletada = [
-        { productId: '1', quantity: 99 },
+        { productId: '5f43ba273200020b101fe49f', quantity: 99 },
       ]
 
     before(() => {
         sinon.stub(saleModels, 'deleteSale')
-        .resolves({ _id: '1', itensSold: vendaDeletada });
+        .resolves({ _id: '5f43ba333200020b101fe4a0', itensSold: vendaDeletada });
         sinon.stub(saleModels, 'findById')
         .resolves(saleMock);
     });
@@ -322,7 +326,8 @@ describe('Service das sales', () => {
 
     it('retira venda do banco', async () => {
       const sale = await saleServices.createNewSale(saleMock);
-      const response = await productServices.deleteSale(sale._id);
+      const { _id } = sale;
+      const response = await productServices.deleteSale(_id);
 
       expect(response).to.be.an('object');
     });
