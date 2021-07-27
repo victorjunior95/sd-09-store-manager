@@ -255,4 +255,27 @@ describe('Service das sales', () => {
       expect(response).to.have.a.property('_id');
     });
   });
+  describe('deletar uma venda', async() => {
+    const vendaDeletada = [
+        { productId: '1', quantity: 99 },
+      ]
+
+    before(() => {
+        sinon.stub(saleModels, 'deleteSale')
+        .resolves({ _id: '1', itensSold: vendaDeletada });
+        sinon.stub(saleModels, 'findById')
+        .resolves(saleMock);
+    });
+
+    after(() => {
+        saleModels.findById.restore();
+    });
+
+    it('retira venda do banco', async () => {
+      const sale = await saleServices.createNewSale(saleMock);
+      const response = await productServices.deleteSale(sale._id);
+
+      expect(response).to.be.an('object');
+    });
+  });
 });
