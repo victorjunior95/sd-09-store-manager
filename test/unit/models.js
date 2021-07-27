@@ -1,11 +1,13 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const products = require('../../models/products');
+const sales = require('../../models/sales');
+
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MongoClient } = require('mongodb');
 const { object } = require('joi');
 
-describe('Models function', () => {
+describe('Product Models function', () => {
   const DBServer = new MongoMemoryServer();
   let connectionMock;
   before(async () => {
@@ -208,21 +210,21 @@ describe('Models function', () => {
         await products.updateProductSale(saleInfo);
         const updatedData = await products.listAllProducts().then(result => result[0]);
         expect(updatedData.quantity).to.be.equals(newQuantity)
-          });
+      });
     })
   });
 
   describe('Delete product model', () => {
-      before(async () => {
-        await connectionMock.db('StoreManager').collection('products').insertOne({
-          name: "Nome do produto",
-          quantity: 10,
-        })
-      });
+    before(async () => {
+      await connectionMock.db('StoreManager').collection('products').insertOne({
+        name: "Nome do produto",
+        quantity: 10,
+      })
+    });
       
-      after(async () => {
-        await connectionMock.db('StoreManager').collection('products').deleteMany({});
-      });
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('products').deleteMany({});
+    });
 
     describe('If the product exists', () => {
       it('Should be removed from the list', async () => {
@@ -290,4 +292,204 @@ describe('Models function', () => {
       });
     })
   });
-})
+});
+
+describe('Sales Models function', () => {
+  const DBServer = new MongoMemoryServer();
+  let connectionMock;
+  before(async () => {
+    const urlMock = await DBServer.getUri();
+    connectionMock = await MongoClient.connect(urlMock, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+
+    sinon.stub(MongoClient, 'connect')
+      .resolves(connectionMock);
+  });
+
+  after(async () => {
+    MongoClient.connect.restore();
+    await DBServer.stop();
+  });
+
+  describe('When a new sale is created', () => {
+    before(async () => {
+      await connectionMock.db('StoreManager').collection('products').insertOne({
+        name: "Nome do produto",
+        quantity: 30,
+      })
+    });
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+    
+    it('Should remove the sold quantity from the stock', async () => {
+      const product = await products.listAllProducts().then(result => result[0]);
+      const newSaleData = [
+        {
+        "productId": product._id,
+        "quantity": 15,
+        },
+      ]
+      await sales.createSalesModel(newSaleData);
+
+      const newData = await products.listAllProducts().then(result => result[0]);
+      const newQuantity = product.quantity - newData.quantity;
+
+      expect(newData.quantity).to.be.equals(newQuantity);
+    });
+
+    it('Should create a new Sale on the list', async () => {
+      const product = await products.listAllProducts().then(result => result[0]);
+      const newSaleData = [
+        {
+          "productId": product._id,
+          "quantity": 15,
+        },
+      ];
+
+      await sales.createSalesModel(newSaleData);
+
+      const sale = await sales.listSalesModel().then(result => result[0]);
+console.log(sale);
+      expect(sale).to.not.be.null;
+    });
+  })
+
+  describe('When listing all sales', () => {
+    before(async () => {
+      await connectionMock.db('StoreManager').collection('products').insertOne({
+        name: "Nome do produto",
+        quantity: 30,
+      })
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+    
+    describe('When there is no sale created', () => {
+      it('Should return an empty array', async () => {
+        const allSalesList = await sales.listSalesModel();
+
+        expect(allSalesList).to.be.an('array');
+        expect(allSalesList).to.be.empty;
+      });
+    });
+    describe('When there is at least one sale created', () => {
+      it('Should return an array with the sale', async () => {
+        const product = await products.listAllProducts().then(result => result[0]);
+        const newSaleData = [
+          {
+          "productId": product._id,
+          "quantity": 15,
+          },
+        ]
+        await sales.createSalesModel(newSaleData);
+        const allSalesList = await sales.listSalesModel();
+
+        expect(allSalesList).to.be.an('array');
+        expect(allSalesList).to.have.length(1);
+      })
+    })
+  })
+
+  describe('When searching a sale by the ID', () => {
+    before(async () => {
+      await connectionMock.db('StoreManager').collection('products').insertOne({
+        name: "Nome do produto",
+        quantity: 30,
+      })
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+    
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+
+    describe('If no sale is found', () => {
+      it('Should return null', async () => {
+        const saleId = '610026239682bb2c1e56411c';
+
+      const sale = await sales.saleByIdModel(saleId).then(result => result);
+
+      expect(sale).to.be.null;
+      })
+    })
+
+    describe('If the sale is found', () => {
+      it('Should return the object with the sale info', async () => {
+        const product = await products.listAllProducts().then(result => result[0]);
+        const newSaleData = [
+          {
+            "productId": product._id,
+            "quantity": 15,
+          },
+        ]
+        
+        await sales.createSalesModel(newSaleData);
+        
+        const saleId = await sales.listSalesModel().then(result => result[0]._id);
+        console.log(saleId);
+      const sale = await sales.saleByIdModel(saleId).then(result => result);
+
+      expect(sale).to.be.an('object');
+
+      })
+    })
+  })
+
+  describe('When updating a sale info', () => {
+
+    before(async () => {
+      await connectionMock.db('StoreManager').collection('products').insertOne({
+        name: "Nome do produto",
+        quantity: 30,
+      })
+      
+    });
+    
+    after(async () => {
+      await connectionMock.db('StoreManager').collection('products').deleteMany({});
+      await connectionMock.db('StoreManager').collection('sales').deleteMany({});
+    });
+    
+    describe('If the sale exists', () => {
+      before(async () => {
+        
+        const product = await products.listAllProducts().then(result => result[0]);
+        await connectionMock.db('StoreManager').collection('sales').insertOne({
+          itensSold: [{
+            "productId": product._id,
+            "quantity": 15
+          }]
+        });
+      });
+
+      it('Should have the new values', async () => {
+        //get the id for the existin sale:
+        const sale = await sales.listSalesModel().then(result => result[0]);
+        const saleId = sale._id;
+        const { productId } = sale.itensSold[0];
+        // update the sale using the correct id
+
+        const updateData = {
+          id: saleId,
+          itensSold: [{
+            productId: productId,
+            quantity: 20,
+          }]
+        }
+
+        const newSaleData = await sales.saleUpdateModel(updateData);
+
+        expect(newSaleData.itensSold[0].quantity).to.be.equals(20);
+      })
+    })
+  })
+});
