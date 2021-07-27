@@ -34,6 +34,18 @@ describe('Service do produto', () => {
         expect(result).to.be.an('object');
         expect(result).to.have.a.property('_id');
       });
+      it('retorna um objeto com name', async () => {
+        const { name, quantity } = productMock2;
+        const result = await productServices.createNewProduct(name, quantity);
+        expect(result).to.be.an('object');
+        expect(result).to.have.a.property('name');
+      });
+      it('retorna um objeto com quantity', async () => {
+        const { name, quantity } = productMock2;
+        const result = await productServices.createNewProduct(name, quantity);
+        expect(result).to.be.an('object');
+        expect(result).to.have.a.property('quantity');
+      });
     });
 
     describe('criar objeto ja existente', async () => {
@@ -89,6 +101,13 @@ describe('Service do produto', () => {
 
         expect(response).to.be.an('object');
         expect(response).to.have.a.property('_id');
+      });
+      it('deve incluir as chaves `name` e `quantity`', async() => {
+        const { _id } = productMock;
+        const response = await productServices.findById(_id )
+
+        expect(response).to.be.an('object');
+        expect(response).to.include.all.keys('name', 'quantity');
       });
     });
     describe('deletar produto', async() => {
@@ -167,6 +186,12 @@ describe('Service das sales', () => {
       expect(response).to.be.an('object');
       expect(response).to.have.a.property('_id');
     });
+    it('retorna um objeto com itensSold', async () => {
+        const response = await saleServices.createNewSale(saleMock);
+  
+        expect(response).to.be.an('object');
+        expect(response).to.have.a.property('itensSold');
+      });
   });
 
   describe('listar todas as vendas', async () => {
