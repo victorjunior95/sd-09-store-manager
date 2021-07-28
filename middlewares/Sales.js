@@ -21,4 +21,16 @@ const deleteValidator = async (req, res, next) => {
   next();
 };
 
-module.exports = { saleValidator, idValidator, deleteValidator };
+const stockValidator = async (req, res, next) => {
+  const sale = req.body;
+  const stock = await salesSchema.stockValidator(sale);
+  if(stock.message) return res.status(stock.code).json(stock.message);
+  next();
+};
+
+module.exports = {
+  saleValidator,
+  idValidator,
+  deleteValidator,
+  stockValidator
+};

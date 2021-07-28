@@ -1,14 +1,17 @@
-const { getSaleById } = require('../models/Sales');
+const { getSaleById, getStock } = require('../models/Sales');
 
 const errors = {
   INVALID_SALE: 'Wrong product ID or invalid quantity',
   SALE_NOTFOUND: 'Sale not found',
-  INVALID_ID: 'Wrong sale ID format'
+  INVALID_ID: 'Wrong sale ID format',
+  MORE_THAN_STOCK: 'Such amount is not permitted to sell'
 };
 
 const MIN_QUANTITY = 1;
+const MIN_STOCK = 0;
 const INVALID_DATA = 'invalid_data';
 const NOT_FOUND = 'not_found';
+const STOCK_PROBLEM = 'stock_problem';
 const CODE_422 = 422;
 const CODE_404 = 404;
 
@@ -47,4 +50,17 @@ const deleteValidator = async (id) => {
   }
 };
 
-module.exports = { saleValidator, idValidator, deleteValidator };
+const stockValidator = async (sale) => {
+  const stock = await getStock(sale[0].productId, sale[0].quantity);
+  if(stock < MIN_STOCK){
+    return errorObject(STOCK_PROBLEM, errors.MORE_THAN_STOCK, CODE_404);
+  } 
+  return {}; 
+};
+
+module.exports = {
+  saleValidator,
+  idValidator,
+  deleteValidator,
+  stockValidator
+};
