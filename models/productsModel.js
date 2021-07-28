@@ -50,6 +50,17 @@ const deleteProducts = async (mongoId) => {
   return deleteStatus;
 };
 
+const changeProductQuantity = async (mongoId, amount, increase=true) => {
+  const cnt = await connection();
+  const deleteStatus = cnt.collection('products')
+    .updateOne(
+      { _id: ObjectId(mongoId) },
+      { $inc: {quantity: increase === true ? amount : -amount }}
+    );
+
+  return deleteStatus;
+};
+
 module.exports = {
   createProduct,
   updateProducts,
@@ -57,4 +68,5 @@ module.exports = {
   searchProductsByName,
   searchProductsByID,
   listAllProducts,
+  changeProductQuantity,
 };

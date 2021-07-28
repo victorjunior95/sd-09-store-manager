@@ -1,6 +1,10 @@
 const { ObjectId } = require('mongodb');
 const Joi = require('joi');
-const { listAllProducts } = require('../models/productsModel');
+const {
+  listAllProducts,
+  searchProductsByID,
+  changeProductQuantity
+} = require('../models/productsModel');
 const {
   createSale,
   searchSaleByID,
@@ -12,15 +16,17 @@ const unprocessableEntity = 422;
 const notFound = 404;
 const invalidIDOrQuantity = 'Wrong product ID or invalid quantity';
 const invalidSaleId = 'Wrong sale ID format';
+const negativeStock = 'Such amount is not permitted to sell';
 
 const saleSchema = Joi.object({
   productId: Joi.string().required(),
   quantity: Joi.number().integer().min(1).required(),
 });
 
-const validationError = (status, message) => ({
+const validationError = (status, message, code='') => ({
   status,
-  message
+  message,
+  code
 });
 
 const validateSaleArraySchema = (soldItens) => {
@@ -28,6 +34,12 @@ const validateSaleArraySchema = (soldItens) => {
   const anyErrors = validationOfSchema.find((i) => i.error ? i.error : null);
 
   return anyErrors;
+};
+
+const applyStockChanges = async (soldItensArray, increase=true) => {
+  await Promise.all(soldItensArray.map( async ({productId, quantity}) => {
+    await changeProductQuantity(productId, quantity, increase);
+  }));
 };
 
 const validateExistence = async (soldItens) => {
@@ -38,17 +50,39 @@ const validateExistence = async (soldItens) => {
   const avaliation = match.some((i) => i !== true);
 
   return avaliation;
+}; // refactor to Promise.all()
+
+const validateStockAvailability = async (soldItens) => {
+  const prodAvaible = await Promise.all(soldItens.map(
+    async ({ productId, quantity }) => {
+      const negativeStock = -1;
+      const [stock] = await searchProductsByID(productId);
+
+      return (stock.quantity - quantity) > negativeStock; 
+    }
+  ));
+  const avaliation = prodAvaible.some((i) => i !== true);
+
+  return avaliation;
 };
 
 const createSaleService = async (soldItens) => {
   const validationResult = validateSaleArraySchema(soldItens);
   const anyInvalidProduct = await validateExistence(soldItens);
-
+  
   if (validationResult || anyInvalidProduct) {
-    throw validationError(unprocessableEntity, invalidIDOrQuantity);
+    console.log('prod inex');
+    throw validationError(unprocessableEntity, invalidIDOrQuantity, 'invalid_data');
+  }
+
+  const stockAvaible = await validateStockAvailability(soldItens);
+  if (stockAvaible) {
+    console.log('estoque neg');
+    throw validationError(notFound, negativeStock, 'stock_problem');
   }
 
   const newSale = await createSale(soldItens);
+  await applyStockChanges(soldItens, false);
 
   return newSale.ops;
 };
@@ -80,8 +114,11 @@ const deleteSaleService = async (saleId) => {
     const saleData = await listSaleByIdService(saleId);
     
     await deleteSale(saleId);
+    await applyStockChanges(saleData[0].itensSold);
+
     return saleData;
   } catch (err) {
+    console.log(err);
     throw validationError(unprocessableEntity, invalidSaleId);
   }
 };

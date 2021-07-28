@@ -10,7 +10,6 @@ const {
 const router = express.Router();
 const code = 'invalid_data';
 const OK_STATUS = 200;
-const CREATED_STATUS = 201;
 
 router.post('/', async (req, res) => {
   const { body } = req;
@@ -19,7 +18,8 @@ router.post('/', async (req, res) => {
 
     return res.status(OK_STATUS).json(newSale);
   } catch (err) {
-    const { message } = err;
+    console.log(err);
+    const { message, code } = err;
 
     return res.status(err.status).json({ err: { code, message } });
   }
