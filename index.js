@@ -24,6 +24,8 @@ app.get('/products/:id', productController.FindId);
 
 app.put('/products/:id', productController.update);
 
+app.delete('/products/:id', productController.deleteProduct);
+
 app.use(err);
 
 app.listen(port, () => console.log(`rodando na porta ${port}`));
