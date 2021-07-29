@@ -1,10 +1,11 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const postSales = async (itensSold) =>
-  connection()
-    .then((db) => db.collection('sales').insertOne({ itensSold }))
+const postSales = async (data) => {
+  return connection()
+    .then((db) => db.collection('sales').insertOne({ itensSold: data }))
     .then((e) => e.ops[0]);
+};
 
 const getAllSales = async () => {
   return connection().then((db) => db.collection('sales').find().toArray());

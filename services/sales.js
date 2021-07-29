@@ -22,7 +22,18 @@ const postSales = async (newSale) => {
   const result = await sales.postSales(newSale);
 
   newSale.forEach(async (item) => {
-    return await products.validateQtd(item.productId, item.quantity);
+    if (item.quantity < 1) {
+      return {
+        err: {
+          code: 'stock_problem',
+          message: 'Such amount is not permitted to sell'
+        },
+        status: 422,
+      };
+
+    } else {
+      return await products.validateQtd(item.productId, item.quantity);
+    }
   });
 
   return result;

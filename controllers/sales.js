@@ -7,17 +7,6 @@ const STATUS_404 = 404;
 const postSales = async (req, res) => {
   const newSale = req.body;
   const data = await sales.postSales(newSale);
-  const zero = 0;
-  // console.log(data.itensSold[0].quantity)
-
-  if (data.itensSold[0].quantity < zero) {
-    return res.status(STATUS_404).json({
-      err: {
-        code: 'stock_problem',
-        message: 'Such amount is not permitted to sell',
-      },
-    });
-  }
 
   if (data !== null) {
     return res.status(STATUS_200).json(data);
@@ -30,7 +19,6 @@ const postSales = async (req, res) => {
       },
     });
   }
-
 };
 
 const getAllSales = async (_req, res) => {
