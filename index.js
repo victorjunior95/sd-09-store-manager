@@ -18,6 +18,10 @@ app.get('/', (_request, response) => {
 
 app.post('/products', productController.create);
 
+app.get('/products', productController.FindAll);
+
+app.get('/products/:id', productController.FindId);
+
 app.use(err);
 
 app.listen(port, () => console.log(`rodando na porta ${port}`));

@@ -6,9 +6,9 @@ const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-const { urlLocation } = process.env;
+const urlLocation = process.env.urlLocation || 'mongodb://127.0.0.1:27017';
 const DB_NAME = 'StoreManager';
-const MONGO_DB_URL = 'mongodb://127.0.0.1:27017';
+
 
 let db = null;
 
