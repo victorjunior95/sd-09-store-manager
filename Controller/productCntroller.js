@@ -29,9 +29,21 @@ const FindId = rescue(
   }
 );
 
+const update = rescue(
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+    const respost = await productServeci.upidate(id, name, quantity);
+
+    return res.status(stt.d).json(respost);
+  }
+);
+
+
 
 module.exports = {
   create,
   FindAll,
   FindId,
+  update,
 };

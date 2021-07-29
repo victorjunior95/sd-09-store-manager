@@ -22,6 +22,8 @@ app.get('/products', productController.FindAll);
 
 app.get('/products/:id', productController.FindId);
 
+app.put('/products/:id', productController.update);
+
 app.use(err);
 
 app.listen(port, () => console.log(`rodando na porta ${port}`));

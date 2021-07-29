@@ -6,7 +6,8 @@ const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-const urlLocation = process.env.urlLocation || 'mongodb://127.0.0.1:27017';
+//const urlLocation = 'mongodb://localhost:27017/StoreManager';
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
 const DB_NAME = 'StoreManager';
 
 
@@ -15,7 +16,7 @@ let db = null;
 const connection = () => {
   return db
     ? Promise.resolve(db)
-    : MongoClient.connect(urlLocation || MONGO_DB_URL, OPTIONS)
+    : MongoClient.connect(MONGO_DB_URL, OPTIONS)
       .then((conn) => {
         db = conn.db(DB_NAME);
         return db;
