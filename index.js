@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParse = require('body-parser');
 require('dotenv/config');
 const productController = require('./Controller/productCntroller');
+const salesController = require('./Controller/salesController');
 
 const err = require('./middleware/error');
 
@@ -25,6 +26,8 @@ app.get('/products/:id', productController.FindId);
 app.put('/products/:id', productController.update);
 
 app.delete('/products/:id', productController.deleteProduct);
+
+app.post('/sales', salesController.createSales);
 
 app.use(err);
 
