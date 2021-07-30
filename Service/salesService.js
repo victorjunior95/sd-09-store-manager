@@ -48,10 +48,10 @@ const findSalesId = async (id) => {
 const updateSales = async (id, sale) => {
   const { quantity } = sale[0];
   const { error } = validetionProduction.validate({ quantity });
-    if (error) {
-      const message = 'Wrong product ID or invalid quantity';
-      throw  util(status.q2, 'invalid_data', message);
-    }
+  if (error) {
+    const message = 'Wrong product ID or invalid quantity';
+    throw  util(status.q2, 'invalid_data', message);
+  }
 
   if(!validetionId.test(id)) throw util(
     status.q4,
