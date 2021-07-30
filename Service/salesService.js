@@ -69,9 +69,30 @@ const updateSales = async (id, sale) => {
   return retorneSale;
 };
 
+const deleteSales = async (id) => {
+  if(!validetionId.test(id)) throw util(
+    status.q2,
+    'invalid_data',
+    'Wrong sale ID format'
+  );
+
+  const retorne = await salesModel.findSalesId(id);
+  if(!retorne) throw util(
+    status.q2,
+    'invalid_data',
+    'Wrong sale ID format'
+  );
+
+  await salesModel.deleteSales(id);
+
+  return retorne;
+};
+
+
 module.exports = {
   createSales,
   findSales,
   findSalesId,
   updateSales,
+  deleteSales,
 };
