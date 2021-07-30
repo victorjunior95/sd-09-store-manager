@@ -13,6 +13,24 @@ const createSales = rescue(
   }
 );
 
+const findSales = async (_req, res) => {
+  const sales = await service.findSales();
+
+  return res.status(status.d).json({sales});
+};
+
+const findSalesId = rescue(
+  async (req, res) => {
+    const { id } = req.params;
+    const retorne = await service.findSalesId(id);
+
+    return res.status(status.d).json(retorne);
+  }
+);
+
+
 module.exports = {
   createSales,
+  findSales,
+  findSalesId
 };

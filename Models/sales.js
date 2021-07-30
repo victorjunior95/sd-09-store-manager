@@ -10,6 +10,23 @@ async function addSales(products) {
   return value;
 };
 
+async function findSales() {
+  const value = await connection()
+    .then(db => db.collection('sales').find().toArray());
+
+  return value;
+};
+
+async function findSalesId(id) {
+  const value = await connection()
+    .then(db => db.collection('sales').findOne(new ObjectId(id)));
+
+  return value;
+};
+
+
 module.exports = {
   addSales,
+  findSales,
+  findSalesId
 };
