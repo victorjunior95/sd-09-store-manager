@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 const SalesService = require('../services/salesService');
 
 const successStatus = 200;
-const responseSuccessStatus = 201;
+// const responseSuccessStatus = 201;
 
 const create = rescue(async (req, res, next) => {
   const productsSold = req.body;
