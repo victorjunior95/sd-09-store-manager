@@ -1,12 +1,10 @@
 const salesModel = require('../Models/sales');
 const util = require('../utils');
 const joi = require('@hapi/joi');
-const num = 0;
 const status = {
   q4: 404,
   q2: 422
 };
-const mim = 5;
 const validetionId = /[0-9a-z]{24}/;
 
 const validetionProduction = joi.object({
@@ -47,8 +45,33 @@ const findSalesId = async (id) => {
   return retorne;
 };
 
+const updateSales = async (id, sale) => {
+  const { quantity } = sale[0];
+  const { error } = validetionProduction.validate({ quantity });
+    if (error) {
+      const message = 'Wrong product ID or invalid quantity';
+      throw  util(status.q2, 'invalid_data', message);
+    }
+
+  if(!validetionId.test(id)) throw util(
+    status.q4,
+    'not_found',
+    'Sale not found'
+  );
+
+  const retorne = await salesModel.updateSales(id, sale);
+  if(!retorne) throw util(
+    status.q4,
+    'not_found',
+    'Sale not found'
+  );
+  const retorneSale = await salesModel.findSalesId(id);
+  return retorneSale;
+};
+
 module.exports = {
   createSales,
   findSales,
-  findSalesId
+  findSalesId,
+  updateSales,
 };

@@ -28,9 +28,19 @@ const findSalesId = rescue(
   }
 );
 
+const updateSales = rescue(
+  async (req, res) => {
+    const { id } = req.params;
+    const sale = req.body;
+    const retorne = await service.updateSales(id, sale);
+
+    return res.status(status.d).json(retorne);
+  }
+);
 
 module.exports = {
   createSales,
   findSales,
-  findSalesId
+  findSalesId,
+  updateSales,
 };
