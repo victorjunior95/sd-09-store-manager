@@ -32,8 +32,17 @@ const getProductsList = async (req, res) => {
 const updateProductById = async (req, res) => {
   try {
     const { params: { id }, body } = req;
-    console.log(id, body);
     const { data, status } = await productsService.updateProductById(id, body);
+
+    return res.status(status).json(data);
+  }
+  catch({ status, data }) { return res.status(status).json(data); }
+};
+
+const deleteProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data, status } = await productsService.deleteProductById(id);
 
     return res.status(status).json(data);
   }
@@ -45,4 +54,5 @@ module.exports = {
   getProductById,
   getProductsList,
   updateProductById,
+  deleteProductById,
 };

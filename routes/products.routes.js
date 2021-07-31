@@ -3,7 +3,8 @@ const {
   createProduct,
   getProductsList,
   getProductById,
-  updateProductById
+  updateProductById,
+  deleteProductById
 } = require('../controllers/products.controller');
 
 Router.route('/')
@@ -12,6 +13,7 @@ Router.route('/')
 
 Router.route('/:id')
   .put(updateProductById)
+  .delete(deleteProductById)
   .get(getProductById);
 
 module.exports = Router;
