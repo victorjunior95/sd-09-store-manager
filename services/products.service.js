@@ -1,6 +1,6 @@
 const productModel = require('../models/products.model');
 
-const validateProduct = async ({ name, quantity }) => {
+const validateProduct = async ({ name, quantity }, method) => {
   const minQuantity = 1;
   const minNameLength = 5;
   let message;
@@ -16,13 +16,13 @@ const validateProduct = async ({ name, quantity }) => {
   }
 
   const product = await productModel.findProductByName(name);
-  if(product) message = 'Product already exists';
+  if(method === 'post' && product) message = 'Product already exists';
 
   if (message) return { code: 'invalid_data', message };
 };
 
 const createProduct = async (newProduct) => {
-  const validationError = await validateProduct(newProduct);
+  const validationError = await validateProduct(newProduct, 'post');
   
   if(validationError) throw { status: 422, data: { err: validationError } };
 
@@ -39,7 +39,6 @@ const getProductList = async () => {
 
 const getProductById = async (id) => {
   const product = await productModel.getProductById(id);
-  console.log(product);
 
   if(!product) throw {
     status: 422,
@@ -54,8 +53,19 @@ const getProductById = async (id) => {
   return { status: 200, data: product };
 };
 
+const updateProductById = async (id, product) => {
+  const validationError = await validateProduct(product, 'put');
+
+  if(validationError) throw { status: 422, data: { err: validationError } };
+
+  const updatedProduct = await productModel.updateProductById(id, product);
+
+  return { status: 200, data: updatedProduct };
+};
+
 module.exports = {
   createProduct,
   getProductList,
   getProductById,
+  updateProductById,
 };

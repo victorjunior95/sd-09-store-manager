@@ -2,7 +2,8 @@ const Router = require('express').Router();
 const {
   createProduct,
   getProductsList,
-  getProductById
+  getProductById,
+  updateProductById
 } = require('../controllers/products.controller');
 
 Router.route('/')
@@ -10,6 +11,7 @@ Router.route('/')
   .post(createProduct);
 
 Router.route('/:id')
+  .put(updateProductById)
   .get(getProductById);
 
 module.exports = Router;
