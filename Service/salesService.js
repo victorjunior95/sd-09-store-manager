@@ -1,4 +1,5 @@
 const salesModel = require('../Models/sales');
+const productModel = require('../Models/functions');
 const util = require('../utils');
 const updateQuantity = require('../req09Ande10');
 const joi = require('@hapi/joi');
@@ -20,6 +21,15 @@ const createSales = async (product) => {
       throw  util(status.q2, 'invalid_data', message);
     }
   });
+
+  for (const {productId, quantity} of product) {
+    const num = 0;
+    const prod = await productModel.findProductId(productId);
+    if ((prod.quantity - quantity) < num) {
+      let message = 'Such amount is not permitted to sell';
+      throw util(status.q4, 'stock_problem', message);
+    }
+  }
 
   const retorne = await salesModel.addSales(product);
   updateQuantity.updateQuantityProduct(product);
