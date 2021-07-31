@@ -24,13 +24,38 @@ const validateProduct = async ({ name, quantity }) => {
 const createProduct = async (newProduct) => {
   const validationError = await validateProduct(newProduct);
   
-  if(validationError) throw { status: 422, data: validationError };
+  if(validationError) throw { status: 422, data: { err: validationError } };
 
   const product = await productModel.addProduct(newProduct);
 
   return { status: 201, data: product };
 };
 
+const getProductList = async () => {
+  const products = await productModel.listProducts();
+
+  return { status: 200, data:{ products } };
+};
+
+const getProductById = async (id) => {
+  const product = await productModel.getProductById(id);
+  console.log(product);
+
+  if(!product) throw {
+    status: 422,
+    data: {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format',
+      }
+    }
+  };
+
+  return { status: 200, data: product };
+};
+
 module.exports = {
   createProduct,
+  getProductList,
+  getProductById,
 };
