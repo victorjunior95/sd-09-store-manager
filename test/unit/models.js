@@ -139,7 +139,6 @@ describe('Testing the products model', () => {
     })
     it('the product must no longer exist', async () => {
       await ProductsModel.deleteProduct(product.insertedId);
-      console.log(product.insertedId);
       const response = await ProductsModel.getProductById(product.insertedId);
       expect(response.result).to.be.null;
     });
