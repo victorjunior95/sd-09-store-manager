@@ -1,5 +1,6 @@
 const salesModel = require('../Models/sales');
 const util = require('../utils');
+const updateQuantity = require('../req09Ande10');
 const joi = require('@hapi/joi');
 const status = {
   q4: 404,
@@ -21,6 +22,7 @@ const createSales = async (product) => {
   });
 
   const retorne = await salesModel.addSales(product);
+  updateQuantity.updateQuantityProduct(product);
   return retorne.ops[0];
 };
 
@@ -84,7 +86,7 @@ const deleteSales = async (id) => {
   );
 
   await salesModel.deleteSales(id);
-
+  updateQuantity.subQuantityProduct(retorne.itensSold);
   return retorne;
 };
 
