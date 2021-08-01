@@ -25,7 +25,6 @@ const createSales = async (sales) => {
 
 const getSalesList = async () => {
   const sales = await salesModel.listSales();
-  console.log(sales, 'service');
 
   return { status: 200, data:{ sales } };
 };
@@ -46,8 +45,21 @@ const getSaleById = async (id) => {
   return { status: 200, data: sale };
 };
 
+const updateSaleById = async (id, sales) => {
+  let err;
+  sales.forEach((sale) => {
+    err = saleVerification(sale);
+  });
+  if(err) throw err;
+
+  const updatedSales = await salesModel.updateSaleById(id, sales);
+
+  return { status:200, data: updatedSales };
+};
+
 module.exports = {
   createSales,
   getSalesList,
-  getSaleById
+  getSaleById,
+  updateSaleById
 };

@@ -20,7 +20,7 @@ const getSaleById = async (req, res) => {
   catch({ status, data }) { return res.status(status).json(data); }
 };
 
-const getSalesList = async (req, res) => {
+const getSalesList = async (__, res) => {
   try {
     const { data, status } = await salesService.getSalesList();
 
@@ -29,8 +29,21 @@ const getSalesList = async (req, res) => {
   catch({ status, data }) { return res.status(status).json(data); }
 };
 
+const updateSales = async (req, res) => {
+  try {
+    const { params: { id }, body } = req;
+    const { data, status } = await salesService.updateSaleById(id, body);
+
+    return res.status(status).json(data);
+  }
+  catch({ status, data }) { return res.status(status).json(data); }
+};
+
+
+
 module.exports = {
   createSales,
   getSalesList,
-  getSaleById
+  getSaleById,
+  updateSales
 };

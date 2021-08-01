@@ -23,13 +23,22 @@ const getSaleById = async (id) => {
   const db = await getDB();
   const sale = await db.collection('sales').findOne(ObjectId(id));
 
-  console.log(sale);
-
   return sale;
+};
+
+const updateSaleById = async (id, itensSold) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const db = await getDB();
+  const sale = await db.collection('sales')
+    .updateOne({ _id: ObjectId(id) }, { $set: { itensSold } });
+
+  return sale && { _id: id, itensSold };
 };
 
 module.exports = {
   createSales,
   listSales,
-  getSaleById
+  getSaleById,
+  updateSaleById
 };
