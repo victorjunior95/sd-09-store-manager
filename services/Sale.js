@@ -1,25 +1,38 @@
 const Sale = require('../models/Sale');
 const Product = require('../models/Product');
 
-const validateSoldProducts = (soldProducts) => {
+const validateSoldProducts = async (soldProducts) => {
   const err = {
     error: { code: 'invalid_data', message: 'Wrong product ID or invalid quantity' }
   };
+  // const err2 = {
+  //   error: { code: 'stock_problem', message: 'Such amount is not permitted to sell' }
+  // };
   let invalid = false;
-  soldProducts.forEach((soldProduct) => {
+  let noStock = false;
+  soldProducts.forEach(async (soldProduct) => {
     if (soldProduct.quantity < 1
       || typeof soldProduct.quantity == 'string'
       || !Product.findById(soldProduct.id) ) 
     {
       invalid = true;
     }
+    // const product = await Product.findById(soldProduct.productId);
+    // if (soldProduct.quantity > product.quantity) {
+    //   noStock = true;
+    // }
+    // console.log('soldProduct.quantity is: ' + soldProduct.quantity);
+    // console.log('product.quantity is: ' + product.quantity);
+    // console.log('noStock is: ' + noStock);
   });
   if (invalid) return err;
+  // console.log('noStock out is: ' + noStock);
+  // if (noStock) return err2;
   return null;
 };
 
 const create = async (soldProducts) => {
-  let invalid = validateSoldProducts(soldProducts);
+  let invalid = await validateSoldProducts(soldProducts);
   if (invalid) return invalid;
   return await Sale.create(soldProducts);
 };
@@ -36,7 +49,7 @@ const findById = async (id) => {
 };
 
 const edit = async (id, itens) => {
-  let invalid = validateSoldProducts(itens);
+  let invalid = await validateSoldProducts(itens);
   if (invalid) return invalid;
   const existSale = await Sale.findById(id);
   if (!existSale) return { error:

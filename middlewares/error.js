@@ -10,6 +10,7 @@ module.exports = (err, _req, res, _next) => {
   const statusByErrorCode = {
     invalid_data: UNPROCESSABLE,
     not_found: NOT_FOUND,
+    stock_problem: NOT_FOUND,
   };
 
   const status = statusByErrorCode[err.code] || INTERNAL_SERVER_ERROR;

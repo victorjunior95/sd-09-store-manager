@@ -15,7 +15,7 @@ const updateProductQuantityNewSale = async(itensSold) => {
     const _id = ObjectId(item.productId);
     const db = await connection();
     return await db.collection('products')
-      .updateOne({_id}, {$inc: { quantity: quantitySold}}).then((aa) => console.log(aa)); 
+      .updateOne({_id}, {$inc: { quantity: quantitySold}}); 
   });
 };
 
