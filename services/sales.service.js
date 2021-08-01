@@ -1,7 +1,7 @@
 const salesModel = require('../models/sales.model');
 const productModel = require('../models/products.model');
 
-const saleVerification = ({ quantity }) => {
+const saleVerification = async ({ quantity, productId }) => {
   if(quantity < 1 || typeof(quantity) === 'string') return {
     status: 422,
     data: {
@@ -11,16 +11,27 @@ const saleVerification = ({ quantity }) => {
       }
     }
   };
+
+  const product = await productModel.getProductById(productId);
+
+  if(product.quantity < quantity) return {
+    status: 404,
+    data: {
+      err: {
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
+      }
+    }
+  };
 };
 
 const createSales = async (sales) => {
   let err;
-  sales.forEach((sale) => {
-    err = saleVerification(sale);
-  });
+  for (sale of sales) err = await saleVerification(sale);
+
   if(err) throw err;
 
-  sales.forEach(async (sale) => await productModel.saleProduct(sale));
+  for (sale of sales) await productModel.saleProduct(sale);
 
   const createdSales = await salesModel.createSales(sales);
   return { status: 200, data: createdSales };
@@ -50,12 +61,12 @@ const getSaleById = async (id) => {
 
 const updateSaleById = async (id, sales) => {
   let err;
-  sales.forEach((sale) => {
-    err = saleVerification(sale);
-  });
+
+  for (sale of sales) err = await saleVerification(sale);
+
   if(err) throw err;
 
-  sales.forEach(async (sale) => await productModel.saleProduct(sale));
+  for (sale of sales) await productModel.saleProduct(sale);
 
   const updatedSales = await salesModel.updateSaleById(id, sales);
 
