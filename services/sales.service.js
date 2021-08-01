@@ -23,6 +23,31 @@ const createSales = async (sales) => {
   return { status: 200, data: createdSales };
 };
 
+const getSalesList = async () => {
+  const sales = await salesModel.listSales();
+  console.log(sales, 'service');
+
+  return { status: 200, data:{ sales } };
+};
+
+const getSaleById = async (id) => {
+  const sale = await salesModel.getSaleById(id);
+
+  if(!sale) throw {
+    status: 404,
+    data: {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    }
+  };
+
+  return { status: 200, data: sale };
+};
+
 module.exports = {
   createSales,
+  getSalesList,
+  getSaleById
 };

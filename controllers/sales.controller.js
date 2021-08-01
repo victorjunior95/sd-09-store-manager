@@ -10,6 +10,27 @@ const createSales = async (req, res) => {
   catch({ status, data }) { return res.status(status).json(data); }
 };
 
+const getSaleById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data, status } = await salesService.getSaleById(id);
+
+    return res.status(status).json(data);
+  }
+  catch({ status, data }) { return res.status(status).json(data); }
+};
+
+const getSalesList = async (req, res) => {
+  try {
+    const { data, status } = await salesService.getSalesList();
+
+    return res.status(status).json(data);
+  }
+  catch({ status, data }) { return res.status(status).json(data); }
+};
+
 module.exports = {
-  createSales
+  createSales,
+  getSalesList,
+  getSaleById
 };
