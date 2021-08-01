@@ -1,8 +1,8 @@
 const Service = require('../services');
 
-// const HTTP_OK_STATUS = 200;
+const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
-const HTTP_UNPROCESSABLE_STATUS = 442;
+const HTTP_UNPROCESSABLE_STATUS = 422;
 
 const addProduct = async (req, res) => {
   const { name, quantity } = req.body;
@@ -14,6 +14,13 @@ const addProduct = async (req, res) => {
   res.status(HTTP_CREATED_STATUS).json(product);
 };
 
+const getProducts = async (_req, res) => {
+  const products = await Service.products.getProducts();
+
+  res.status(HTTP_OK_STATUS).json(products);
+};
+
 module.exports = {
   addProduct,
+  getProducts,
 };

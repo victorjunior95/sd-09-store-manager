@@ -32,7 +32,7 @@ describe('Cadastro de um novo produto', () => {
     it('é chamado o método "status" com o código 422', async () => {
       await Controller.products.addProduct(request, response);
 
-      expect(response.status.calledWith(442)).to.be.equal(true);
+      expect(response.status.calledWith(422)).to.be.equal(true);
     });
 
     it('é chamado o método "json" com a mensagem correspondente', async () => {
@@ -76,6 +76,66 @@ describe('Cadastro de um novo produto', () => {
       await Controller.products.addProduct(request, response);
 
       expect(response.json.calledWith(payload)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Carrega a lista de produtos', () => {
+  describe('quando não tem nenhum cadastrado',() => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(Service.products, 'getProducts').resolves([]);
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    after(() => {
+      Service.products.getProducts.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.products.getProducts(request, response);
+
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com um array vazio', async () => {
+      await Controller.products.getProducts(request, response);
+
+      expect(response.json.calledWith([])).to.be.equal(true);
+    });
+  });
+
+  describe('quando tem produtos cadastrados', () => {
+    const request = {};
+    const response = {};
+
+    const payload = { name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      sinon.stub(Service.products, 'getProducts').resolves([payload]);
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    after(() => {
+      Service.products.getProducts.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.products.getProducts(request, response);
+
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com um array de produtos', async () => {
+      await Controller.products.getProducts(request, response);
+
+      expect(response.json.calledWith([payload])).to.be.equal(true);
     });
   });
 });

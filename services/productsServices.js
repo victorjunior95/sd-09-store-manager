@@ -30,9 +30,19 @@ const addProduct = async (productData) => {
     message: '"quantity" must be larger than or equal to 1',
   } };
 
+  const alreadyExists = await Model.products.getProductByName(name);
+
+  if (alreadyExists) return { err: {
+    code: error_code_400,
+    message: 'Product already exists',
+  }};
+
   return await Model.products.addProduct(productData);
 };
 
+const getProducts = async () => await Model.products.getProducts();
+
 module.exports = {
   addProduct,
+  getProducts,
 };
