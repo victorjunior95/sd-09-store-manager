@@ -1,4 +1,5 @@
 const salesModel = require('../models/sales.model');
+const productModel = require('../models/products.model');
 
 const saleVerification = ({ quantity }) => {
   if(quantity < 1 || typeof(quantity) === 'string') return {
@@ -18,6 +19,8 @@ const createSales = async (sales) => {
     err = saleVerification(sale);
   });
   if(err) throw err;
+
+  sales.forEach(async (sale) => await productModel.saleProduct(sale));
 
   const createdSales = await salesModel.createSales(sales);
   return { status: 200, data: createdSales };
@@ -52,6 +55,8 @@ const updateSaleById = async (id, sales) => {
   });
   if(err) throw err;
 
+  sales.forEach(async (sale) => await productModel.saleProduct(sale));
+
   const updatedSales = await salesModel.updateSaleById(id, sales);
 
   return { status:200, data: updatedSales };
@@ -69,6 +74,9 @@ const deleteSaleById = async (id) => {
       }
     }
   };
+
+  deletedSale.itensSold
+    .forEach(async (item) => await productModel.cancelSaleProduct(item));
 
   return { status: 200, data: deletedSale };
 };

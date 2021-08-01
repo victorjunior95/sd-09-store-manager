@@ -55,11 +55,25 @@ const deleteProductById = async (id) => {
   return deletedProduct;
 };
 
+const saleProduct = async ({ productId, quantity }) => {
+  const db = await getDB();
+  await db.collection('products')
+    .updateOne({ _id: ObjectId(productId) }, { $inc: { quantity: -quantity } });
+};
+
+const cancelSaleProduct = async ({ productId, quantity }) => {
+  const db = await getDB();
+  await db.collection('products')
+    .updateOne({ _id: ObjectId(productId) }, { $inc: { quantity: +quantity } });
+};
+
 module.exports = {
   addProduct,
   findProductByName,
   listProducts,
   getProductById,
   updateProductById,
-  deleteProductById
+  deleteProductById,
+  saleProduct,
+  cancelSaleProduct
 };
