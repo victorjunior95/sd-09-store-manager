@@ -3,7 +3,8 @@ const {
   createSales,
   getSalesList,
   getSaleById,
-  updateSales
+  updateSales,
+  deleteSaleById
 } = require('../controllers/sales.controller');
 
 Router.route('/')
@@ -12,6 +13,7 @@ Router.route('/')
 
 Router.route('/:id')
   .put(updateSales)
+  .delete(deleteSaleById)
   .get(getSaleById);
 
 module.exports = Router;

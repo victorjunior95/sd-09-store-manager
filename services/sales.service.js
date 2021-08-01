@@ -26,7 +26,7 @@ const createSales = async (sales) => {
 const getSalesList = async () => {
   const sales = await salesModel.listSales();
 
-  return { status: 200, data:{ sales } };
+  return { status: 200, data: { sales } };
 };
 
 const getSaleById = async (id) => {
@@ -57,9 +57,26 @@ const updateSaleById = async (id, sales) => {
   return { status:200, data: updatedSales };
 };
 
+const deleteSaleById = async (id) => {
+  const deletedSale = await salesModel.deleteSaleById(id);
+
+  if(!deletedSale) throw {
+    status: 422,
+    data: {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    }
+  };
+
+  return { status: 200, data: deletedSale };
+};
+
 module.exports = {
   createSales,
   getSalesList,
   getSaleById,
-  updateSaleById
+  updateSaleById,
+  deleteSaleById
 };
