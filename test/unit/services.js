@@ -4,18 +4,21 @@ const { expect } = require('chai');
 const Model = require('../../models');
 const Service = require('../../services');
 
+const ID_EXAMPLE = '604cb554311d68f491ba5781';
+const NOT_VALID_ID = 'I am not valid';
+
 describe('Cadastro de um novo produto', () => {
   describe('com dados válidos', () => {
     const payload = { name: 'Testy, the Tester', quantity: 30 };
 
     before(() => {
-      const ID_EXAMPLE = '604cb554311d68f491ba5781';
-
       sinon.stub(Model.products, 'addProduct').resolves({ _id: ID_EXAMPLE, ...payload });
+      sinon.stub(Model.products, 'getProductByName').resolves(false);
     });
 
     after(() => {
       Model.products.addProduct.restore();
+      Model.products.getProductByName.restore();
     });
 
     it('retorna um objeto', async () => {
@@ -27,7 +30,7 @@ describe('Cadastro de um novo produto', () => {
     it('tal objeto possui a "_id" do produto', async () => {
       const response = await Service.products.addProduct(payload);
 
-      expect(response).to.have.a.property('_id');
+      expect(response).to.have.property('_id');
     });
   });
 
@@ -169,7 +172,23 @@ describe('Carrega a lista de produtos', () => {
 });
 
 describe('Carrega um produto cadastrado pela "_id"', () => {
-  const ID_EXAMPLE = '604cb554311d68f491ba5781';
+  describe('quando o "_id" passado é inválido', () => {
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.getProductById(NOT_VALID_ID);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.getProductById(NOT_VALID_ID);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('Wrong id format');
+    });
+  });
 
   describe('quando não encontrado', () => {
     before(() => {
@@ -216,6 +235,136 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
       expect(response).to.have.property('name');
 
       expect(response).to.have.property('quantity');
+    });
+  });
+});
+
+describe('Atualiza as informações de um produto', () => {
+  const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
+
+  describe('quando o "_id" passado é inválido', () => {
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.updateProduct(NOT_VALID_ID, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.updateProduct(NOT_VALID_ID, updatedPayload);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('Wrong id format');
+    });
+  });
+
+  describe('quando não encontrado', () => {
+    before(() => {
+      sinon.stub(Model.products, 'updateProduct').resolves({ matchedCount: 0 });
+    });
+
+    after(() => {
+      Model.products.updateProduct.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('Wrong id format');
+    });
+  });
+
+  describe('com "name" curto demais', () => {
+    const updatedPayload = { name: '', quantity: 30 };
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('"name" length must be at least 5 characters long');
+    });
+  });
+
+  describe('com uma string no campo "quantity"', () => {
+    const updatedPayload = { name: 'Testy, the Tester', quantity: 'trinta' };
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('"quantity" must be a number');
+    });
+  });
+
+  describe('com um numero menor que 1 no campo "quantity"', () => {
+    const updatedPayload = { name: 'Testy, the Tester', quantity: 0 };
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('"quantity" must be larger than or equal to 1');
+    });
+  });
+
+  describe('quando encontrado, atualiza as informações', () => {
+    before(() => {
+      sinon.stub(Model.products, 'updateProduct').resolves({ matchedCount: 1 });
+    });
+
+    after(() => {
+      Model.products.updateProduct.restore();
+    });
+
+    it('e retorna o produto atualizado', async () => {
+      const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('name');
+
+      expect(response).to.have.property('quantity');
+
+      expect(response.quantity).to.be.equal(updatedPayload.quantity);
     });
   });
 });

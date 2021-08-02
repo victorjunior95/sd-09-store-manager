@@ -30,8 +30,21 @@ const getProductById = async (req, res) => {
   res.status(HTTP_OK_STATUS).json(product);
 };
 
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const { name, quantity } = req.body;
+
+  const product = await Service.products.updateProduct(id, { name, quantity });
+
+  if (product.err) return res.status(HTTP_UNPROCESSABLE_STATUS).json(product);
+
+  res.status(HTTP_OK_STATUS).json(product);
+};
+
 module.exports = {
   addProduct,
   getProducts,
   getProductById,
+  updateProduct,
 };

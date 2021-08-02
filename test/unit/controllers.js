@@ -10,6 +10,7 @@ const HTTP_UNPROCESSABLE_STATUS = 422;
 // const HTTP_NOT_FOUND_STATUS = 404;
 
 const ID_EXAMPLE = '604cb554311d68f491ba5781';
+const NOT_VALID_ID = 'I am not valid';
 
 describe('Cadastro de um novo produto', () => {
   describe('com dados inválidos', () => {
@@ -210,6 +211,81 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
 
     it('é chamado o método "json" com as informações do produto', async () => {
       await Controller.products.getProductById(request, response);
+
+      expect(response.json.calledWith(payload)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Atualiza as informações de um produto', () => {
+  const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
+
+  describe('com dados inválidos', () => {
+    const response = {};
+    const request = {};
+    
+    const ERROR = { 
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong id format',
+        }
+      };
+
+    before(() => {
+      request.params = { id: NOT_VALID_ID };
+      request.body = { ...updatedPayload };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.products, 'updateProduct').resolves(ERROR);
+    });
+
+    after(() => {
+      Service.products.updateProduct.restore();
+    });
+
+    it('é chamado o método "status" com o código 422', async () => {
+      await Controller.products.updateProduct(request, response);
+
+      expect(response.status.calledWith(HTTP_UNPROCESSABLE_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.products.updateProduct(request, response);
+
+      expect(response.json.calledWith(ERROR)).to.be.equal(true);
+    });
+  });
+
+  describe('quando é adicionado com sucesso', () => {
+    const response = {};
+    const request = {};
+
+    const payload = { _id: ID_EXAMPLE, ...updatedPayload }
+
+    before(() => {
+      request.params = { id: ID_EXAMPLE };
+      request.body = { ...updatedPayload };
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.products, 'updateProduct').resolves(payload);
+    });
+
+    after(() => {
+      Service.products.updateProduct.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.products.updateProduct(request, response);
+
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com as novas informações do produto', async () => {
+      await Controller.products.updateProduct(request, response);
 
       expect(response.json.calledWith(payload)).to.be.equal(true);
     });
