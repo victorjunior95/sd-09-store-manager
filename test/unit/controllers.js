@@ -12,17 +12,20 @@ const HTTP_UNPROCESSABLE_STATUS = 422;
 const ID_EXAMPLE = '604cb554311d68f491ba5781';
 const NOT_VALID_ID = 'I am not valid';
 
+const ERROR_CODE_400 = 'invalid_data';
+const ERROR_NAME = { err: {
+  code: ERROR_CODE_400,
+  message: '"name" length must be at least 5 characters long',
+} };
+const ERROR_ID = { err: {
+  code: ERROR_CODE_400,
+  message: 'Wrong id format',
+} };
+
 describe('Cadastro de um novo produto', () => {
   describe('com dados inválidos', () => {
     const response = {};
     const request = {};
-    
-    const ERROR = { 
-        err: {
-          code: 'invalid_data',
-          message: '"name" length must be at least 5 characters long',
-        }
-      };
 
     before(() => {
       request.body = {};
@@ -30,7 +33,7 @@ describe('Cadastro de um novo produto', () => {
       response.status = sinon.stub().returns(response);
       response.json = sinon.stub().returns();
 
-      sinon.stub(Service.products, 'addProduct').resolves(ERROR);
+      sinon.stub(Service.products, 'addProduct').resolves(ERROR_NAME);
     });
 
     after(() => {
@@ -46,7 +49,7 @@ describe('Cadastro de um novo produto', () => {
     it('é chamado o método "json" com a mensagem correspondente', async () => {
       await Controller.products.addProduct(request, response);
 
-      expect(response.json.calledWith(ERROR)).to.be.equal(true);
+      expect(response.json.calledWith(ERROR_NAME)).to.be.equal(true);
     });
   });
 
@@ -151,17 +154,10 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
     const request = {};
     const response = {};
 
-    const ERROR = {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format',
-      }
-    };
-
     before(() => {
       request.params = { id: ID_EXAMPLE };
 
-      sinon.stub(Service.products, 'getProductById').resolves(ERROR);
+      sinon.stub(Service.products, 'getProductById').resolves(ERROR_ID);
 
       response.status = sinon.stub().returns(response);
       response.json = sinon.stub().returns();
@@ -180,7 +176,7 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
     it('é chamado o método "json" com a mensagem correspondente', async () => {
       await Controller.products.getProductById(request, response);
 
-      expect(response.json.calledWith(ERROR)).to.be.equal(true);
+      expect(response.json.calledWith(ERROR_ID)).to.be.equal(true);
     });
   });
 
@@ -223,13 +219,6 @@ describe('Atualiza as informações de um produto', () => {
   describe('com dados inválidos', () => {
     const response = {};
     const request = {};
-    
-    const ERROR = { 
-        err: {
-          code: 'invalid_data',
-          message: 'Wrong id format',
-        }
-      };
 
     before(() => {
       request.params = { id: NOT_VALID_ID };
@@ -238,7 +227,7 @@ describe('Atualiza as informações de um produto', () => {
       response.status = sinon.stub().returns(response);
       response.json = sinon.stub().returns();
 
-      sinon.stub(Service.products, 'updateProduct').resolves(ERROR);
+      sinon.stub(Service.products, 'updateProduct').resolves(ERROR_ID);
     });
 
     after(() => {
@@ -254,7 +243,7 @@ describe('Atualiza as informações de um produto', () => {
     it('é chamado o método "json" com a mensagem correspondente', async () => {
       await Controller.products.updateProduct(request, response);
 
-      expect(response.json.calledWith(ERROR)).to.be.equal(true);
+      expect(response.json.calledWith(ERROR_ID)).to.be.equal(true);
     });
   });
 
@@ -262,7 +251,7 @@ describe('Atualiza as informações de um produto', () => {
     const response = {};
     const request = {};
 
-    const payload = { _id: ID_EXAMPLE, ...updatedPayload }
+    const payload = { _id: ID_EXAMPLE, ...updatedPayload };
 
     before(() => {
       request.params = { id: ID_EXAMPLE };
@@ -286,6 +275,72 @@ describe('Atualiza as informações de um produto', () => {
 
     it('é chamado o método "json" com as novas informações do produto', async () => {
       await Controller.products.updateProduct(request, response);
+
+      expect(response.json.calledWith(payload)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Deleta um produto cadastrado', () => {
+  describe('com dados inválidos', () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.params = { id: NOT_VALID_ID };
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.products, 'deleteProduct').resolves(ERROR_ID);
+    });
+
+    after(() => {
+      Service.products.deleteProduct.restore();
+    });
+
+    it('é chamado o método "status" com o código 422', async () => {
+      await Controller.products.deleteProduct(request, response);
+
+      expect(response.status.calledWith(HTTP_UNPROCESSABLE_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.products.deleteProduct(request, response);
+
+      expect(response.json.calledWith(ERROR_ID)).to.be.equal(true);
+    });
+  });
+
+  describe('quando é deletado com sucesso', () => {
+    const response = {};
+    const request = {};
+
+    const payload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      request.params = { id: ID_EXAMPLE };
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.products, 'deleteProduct').resolves(payload);
+    });
+
+    after(() => {
+      Service.products.deleteProduct.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.products.deleteProduct(request, response);
+
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com as novas informações do produto', async () => {
+      await Controller.products.deleteProduct(request, response);
 
       expect(response.json.calledWith(payload)).to.be.equal(true);
     });

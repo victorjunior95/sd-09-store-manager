@@ -1,25 +1,25 @@
 const Model = require('../models');
 
-const error_code_400 = 'invalid_data';
+const ERROR_CODE_400 = 'invalid_data';
 
 const ERROR_NAME = { err: {
-  code: error_code_400,
+  code: ERROR_CODE_400,
   message: '"name" length must be at least 5 characters long',
 } };
 const ERROR_QTY_STRING = { err: {
-  code: error_code_400,
+  code: ERROR_CODE_400,
   message: '"quantity" must be a number',
 } };
 const ERROR_QTY_NUMBER = { err: {
-  code: error_code_400,
+  code: ERROR_CODE_400,
   message: '"quantity" must be larger than or equal to 1',
 } };
 const ERROR_ALREADY_EXISTS = { err: {
-  code: error_code_400,
+  code: ERROR_CODE_400,
   message: 'Product already exists',
 } };
 const ERROR_ID = { err: {
-  code: error_code_400,
+  code: ERROR_CODE_400,
   message: 'Wrong id format',
 } };
 
@@ -83,9 +83,20 @@ const updateProduct = async (id, updatedProduct) => {
   return (product.matchedCount === 1) ? { _id: id, name, quantity } : ERROR_ID;
 };
 
+const deleteProduct = async (id) => {
+  if (!idValidator(id)) return ERROR_ID;
+
+  const deletedProduct = await Model.products.getProductById(id);
+
+  const product = await Model.products.deleteProduct(id);
+
+  return (product.deletedCount === 1) ? deletedProduct : ERROR_ID;
+};
+
 module.exports = {
   addProduct,
   getProducts,
   getProductById,
   updateProduct,
+  deleteProduct,
 };

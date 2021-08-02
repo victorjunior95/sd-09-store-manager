@@ -7,6 +7,13 @@ const Service = require('../../services');
 const ID_EXAMPLE = '604cb554311d68f491ba5781';
 const NOT_VALID_ID = 'I am not valid';
 
+const ERROR_CODE_400 = 'invalid_data';
+const ERROR_NAME = '"name" length must be at least 5 characters long';
+const ERROR_QTY_STRING = '"quantity" must be a number';
+const ERROR_QTY_NUMBER = '"quantity" must be larger than or equal to 1';
+const ERROR_ALREADY_EXISTS = 'Product already exists';
+const ERROR_ID = 'Wrong id format';
+
 describe('Cadastro de um novo produto', () => {
   describe('com dados válidos', () => {
     const payload = { name: 'Testy, the Tester', quantity: 30 };
@@ -48,9 +55,9 @@ describe('Cadastro de um novo produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.addProduct(payload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"name" length must be at least 5 characters long');
+      expect(response.err.message).to.be.equal(ERROR_NAME);
     });
   });
 
@@ -68,9 +75,9 @@ describe('Cadastro de um novo produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.addProduct(payload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"quantity" must be a number');
+      expect(response.err.message).to.be.equal(ERROR_QTY_STRING);
     });
   });
 
@@ -88,9 +95,9 @@ describe('Cadastro de um novo produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.addProduct(payload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"quantity" must be larger than or equal to 1');
+      expect(response.err.message).to.be.equal(ERROR_QTY_NUMBER);
     });
   });
 
@@ -116,9 +123,9 @@ describe('Cadastro de um novo produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.addProduct(payload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('Product already exists');
+      expect(response.err.message).to.be.equal(ERROR_ALREADY_EXISTS);
     });
   });
 });
@@ -147,9 +154,9 @@ describe('Carrega a lista de produtos', () => {
   });
 
   describe('quando tem produtos cadastrados', () => {
-    before(() => {
-      const payload = { name: 'Testy, the Tester', quantity: 30 };
+    const payload = { name: 'Testy, the Tester', quantity: 30 };
 
+    before(() => {
       sinon.stub(Model.products, 'getProducts').resolves([payload]);
     });
 
@@ -163,10 +170,18 @@ describe('Carrega a lista de produtos', () => {
       expect(response).to.be.an('array');
     });
 
-    it('de objetos', async () => {
-      const [ item ] = await Model.products.getProducts();
+    it('de objetos contendo as informações dos produtos', async () => {
+      const response = await Model.products.getProducts();
 
-      expect(item).to.be.an('object');
+      expect(response[0]).to.be.an('object');
+
+      expect(response[0]).to.have.property('name');
+
+      expect(response[0]).to.have.property('quantity');
+
+      expect(response[0].name).to.be.equal(payload.name);
+
+      expect(response[0].quantity).to.be.equal(payload.quantity);
     });
   });
 });
@@ -184,9 +199,9 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.getProductById(NOT_VALID_ID);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('Wrong id format');
+      expect(response.err.message).to.be.equal(ERROR_ID);
     });
   });
 
@@ -210,16 +225,16 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.getProductById(ID_EXAMPLE);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('Wrong id format');
+      expect(response.err.message).to.be.equal(ERROR_ID);
     });
   });
 
   describe('quando encontrado', () => {
-    before(() => {
-      const payload = { name: 'Testy, the Tester', quantity: 30 };
+    const payload = { name: 'Testy, the Tester', quantity: 30 };
 
+    before(() => {
       sinon.stub(Model.products, 'getProductById').resolves(payload);
     });
 
@@ -235,6 +250,10 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
       expect(response).to.have.property('name');
 
       expect(response).to.have.property('quantity');
+
+      expect(response.name).to.be.equal(payload.name);
+
+      expect(response.quantity).to.be.equal(payload.quantity);
     });
   });
 });
@@ -254,9 +273,9 @@ describe('Atualiza as informações de um produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.updateProduct(NOT_VALID_ID, updatedPayload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('Wrong id format');
+      expect(response.err.message).to.be.equal(ERROR_ID);
     });
   });
 
@@ -280,9 +299,9 @@ describe('Atualiza as informações de um produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('Wrong id format');
+      expect(response.err.message).to.be.equal(ERROR_ID);
     });
   });
 
@@ -300,9 +319,9 @@ describe('Atualiza as informações de um produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"name" length must be at least 5 characters long');
+      expect(response.err.message).to.be.equal(ERROR_NAME);
     });
   });
 
@@ -320,9 +339,9 @@ describe('Atualiza as informações de um produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"quantity" must be a number');
+      expect(response.err.message).to.be.equal(ERROR_QTY_STRING);
     });
   });
 
@@ -340,9 +359,9 @@ describe('Atualiza as informações de um produto', () => {
     it('contendo a mensagem correta', async () => {
       const response = await Service.products.updateProduct(ID_EXAMPLE, updatedPayload);
 
-      expect(response.err.code).to.be.equal('invalid_data');
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
 
-      expect(response.err.message).to.be.equal('"quantity" must be larger than or equal to 1');
+      expect(response.err.message).to.be.equal(ERROR_QTY_NUMBER);
     });
   });
 
@@ -364,7 +383,85 @@ describe('Atualiza as informações de um produto', () => {
 
       expect(response).to.have.property('quantity');
 
+      expect(response.name).to.be.equal(updatedPayload.name);
+
       expect(response.quantity).to.be.equal(updatedPayload.quantity);
+    });
+  });
+});
+
+describe('Deleta um produto cadastrado', () => {
+  const payload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+  describe('quando o "_id" passado é inválido', () => {
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.deleteProduct(NOT_VALID_ID);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.deleteProduct(NOT_VALID_ID);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_ID);
+    });
+  });
+
+  describe('quando não encontrado', () => {
+    before(() => {
+      sinon.stub(Model.products, 'deleteProduct').resolves({ deletedCount: 0 });
+      sinon.stub(Model.products, 'getProductById').resolves(payload);
+    });
+
+    after(() => {
+      Model.products.deleteProduct.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.deleteProduct(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.deleteProduct(ID_EXAMPLE);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_ID);
+    });
+  });
+
+  describe('quando encontrado', () => {
+    before(() => {
+      sinon.stub(Model.products, 'deleteProduct').resolves({ deletedCount: 1 });
+      sinon.stub(Model.products, 'getProductById').resolves(payload);
+    });
+
+    after(() => {
+      Model.products.deleteProduct.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('deleta o produto e retorna as suas informações', async () => {
+      const response = await Service.products.deleteProduct(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('name');
+
+      expect(response).to.have.property('quantity');
+
+      expect(response.name).to.be.equal(payload.name);
+
+      expect(response.quantity).to.be.equal(payload.quantity);
     });
   });
 });

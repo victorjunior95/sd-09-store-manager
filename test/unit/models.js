@@ -170,6 +170,48 @@ describe('Atualiza as informações de um produto', () => {
 
       expect(response).to.be.an('object');
       expect(response.modifiedCount).to.be.equal(1);
+
+      MongoClient.connect.restore();
+    });
+  });
+});
+
+describe('Deleta um produto cadastrado', () => {
+  describe('quando não encontrado', () => {
+    before(async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    });
+
+    after(() => {
+      MongoClient.connect.restore();
+    });
+
+    it('retorna um objeto com "deletedCount" com valor 0', async () => {
+      const response = await Model.products.deleteProduct(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+      expect(response.deletedCount).to.be.equal(0);
+    });
+  });
+
+  describe('quando encontrado', () => {
+    const payload = { name: 'Testy, the Tester', quantity: 45 };
+
+    it('deleta o produto e retorna um objeto com "deletedCount" com valor 1', async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+
+      const { insertedId } = await connectionMock.db(DB_NAME).collection(COLLECTION).insertOne(payload);
+
+      const response = await Model.products.deleteProduct(insertedId);
+
+      expect(response).to.be.an('object');
+      expect(response.deletedCount).to.be.equal(1);
+
+      MongoClient.connect.restore();
     });
   });
 });
