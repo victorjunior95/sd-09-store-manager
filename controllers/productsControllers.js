@@ -43,11 +43,25 @@ async function productUpdate(req, res) {
   }
 
   return res.status(STATUS_OK).json(newUpdateProduct);
-}
+};
+
+async function deleteProduct(req, res) {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const deleteProductId = await productsServices.deleteProduct(id);
+
+  if (deleteProductId.err) {
+    return res.status(UNPROCESSABLE_ENTITY).json(deleteProductId);
+  }
+
+  return res.status(STATUS_OK).json(deleteProductId);
+};
+
 
 module.exports = {
   createProduct,
   getAllProducts,
   getProductId,
-  productUpdate
+  productUpdate,
+  deleteProduct,
 };

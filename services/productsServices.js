@@ -41,12 +41,6 @@ const existingProduct = async (name) => {
   return product;
 };
 
-/* const productNotExist = async (id) => {
-  const productId = await productsModel.findOne(id);
-
-  return productId;
-}; */
-
 const createProduct = async (name, quantity) => {
   if (chekName(name)) return chekName(name);
   if (chekQuantity(quantity)) return chekQuantity(quantity);
@@ -94,9 +88,25 @@ const productUpdate = async (id, name, quantity) => {
   return { _id: id, name, quantity };
 };
 
+const deleteProduct = async (id) => {
+  const deleteProductId = await productsModel.deleteProduct(id);
+  if (!deleteProductId) {
+    
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+
+  return deleteProductId;
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductId,
   productUpdate,
+  deleteProduct,
 };
