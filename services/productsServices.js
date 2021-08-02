@@ -42,7 +42,27 @@ const addProduct = async (productData) => {
 
 const getProducts = async () => await Model.products.getProducts();
 
+const getProductById = async (id) => {
+  const idRegex = /^.{24}$/;
+
+  const ERROR = {
+    err: {
+      code: error_code_400,
+      message: 'Wrong id format',
+    }
+  };
+
+  if (!idRegex.test(id)) return ERROR;
+
+  const product = await Model.products.getProductById(id);
+  
+  if (!product) return ERROR;
+
+  return product;
+};
+
 module.exports = {
   addProduct,
   getProducts,
+  getProductById,
 };

@@ -145,7 +145,9 @@ describe('Carrega a lista de produtos', () => {
 
   describe('quando tem produtos cadastrados', () => {
     before(() => {
-      sinon.stub(Model.products, 'getProducts').resolves([{ name: 'Testy, the Tester', quantity: 30 }]);
+      const payload = { name: 'Testy, the Tester', quantity: 30 };
+
+      sinon.stub(Model.products, 'getProducts').resolves([payload]);
     });
 
     after(() => {
@@ -162,6 +164,58 @@ describe('Carrega a lista de produtos', () => {
       const [ item ] = await Model.products.getProducts();
 
       expect(item).to.be.an('object');
+    });
+  });
+});
+
+describe('Carrega um produto cadastrado pela "_id"', () => {
+  const ID_EXAMPLE = '604cb554311d68f491ba5781';
+
+  describe('quando não encontrado', () => {
+    before(() => {
+      sinon.stub(Model.products, 'getProductById').resolves(null);
+    });
+
+    after(() => {
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.products.getProductById(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.products.getProductById(ID_EXAMPLE);
+
+      expect(response.err.code).to.be.equal('invalid_data');
+
+      expect(response.err.message).to.be.equal('Wrong id format');
+    });
+  });
+
+  describe('quando encontrado', () => {
+    before(() => {
+      const payload = { name: 'Testy, the Tester', quantity: 30 };
+
+      sinon.stub(Model.products, 'getProductById').resolves(payload);
+    });
+
+    after(() => {
+      Model.products.getProductById.restore();
+    });
+
+    it('o retorno é um objeto, com as informações do produto', async () => {
+      const response = await Service.products.getProductById(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('name');
+
+      expect(response).to.have.property('quantity');
     });
   });
 });
