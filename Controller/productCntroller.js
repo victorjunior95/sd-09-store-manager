@@ -1,4 +1,4 @@
-const productServeci = require('../Service/productService');
+const productServeci = require('../service/productService');
 const rescue = require('express-rescue');
 const stt = {
   d1: 201,

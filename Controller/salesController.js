@@ -1,4 +1,4 @@
-const service = require('../Service/salesService');
+const service = require('../service/salesService');
 const rescue = require('express-rescue');
 const status = {
   d: 200,
