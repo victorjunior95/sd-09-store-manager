@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.post('/products', rescue(productsControllers.createProduct));
+app.post('/products', (productsControllers.createProduct));
 
 // app.get('/products', getProducts);
 
