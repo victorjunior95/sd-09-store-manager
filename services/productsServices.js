@@ -4,12 +4,6 @@ const { ObjectId } = require('mongodb');
 const MIN_CHARACTERS_NAME = 5;
 const MIN_PRODUCT_AMOUNT = 0;
 
-const existingProduct = async (name) => {
-  const product = await productsModel.findByName(name);
-
-  return product;
-};
-
 const chekName = (name) => {
   if (name.length < MIN_CHARACTERS_NAME) {
     return {
@@ -41,6 +35,18 @@ const chekQuantity = (quantity) => {
   }
 };
 
+const existingProduct = async (name) => {
+  const product = await productsModel.findByName(name);
+
+  return product;
+};
+
+const productNotExist = async (id) => {
+  const productId = await productsModel.findOne(id);
+
+  return productId;
+};
+
 const createProduct = async (name, quantity) => {
   if (chekName(name)) return chekName(name);
   if (chekQuantity(quantity)) return chekQuantity(quantity);
@@ -57,6 +63,30 @@ const createProduct = async (name, quantity) => {
   return newProduct;
 };
 
+const getAllProducts = async () => {
+  const products = await productsModel.getAllProducts();
+  const allProducts = { products: [...products] };
+
+  return allProducts;
+};
+
+const getProductId = async (id) => {
+  const productId = await productsModel.getProductId(id);
+
+  if (productId === null) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    };
+  }
+
+  return productId;
+};
+
 module.exports = {
   createProduct,
+  getAllProducts,
+  getProductId,
 };

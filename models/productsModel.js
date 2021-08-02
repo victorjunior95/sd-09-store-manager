@@ -16,15 +16,25 @@ const createProduct = async (name, quantity) => {
   return createProduct;
 };
 
-/* const getAllProducts = () => {
-  const products = connection()
+const getAllProducts = async () => {
+  const allProducts = await connection()
     .then((db) => db.collection('products').find().toArray());
 
-  return products;
-}; */
+  return allProducts;
+};
+
+const getProductId = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  
+  const productId = await connection()
+    .then((db) => db.collection('products').findOne(new ObjectId(id)));
+
+  return productId;
+};
 
 module.exports = {
-  createProduct,
-  // getAllProducts,
   findByName,
+  createProduct,
+  getAllProducts,
+  getProductId,
 };

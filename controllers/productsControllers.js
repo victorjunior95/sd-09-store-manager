@@ -1,7 +1,7 @@
 const express = require('express');
 const productsServices = require('../services/productsServices');
 
-// const STATUS_OK = 200;
+const STATUS_OK = 200;
 const CREATE_OK = 201;
 const UNPROCESSABLE_ENTITY = 422;
 
@@ -17,7 +17,26 @@ async function createProduct(req, res) {
   return res.status(CREATE_OK).json(newProduct);
 };
 
+async function getAllProducts(_req, res) {
+  const allProducts = await productsServices.getAllProducts();
+
+  return res.status(STATUS_OK).json(allProducts);
+};
+
+async function getProductId(req, res) {
+  const { id } = req.params;
+  const productId = await productsServices.getProductId(id);
+  
+  if (productId.err) {
+
+    return res.status(UNPROCESSABLE_ENTITY).json(productId);
+  }
+
+  return res.status(STATUS_OK).json(productId);
+}
+
 module.exports = {
   createProduct,
-  // getAllProducts,
+  getAllProducts,
+  getProductId,
 };
