@@ -59,6 +59,19 @@ describe('Testando... services/products', () => {
       expect(res02.err.message).to.be.equal(msg);
     });
 
+    it('Verifica se já existe o produto', async () => {
+      const code = 'invalid_data';
+      const msg = 'Product already exists';
+      const { name, quantity } = PRODUCT;
+
+      const res = await ProductsService.postProduct(name, quantity);
+      const res02 = await ProductsService.postProduct(PRODUCT);
+
+      expect(res02).to.be.an('object');
+      expect(res02.err.code).to.be.equal(code);
+      expect(res02.err.message).to.be.equal(msg);
+    });
+
   });
 
   describe('Verificar se retorna todos os produtos cadastrados', async () => {
