@@ -41,11 +41,11 @@ const existingProduct = async (name) => {
   return product;
 };
 
-const productNotExist = async (id) => {
+/* const productNotExist = async (id) => {
   const productId = await productsModel.findOne(id);
 
   return productId;
-};
+}; */
 
 const createProduct = async (name, quantity) => {
   if (chekName(name)) return chekName(name);
@@ -85,8 +85,18 @@ const getProductId = async (id) => {
   return productId;
 };
 
+const productUpdate = async (id, name, quantity) => {
+  if (chekName(name)) return chekName(name);
+  if (chekQuantity(quantity)) return chekQuantity(quantity);
+
+  await productsModel.productUpdate( id, name, quantity );
+
+  return { _id: id, name, quantity };
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductId,
+  productUpdate,
 };

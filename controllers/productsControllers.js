@@ -10,7 +10,6 @@ async function createProduct(req, res) {
   const newProduct = await productsServices.createProduct(name, quantity);
 
   if (newProduct.err) {
-
     return res.status(UNPROCESSABLE_ENTITY).json(newProduct);
   }
 
@@ -19,7 +18,7 @@ async function createProduct(req, res) {
 
 async function getAllProducts(_req, res) {
   const allProducts = await productsServices.getAllProducts();
-
+  
   return res.status(STATUS_OK).json(allProducts);
 };
 
@@ -28,15 +27,27 @@ async function getProductId(req, res) {
   const productId = await productsServices.getProductId(id);
   
   if (productId.err) {
-
     return res.status(UNPROCESSABLE_ENTITY).json(productId);
   }
 
   return res.status(STATUS_OK).json(productId);
+};
+
+async function productUpdate(req, res) {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const newUpdateProduct = await productsServices.productUpdate(id, name, quantity);
+
+  if (newUpdateProduct.err) {
+    return res.status(UNPROCESSABLE_ENTITY).json(newUpdateProduct);
+  }
+
+  return res.status(STATUS_OK).json(newUpdateProduct);
 }
 
 module.exports = {
   createProduct,
   getAllProducts,
   getProductId,
+  productUpdate
 };

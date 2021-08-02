@@ -19,6 +19,7 @@ app.post('/products', (productsControllers.createProduct));
 app.get('/products', productsControllers.getAllProducts);
 
 app.get('/products/:id', productsControllers.getProductId);
-// app.put('/products/:id', productsControllers.productUpdate);
+
+app.put('/products/:id', productsControllers.productUpdate);
 
 app.listen(PORT, () => console.log(`Online na porta ${PORT}`));
