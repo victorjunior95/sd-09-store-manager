@@ -3,8 +3,8 @@ const { ObjectId } = require('mongodb');
 const { expect } = require('chai') ;
 const { MongoClient } = require('mongodb');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const modelProduct = require('../../Models/functions');
-const modelSales = require('../../Models/sales');
+const modelProduct = require('../../models/functions');
+const modelSales = require('../../models/sales');
 
 describe('Busca todos os produtos e vendas', () => {
   let connectionMock;

@@ -1,4 +1,4 @@
-const productModel = require('../Models/functions');
+const productModel = require('../models/functions');
 const util = require('../utils');
 const joi = require('@hapi/joi');
 const num = 0;
