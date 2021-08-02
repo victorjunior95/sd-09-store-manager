@@ -8,7 +8,7 @@ const Sales = require('../../models/sales');
 
 const product = { name: 'ProdutoTeste', quantity: 10 };
 
-describe('Testando... models/products', () => {  
+describe('Testando... models/products', () => {
   before(async () => {
     const DBServer = new MongoMemoryServer();
     const connectionURL = await DBServer.getUri();
@@ -27,7 +27,8 @@ describe('Testando... models/products', () => {
 
   it('Testando se adiciona produto com sucesso.', async () => {
     const { name, quantity } = product;
-    const res = await Products.postProduct(name, quantity);
+    await Products.postProduct(name, quantity);
+    const res = await Products.findOne(name);
 
     expect(res).to.be.an('object');
     expect(res).to.have.property('_id');
@@ -36,7 +37,8 @@ describe('Testando... models/products', () => {
   });
 
   it('Testando busca de todos os produtos cadastrados.', async () => {
-    await Products.postProduct(product);
+    const { name, quantity } = product;
+    await Products.postProduct(name, quantity);
     const res = await Products.getAllProducts();
 
     expect(res).to.be.an('array');
@@ -111,6 +113,20 @@ describe('Testes para os models de sales', () => {
 
   it('Testando recuperar todas as vendas.', async () => {
     const res = await Sales.getAllSales();
+    expect(res).to.be.an('array');
+    expect(res).to.have.length(1);
+
+    res.forEach((e) => {
+      expect(e).to.have.property('_id');
+      expect(e).to.have.property('itensSold');
+    });
+  });
+
+  it('Testando alteração em uma venda.', async () => {
+    const id = await Sales.getAllSales().then((e) => e[0]._id);
+    await Sales.putSales(id);
+    const res = await Sales.getAllSales();
+
     expect(res).to.be.an('array');
     expect(res).to.have.length(1);
 
