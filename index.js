@@ -1,7 +1,7 @@
 const express = require('express');
-const rescue = require('express-rescue');
 const bodyParser = require('body-parser');
 const productsControllers = require('./controllers/productsControllers');
+const salesController = require('./controllers/salesController');
 
 const app = express();
 const PORT = 3000;
@@ -14,6 +14,7 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
+/* ===Produtos=== */
 app.post('/products', (productsControllers.createProduct));
 
 app.get('/products', productsControllers.getAllProducts);
@@ -25,3 +26,6 @@ app.put('/products/:id', productsControllers.productUpdate);
 app.delete('/products/:id', productsControllers.deleteProduct);
 
 app.listen(PORT, () => console.log(`Online na porta ${PORT}`));
+
+/* ===Vendas=== */
+app.post('/sales', salesController.registerSales);
