@@ -1,7 +1,6 @@
 const Model = require('../models');
 
 const ERROR_CODE_400 = 'invalid_data';
-
 const ERROR_NAME = { err: {
   code: ERROR_CODE_400,
   message: '"name" length must be at least 5 characters long',

@@ -10,6 +10,8 @@ const getConnection = require('./connectionMock');
 
 const ID_EXAMPLE = '604cb554311d68f491ba5781';
 
+// TESTES PRODUCTS
+
 describe('Cadastro de um novo produto', () => {
   describe('quando é adicionado com sucesso', () => {
     const payload = { name: 'Testy, the Tester', quantity: 30 };
@@ -212,6 +214,64 @@ describe('Deleta um produto cadastrado', () => {
       expect(response.deletedCount).to.be.equal(1);
 
       MongoClient.connect.restore();
+    });
+  });
+});
+
+/**  
+ * *  * * * TESTES SALES  * * * *
+*/
+
+describe('Cadastro de uma nova venda', () => {
+  describe('quando uma venda de um produto é adicionada com sucesso', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    before(async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    });
+
+    after(() => {
+      MongoClient.connect.restore();
+    });
+
+    it('retorna um objeto', async () => {
+      const response = await Model.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+    });
+
+    it('tal objeto possui a "_id" do produto', async () => {
+      const response = await Model.sales.addSales(payload);
+
+      expect(response).to.have.a.property('_id');
+    });
+  });
+
+  describe('quando uma venda de dois produtos é adicionada com sucesso', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }, { productId: ID_EXAMPLE, quantity: 7 }];
+
+    before(async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    });
+
+    after(() => {
+      MongoClient.connect.restore();
+    });
+
+    it('retorna um objeto', async () => {
+      const response = await Model.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+    });
+
+    it('tal objeto possui a "_id" do produto', async () => {
+      const response = await Model.sales.addSales(payload);
+
+      expect(response).to.have.a.property('_id');
     });
   });
 });

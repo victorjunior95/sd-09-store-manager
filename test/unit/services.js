@@ -13,6 +13,9 @@ const ERROR_QTY_STRING = '"quantity" must be a number';
 const ERROR_QTY_NUMBER = '"quantity" must be larger than or equal to 1';
 const ERROR_ALREADY_EXISTS = 'Product already exists';
 const ERROR_ID = 'Wrong id format';
+const ERROR_SALES = 'Wrong product ID or invalid quantity';
+
+// TESTES PRODUCTS
 
 describe('Cadastro de um novo produto', () => {
   describe('com dados válidos', () => {
@@ -462,6 +465,156 @@ describe('Deleta um produto cadastrado', () => {
       expect(response.name).to.be.equal(payload.name);
 
       expect(response.quantity).to.be.equal(payload.quantity);
+    });
+  });
+});
+
+/**  
+ * *  * * * TESTES SALES  * * * *
+*/
+
+describe('Cadastro de uma nova venda', () => {
+  describe('com dados válidos', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.addSales.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+    });
+
+    it('tal objeto possui a "_id" do produto', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.have.property('_id');
+    });
+  });
+
+  describe('com dados válidos e mais de um produto', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }, { productId: ID_EXAMPLE, quantity: 5 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.addSales.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+    });
+
+    it('tal objeto possui a "_id" do produto', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.have.property('_id');
+    });
+  });
+
+  describe('com "productId" inexistente', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    before(() => {
+      sinon.stub(Model.products, 'getProductById').resolves(null);
+    });
+
+    after(() => {
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('com "quantity" menor que 1', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: -3 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.addSales.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('com uma string no campo "quantity"', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: "doze" }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.addSales.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
     });
   });
 });
