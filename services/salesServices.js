@@ -1,6 +1,7 @@
 const Model = require('../models');
 
 const ERROR_CODE_400 = 'invalid_data';
+const ERROR_CODE_401 = 'stock_problem';
 const ERROR_CODE_404 = 'not_found';
 const ERROR_SALES = { err: {
   code: ERROR_CODE_400,
@@ -14,6 +15,10 @@ const ERROR_SALE_ID = { err: {
   code: ERROR_CODE_400,
   message: 'Wrong sale ID format',
 } };
+const ERROR_STOCK = { err: {
+  code: ERROR_CODE_401,
+  message: 'Such amount is not permitted to sell',
+} };
 
 const quantityTypeValidator = (quantity) => typeof(quantity) === 'number';
 
@@ -26,19 +31,29 @@ const idValidator = (id) => {
 };
 
 const addSales = async (salesData) => {
-  let error = false;
+  let errorData = false;
+  let errorStock = false;
+  const stock = [];
 
   await salesData.forEach(async ({ productId, quantity }) => {
     const test = await Model.products.getProductById(productId);
 
-    if(!test) error = true;
+    if(!test) errorData = true;
 
-    if (!quantityTypeValidator(quantity)) error = true;
+    if (test) stock.push(test.quantity);
 
-    if (!quantityValidator(quantity)) error = true;
+    if (!quantityTypeValidator(quantity)) errorData = true;
+
+    if (!quantityValidator(quantity)) errorData = true;
   });
 
-  if (error) return ERROR_SALES;
+  if (errorData) return ERROR_SALES;
+
+  stock.forEach((_product, index) => {
+    if (stock[index] < salesData[index].quantity) errorStock = true;
+  });
+
+  if (errorStock) return ERROR_STOCK;
 
   return await Model.sales.addSales(salesData);
 };
@@ -56,21 +71,35 @@ const getSaleById = async (id) => {
 };
 
 const updateSale = async (id, updatedSale) => {
+  let errorData = false;
+  let errorStock = false;
+  const stock = [];
+
   if (!idValidator(id)) return ERROR_SALES;
 
-  let error = false;
-
   await updatedSale.forEach(async ({ productId, quantity }) => {
-    if (!quantityTypeValidator(quantity)) error = true;
+    if (!quantityTypeValidator(quantity)) errorData = true;
 
-    if (!quantityValidator(quantity)) error = true;
+    if (!quantityValidator(quantity)) errorData = true;
 
     const test = await Model.products.getProductById(productId);
 
-    if(!test) error = true;
+    if(!test) errorData = true;
+
+    if(test) stock.push(test.quantity);
   });
 
-  if (error) return ERROR_SALES;
+  if (errorData) return ERROR_SALES;
+
+  const oldSale = await Model.sales.getSaleById(id);
+
+  stock.forEach((_product, index) => {
+    if (stock[index] < updatedSale[index].quantity - oldSale.itensSold[index].quantity) {
+      errorStock = true;
+    } 
+  });
+
+  if (errorStock) return ERROR_STOCK;
 
   const sale = await Model.sales.updateSale(id, { itensSold: updatedSale });
 

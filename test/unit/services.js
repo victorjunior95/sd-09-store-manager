@@ -8,6 +8,7 @@ const ID_EXAMPLE = '604cb554311d68f491ba5781';
 const NOT_VALID_ID = 'I am not valid';
 
 const ERROR_CODE_400 = 'invalid_data';
+const ERROR_CODE_401 = 'stock_problem';
 const ERROR_CODE_404 = 'not_found';
 const ERROR_NAME = '"name" length must be at least 5 characters long';
 const ERROR_QTY_STRING = '"quantity" must be a number';
@@ -17,6 +18,7 @@ const ERROR_ID = 'Wrong id format';
 const ERROR_SALES = 'Wrong product ID or invalid quantity';
 const ERROR_NOT_FOUND = 'Sale not found';
 const ERROR_SALE_ID = 'Wrong sale ID format';
+const ERROR_STOCK = 'Such amount is not permitted to sell';
 
 // TESTES PRODUCTS
 
@@ -624,6 +626,37 @@ describe('Cadastro de uma nova venda', () => {
       expect(response.err.message).to.be.equal(ERROR_SALES);
     });
   });
+
+  describe('com dados válidos mas com problemas de estoque', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 12 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 10 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.addSales.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.addSales(payload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_401);
+
+      expect(response.err.message).to.be.equal(ERROR_STOCK);
+    });
+  });
 });
 
 describe('Carrega a lista de vendas', () => {
@@ -777,13 +810,19 @@ describe('Atualiza as informações de uma venda', () => {
 
   describe('quando não encontrada', () => {
     const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
 
     before(() => {
       sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 0 });
+      sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
     });
 
     after(() => {
       Model.sales.updateSale.restore();
+      Model.sales.getSaleById.restore();
+      Model.products.getProductById.restore();
     });
 
     it('retorna um objeto de erro', async () => {
@@ -843,15 +882,53 @@ describe('Atualiza as informações de uma venda', () => {
     });
   });
 
+  describe('quando encontrada, mas com erro de estoque', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 3 };
+
+    before(() => {
+      sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+    });
+
+    after(() => {
+      Model.sales.getSaleById.restore();
+      Model.products.getProductById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_401);
+
+      expect(response.err.message).to.be.equal(ERROR_STOCK);
+    });
+  });
+
   describe('quando encontrada, atualiza as informações', () => {
     const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+    const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 30 };
 
     before(() => {
       sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 1 });
+      sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
     });
 
     after(() => {
       Model.sales.updateSale.restore();
+      Model.sales.getSaleById.restore();
+      Model.products.getProductById.restore();
     });
 
     it('e retorna os produtos vendidos atualizados', async () => {
