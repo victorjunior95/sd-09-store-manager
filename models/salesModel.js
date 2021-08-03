@@ -24,7 +24,14 @@ const getSales = async () => {
   return sale;
 };
 
+const getSaleById = async (id) => {
+  const salesCollection = await connection().then((db) => db.collection(COLLECTION));
+
+  return await salesCollection.findOne({ _id: ObjectId(id) });
+};
+
 module.exports = {
   addSales,
   getSales,
+  getSaleById,
 };
