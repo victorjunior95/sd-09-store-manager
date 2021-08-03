@@ -39,9 +39,20 @@ const updateSale = async (req, res) => {
   res.status(HTTP_OK_STATUS).json(sale);
 };
 
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+
+  const sale = await Service.sales.deleteSale(id);
+
+  if (sale.err) return res.status(HTTP_UNPROCESSABLE_STATUS).json(sale);
+
+  res.status(HTTP_OK_STATUS).json(sale);
+};
+
 module.exports = {
   addSales,
   getSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };

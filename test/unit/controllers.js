@@ -30,6 +30,10 @@ const ERROR_NOT_FOUND = { err: {
   code: ERROR_CODE_404,
   message: 'Sale not found',
 } };
+const ERROR_SALE_ID = { err: {
+  code: ERROR_CODE_400,
+  message: 'Wrong sale ID format',
+} };
 
 // TESTES PRODUCTS
 
@@ -350,7 +354,7 @@ describe('Deleta um produto cadastrado', () => {
       expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
     });
 
-    it('é chamado o método "json" com as novas informações do produto', async () => {
+    it('é chamado o método "json" com as informações deletadas do produto', async () => {
       await Controller.products.deleteProduct(request, response);
 
       expect(response.json.calledWith(payload)).to.be.equal(true);
@@ -617,10 +621,76 @@ describe('Atualiza as informações de uma venda', () => {
       expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
     });
 
-    it('é chamado o método "json" com as novas informações do produto', async () => {
+    it('é chamado o método "json" com as novas informações dos produtos vendidos', async () => {
       await Controller.sales.updateSale(request, response);
 
       expect(response.json.calledWith(payload)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Deleta uma venda cadastrada', () => {
+  describe('com dados inválidos', () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.params = { id: NOT_VALID_ID };
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.sales, 'deleteSale').resolves(ERROR_SALE_ID);
+    });
+
+    after(() => {
+      Service.sales.deleteSale.restore();
+    });
+
+    it('é chamado o método "status" com o código 422', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.status.calledWith(HTTP_UNPROCESSABLE_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.json.calledWith(ERROR_SALE_ID)).to.be.equal(true);
+    });
+  });
+
+  describe('quando é deletada com sucesso', () => {
+    const response = {};
+    const request = {};
+
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    before(() => {
+      request.params = { id: ID_EXAMPLE };
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.sales, 'deleteSale').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+    });
+
+    after(() => {
+      Service.sales.deleteSale.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com as informações deletadas dos produtos vendidos', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.json.calledWith({ _id: ID_EXAMPLE, itensSold: payload })).to.be.equal(true);
     });
   });
 });

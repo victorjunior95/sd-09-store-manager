@@ -10,6 +10,10 @@ const ERROR_NOT_FOUND = { err: {
   code: ERROR_CODE_404,
   message: 'Sale not found',
 } };
+const ERROR_SALE_ID = { err: {
+  code: ERROR_CODE_400,
+  message: 'Wrong sale ID format',
+} };
 
 const quantityTypeValidator = (quantity) => typeof(quantity) === 'number';
 
@@ -73,9 +77,20 @@ const updateSale = async (id, updatedSale) => {
   return (sale.matchedCount === 1) ? { _id: id, itensSold: updatedSale } : ERROR_SALES;
 };
 
+const deleteSale = async (id) => {
+  if (!idValidator(id)) return ERROR_SALE_ID;
+
+  const deletedSale = await Model.sales.getSaleById(id);
+
+  const sale = await Model.sales.deleteSale(id);
+
+  return (sale.deletedCount === 1) ? deletedSale : ERROR_SALE_ID;
+};
+
 module.exports = {
   addSales,
   getSales,
   getSaleById,
   updateSale,
+  deleteSale,
 };

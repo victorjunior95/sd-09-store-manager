@@ -16,6 +16,7 @@ const ERROR_ALREADY_EXISTS = 'Product already exists';
 const ERROR_ID = 'Wrong id format';
 const ERROR_SALES = 'Wrong product ID or invalid quantity';
 const ERROR_NOT_FOUND = 'Sale not found';
+const ERROR_SALE_ID = 'Wrong sale ID format';
 
 // TESTES PRODUCTS
 
@@ -861,6 +862,78 @@ describe('Atualiza as informações de uma venda', () => {
       expect(response).to.have.property('itensSold');
 
       expect(response.itensSold[0].quantity).to.be.equal(updatedPayload[0].quantity);
+    });
+  });
+});
+
+describe('Deleta uma venda cadastrada', () => {
+  const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+  describe('quando o "_id" passado é inválido', () => {
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.deleteSale(NOT_VALID_ID);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.deleteSale(NOT_VALID_ID);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALE_ID);
+    });
+  });
+
+  describe('quando não encontrada', () => {
+    before(() => {
+      sinon.stub(Model.sales, 'deleteSale').resolves({ deletedCount: 0 });
+      sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+    });
+
+    after(() => {
+      Model.sales.deleteSale.restore();
+      Model.sales.getSaleById.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.deleteSale(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.deleteSale(ID_EXAMPLE);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALE_ID);
+    });
+  });
+
+  describe('quando encontrada', () => {
+    before(() => {
+      sinon.stub(Model.sales, 'deleteSale').resolves({ deletedCount: 1 });
+      sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+    });
+
+    after(() => {
+      Model.sales.deleteSale.restore();
+      Model.sales.getSaleById.restore();
+    });
+
+    it('deleta a venda e retorna as suas informações', async () => {
+      const response = await Service.sales.deleteSale(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('itensSold');
+
+      expect(response.itensSold[0].quantity).to.be.equal(payload[0].quantity);
     });
   });
 });

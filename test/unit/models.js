@@ -426,3 +426,46 @@ describe('Atualiza as informações de uma venda', () => {
     });
   });
 });
+
+describe('Deleta uma venda cadastrada', () => {
+  describe('quando não encontrada', () => {
+    before(async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    });
+
+    after(() => {
+      MongoClient.connect.restore();
+    });
+
+    it('retorna um objeto com "deletedCount" com valor 0', async () => {
+      const response = await Model.sales.deleteSale(ID_EXAMPLE);
+
+      expect(response).to.be.an('object');
+
+      expect(response.deletedCount).to.be.equal(0);
+    });
+  });
+
+  describe('quando encontrada', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    it('deleta a venda e retorna um objeto com "deletedCount" com valor 1', async () => {
+      const connectionMock = await getConnection();
+
+      sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+
+      const { insertedId } = await connectionMock.db(DB_NAME)
+        .collection(COLLECTION_S).insertOne({ itensSold: payload });
+
+      const response = await Model.sales.deleteSale(insertedId);
+
+      expect(response).to.be.an('object');
+
+      expect(response.deletedCount).to.be.equal(1);
+
+      MongoClient.connect.restore();
+    });
+  });
+});
