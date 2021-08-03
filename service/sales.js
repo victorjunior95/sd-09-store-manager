@@ -24,20 +24,7 @@ const updateStock = (products, type, oldQuantity = zero) => {
 };
 
 const create = async(sale) => {
-
-  //const createSale = [];
-  //const zero = 0;
-  //for (let index = zero; index < sale.length; index++) {
-
-  //  const result = await productModel.productsId(sale[index].productId);
-  //  if(!result) return false;
-
-  //  createSale.push(sale[index]);   
-  //}
-
-  //const saleSalva = await modelSales.create(createSale);
-  //return saleSalva;
-  
+    
   updateStock(sale, 'create');
   return modelSales.create(sale);
 };

@@ -52,18 +52,8 @@ const updateStock = async (id, quantity) => {
   }
 };
 
-//const getStock = async (id, quantity) => {
-//  const stock = await connection()
-//    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
-//    .then((data) => {
-//      return data.quantity - quantity;
-//    });
-//  return stock;
-// };
-
 module.exports = { create, getAllSales, getIdSales, 
   editSale, 
   deleteSale, 
   updateStock, 
-//  getStock 
 };
