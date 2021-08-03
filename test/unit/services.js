@@ -490,11 +490,13 @@ describe('Cadastro de uma nova venda', () => {
     before(() => {
       sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
       sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.addSales.restore();
       Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('retorna um objeto', async () => {
@@ -517,11 +519,13 @@ describe('Cadastro de uma nova venda', () => {
     before(() => {
       sinon.stub(Model.sales, 'addSales').resolves({ _id: ID_EXAMPLE, itensSold: payload });
       sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.addSales.restore();
       Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('retorna um objeto', async () => {
@@ -817,12 +821,14 @@ describe('Atualiza as informações de uma venda', () => {
       sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 0 });
       sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
       sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.updateSale.restore();
       Model.sales.getSaleById.restore();
       Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('retorna um objeto de erro', async () => {
@@ -923,12 +929,14 @@ describe('Atualiza as informações de uma venda', () => {
       sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 1 });
       sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
       sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.updateSale.restore();
       Model.sales.getSaleById.restore();
       Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('e retorna os produtos vendidos atualizados', async () => {
