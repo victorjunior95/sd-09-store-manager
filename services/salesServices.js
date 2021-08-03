@@ -24,9 +24,7 @@ const idValidator = (id) => {
 const addSales = async (salesData) => {
   let error = false;
 
-  const sales = salesData.map(({ productId, quantity }) => ({ productId, quantity }));
-
-  await sales.forEach(async ({ productId, quantity }) => {
+  await salesData.forEach(async ({ productId, quantity }) => {
     const test = await Model.products.getProductById(productId);
 
     if(!test) error = true;
@@ -53,8 +51,31 @@ const getSaleById = async (id) => {
   return product;
 };
 
+const updateSale = async (id, updatedSale) => {
+  if (!idValidator(id)) return ERROR_SALES;
+
+  let error = false;
+
+  await updatedSale.forEach(async ({ productId, quantity }) => {
+    if (!quantityTypeValidator(quantity)) error = true;
+
+    if (!quantityValidator(quantity)) error = true;
+
+    const test = await Model.products.getProductById(productId);
+
+    if(!test) error = true;
+  });
+
+  if (error) return ERROR_SALES;
+
+  const sale = await Model.sales.updateSale(id, { itensSold: updatedSale });
+
+  return (sale.matchedCount === 1) ? { _id: id, itensSold: updatedSale } : ERROR_SALES;
+};
+
 module.exports = {
   addSales,
   getSales,
   getSaleById,
+  updateSale,
 };

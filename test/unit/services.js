@@ -86,7 +86,7 @@ describe('Cadastro de um novo produto', () => {
     });
   });
 
-  describe('com um numero menor que 1 no campo "quantity"', () => {
+  describe('com um número menor que 1 no campo "quantity"', () => {
     const payload = { name: 'Testy, the Tester', quantity: 0 };
 
     it('retorna um objeto de erro', async () => {
@@ -264,9 +264,9 @@ describe('Carrega um produto cadastrado pela "_id"', () => {
 });
 
 describe('Atualiza as informações de um produto', () => {
-  const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
-
   describe('quando o "_id" passado é inválido', () => {
+    const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
+
     it('retorna um objeto de erro', async () => {
       const response = await Service.products.updateProduct(NOT_VALID_ID, updatedPayload);
 
@@ -285,6 +285,8 @@ describe('Atualiza as informações de um produto', () => {
   });
 
   describe('quando não encontrado', () => {
+    const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
+
     before(() => {
       sinon.stub(Model.products, 'updateProduct').resolves({ matchedCount: 0 });
     });
@@ -350,7 +352,7 @@ describe('Atualiza as informações de um produto', () => {
     });
   });
 
-  describe('com um numero menor que 1 no campo "quantity"', () => {
+  describe('com um número menor que 1 no campo "quantity"', () => {
     const updatedPayload = { name: 'Testy, the Tester', quantity: 0 };
 
     it('retorna um objeto de erro', async () => {
@@ -371,6 +373,8 @@ describe('Atualiza as informações de um produto', () => {
   });
 
   describe('quando encontrado, atualiza as informações', () => {
+    const updatedPayload = { name: 'Testy, the Tester', quantity: 45 };
+
     before(() => {
       sinon.stub(Model.products, 'updateProduct').resolves({ matchedCount: 1 });
     });
@@ -745,6 +749,118 @@ describe('Carrega uma venda cadastrada pela "_id"', () => {
       expect(response).to.have.property('itensSold');
 
       expect(response.itensSold).to.be.equal(payload);
+    });
+  });
+});
+
+describe('Atualiza as informações de uma venda', () => {
+  describe('quando o "_id" passado é inválido', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.updateSale(NOT_VALID_ID, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.updateSale(NOT_VALID_ID, updatedPayload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('quando não encontrada', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+
+    before(() => {
+      sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 0 });
+    });
+
+    after(() => {
+      Model.sales.updateSale.restore();
+    });
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('com uma string no campo "quantity"', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 'sete' }];
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('com um número menor que 1 no campo "quantity"', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: -2 }];
+
+    it('retorna um objeto de erro', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('err');
+    });
+
+    it('contendo a mensagem correta', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response.err.code).to.be.equal(ERROR_CODE_400);
+
+      expect(response.err.message).to.be.equal(ERROR_SALES);
+    });
+  });
+
+  describe('quando encontrada, atualiza as informações', () => {
+    const updatedPayload = [{ productId: ID_EXAMPLE, quantity: 7 }];
+
+    before(() => {
+      sinon.stub(Model.sales, 'updateSale').resolves({ matchedCount: 1 });
+    });
+
+    after(() => {
+      Model.sales.updateSale.restore();
+    });
+
+    it('e retorna os produtos vendidos atualizados', async () => {
+      const response = await Service.sales.updateSale(ID_EXAMPLE, updatedPayload);
+
+      expect(response).to.be.an('object');
+
+      expect(response).to.have.property('itensSold');
+
+      expect(response.itensSold[0].quantity).to.be.equal(updatedPayload[0].quantity);
     });
   });
 });

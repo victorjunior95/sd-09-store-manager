@@ -8,5 +8,6 @@ router.post('/', Controller.sales.addSales);
 router.get('/', Controller.sales.getSales);
 
 router.get('/:id', Controller.sales.getSaleById);
+router.put('/:id', Controller.sales.updateSale);
 
 module.exports = router;
