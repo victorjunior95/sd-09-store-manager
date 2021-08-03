@@ -423,3 +423,67 @@ describe('Cadastro de uma nova venda', () => {
     });
   });
 });
+
+describe('Carrega a lista de vendas', () => {
+  describe('quando não tem nenhuma cadastrada',() => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(Service.sales, 'getSales').resolves({ sales: [] });
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    after(() => {
+      Service.sales.getSales.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.sales.getSales(request, response);
+
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com um objeto contendo um array vazio', async () => {
+      await Controller.sales.getSales(request, response);
+
+      expect(response.json.calledWith({ sales: [] })).to.be.equal(true);
+    });
+  });
+
+  describe('quando tem vendas cadastradas', () => {
+    const request = {};
+    const response = {};
+
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    before(() => {
+      sinon.stub(Service.sales, 'getSales').resolves({
+        sales:[{ _id: ID_EXAMPLE, itensSold: payload }]
+      });
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    after(() => {
+      Service.sales.getSales.restore();
+    });
+
+    it('é chamado o método "status" com o código 200', async () => {
+      await Controller.sales.getSales(request, response);
+
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com um objeto contendo um array de produtos', async () => {
+      await Controller.sales.getSales(request, response);
+
+      expect(response.json.calledWith({
+        sales:[{ _id: ID_EXAMPLE, itensSold: payload }]
+      })).to.be.equal(true);
+    });
+  });
+});

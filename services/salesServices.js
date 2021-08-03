@@ -30,6 +30,9 @@ const addSales = async (salesData) => {
   return await Model.sales.addSales(salesData);
 };
 
+const getSales = async () => await Model.sales.getSales();
+
 module.exports = {
   addSales,
+  getSales,
 };

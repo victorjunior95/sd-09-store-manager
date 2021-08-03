@@ -618,3 +618,63 @@ describe('Cadastro de uma nova venda', () => {
     });
   });
 });
+
+describe('Carrega a lista de vendas', () => {
+  describe('quando não tem nenhuma cadastrada',() => {
+    before(() => {
+      sinon.stub(Model.sales, 'getSales').resolves({ sales: [] });
+    });
+
+    after(() => {
+      Model.sales.getSales.restore();
+    });
+
+    it('retorna um objeto contendo um array', async () => {
+      const response = await Model.sales.getSales();
+
+      expect(response).to.be.an('object');
+
+      expect(response.sales).to.be.an('array');
+    });
+
+    it('vazio', async () => {
+      const response = await Model.sales.getSales();
+
+      expect(response.sales).to.be.empty;
+    });
+  });
+
+  describe('quando tem vendas cadastradas', () => {
+    const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+
+    before(() => {
+      sinon.stub(Model.sales, 'getSales').resolves({
+        sales: [{ _id: ID_EXAMPLE, itensSold: payload }]
+      });
+    });
+
+    after(() => {
+      Model.sales.getSales.restore();
+    });
+
+    it('retorna um objeto contendo um array', async () => {
+      const response = await Model.sales.getSales();
+
+      expect(response).to.be.an('object');
+
+      expect(response.sales).to.be.an('array');
+    });
+
+    it('de objetos contendo as informações dos produtos', async () => {
+      const response = await Model.sales.getSales();
+
+      expect(response.sales[0]).to.be.an('object');
+
+      expect(response.sales[0]).to.have.property('_id');
+
+      expect(response.sales[0]).to.have.property('itensSold');
+
+      expect(response.sales[0].itensSold).to.be.equal(payload);
+    });
+  });
+});

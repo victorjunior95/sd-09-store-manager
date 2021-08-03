@@ -14,6 +14,17 @@ const addSales = async (salesData) => {
   return { _id, itensSold: salesData };
 };
 
+const getSales = async () => {
+  const sale = {};
+
+  const salesCollection = await connection().then((db) => db.collection(COLLECTION));
+
+  sale.sales = await salesCollection.find().toArray();
+
+  return sale;
+};
+
 module.exports = {
   addSales,
+  getSales,
 };
