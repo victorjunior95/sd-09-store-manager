@@ -1,20 +1,45 @@
 const modelSales = require('../models/sales');
-const productModel = require('../models/product');;
+const productModel = require('../models/product');
+
+const zero = 0;
+const updateStock = (products, type, oldQuantity = zero) => {
+  if (type === 'create') {
+    products.forEach((product) => {
+      modelSales.updateStock(product.productId, -product.quantity);
+    });
+  }
+  if(type === 'delete') {
+    products.forEach((product) => {
+      modelSales.updateStock(product.productId, product.quantity);
+    });
+  }
+  if(type === 'edit') {
+    products.forEach((product) => {
+      const old = oldQuantity.forEach((item) => {
+        return item.quantity - product.quantity;
+      });
+      modelSales.updateStock(product.productId, old);
+    });
+  }
+};
 
 const create = async(sale) => {
 
-  const createSale = [];
-  const zero = 0;
-  for (let index = zero; index < sale.length; index++) {
+  //const createSale = [];
+  //const zero = 0;
+  //for (let index = zero; index < sale.length; index++) {
 
-    const result = await productModel.productsId(sale[index].productId);
-    if(!result) return false;
+  //  const result = await productModel.productsId(sale[index].productId);
+  //  if(!result) return false;
 
-    createSale.push(sale[index]);   
-  }
+  //  createSale.push(sale[index]);   
+  //}
 
-  const saleSalva = await modelSales.create(createSale);
-  return saleSalva;
+  //const saleSalva = await modelSales.create(createSale);
+  //return saleSalva;
+  
+  updateStock(sale, 'create');
+  return modelSales.create(sale);
 };
 
 const getAllSales = async() => {
@@ -28,11 +53,17 @@ const getSalesId = async(_id) => {
 };
 
 const editSale = async (_id, sale) => {
+  const oldSale = await modelSales.getIdSales(_id);
+  const { itensSold } = await oldSale;
+  await updateStock(sale, 'edit', itensSold);
   const editSale = await modelSales.editSale(_id, sale);
   return editSale;
 };
 
 const deleteSale = async(_id) => {
+  const sale = await modelSales.getIdSales(_id);
+  const { itensSold } = await sale;
+  await updateStock(itensSold, 'delete');
   const deleteSale = await modelSales.deleteSale(_id);
   return deleteSale;
 };

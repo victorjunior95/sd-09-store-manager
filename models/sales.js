@@ -1,5 +1,5 @@
 const connection = require('./connection');
-const { ObjectId } = require('mongodb');
+const { ObjectId, ObjectID } = require('mongodb');
 
 const create = async (sale) => {
   const db = await connection();
@@ -42,4 +42,28 @@ const deleteSale = async(_id) =>{
   return deleteSale;
 };
 
-module.exports = { create, getAllSales, getIdSales, editSale, deleteSale };
+const updateStock = async (id, quantity) => {
+  if (quantity) {
+    await connection()
+      .then((db) => {
+        db.collection('products')
+          .updateOne({ _id: ObjectId(id) }, { $inc: { quantity } });
+      });
+  }
+};
+
+//const getStock = async (id, quantity) => {
+//  const stock = await connection()
+//    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }))
+//    .then((data) => {
+//      return data.quantity - quantity;
+//    });
+//  return stock;
+// };
+
+module.exports = { create, getAllSales, getIdSales, 
+  editSale, 
+  deleteSale, 
+  updateStock, 
+//  getStock 
+};

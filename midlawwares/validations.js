@@ -1,5 +1,8 @@
-const { nameProduct, productsId } = require('../models/product');
+const { nameProduct, productsId, getProducts } = require('../models/product');
 const { getIdSales } = require('../models/sales');
+const { ObjectID } = require('mongodb');
+const { fakeServerWithClock } = require('sinon');
+const { not } = require('joi');
 
 const notProduct = 422; 
 const notFound = 404;
@@ -111,6 +114,25 @@ const isValidNotId = async (req, res, next) => {
   next();
 };
 
+const stok = async(req, res, next) => {
+  const { _id } = req.params;
+  const sale = req.body;
+  const arr = await getProducts();
+  const available = sale.every(({ productId, quantity}) => {
+    const stok = arr.find((e) => e._id.toString() === productId);
+    return stok.quantity >= quantity;
+  });
+  if(!available) {
+    return res.status(notFound).json(
+      { err: {
+        code: 'stock_problem',
+        message: 'Such amount is not permitted to sell',
+      }
+      });
+  }
+  next();
+};
+
 module.exports = { 
   isValidName, 
   existName, 
@@ -119,5 +141,6 @@ module.exports = {
   isValidId,
   isValidSales,
   isValidSaleId,
-  isValidNotId
+  isValidNotId,
+  stok
 };

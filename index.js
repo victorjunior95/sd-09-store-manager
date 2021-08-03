@@ -37,7 +37,8 @@ app.put('/products/:_id',
 app.delete('/products/:_id', validations.isValidId, productControllers.deleteProduct);
 
 app.post('/sales', 
-  validations.isValidSales, 
+  validations.isValidSales,
+  validations.stok, 
   salesContollers.create);
 
 app.get('/sales', salesContollers.getAllSales);
