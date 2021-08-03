@@ -953,6 +953,7 @@ describe('Atualiza as informações de uma venda', () => {
 
 describe('Deleta uma venda cadastrada', () => {
   const payload = [{ productId: ID_EXAMPLE, quantity: 3 }];
+  const productPayload = { _id: ID_EXAMPLE, name: 'Testy, the Tester', quantity: 3 };
 
   describe('quando o "_id" passado é inválido', () => {
     it('retorna um objeto de erro', async () => {
@@ -976,11 +977,15 @@ describe('Deleta uma venda cadastrada', () => {
     before(() => {
       sinon.stub(Model.sales, 'deleteSale').resolves({ deletedCount: 0 });
       sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.deleteSale.restore();
       Model.sales.getSaleById.restore();
+      Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('retorna um objeto de erro', async () => {
@@ -1004,11 +1009,15 @@ describe('Deleta uma venda cadastrada', () => {
     before(() => {
       sinon.stub(Model.sales, 'deleteSale').resolves({ deletedCount: 1 });
       sinon.stub(Model.sales, 'getSaleById').resolves({ _id: ID_EXAMPLE, itensSold: payload });
+      sinon.stub(Model.products, 'getProductById').resolves(productPayload);
+      sinon.stub(Model.products, 'updateProduct').resolves(null);
     });
 
     after(() => {
       Model.sales.deleteSale.restore();
       Model.sales.getSaleById.restore();
+      Model.products.getProductById.restore();
+      Model.products.updateProduct.restore();
     });
 
     it('deleta a venda e retorna as suas informações', async () => {
