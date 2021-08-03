@@ -53,16 +53,18 @@ describe('Carrega a lista de produtos', () => {
       MongoClient.connect.restore();
     });
 
-    it('retorna um array', async () => {
+    it('retorna um objeto contendo um array', async () => {
       const response = await Model.products.getProducts();
 
-      expect(response).to.be.an('array');
+      expect(response).to.be.an('object');
+
+      expect(response.products).to.be.an('array');
     });
 
     it('vazio', async () => {
       const response = await Model.products.getProducts();
 
-      expect(response).to.be.empty;
+      expect(response.products).to.be.empty;
     });
   });
 
@@ -81,18 +83,20 @@ describe('Carrega a lista de produtos', () => {
       MongoClient.connect.restore();
     });
 
-    it('retorna um array', async () => {
+    it('retorna um objeto contendo um array', async () => {
       const response = await Model.products.getProducts();
 
-      expect(response).to.be.an('array');
+      expect(response).to.be.an('object');
+
+      expect(response.products).to.be.an('array');
     });
 
     it('de objetos', async () => {
       const response = await Model.products.getProducts();
 
-      expect(response[0]).to.be.an('object');
+      expect(response.products[0]).to.be.an('object');
 
-      expect(response[0]).to.have.property('_id');
+      expect(response.products[0]).to.have.property('_id');
     });
   });
 });

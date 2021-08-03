@@ -24,9 +24,13 @@ const getProductByName = async (name) => {
 };
 
 const getProducts = async () => {
+  const product = {};
+
   const productsCollection = await connection().then((db) => db.collection(COLLECTION));
 
-  return await productsCollection.find({}).toArray();
+  product.products = await productsCollection.find({}).toArray();
+
+  return product;
 };
 
 const getProductById = async (id) => {

@@ -13,6 +13,7 @@ const ID_EXAMPLE = '604cb554311d68f491ba5781';
 const NOT_VALID_ID = 'I am not valid';
 
 const ERROR_CODE_400 = 'invalid_data';
+const ERROR_CODE_401 = 'stock_problem';
 const ERROR_CODE_404 = 'not_found';
 const ERROR_NAME = { err: {
   code: ERROR_CODE_400,
@@ -33,6 +34,10 @@ const ERROR_NOT_FOUND = { err: {
 const ERROR_SALE_ID = { err: {
   code: ERROR_CODE_400,
   message: 'Wrong sale ID format',
+} };
+const ERROR_STOCK = { err: {
+  code: ERROR_CODE_401,
+  message: 'Such amount is not permitted to sell',
 } };
 
 // TESTES PRODUCTS
@@ -397,6 +402,36 @@ describe('Cadastro de uma nova venda', () => {
     });
   });
 
+  describe('com dados válidos, mas com erro de estoque', () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.sales, 'addSales').resolves(ERROR_STOCK);
+    });
+
+    after(() => {
+      Service.sales.addSales.restore();
+    });
+
+    it('é chamado o método "status" com o código 404', async () => {
+      await Controller.sales.addSales(request, response);
+
+      expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.sales.addSales(request, response);
+
+      expect(response.json.calledWith(ERROR_STOCK)).to.be.equal(true);
+    });
+  });
+
   describe('quando é adicionado com sucesso', () => {
     const response = {};
     const request = {};
@@ -419,10 +454,10 @@ describe('Cadastro de uma nova venda', () => {
       Service.sales.addSales.restore();
     });
 
-    it('é chamado o método "status" com o código 201', async () => {
+    it('é chamado o método "status" com o código 200', async () => {
       await Controller.sales.addSales(request, response);
 
-      expect(response.status.calledWith(HTTP_CREATED_STATUS)).to.be.equal(true);
+      expect(response.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
     });
 
     it('é chamado o método "json" com as informações do produto', async () => {
@@ -595,6 +630,37 @@ describe('Atualiza as informações de uma venda', () => {
     });
   });
 
+  describe('com dados válidos, mas com erro de estoque', () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.params = { id: ID_EXAMPLE };
+      request.body = updatedPayload;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.sales, 'updateSale').resolves(ERROR_STOCK);
+    });
+
+    after(() => {
+      Service.sales.updateSale.restore();
+    });
+
+    it('é chamado o método "status" com o código 404', async () => {
+      await Controller.sales.updateSale(request, response);
+
+      expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.sales.updateSale(request, response);
+
+      expect(response.json.calledWith(ERROR_STOCK)).to.be.equal(true);
+    });
+  });
+
   describe('quando é encontrada com sucesso', () => {
     const response = {};
     const request = {};
@@ -658,6 +724,37 @@ describe('Deleta uma venda cadastrada', () => {
       await Controller.sales.deleteSale(request, response);
 
       expect(response.json.calledWith(ERROR_SALE_ID)).to.be.equal(true);
+    });
+  });
+
+  describe('com dados válidos, mas com erro de estoque', () => {
+    const response = {};
+    const request = {};
+
+    before(() => {
+      request.params = { id: ID_EXAMPLE };
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(Service.sales, 'deleteSale').resolves(ERROR_STOCK);
+    });
+
+    after(() => {
+      Service.sales.deleteSale.restore();
+    });
+
+    it('é chamado o método "status" com o código 404', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.status.calledWith(HTTP_NOT_FOUND_STATUS)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" com a mensagem correspondente', async () => {
+      await Controller.sales.deleteSale(request, response);
+
+      expect(response.json.calledWith(ERROR_STOCK)).to.be.equal(true);
     });
   });
 
