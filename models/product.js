@@ -30,7 +30,7 @@ const findProductAll = async () => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  const findProduct = await connection()
+  await connection()
     .then(db => db.collection('products').updateOne(
       { _id: new ObjectId(id) }, { $set: { name, quantity } }
     ));
@@ -38,10 +38,37 @@ const updateProduct = async (id, name, quantity) => {
   return {id, name, quantity };
 };
 
+const somaProducts = async (id, value) => {
+  await connection()
+    .then(db => db.collection('products').updateOne(
+      { _id: new ObjectId(id) }, { $inc: { quantity: - value } }
+    ));
+};
+
+const subProducts = async (id, value) => {
+  await connection()
+    .then(db => db.collection('products').updateOne(
+      { _id: new ObjectId(id) }, { $inc: { quantity: value } }
+    ));
+};
+
+const deleteProduct = async (id) => {
+  const result = await connection()
+    .then(db => db.collection('products').deleteOne(
+      { _id: new ObjectId(id) }
+    ));
+
+  return result;
+};
+
+
 module.exports = {
   create,
   findProductName,
   findProductId,
   findProductAll,
   updateProduct,
+  deleteProduct,
+  somaProducts,
+  subProducts,
 };

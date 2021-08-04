@@ -1,4 +1,4 @@
-const productServeci = require('../Service/productService');
+const productServeci = require('../services/product');
 const rescue = require('express-rescue');
 const stt = {
   d1: 201,
@@ -39,11 +39,19 @@ const update = rescue(
   }
 );
 
+const deleteProduct = rescue(
+  async (req, res) => {
+    const { id } = req.params;
+    const retorne = await productServeci.deleteProduct(id);
 
+    return res.status(stt.d).json(retorne);
+  }
+);
 
 module.exports = {
   create,
   FindAll,
   FindId,
   update,
+  deleteProduct,
 };

@@ -1,4 +1,4 @@
-const productModel = require('../Models/functions');
+const productModel = require('../models/product');
 const util = require('../utils');
 const joi = require('@hapi/joi');
 const num = 0;
@@ -58,10 +58,22 @@ const upidate = async (id, name, quantity) => {
   return retorneUpdate;
 };
 
+const deleteProduct = async (id) => {
+  if(!validetionId.test(id)) throw util(status, 'invalid_data', 'Wrong id format');
+
+  const retorneFind = await productModel.findProductId(id);
+  if(!retorneFind) throw util(status, 'invalid_data', 'wrong id format');
+
+  const retorne = await productModel.deleteProduct(id);
+
+  return retorne;
+};
+
 
 module.exports = {
   create,
   FindAll,
   FindId,
-  upidate
+  upidate,
+  deleteProduct,
 };

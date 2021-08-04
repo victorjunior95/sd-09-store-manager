@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParse = require('body-parser');
-require('dotenv/config');
-const productController = require('./Controller/productCntroller');
+const productController = require('./controlllers/product');
+const salesController = require('./controlllers/sales');
 
 const err = require('./middleware/error');
 
@@ -24,7 +24,18 @@ app.get('/products/:id', productController.FindId);
 
 app.put('/products/:id', productController.update);
 
+app.delete('/products/:id', productController.deleteProduct);
+
+app.post('/sales', salesController.createSales);
+
+app.get('/sales', salesController.findSales);
+
+app.get('/sales/:id', salesController.findSalesId);
+
+app.put('/sales/:id', salesController.updateSales);
+
+app.delete('/sales/:id', salesController.deletesales);
+
 app.use(err);
 
 app.listen(port, () => console.log(`rodando na porta ${port}`));
-
