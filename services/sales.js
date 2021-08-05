@@ -7,13 +7,13 @@ const STATUS_422 = 422;
 const getAllSales = async () => {
   const getAll = await sales.getAllSales();
 
-  if (!getAll) {
-    throw {
-      status: notFound,
-      message: 'Sale not found',
-      code: 'not_found'
-    };
-  };
+  // if (!getAll) {
+  //   throw {
+  //     status: notFound,
+  //     message: 'Sale not found',
+  //     code: 'not_found'
+  //   };
+  // };
 
   return getAll;
 };
