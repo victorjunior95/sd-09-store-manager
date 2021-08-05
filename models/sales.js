@@ -6,7 +6,6 @@ async function addSales(products) {
     .then(db => db.collection('sales').insertOne(
       { itensSold: products }
     ));
-
   return value;
 };
 
@@ -29,7 +28,6 @@ const updateSales = async (id, sale) => {
     .then(db => db.collection('sales').updateOne(
       { _id: new ObjectId(id) }, { $set: { itensSold: sale } }
     ));
-
   return retorne;
 };
 
