@@ -1,10 +1,10 @@
 const mongodb = require('mongodb').MongoClient;
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
-const DB_NAME = 'StoreManager';
-
-/* const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
+/* const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
 const DB_NAME = 'StoreManager'; */
+
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
+const DB_NAME = 'StoreManager';
 
 module.exports = () =>
   mongodb.connect(MONGO_DB_URL, {

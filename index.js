@@ -14,6 +14,13 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
+/* ===Vendas=== */
+app.post('/sales', salesController.registerSales);
+
+app.get('/sales', salesController.getAllSalesController);
+
+app.get('/sales/:id', salesController.getSalesIdController);
+
 /* ===Produtos=== */
 app.post('/products', (productsControllers.createProduct));
 
@@ -27,5 +34,3 @@ app.delete('/products/:id', productsControllers.deleteProduct);
 
 app.listen(PORT, () => console.log(`Online na porta ${PORT}`));
 
-/* ===Vendas=== */
-app.post('/sales', salesController.registerSales);
