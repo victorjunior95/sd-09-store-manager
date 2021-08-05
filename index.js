@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.get('/', (_request, response) => { response.send();});
 app.get('/products', controller.getAll);
 app.post('/products', controller.create);
+app.get('/products/:id', controller.getById);
 
 app.use(error);
 
