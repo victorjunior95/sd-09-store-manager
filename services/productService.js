@@ -3,6 +3,8 @@ const Joi = require('@hapi/joi');
 const model = require('../models/productModel');
 
 const minimoNameLength = 5;
+const unprocessableEntity = 422;
+
 const validateProduct = Joi.object({
   name: Joi.string().min(minimoNameLength).required(),
   quantity: Joi.number().min(1).required(),
@@ -12,7 +14,11 @@ const create = async (name, quantity) => {
   const { error } = validateProduct.validate({ name, quantity });
 
   if (error) {
-    return {status: 422, code: 'invalid_data', error};
+    return {
+      status: unprocessableEntity,
+      code: 'invalid_data',
+      error
+    };
   };
 
   const allProducts = await getAll();
@@ -20,7 +26,9 @@ const create = async (name, quantity) => {
 
   if (isNameUsed) {
     return {
-      status: 422, code: 'invalid_data', error: { message: 'Product already exists' }
+      status: unprocessableEntity,
+      code: 'invalid_data',
+      error: { message: 'Product already exists' }
     };
   }
 
@@ -40,15 +48,34 @@ const getById = async (id) => {
 
   if (!product) {
     return {
-      status: 422, code: 'invalid_data', error: { message: 'Wrong id format' }
+      status: unprocessableEntity,
+      code: 'invalid_data',
+      error: { message: 'Wrong id format' }
     };
   }
 
   return product;
 };
 
+const update = async (id, name, quantity) => {
+  const { error } = validateProduct.validate({ name, quantity });
+
+  if (error) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error
+    };
+  };
+
+  const updateProduct = await model.update(id, name, quantity);
+
+  return updateProduct;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };

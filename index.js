@@ -10,9 +10,10 @@ app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => { response.send();});
-app.get('/products/:id', controller.getById);
-app.get('/products', controller.getAll);
 app.post('/products', controller.create);
+app.get('/products', controller.getAll);
+app.get('/products/:id', controller.getById);
+app.put('/products/:id', controller.update);
 
 app.use(error);
 
