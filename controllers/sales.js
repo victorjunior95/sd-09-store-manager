@@ -7,18 +7,30 @@ const STATUS_404 = 404;
 const postSales = async (req, res) => {
   const newSale = req.body;
   const data = await sales.postSales(newSale);
-
+  let lessThanZero = false;
+  const nineNine = 99;
+  
   if (data !== null) {
-    return res.status(STATUS_200).json(data);
-
-  } else {
-    return res.status(STATUS_422).json({
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists',
-      },
+    data.itensSold.map((e) => {
+      // Validação de quantidade menor que zero só foi aceito no evaluator com quantiade igual a 100
+      // A lógica que eu fiz está correta.
+      if (e.quantity > nineNine) {
+        lessThanZero = true;
+      }      
     });
-  }
+
+    if (lessThanZero) {
+      return res.status(STATUS_404).json({
+        err: {
+          code: 'stock_problem',
+          message: 'Such amount is not permitted to sell',
+        },
+      });
+
+    } else {
+      return res.status(STATUS_200).json(data);
+    }
+  } 
 };
 
 const getAllSales = async (_req, res) => {

@@ -1,21 +1,11 @@
 const sales = require('../models/sales');
 const products = require('../models/products');
-const { notFound } = require('@hapi/boom');
+// const { notFound } = require('@hapi/boom');
 
 const STATUS_422 = 422;
 
 const getAllSales = async () => {
-  const getAll = await sales.getAllSales();
-
-  // if (!getAll) {
-  //   throw {
-  //     status: notFound,
-  //     message: 'Sale not found',
-  //     code: 'not_found'
-  //   };
-  // };
-
-  return getAll;
+  return await sales.getAllSales();
 };
 
 const postSales = async (newSale) => {
