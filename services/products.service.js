@@ -85,4 +85,5 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  validateProduct,
 };

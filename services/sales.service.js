@@ -97,5 +97,6 @@ module.exports = {
   getSalesList,
   getSaleById,
   updateSaleById,
-  deleteSaleById
+  deleteSaleById,
+  saleVerification
 };
