@@ -38,19 +38,18 @@ const FindId = async (id) => {
   if(!validetionId.test(id)) throw util(status, 'invalid_data', 'Wrong id format');
 
   const retorneFind = await productModel.findProductId(id);
+
   if(!retorneFind) throw util(status, 'invalid_data', 'wrong id format');
 
   return retorneFind;
 };
 
 const upidate = async (id, name, quantity) => {
-  //if(!validetionId.test(id)) throw util(status, 'invalid_data', 'Wrong id format');
   const { error } = validetionProduction.validate({ name, quantity });
-
 
   if (error) {
     const { message } = error.details[0];
-    throw  util(status, 'invalid_data', message);
+    throw util(status, 'invalid_data', message);
   }
 
   const retorneUpdate = await productModel.updateProduct(id, name, quantity);

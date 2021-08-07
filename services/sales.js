@@ -14,7 +14,7 @@ const validetionProduction = joi.object({
 });
 
 const createSales = async (product) => {
-  product.forEach(({quantity}) =>{
+  product.forEach(({quantity}) => {
     const { error } = validetionProduction.validate({ quantity });
     if (error) {
       const message = 'Wrong product ID or invalid quantity';
@@ -32,6 +32,7 @@ const createSales = async (product) => {
   }
 
   const retorne = await salesModel.addSales(product);
+  console.log(retorne);
   updateQuantity.updateQuantityProduct(product);
   return retorne.ops[0];
 };
@@ -49,11 +50,13 @@ const findSalesId = async (id) => {
   );
 
   const retorne = await salesModel.findSalesId(id);
+
   if(!retorne) throw util(
     status.q4,
     'not_found',
     'Sale not found'
   );
+
   return retorne;
 };
 
