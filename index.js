@@ -21,6 +21,8 @@ app.get('/sales', salesController.getAllSalesController);
 
 app.get('/sales/:id', salesController.getSalesIdController);
 
+app.put('/sales/:id', salesController.salesUpdateController);
+
 /* ===Produtos=== */
 app.post('/products', (productsControllers.createProduct));
 

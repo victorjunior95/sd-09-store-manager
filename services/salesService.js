@@ -41,8 +41,15 @@ const getSalesIdService = async (id) => {
   return salesId;
 };
 
+const salesUpdateService = async (id, productId, quantity) => {
+  const saleUpdate = await salesModel.salesUpdateModel(id, productId, quantity);
+
+  return { _id: id, itensSold: [{ productId, quantity }]};
+};
+
 module.exports = {
   registerSales,
   getAllSalesService,
   getSalesIdService,
+  salesUpdateService,
 };

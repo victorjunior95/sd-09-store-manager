@@ -25,8 +25,21 @@ const getSalesIdModel = async (id) => {
   return salesId;
 };
 
+const salesUpdateModel = async (id, productId, quantity) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const updateSales = await connection()
+    .then((db) => db.collection('sales').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { productId, quantity }},
+    ));
+
+  return true;
+};
+
 module.exports = {
   registerSales,
   getAllSalesModel,
   getSalesIdModel,
+  salesUpdateModel,
 };
