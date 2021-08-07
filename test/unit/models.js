@@ -26,7 +26,7 @@ describe('Busca todos os produtos e vendas', () => {
   });
 
   describe('Quando não existe produtos e vendas cadastrados', () => {
-    it('retorna um array da coleção da "product"', async () => {
+    it('retorna um array da coleção da "products"', async () => {
       const response = await modelProduct.findProductAll();
 
       expect(response).to.be.an('array');
