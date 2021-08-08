@@ -2,7 +2,7 @@ const Joi = require('@hapi/joi');
 
 const UNAVAIALBLE_REQUISITION = 422;
 
-const validateSales = Joi.array().items({
+const schema = Joi.array().items({
 
   productId: Joi.string().required,
   quantity: Joi.number().min(1).required
@@ -10,13 +10,16 @@ const validateSales = Joi.array().items({
 });
 
 const create = (item) => {
-  const { error } = validateSales.validate(item);
+  const { error } = schema.validate(item);
 
   if(error) {
-    return {
+    throw {
+      err: {
+        code: 'invalid_data',
+        error: {message: 'Wrong product ID or invalid quantity'}
+      },
       status: UNAVAIALBLE_REQUISITION,
-      code: 'invalid_data',
-      error: {message: 'Wrong product ID or invalid quantity'}
+      
     };   
   }
 };
