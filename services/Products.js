@@ -16,8 +16,11 @@ const checkIfProductExists = async (name) => {
 };
 
 const checkProductNameLength = (name) => {
-  const minNameLength = 5;
-  if (name.length < minNameLength) {
+  const MIN_LENGTH = 5;
+  const validateNameLength = Joi.string().length().min(MIN_LENGTH).required;
+
+  const { error } = validateNameLength.validate(name);
+  if (error) {
     throw { 
       err: {
         code: 'invalid_data',
@@ -29,7 +32,9 @@ const checkProductNameLength = (name) => {
 };
 
 const checkProductQuantity = (quantity) => {
-  if (quantity < 1) {
+  const validateQuantity = Joi.number().min(1).required;
+  const { error } = validateQuantity.validate(quantity);
+  if (error) {
     throw { 
       err: {
         code: 'invalid_data',
@@ -41,7 +46,11 @@ const checkProductQuantity = (quantity) => {
 };
 
 const checkQuantityType = (quantity) => {
-  if (typeof quantity !== 'number') {
+  const validateType = Joi.number().required;
+
+  const { error } = validateType.validate(quantity);
+
+  if (error) {
     throw { 
       err: {
         code: 'invalid_data',
