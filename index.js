@@ -20,7 +20,11 @@ app.post('/products', Products.create);
 app.put('/products/:id', Products.updateProduct);
 app.delete('/products/:id', Products.deleteProduct);
 
-app.post('/sales', Sales.create);
+app.get('/sales', Sales.getAll);
+app.get('/sales/:id', Sales.findById);
+app.post('/sales', Sales.newSale);
+app.put('/sales/:id', Sales.updateSale);
+app.delete('/sales/:id', Sales.deleteSale);
 
 
 app.use(error);
