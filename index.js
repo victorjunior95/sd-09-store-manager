@@ -4,6 +4,7 @@ const bodyParser = require('body-parser').json();
 const error = require('./middleware/error');
 
 const Products = require('./controllers/Products');
+const Sales = require('./controllers/Sales');
 
 app.use(bodyParser);
 
@@ -18,6 +19,8 @@ app.get('/products/:id', Products.findById);
 app.post('/products', Products.create);
 app.put('/products/:id', Products.updateProduct);
 app.delete('/products/:id', Products.deleteProduct);
+
+app.post('/sales', Sales.create);
 
 
 app.use(error);
