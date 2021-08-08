@@ -1,11 +1,17 @@
 exports.startServer = async (app) => {
   const DEFAULT_PORT = 3000;
-  const PORT = process.env.PORT || DEFAULT_PORT;
+  const PORT = DEFAULT_PORT;
 
-  app.listen(PORT, (err) => {
+  const server = app.listen(PORT, (err) => {
     if (err) {
       return;
     }
     console.log(`Server is running... Listening on ${PORT}`);
   });
 };
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('Proces terminated');
+  });
+});
