@@ -1,0 +1,26 @@
+{
+  "$async": true,
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 5,
+      "productNameExists": false,
+      "errorMessage": {
+        "type": "\"name\" must be a string",
+        "minLength": "\"name\" length must be at least 5 characters long",
+        "productNameExists": "Product already exists"
+      }
+    },
+    "quantity": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "errorMessage": {
+        "type": "\"quantity\" must be a number",
+        "exclusiveMinimum": "\"quantity\" must be larger than or equal to 1"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["name", "quantity"]
+}

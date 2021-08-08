@@ -1,0 +1,6 @@
+{
+  "INVALID_DATA": "invalid_data",
+  "INTERNAL_ERROR": "internal_error",
+  "DATABASE_ERROR": "database_error",
+  "STOCK_PROBLEM": "stock_problem"
+}
