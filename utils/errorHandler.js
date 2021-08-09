@@ -19,7 +19,7 @@ const responseAppError = (errorObj) => ({
 });
 
 const errorHandler = (errorObj, res) => {
-  if(res === undefined) {
+  if (res === undefined) {
     console.error('Error uncaught: ', errorObj);
     return;
   }
@@ -27,6 +27,8 @@ const errorHandler = (errorObj, res) => {
     res
       .status(httpCodes.HTTP_UNPROCESSABLE_ERROR)
       .json(responseValidationError(errorObj));
+  } else if (errorObj.code === errorCodes.NOT_FOUND) {
+    res.status(httpCodes.HTTP_NOT_FOUND).json(responseAppError(errorObj));
   } else {
     res
       .status(httpCodes.HTTP_UNPROCESSABLE_ERROR)
