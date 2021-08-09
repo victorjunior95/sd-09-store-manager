@@ -1,47 +1,53 @@
 const rescue = require('express-rescue');
-const SalesService = require('../services/salesService');
+const StoreService = require('../services/storeService');
 
 const successStatus = 200;
-// const responseSuccessStatus = 201;
+const responseSuccessStatus = 201;
 
 const create = rescue(async (req, res, next) => {
-  const productsSold = req.body;
-  const response = await SalesService.create(productsSold);
-  if (response.message) return next(response.message);
-  res.status(successStatus).json(response);
+  const { name, quantity } = req.body;
+  const response = await StoreService.create(name, quantity);
+  if (response.isJoi) {
+    return next(response.details[0].message);
+  }
+  if (response.message) {
+    return next(response.message);
+  }
+  res.status(responseSuccessStatus).json(response);
 });
 
 const getAll = rescue(async (_req, res, _next) => {
-  const response = await SalesService.getAll();
-  res.status(successStatus).json({ sales: response });
+  const response = await StoreService.getAll();
+  res.status(successStatus).json({ products: response });
 });
 
-const getById = rescue(async (req, res, next) => {
+const getByIdOrName = rescue(async (req, res, next) => {
   const { id } = req.params;
-  const response = await SalesService.getById(id);
+  const response = await StoreService.getByIdOrName(id);
   if (response.message) return next(response.message);
   res.status(successStatus).json(response);
 });
 
 const updateById = rescue(async (req, res, next) => {
   const { id } = req.params;
-  const [{ productId, quantity }] = req.body;
-  const response = await SalesService.updateById(id, productId, quantity);
+  const { name, quantity } = req.body;
+  const response = await StoreService.updateById(id, name, quantity);
+  if (response.isJoi) return next(response.details[0].message);
   if (response.message) return next(response.message);
-  res.status(successStatus).json({ _id: id, itensSold: [{ productId, quantity }] });
+  res.status(successStatus).json({ _id: id, name, quantity });
 });
 
 const deleteById = rescue(async (req, res, next) => {
   const { id } = req.params;
-  const response = await SalesService.deleteById(id);
+  const response = await StoreService.deleteById(id);
   if (response.message) return next(response.message);
-  res.status(successStatus).json(response[0]);
+  res.status(successStatus).json(response);
 });
 
 module.exports = {
   create,
   getAll,
-  getById,
+  getByIdOrName,
   updateById,
   deleteById,
 };
