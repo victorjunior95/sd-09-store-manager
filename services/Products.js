@@ -10,7 +10,7 @@ const validateProduct = Joi.object({
   quantity: Joi.number().min(1).required(),
 });
 
-async function create(name, quantity) {
+const create = async (name, quantity) => {
   const { error } = validateProduct.validate({ name, quantity });
 
   if (error) { 
@@ -37,13 +37,13 @@ async function create(name, quantity) {
   return newProduct;
 };
 
-async function readAll() {
+const readAll= async () => {
   const products = await model.readAll();
 
   return products;
 };
 
-async function readById(id) {
+const readById = async (id) => {
   const product = await model.readById(id);
 
   if (!product) {
@@ -57,7 +57,7 @@ async function readById(id) {
   return product;
 };
 
-async function update(id, name, quantity) {
+const update = async (id, name, quantity) => {
   const { error } = validateProduct.validate({ name, quantity });
 
   if (error) { 
@@ -73,7 +73,7 @@ async function update(id, name, quantity) {
   return updateProduct;
 };
 
-async function destroy(id) {
+const destroy = async(id) => {
   const productDeleted = await model.destroy(id);
 
   if (!productDeleted) {

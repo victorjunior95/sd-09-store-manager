@@ -3,7 +3,7 @@ const service = require('../services/Products');
 const OK = 200;
 const CREATED = 201;
 
-async function create(req, res, next) {
+const create = async (req, res, next) => {
   const { name, quantity } = req.body;
   const newProduct = await service.create(name, quantity);
 
@@ -12,13 +12,13 @@ async function create(req, res, next) {
   res.status(CREATED).json(newProduct);
 };
 
-async function readAll(_req, res, _next) {
+const readAll = async (_req, res, _next) => {
   const all = await service.readAll();
 
   res.status(OK).json({ products: all });
 };
 
-async function readById(req, res, next) {
+const readById = async(req, res, next) => {
   const { id } = req.params;
   const product = await service.readById(id);
 
@@ -27,7 +27,7 @@ async function readById(req, res, next) {
   res.status(OK).json(product);
 };
 
-async function update(req, res, next) {
+const update = async(req, res, next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   const updateProduct = await service.update(id, name, quantity);
@@ -37,7 +37,7 @@ async function update(req, res, next) {
   res.status(OK).json(updateProduct);
 };
 
-async function destroy(req, res, next) {
+const destroy = async(req, res, next) => {
   const { id } = req.params;
   const productDeleted = await service.destroy(id);
 

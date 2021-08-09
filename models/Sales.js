@@ -1,21 +1,21 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-async function create(items) {
+const create = async (items) => {
   const db = await connection();
   const newSale = await db.collection('sales').insertOne({ itensSold: items });
 
   return newSale.ops[0];
 };
 
-async function readAll() {
+const readAll = async() => {
   const db = await connection();
   const sales = await db.collection('sales').find().toArray();
 
   return sales;
 };
 
-async function readById(id) {
+const readById= async(id) => {
   if (!ObjectId.isValid(id)) return null;
 
   const db = await connection();
@@ -26,7 +26,7 @@ async function readById(id) {
   return sale;
 };
 
-async function update(id, item) {
+const update = async (id, item) => {
   if (!ObjectId.isValid(id)) return null;
 
   const db = await connection();
@@ -42,7 +42,7 @@ async function update(id, item) {
   return updateSale.value;
 };
 
-async function destroy(id) {
+const destroy = async (id) => {
   if (!ObjectId.isValid(id)) return null;
 
   const saleDeleted = await readById(id);
