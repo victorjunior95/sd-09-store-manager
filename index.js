@@ -16,12 +16,12 @@ app.post('/products', StoreController.create);
 app.get('/products/:id', StoreController.getByIdOrName);
 app.get('/products', StoreController.getAll);
 app.put('/products/:id', StoreController.updateById);
-// app.delete('/products/:id', StoreController.deleteById);
+app.delete('/products/:id', StoreController.deleteById);
 app.post('/sales', SalesController.create);
 app.get('/sales/:id', SalesController.getById);
 app.get('/sales', SalesController.getAll);
 app.put('/sales/:id', SalesController.updateById);
-// app.delete('/sales/:id', SalesController.deleteById);
+app.delete('/sales/:id', SalesController.deleteById);
 
 
 app.use(ErrorMiddleware);
