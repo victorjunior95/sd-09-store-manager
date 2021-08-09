@@ -1,126 +1,95 @@
-const Products = require('../models/Products');
 const Joi = require('joi');
 
+const model = require('../models/Products');
 
+const UNPROCESSABLE_ENTITY = 422;
+const MIN_NAME_LENGTH = 5;
+const validateProduct = Joi.object({
+  name: Joi.string().min(MIN_NAME_LENGTH).required(),
+  quantity: Joi.number().min(1).required(),
+});
 
-const checkIfProductExists = async (name) => {
-  const isProduct = await Products.findByName(name);
+async function create(name, quantity) {
+  const { error } = validateProduct.validate({ name, quantity });
 
-  if (isProduct) {
-    throw { 
-      err: {
-        code: 'invalid_data',
-        message: 'Product already exists'
-      },
-      status: 422,
+  if (error) { 
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error
+    };
+  };
+
+  const allProducts = await readAll();
+  const isNameUsed = allProducts.some(product => product.name === name);
+
+  if (isNameUsed) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Product already exists' }
     };
   }
+
+  const newProduct = model.create(name, quantity);
+
+  return newProduct;
 };
 
-const checkProductNameLength = (name) => {
-  const minNameLength = 5;
-  if (name.length < minNameLength) {
-    throw { 
-      err: {
-        code: 'invalid_data',
-        message: '"name" length must be at least 5 characters long'
-      },
-      status: 422,
-    };
-  }
+async function readAll() {
+  const products = await model.readAll();
+
+  return products;
 };
 
-const checkProductQuantity = (quantity) => {
-  if (quantity < 1) {
-    throw { 
-      err: {
-        code: 'invalid_data',
-        message: '"quantity" must be larger than or equal to 1'
-      },
-      status: 422,
-    };
-  }
-};
+async function readById(id) {
+  const product = await model.readById(id);
 
-const checkQuantityType = (quantity) => {
-  if (typeof quantity !== 'number') {
-    throw { 
-      err: {
-        code: 'invalid_data',
-        message: '"quantity" must be a number'
-      },
-      status: 422,
-    };
-  }
-};
-
-const checkProduct = (product) => {
   if (!product) {
-    throw {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong id format'
-      },
-      status: 422,
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Wrong id format' }
     };
   }
+
+  return product;
 };
 
-const getAll = async () => {
-  const result = await Products.getAll();
-  return {
-    status: 200,
-    result
+async function update(id, name, quantity) {
+  const { error } = validateProduct.validate({ name, quantity });
+
+  if (error) { 
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error
+    };
   };
+
+  const updateProduct = await model.update(id, name, quantity);
+
+  return updateProduct;
 };
 
-const findById = async (id) => {
-  const product = await Products.findById(id);
-  checkProduct(product);
-  return {
-    status: 200,
-    product,
-  };
-};
+async function destroy(id) {
+  const productDeleted = await model.destroy(id);
 
-const validateProductInfo = (name, quantity) => {
-  checkProductNameLength(name);
-  checkProductQuantity(quantity);
-  checkQuantityType(quantity);
-};
+  if (!productDeleted) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Wrong id format' }
+    };
+  }
 
-const create = async (name, quantity) => {
-  await checkIfProductExists(name);
-  validateProductInfo(name, quantity);
-  const newProduct = await Products.create(name, quantity);
-  return {
-    status: 201,
-    newProduct
-  };
-};
-
-const updateProduct = async (id, name, quantity) => {
-  validateProductInfo(name, quantity);
-  const updatedProduct = await Products.updateProduct(id, name, quantity);
-  return {
-    status: 200,
-    updatedProduct
-  };
-};
-
-const deleteProduct = async (id) => {
-  const deletedProduct = await Products.deleteProduct(id);
-  checkProduct(deletedProduct);
-  return {
-    status: 200,
-    deletedProduct
-  };
+  return productDeleted;
 };
 
 module.exports = {
   create,
-  updateProduct,
-  deleteProduct,
-  getAll,
-  findById,
+  readAll,
+  readById,
+  update,
+  destroy
 };

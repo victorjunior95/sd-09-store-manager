@@ -1,40 +1,55 @@
-const Products = require('../services/Products');
-const rescue = require('express-rescue');
+const service = require('../services/Products');
 
-const create = rescue(async (req, res) => {
+const OK = 200;
+const CREATED = 201;
+
+async function create(req, res, next) {
   const { name, quantity } = req.body;
-  const { status, newProduct } = await Products.create(name, quantity);
-  res.status(status).json(newProduct);
-});
+  const newProduct = await service.create(name, quantity);
 
-const updateProduct = rescue(async (req, res) => {
+  if (newProduct.error) return next(newProduct);
+
+  res.status(CREATED).json(newProduct);
+};
+
+async function readAll(_req, res, _next) {
+  const all = await service.readAll();
+
+  res.status(OK).json({ products: all });
+};
+
+async function readById(req, res, next) {
+  const { id } = req.params;
+  const product = await service.readById(id);
+
+  if (product.error) return next(product);
+
+  res.status(OK).json(product);
+};
+
+async function update(req, res, next) {
   const { id } = req.params;
   const { name, quantity } = req.body;
-  const { status, updatedProduct } = await Products.updateProduct(id, name, quantity);
-  res.status(status).json(updatedProduct);
-});
+  const updateProduct = await service.update(id, name, quantity);
 
-const deleteProduct = rescue(async (req, res) => {
+  if (updateProduct.error) return next(updateProduct);
+
+  res.status(OK).json(updateProduct);
+};
+
+async function destroy(req, res, next) {
   const { id } = req.params;
-  const { status, deletedProduct } = await Products.deleteProduct(id);
-  res.status(status).json(deletedProduct);
-});
+  const productDeleted = await service.destroy(id);
 
-const getAll = rescue(async (req, res) => {
-  const { result, status } = await Products.getAll();
-  res.status(status).json(result);
-});
+  if (productDeleted.error) return next(productDeleted);
 
-const findById = rescue(async (req, res) => {
-  const { id } = req.params;
-  const { status, product } = await Products.findById(id);
-  res.status(status).json(product);
-});
+  res.status(OK).json(productDeleted);
+};
 
 module.exports = {
   create,
-  updateProduct,
-  deleteProduct,
-  getAll,
-  findById,
+  readAll,
+  readById,
+  update,
+  destroy
 };

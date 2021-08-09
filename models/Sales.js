@@ -1,46 +1,61 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const getAll = async () => 
-  connection()
-    .then((db) => db.collection('sales').find().toArray())
-    .then((result) => ({ sales: result }));
+async function create(items) {
+  const db = await connection();
+  const newSale = await db.collection('sales').insertOne({ itensSold: items });
 
-const findById = async (id) => {
+  return newSale.ops[0];
+};
+
+async function readAll() {
+  const db = await connection();
+  const sales = await db.collection('sales').find().toArray();
+
+  return sales;
+};
+
+async function readById(id) {
   if (!ObjectId.isValid(id)) return null;
-  const sale = await connection()
-    .then((db) => db.collection('sales').findOne(new ObjectId(id)));
+
+  const db = await connection();
+  const sale = await db.collection('sales').findOne(ObjectId(id));
+
+  if (!sale) return null;
+
   return sale;
 };
 
-const newSale = async (sales) => {
-  return connection()
-    .then((db) => db.collection('sales').insertOne({ itensSold: sales }))
-    .then((result) => result.ops[0]);
-};
-
-const updateSale = async (saleId, sale) => {
-  if (!ObjectId.isValid(saleId)) return null;
-  return connection()
-    .then((db) => db
-      .collection('sales')
-      .updateOne(
-        { _id: ObjectId(saleId) },
-        { $set: { itensSold: sale }}))
-    .then(() => ({ _id: saleId, itensSold: sale}));
-};
-
-const deleteSale = async (id) => {
+async function update(id, item) {
   if (!ObjectId.isValid(id)) return null;
-  return connection()
-    .then((db) => db.collection('sales').findOneAndDelete({ _id: ObjectId(id)}))
-    .then((result) => result.value);
+
+  const db = await connection();
+  const updateSale = await db.collection('sales')
+    .findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { itensSold: item } }, 
+      { returnOriginal: false}
+    );
+
+  if (!updateSale) return null;
+
+  return updateSale.value;
+};
+
+async function destroy(id) {
+  if (!ObjectId.isValid(id)) return null;
+
+  const saleDeleted = await readById(id);
+  const db = await connection();
+  await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+
+  return saleDeleted;
 };
 
 module.exports = {
-  getAll,
-  findById,
-  newSale,
-  updateSale,
-  deleteSale,
+  create,
+  readAll,
+  readById,
+  update,
+  destroy
 };

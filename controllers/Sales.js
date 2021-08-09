@@ -1,40 +1,54 @@
-const Sales = require('../services/Sales');
-const rescue = require('express-rescue');
+const service = require('../services/Sales');
 
-const getAll = rescue(async (req, res) => {
-  const { status, sales } = await Sales.getAll();
-  res.status(status).json(sales);
-});
+const OK = 200;
 
-const findById = rescue(async (req, res) => {
+async function create(req, res, next) {
+  const items = req.body;
+  const newSale = await service.create(items);
+
+  if (newSale.error) return next(newSale);
+
+  res.status(OK).json(newSale);
+};
+
+async function readAll(_req, res, _next) {
+  const all = await service.readAll();
+
+  res.status(OK).json({ sales: all });
+};
+
+async function readById(req, res, next) {
   const { id } = req.params;
-  const { status, sale } = await Sales.findById(id);
-  res.status(status).json(sale);
-});
+  const sale = await service.readById(id);
 
-const newSale = rescue(async (req, res) => {
-  const sale = req.body;
-  const { status, addSale } = await Sales.newSale(sale);
-  res.status(status).json(addSale);
-});
+  if (sale.error) return next(sale);
 
-const updateSale = rescue(async (req, res) => {
+  res.status(OK).json(sale);
+};
+
+async function update(req, res, next) {
   const { id } = req.params;
-  const sale = req.body;
-  const { status, updatedSale } = await Sales.updateSale(id, sale);
-  res.status(status).json(updatedSale);
-});
+  const item = req.body;
+  const updateSale = await service.update(id, item);
 
-const deleteSale = rescue(async (req, res) => {
+  if (updateSale.error) return next(updateSale);
+
+  res.status(OK).json(updateSale);
+};
+
+async function destroy(req, res, next) {
   const { id } = req.params;
-  const { status, result } = await Sales.deleteSale(id);
-  res.status(status).json(result);
-});
+  const saleDeleted = await service.destroy(id);
+
+  if (saleDeleted.error) return next(saleDeleted);
+
+  res.status(OK).json(saleDeleted);
+};
 
 module.exports = {
-  getAll,
-  findById,
-  newSale,
-  updateSale,
-  deleteSale
+  create,
+  readAll,
+  readById,
+  update,
+  destroy
 };

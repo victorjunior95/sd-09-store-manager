@@ -1,34 +1,31 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
+const product = require('./controllers/Products');
+const sale = require('./controllers/Sales');
+const errorMiddleware = require('./middleware/error');
+
 const app = express();
-const bodyParser = require('body-parser').json();
-const error = require('./middleware/error');
 
-const Products = require('./controllers/Products');
-const Sales = require('./controllers/Sales');
+app.use(bodyParser.json());
 
-app.use(bodyParser);
+app.get('/', (_request, response) => {response.send();});
 
+app.post('/products', product.create);
+app.get('/products', product.readAll);
+app.get('/products/:id', product.readById);
+app.put('/products/:id', product.update);
+app.delete('/products/:id', product.destroy);
 
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.send();
-});
+app.post('/sales', sale.create);
+app.get('/sales', sale.readAll);
+app.get('/sales/:id', sale.readById);
+app.put('/sales/:id', sale.update);
+app.delete('/sales/:id', sale.destroy);
 
-app.get('/products', Products.getAll);
-app.get('/products/:id', Products.findById);
-app.post('/products', Products.create);
-app.put('/products/:id', Products.updateProduct);
-app.delete('/products/:id', Products.deleteProduct);
+app.use(errorMiddleware);
 
-app.get('/sales', Sales.getAll);
-app.get('/sales/:id', Sales.findById);
-app.post('/sales', Sales.newSale);
-app.put('/sales/:id', Sales.updateSale);
-app.delete('/sales/:id', Sales.deleteSale);
+const LOCALHOST = 3000;
+const port = process.env.PORT || LOCALHOST;
 
-
-app.use(error);
-
-const PORT = 3000;
-
-app.listen(PORT, () => console.log(`Servidor funcionando na porta ${PORT}`));
+app.listen(port, () => { console.log(`Listening on port ${port}`); });

@@ -1,61 +1,61 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const create = async (name, quantity) => 
-  connection()
-    .then((db) => db.collection('products').insertOne({ name, quantity }))
-    .then((result) => ({ _id: result.insertedId, name, quantity }));
+async function create(name, quantity) {
+  const db = await connection();
+  const newProduct = await db.collection('products').insertOne({ name, quantity });
 
-const updateProduct = async (id, name, quantity) => {
+  return newProduct.ops[0];
+};
+
+async function readAll() {
+  const db = await connection();
+  const products = await db.collection('products').find().toArray();
+
+  return products;
+};
+
+async function readById (id) {
   if (!ObjectId.isValid(id)) return null;
 
-  return connection()
+  const db = await connection();
+  const product = await db.collection('products').findOne(ObjectId(id));
 
-    .then((db) => db
-      .collection('products')
-      .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-    .then(() => ({ _id: id, name, quantity }));
-};
+  if (!product) return null;
 
-const deleteProduct = async (id) => {
-  if (!ObjectId.isValid(id)) return null;  
-  return connection()
-    .then((db) => db.collection('products').findOneAndDelete({ _id: ObjectId(id)}))
-    .then(({ value: { name, quantity } }) => ({ _id: id, name, quantity }))
-    .catch(() => null);
-};
-
-const findByName = async (name) => {
-  const result = await connection()
-    .then((db) => db.collection('products').findOne({ name }));
-
-  if (!result) return null;
-  return result;
-};
-
-const listProducts = (products) => {
-  return {
-    products 
-  };
-};
-
-const getAll = async () => 
-  connection()
-    .then((db) => db.collection('products').find().toArray())
-    .then((result) => listProducts(result));
-
-const findById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-  const product = await connection()
-    .then((db) => db.collection('products').findOne(new ObjectId(id)));  
   return product;
+};
+
+async function update(id, name, quantity) {
+  if (!ObjectId.isValid(id)) return null;
+
+  const db = await connection();
+  const updateProduct = await db.collection('products')
+    .findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } }, 
+      { returnOriginal: false}
+    );
+
+  if (!updateProduct) return null;
+
+  return updateProduct.value;
+};
+
+async function destroy(id) {
+  if (!ObjectId.isValid(id)) return null;
+
+  const productDeleted = await readById(id);
+  const db = await connection();
+  await db.collection('products').deleteOne({ _id: ObjectId(id) });
+
+  return productDeleted;
 };
 
 module.exports = {
   create,
-  updateProduct,
-  deleteProduct,
-  findByName,
-  getAll,
-  findById
+  readAll,
+  readById,
+  update,
+  destroy
 };

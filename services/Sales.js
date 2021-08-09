@@ -1,93 +1,104 @@
-const Sales = require('../models/Sales');
+const Joi = require('joi');
 
-const validateSaleQtts = (sale) => {
-  sale.forEach((sale) => {
-    if (sale.quantity < 1 || typeof sale.quantity !== 'number') {
-      throw {
-        err: {
-          code: 'invalid_data',
-          message: 'Wrong product ID or invalid quantity'
-        },
-        status: 422,
-      };
-    }
-  });
-};
+const model = require('../models/Sales');
+const stock = require('../models/Products');
 
-const checkSale = (sale) => {
-  if (!sale) {
-    throw {
-      err: {
-        code: 'not_found',
-        message: 'Sale not found'
-      },
-      status: 404,
+const NOT_FOUND = 404;
+const UNPROCESSABLE_ENTITY = 422;
+const validateSale = Joi.array().items({
+  productId: Joi.string().required(),
+  quantity: Joi.number().min(1).required()
+});
+
+async function create(items) {
+  const { error } = validateSale.validate(items);
+
+  if (error) { 
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Wrong product ID or invalid quantity' }
+    };
+  };
+
+  const { productId } = items[0];
+  const { name, quantity } = await stock.readById(productId);
+  const itemQuantity = quantity - items[0].quantity;
+  const NO_STOCK = 0;
+
+  if (itemQuantity < NO_STOCK) {
+    return {
+      status: NOT_FOUND,
+      code: 'stock_problem',
+      error: { message: 'Such amount is not permitted to sell' }
     };
   }
+
+  await stock.update(productId, name, itemQuantity);
+  const newSale = await model.create(items);
+
+  return newSale;
 };
 
-const validateDeletedSale = (sale) => {
+async function readAll() {
+  const sales = await model.readAll();
+
+  return sales;
+};
+
+async function readById(id) {
+  const sale = await model.readById(id);
+
   if (!sale) {
-    throw {
-      err: {
-        code: 'invalid_data',
-        message: 'Wrong sale ID format'
-      },
-      status: 422,
+    return {
+      status: NOT_FOUND,
+      code: 'not_found',
+      error: { message: 'Sale not found' }
     };
   }
+
+  return sale;
 };
 
-const getAll = async () => {
-  const sales = await Sales.getAll();
-  return {
-    status: 200,
-    sales
+async function update(id, item) {
+  const { error } = validateSale.validate(item);
+
+  if (error) { 
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Wrong product ID or invalid quantity' }
+    };
   };
+
+  const updateSale = await model.update(id, item);
+
+  return updateSale;
 };
 
-const findById = async (id) => {
-  const sale = await Sales.findById(id);
-  checkSale(sale);
-  return {
-    status: 200,
-    sale
-  };
-};
+async function destroy(id) {
+  const saleDeleted = await model.destroy(id);
 
+  if (!saleDeleted) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      code: 'invalid_data',
+      error: { message: 'Wrong sale ID format' }
+    };
+  }
 
-const newSale = async (sale) => {
-  validateSaleQtts(sale);
-  const addSale = await Sales.newSale(sale); 
-  return {
-    status: 200,
-    addSale
-  };
-};
+  const { productId, quantity } = saleDeleted.itensSold[0];
+  const product = await stock.readById(productId);
+  const itemQuantity = product.quantity + quantity;
+  await stock.update(productId, product.name, itemQuantity);
 
-const updateSale = async (saleId, sale) => {
-  validateSaleQtts(sale);
-  const updatedSale = await Sales.updateSale(saleId, sale);
-  return {
-    status: 200,
-    updatedSale
-  };
-};
-
-const deleteSale = async (id) => {
-  const result = await Sales.deleteSale(id);
-  console.log(result);
-  validateDeletedSale(result);
-  return {
-    status: 200,
-    result
-  };
+  return saleDeleted;
 };
 
 module.exports = {
-  getAll,
-  findById,
-  newSale,
-  updateSale,
-  deleteSale
+  create,
+  readAll,
+  readById,
+  update,
+  destroy
 };
