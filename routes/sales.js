@@ -5,6 +5,6 @@ router.get('/:id', salesController.salesGetId);
 router.get('/', salesController.salesIndex);
 router.put('/:id', salesController.updateSale);
 router.post('/', salesController.salesCreate);
-// router.delete('/:id', salesController.deleteSale);
+router.delete('/:id', salesController.deleteSale);
 
 module.exports = router;

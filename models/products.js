@@ -61,6 +61,32 @@ const updateProduct = async (id, newInfo) => {
   }
 };
 
+const updateProductDecQuantity = async (id, newInfo) => {
+  try {
+    const db = await connection();
+    const objectId = new ObjectId(id);
+    const updatedProduct = await db
+      .collection('products')
+      .updateOne({ _id: objectId },{ $inc: { quantity: -newInfo }});
+    return updateProduct;
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
+const updateProductIncQuantity = async (id, newInfo) => {
+  try {
+    const db = await connection();
+    const objectId = new ObjectId(id);
+    const updatedProduct = await db
+      .collection('products')
+      .updateOne({ _id: objectId },{ $inc: { quantity: newInfo }});
+    return updateProduct;
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
 const deleteProduct = async (id) => {
   try {
     const db = await connection();
@@ -79,6 +105,8 @@ module.exports = {
   checkIdExists,
   createProduct,
   updateProduct,
+  updateProductDecQuantity,
+  updateProductIncQuantity,
   deleteProduct,
   getById,
   getAll,

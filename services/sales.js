@@ -20,8 +20,7 @@ exports.getByIdService = async (id) => {
 
   if (ObjectId.isValid(id)) {
     sale = await salesModel.getSaleById(id);
-    if (sale === null)
-      throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
+    if (sale === null) throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
     return sale;
   } else {
     throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
@@ -33,33 +32,52 @@ exports.updateSaleService = async (id, newInfo) => {
   const validate = ajv.getSchema('sales');
   const isValid = await validate(newInfo);
 
-  if (ObjectId.isValid(id) && isValid) {
+  if (ObjectId.isValid(id)) {
     updatedSale = await salesModel.updateSale(id, newInfo);
     if (updatedSale === null)
       throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
     return updatedSale;
-  } else if (!ObjectId.isValid(id)) {
-    throw new AppError(errorCodes.INVALID_DATA, SALE_NOT_FOUND);
   } else {
-    throw new AppError(errorCodes.INVALID_DATA, validate.errors[0].message);
+    throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
   }
 };
 
 exports.createService = async (sales) => {
   const validate = ajv.getSchema('sales');
   const isValid = await validate(sales);
-  return await salesModel.createSale(sales);
+  let stock = false;
+
+  for ({ productId, quantity } of sales.itensSold) {
+    stock = false;
+    const product = await productsModel.getById(productId);
+    if (product.quantity >= quantity) {
+      stock = true;
+      await productsModel.updateProductDecQuantity(productId, quantity);
+    }
+  };
+
+  if (stock) {
+    return await salesModel.createSale(sales);
+  } else {
+    throw new AppError(
+      errorCodes.STOCK_PROBLEM,
+      'Such amount is not permitted to sell'
+    );
+  }
 };
 
-// exports.deleteSaleService = async (id) => {
-//   let sale = null;
+exports.deleteSaleService = async (id) => {
+  let deletedSale = null;
 
-//   if (ObjectId.isValid(id)) {
-//     deletedSale = await salesModel.deleteSale(id);
-//     if (deletedSale === null)
-//       throw new AppError(errorCodes.INVALID_DATA, WRONG_ID_MESSAGE);
-//     return deletedSale;
-//   } else {
-//     throw new AppError(errorCodes.INVALID_DATA, WRONG_ID_MESSAGE);
-//   }
-// };
+  if (ObjectId.isValid(id)) {
+    deletedSale = await salesModel.deleteSale(id);
+    if (deletedSale === null)
+      throw new AppError(errorCodes.INVALID_DATA, 'Wrong sale ID format');
+    for ({ productId, quantity } of deletedSale.itensSold) {
+      await productsModel.updateProductIncQuantity(productId, quantity);
+    };
+    return deletedSale;
+  } else {
+    throw new AppError(errorCodes.INVALID_DATA, 'Wrong sale ID format');
+  }
+};
