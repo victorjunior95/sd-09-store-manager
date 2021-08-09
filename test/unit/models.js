@@ -3,6 +3,10 @@ const { expect } = require('chai');
 const { saleModel, productModel } = require('../../models');
 const { MongoClient } = require('mongodb');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+
+/**
+ * Estrutura dos mock retirada do course
+ */
 describe('Sale Model', async () => {
   before(async () => {
     const DBServer = new MongoMemoryServer();
