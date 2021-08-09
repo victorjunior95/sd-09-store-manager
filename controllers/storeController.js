@@ -4,7 +4,6 @@ const StoreService = require('../services/storeService');
 const successStatus = 200;
 const responseSuccessStatus = 201;
 
-// Cadastro de produtos
 const create = rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
   const response = await StoreService.create(name, quantity);

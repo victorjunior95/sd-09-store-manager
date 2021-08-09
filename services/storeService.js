@@ -6,7 +6,7 @@ const Validation = require('./validation');
 const message = 'Wrong id format';
 
 const create = async (name, quantity) => {
-  const { error } = Validation.nameAndQuantityAreValid(name, quantity);
+  const { error } = Validation.nameAndQuantityIsValid(name, quantity);
   if (error) return error;
   const existingProduct = await StoreModel.getByIdOrName(null, name);
   if(existingProduct) return { message: 'Product already exists'};
@@ -28,7 +28,7 @@ const getByIdOrName = async (id) => {
 
 const updateById = async (id, name, quantity) => {
   if(!ObjectId.isValid(id)) return { message };
-  const { error } = Validation.nameAndQuantityAreValid(name, quantity);
+  const { error } = Validation.nameAndQuantityIsValid(name, quantity);
   if (error) return error;
   const { modifiedCount } = await StoreModel.updateById(id, name, quantity);
   return { modifiedCount };

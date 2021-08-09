@@ -5,25 +5,25 @@ const SalesModel = require('../models/salesModel');
 
 const emptyQuantity = 0;
 
-const nameAndQuantityAreValid = (name, quantity) => {
-  const requiredString = Joi.string().not().empty().required();
-  const requiredNumber = Joi.number().not().empty().required();
-  const minLengthString = 5;
-  const minQuantity = 1;
-  
+const nameAndQuantityIsValid = (name, quantity) => {
+  const requiredNonEmptyString = Joi.string().not().empty().required();
+  const requiredNonEmptyNumber = Joi.number().not().empty().required();
+  const minLengthNameString = 5;
+  const minValueQuantityNumber = 1;
+
   const erro =  Joi.object({
-    name: requiredString.min(minLengthString),
-    quantity: requiredNumber.integer().min(minQuantity),
+    name: requiredNonEmptyString.min(minLengthNameString),
+    quantity: requiredNonEmptyNumber.integer().min(minValueQuantityNumber),
   }).validate({ name, quantity });
   return erro;
 };
 
 const quantityIsValid = (quantity) => {
-  const requiredNumber = Joi.number().not().empty().required();
-  const minQuantity = 1;
+  const requiredNonEmptyNumber = Joi.number().not().empty().required();
+  const minValueQuantityNumber = 1;
 
   const erro =  Joi.object({
-    quantity: requiredNumber.integer().min(minQuantity),
+    quantity: requiredNonEmptyNumber.integer().min(minValueQuantityNumber),
   }).validate({ quantity });
   return erro;
 };
@@ -35,7 +35,7 @@ const subtractQuantity = async ({ productId, quantity }) => {
   await StoreModel.updateById(productId, null, newQuantity);
 };
 
-const addQuantity = async ({ productId, quantity }) => {
+const addingQuantity = async ({ productId, quantity }) => {
   const product = await StoreModel.getByIdOrName(productId);
   const newQuantity = product.quantity + quantity;
   await StoreModel.updateById(productId, null, newQuantity);
@@ -53,9 +53,9 @@ const updatingQuantity = async (idSale, idOnSale, quantity) => {
 };
 
 module.exports = {
-  nameAndQuantityAreValid,
+  nameAndQuantityIsValid,
   quantityIsValid,
   subtractQuantity,
-  addQuantity,
+  addingQuantity,
   updatingQuantity,
 };

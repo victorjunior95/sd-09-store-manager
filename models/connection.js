@@ -1,4 +1,4 @@
-// Conectando 
+// Connection
 
 const { MongoClient } = require('mongodb');
 

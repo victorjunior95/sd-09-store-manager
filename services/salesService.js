@@ -57,7 +57,7 @@ const deleteById = async (id) => {
   if(!ObjectId.isValid(id)) return { message: message_3 };
   const sale = await SalesModel.deleteById(id);
   if (!sale || sale.length === emptyArray) return { message: message_3 };
-  await Validation.addQuantity(sale[0].itensSold[0]);
+  await Validation.addingQuantity(sale[0].itensSold[0]);
   return sale;
 };
 
