@@ -1,46 +1,51 @@
-const SalesServices = require('../services/SalesServices');
-const statusCode = require('../utils/statusCode');
-const errorObject = require('../utils/errorObject');
+const SalesService = require('../services/SalesService');
+const statusSucess = 200;
 
-const create = async (req, res, next) => {
-  const itensSold = req.body;
+const getAllSales = async (_req, res, _next) => {
+  const allSales = await SalesService.getAllSales();
 
-  const newSale = await SalesServices.create(itensSold);
-
-  if (newSale.err) return next(newSale);
-
-  return res.status(statusCode.ok).json(newSale);
+  return res.status(statusSucess).json({ sales: allSales });
 };
 
-const getAll = async (_req, res) => {
-  const allProducts = await SalesServices.getAll();
-  return res.status(statusCode.ok).json(allProducts);
-};
-
-const getById = async (req, res, next) => {
+const findById = async (req, res, next) => {
   const { id } = req.params;
-  const sale = await SalesServices.getById(id);
-  if (!sale) return next(errorObject('not_found', 'Sale not found'));
-  return res.status(statusCode.ok).json(sale);
+
+  const sale = await SalesService.findById(id);
+
+  if (sale.err) return next(sale.err);
+
+  return res.status(statusSucess).json(sale);
 };
 
-const remove = async (req, res) => {
-  const { id } = req.params;
-  const removedSale = await SalesServices.remove(id);
-  return res.status(statusCode.ok).json(removedSale);
+const createSales = async (req, res, _next) => {
+  const { body } = req;
+
+  const productsSale = await SalesService.createSales(body);
+
+  return res.status(statusSucess).json(productsSale);
 };
 
-const update = async (req, res) => {
+const editSale = async (req, res, _next) => {
   const { id } = req.params;
-  const itensSold = req.body;
-  const updatedSale = await SalesServices.update(id, itensSold);
-  return res.status(statusCode.ok).json(updatedSale);
+  const { body } = req;
+
+  const newSale = await SalesService.editSale(id, body);
+
+  return res.status(statusSucess).json(newSale);
+};
+
+const deleteSale = async (req, res, _next) => {
+  const { id } = req.params;
+
+  const deleteProduct = await SalesService.deleteSale(id);
+
+  return res.status(statusSucess).json(deleteProduct);
 };
 
 module.exports = {
-  create,
-  getAll,
-  getById,
-  remove,
-  update,
-};
+  getAllSales,
+  findById,
+  createSales,
+  editSale,
+  deleteSale
+}; 

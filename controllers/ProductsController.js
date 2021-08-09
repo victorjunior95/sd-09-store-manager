@@ -1,44 +1,51 @@
-const ProductsServices = require('../services/ProductsServices');
-const statusCode = require('../utils/statusCode');
+const ProductsService = require('../services/ProductsService');
+const statusSucessCreate = 201;
+const statusSucess = 200;
 
-const create = async (req, res, next) => {
+const getAllProducts = async (_req, res, _next) => {
+  const allProducts = await ProductsService.getAllProducts();
+
+  return res.status(statusSucess).json({ products: allProducts });
+};
+
+const findById = async (req, res, _next) => {
+  const { id } = req.params;
+  const product = await ProductsService.findById(id);
+
+  return res.status(statusSucess).json(product);
+};
+
+const createProduct = async (req, res, next) => {
   const { name, quantity } = req.body;
 
-  const newProduct = await ProductsServices.create(name, quantity);
+  const product = await ProductsService.createProduct(name, quantity);
 
-  if (newProduct.err) return next(newProduct);
+  if (product.err) return next(product.err);
 
-  return res.status(statusCode.created).json(newProduct);
+  return res.status(statusSucessCreate).json(product);
 };
 
-const getAll = async (_req, res) => {
-  const allProducts = await ProductsServices.getAll();
-  return res.status(statusCode.ok).json(allProducts);
-};
-
-const getById = async (req, res) => {
-  const { id } = req.params;
-  const product = await ProductsServices.getById(id);
-  return res.status(statusCode.ok).json(product);
-};
-
-const remove = async (req, res) => {
-  const { id } = req.params;
-  const product = await ProductsServices.remove(id);
-  return res.status(statusCode.ok).json(product);
-};
-
-const update = async (req, res) => {
+const editProduct = async (req, res, _next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
-  const product = await ProductsServices.update(id, name, quantity);
-  return res.status(statusCode.ok).json(product);
+
+  const newProduct = await ProductsService.editProduct(id, name, quantity );
+
+  return res.status(statusSucess).json(newProduct);
+};
+
+const deleteProduct = async (req, res, _next) => {
+  const { id } = req.params;
+
+  const deleteProduct = await ProductsService.deleteProduct(id);
+
+  return res.status(statusSucess).json(deleteProduct);
 };
 
 module.exports = {
-  create,
-  getAll,
-  getById,
-  remove,
-  update,
+  getAllProducts,
+  findById,
+  createProduct,
+  editProduct,
+  deleteProduct
 };

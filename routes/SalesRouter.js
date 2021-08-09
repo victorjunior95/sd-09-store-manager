@@ -1,37 +1,25 @@
 const express = require('express');
-const rescue = require('express-rescue');
 const {
-  validateSale,
-  validateSaleId,
-} = require('../middlewares/SalesMiddlewares');
+  validatorIdAndQuantity,
+  isValidId,
+  validatorId, 
+  deleteSale,
+  buyProduct} = require('../middlewares/validatorSale');
 const SalesController = require('../controllers/SalesController');
 
 const SalesRouter = express.Router();
 
-SalesRouter.post(
-  '/',
-  rescue(validateSale),
-  rescue(SalesController.create),
-);
-SalesRouter.get(
-  '/',
-  rescue(SalesController.getAll),
-);
-SalesRouter.get(
-  '/:id',
-  rescue(validateSaleId),
-  rescue(SalesController.getById),
-);
-SalesRouter.put(
-  '/:id',
-  rescue(validateSaleId),
-  rescue(validateSale),
-  rescue(SalesController.update),
-);
-SalesRouter.delete(
-  '/:id',
-  rescue(validateSaleId),
-  rescue(SalesController.remove),
-);
+SalesRouter.get('/', SalesController.getAllSales);
 
-module.exports = SalesRouter;
+SalesRouter.get('/:id', isValidId, SalesController.findById);
+
+SalesRouter.post('/',
+  validatorIdAndQuantity,
+  buyProduct,
+  SalesController.createSales);
+
+SalesRouter.put('/:id', validatorIdAndQuantity, SalesController.editSale);
+
+SalesRouter.delete('/:id', validatorId, deleteSale, SalesController.deleteSale);
+
+module.exports = SalesRouter; 

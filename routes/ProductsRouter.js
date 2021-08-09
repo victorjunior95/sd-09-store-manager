@@ -1,37 +1,20 @@
 const express = require('express');
-const rescue = require('express-rescue');
-const {
-  validateProduct,
-  validateProductId,
-} = require('../middlewares/ProductsMiddlewares');
 const ProductsController = require('../controllers/ProductsController');
+const {validatorNameAndQuant, validatorId} = require('../middlewares/validatorProduct');
 
 const ProductsRouter = express.Router();
 
-ProductsRouter.post(
-  '/',
-  rescue(validateProduct),
-  rescue(ProductsController.create),
-);
-ProductsRouter.get(
-  '/',
-  rescue(ProductsController.getAll),
-);
-ProductsRouter.get(
-  '/:id',
-  rescue(validateProductId),
-  rescue(ProductsController.getById),
-);
-ProductsRouter.put(
-  '/:id',
-  rescue(validateProductId),
-  rescue(validateProduct),
-  rescue(ProductsController.update),
-);
-ProductsRouter.delete(
-  '/:id',
-  rescue(validateProductId),
-  rescue(ProductsController.remove),
-);
+ProductsRouter.get('/', ProductsController.getAllProducts);
+
+ProductsRouter.get('/:id', validatorId, ProductsController.findById);
+
+ProductsRouter.post('/', validatorNameAndQuant, ProductsController.createProduct);
+
+ProductsRouter.put('/:id',
+  validatorId,
+  validatorNameAndQuant,
+  ProductsController.editProduct);
+
+ProductsRouter.delete('/:id', validatorId, ProductsController.deleteProduct);
 
 module.exports = ProductsRouter;

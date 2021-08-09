@@ -1,39 +1,68 @@
-const { ObjectId } = require('mongodb');
 const ProductsModel = require('../models/ProductsModel');
-const errorObject = require('../utils/errorObject');
 
-const create = async (name, quantity) => {
-  const productExists = await ProductsModel.findByQuery({ name });
+const getAllProducts = async () => {
+  const product = await ProductsModel.getAllProducts();
 
-  if (productExists) return errorObject('invalid_data', 'Product already exists');
+  return product;
+};
 
-  const { ops: [newProduct] } = await ProductsModel.create(name, quantity);
+const findById = async (id) => {
+  const product = await ProductsModel.findById(id);
+
+  return product;
+};
+
+const createProduct = async (name, quantity) => {
+  const product = await ProductsModel.findByName(name);
+
+  if (product) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
+    };
+  }
+
+  const { insertedId } = await ProductsModel.createProduct(name, quantity);
+
+  return {
+    _id: insertedId,
+    name,
+    quantity
+  };
+};
+
+const editProduct = async (id, name, quantity) => {
+  const newProduct = await ProductsModel.editProduct(id, name, quantity);
+
   return newProduct;
 };
 
-const getAll = async () => {
-  const products = await ProductsModel.getAll();
-  return { products };
+const deleteProduct = async (id) => {
+  const product = await ProductsModel.deleteProduct(id);
+
+  return product;
 };
 
-const getById = async (id) => ProductsModel.findByQuery(ObjectId(id));
+const buyProduct = async (id, quantity) => {
+  const product = await ProductsModel.buyProduct(id, quantity);
 
-const remove = async (id) => {
-  const removedProduct = await getById(id);
-  await ProductsModel.remove(id);
-  return removedProduct;
+  return product;
 };
 
-const update = async (id, name, quantity) => {
-  await ProductsModel.update(id, name, quantity);
-  const updatedProduct = await getById(id);
-  return updatedProduct;
+const deleteSale = async (id, quantity) => {
+  const product = await ProductsModel.deleteSale(id, quantity);
+
+  return product;
 };
 
 module.exports = {
-  create,
-  getAll,
-  getById,
-  remove,
-  update,
+  createProduct,
+  findById,
+  getAllProducts,
+  editProduct,
+  deleteProduct,
+  buyProduct,
+  deleteSale
 };

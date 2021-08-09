@@ -1,404 +1,366 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
-const { ObjectId } = require('mongodb');
+const ProductsService = require('../../services/ProductsService');
 const ProductsModel = require('../../models/ProductsModel');
-const ProductsServices = require('../../services/ProductsServices');
+const SalesService = require('../../services/SalesService');
 const SalesModel = require('../../models/SalesModel');
-const SalesServices = require('../../services/SalesServices');
 
-describe('ProductsServices', () => {
+// PRODUCTS
 
-  describe('ProductsServices.create()', () => {
+describe('Function getAllProducts', () => {
+  describe('quando nao existir produtos cadastrados', () => {
+    const mockProduct = []
 
-    const payloadProduct = { _id: '604cb554311d68f491ba5781', name: 'Teste', quantity: 10 };
-
-    before(() => {
-      sinon.stub(ProductsModel, 'create')
-        .resolves({ ops: [payloadProduct] });
+    before(async () => {
+      sinon.stub(ProductsModel, 'getAllProducts')
+        .resolves(mockProduct);
     });
 
-    after(() => {
-      ProductsModel.create.restore();
+    after(async () => {
+      ProductsModel.getAllProducts.restore();
     });
 
-    it('retorna um objeto', async () => {
-      const response = await ProductsServices.create(payloadProduct.name, payloadProduct.quantity);
-      expect(response).to.be.an('object');
-    });
+    it('retorna um Array', async () => {
+      const response = await ProductsService.getAllProducts();
 
-    it('retorna um objeto com propriedades passadas', async () => {
-      const response = await ProductsServices.create(payloadProduct.name, payloadProduct.quantity);
-      expect(response).to.be.deep.equal(payloadProduct);
-    });
+      expect(response).to.be.an('array');
+    })
 
-    it('retorna erro se produto já existe', async () => {
-      sinon.stub(ProductsModel, 'findByQuery')
-        .resolves(payloadProduct);
-      const errorMessage = { err: { code: "invalid_data", message: "Product already exists" } };
-      const response = await ProductsServices.create(payloadProduct.name, payloadProduct.quantity);
-      expect(response).to.be.deep.equal(errorMessage);
-      ProductsModel.findByQuery.restore();
-    });
+    it('o Array [e vazio', async () => {
+      const response = await ProductsService.getAllProducts();
 
-  });
-
-  describe('ProductsServices.getAll()', () => {
-
-    const payloadProduct = [
-      { _id: '604cb554311d68f491ba5781', name: 'Teste 1', quantity: 10 },
-      { _id: '604cb554311d68f491ff5901', name: 'Teste 2', quantity: 11 },
-    ];
-
-    before(() => {
-      sinon.stub(ProductsModel, 'getAll')
-        .resolves(payloadProduct);
-    });
-
-    after(() => {
-      ProductsModel.getAll.restore();
-    });
-
-    it('retorna um objeto', async () => {
-      const response = await ProductsServices.getAll();
-      expect(response).to.be.an('object');
-    });
-
-    it('retorna um objeto com propriedade products', async () => {
-      const response = await ProductsServices.getAll();
-      expect(response).to.have.property('products');
-    });
-
-    it('propriedade products é um array', async () => {
-      const response = await ProductsServices.getAll();
-      expect(response.products).to.be.an('array');
-    });
-
-    it('propriedade products é um array de tamanho 2', async () => {
-      const response = await ProductsServices.getAll();
-      expect(response.products).to.have.lengthOf(2);
-    });
-
-  });
-
-  describe('ProductsServices.getById()', () => {
-
-    const payloadProduct = { _id: '604cb554311d68f491ba5781', name: 'Teste 1', quantity: 10 };
-
-    before(() => {
-      sinon.stub(ProductsModel, 'findByQuery')
-        .callsFake(async (id) => {
-          if (id === ObjectId(id))
-            return Promise.resolve(payloadProduct);
-        })
-    });
-
-    it('retorna um objeto', async () => {
-      const response = await ProductsServices.getById(payloadProduct._id);
-      expect(response).to.be.an('object');
-    });
-
-    it('retorna o objeto com o id passado', async () => {
-      const response = await ProductsServices.getById(payloadProduct._id);
-      expect(response).to.be.deep.equal(payloadProduct);
-    });
-
-  });
-
-  describe('ProductsServices.remove()', () => {
-
-    const payloadProduct = { _id: '604cb554311d68f491ba5781', name: 'Teste 1', quantity: 10 };
-
-    it('retorna um objeto', async () => {
-      const response = await ProductsServices.remove(payloadProduct._id);
-      expect(response).to.be.an('object');
-    });
-
-    it('retorna o objeto com o id passado', async () => {
-      const response = await ProductsServices.remove(payloadProduct._id);
-      expect(response).to.be.deep.equal(payloadProduct);
-    });
-
-  });
-
-  describe('ProductsServices.update()', () => {
-
-    const payloadProduct = { _id: '604cb554311d68f491ba5781', name: 'Teste 1', quantity: 10 };
-
-    before(() => {
-      sinon.stub(ProductsModel, 'update')
-        .callsFake(async (id, name, quantity) => {
-          return Promise.resolve({ id, name, quantity });
-        })
-    });
-
-    after(() => {
-      ProductsModel.findByQuery.restore();
-      ProductsModel.update.restore();
-    });
-
-    it('retorna um objeto', async () => {
-      const response = await ProductsServices.update(
-        payloadProduct._id,
-        payloadProduct.name,
-        payloadProduct.quantity,
-      );
-      expect(response).to.be.an('object');
-    });
-
-    it('retorna o objeto com o id passado', async () => {
-      const response = await ProductsServices.update(
-        payloadProduct._id,
-        payloadProduct.name,
-        payloadProduct.quantity,
-      );
-      expect(response).to.be.deep.equal(payloadProduct);
-    });
-
-  });
-
-
+      expect(response).to.be.empty;
+    })
+  })
 });
 
-describe('SalesServices', () => {
+describe('Function findById', () => {
+  describe('quando achar um produto com ID', () => {
+    const mockProduct = {
+      name: 'Cerveja',
+      quantity: 10
+    }
 
-  describe('SalesServices.create() consegue criar uma venda', () => {
-
-    const payloadSale = {
-      _id: '604cb554311d68f491ba5781',
-      itensSold: [
-        { productId: '604cb554311d68f491ba1342', quantity: 1 },
-      ]
-    };
-
-    before(() => {
-      sinon.stub(SalesModel, 'create')
-        .resolves({ ops: [payloadSale] });
-      sinon.stub(ProductsServices, 'getById')
-        .callsFake(async (id) => {
-          if (id === payloadSale.itensSold[0].productId) {
-            return Promise.resolve(payloadSale.itensSold[0]);
-          }
-          return Promise.resolve(null)
-        });
-      sinon.stub(ProductsModel, 'update')
-        .resolves({});
+    before(async () => {
+      sinon.stub(ProductsModel, 'findById')
+        .resolves(mockProduct);
     });
 
-    after(() => {
-      SalesModel.create.restore();
-      ProductsServices.getById.restore();
-      ProductsModel.update.restore();
+    after(async () => {
+      ProductsModel.findById.restore();
     });
 
-    it('retorna um objeto', async () => {
-      const response = await SalesServices.create(payloadSale.itensSold);
+    it('retorna um object', async () => {
+      const response = await ProductsService.findById(mockProduct);
+
       expect(response).to.be.an('object');
-    });
-
-    it('retorna um objeto com propriedades passadas', async () => {
-      const response = await SalesServices.create(payloadSale.itensSold);
-      expect(response).to.be.deep.equal(payloadSale);
-    });
-
+    })
   });
+});
 
-  describe('SalesServices.create() não consegue criar uma venda', () => {
+describe('Function createProduct', () => {
+  describe('quando criar um produto no banco', () => {
+    const mockProduct = {
+      _id: '60e72ce912fb02363cd340e4',
+      name: 'Cerveja',
+      quantity: 10
+    }
 
-    const payloadSale = {
-      _id: '604cb554311d68f491ba5781',
-      itensSold: [
-        { productId: '604cb554311d68f491ba1342', quantity: 1 },
-      ]
-    };
-
-    before(() => {
-      sinon.stub(SalesModel, 'create')
-        .resolves({ ops: [payloadSale] });
-      sinon.stub(ProductsModel, 'update')
-        .resolves({});
+    before(async () => {
+      sinon.stub(ProductsModel, 'createProduct')
+        .resolves(mockProduct);
     });
 
-    after(() => {
-      SalesModel.create.restore();
-      ProductsModel.update.restore();
+    after(async () => {
+      ProductsModel.createProduct.restore();
     });
 
-    it('retorna erro "product_not_found" se o produto não é encontrado', async () => {
-      sinon.stub(ProductsServices, 'getById')
+    it('retorna um object', async () => {
+      const response = await ProductsService.createProduct(mockProduct);
+
+      expect(response).to.be.an('object');
+    })
+  });
+});
+
+describe('Function editProduct', () => {
+  describe('quando edita um produto com ID', () => {
+    const mockProduct = {
+      name: 'Cerveja',
+      quantity: 10
+    }
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(ProductsModel, 'editProduct')
+        .resolves(mockProduct);
+    });
+
+    after(async () => {
+      ProductsModel.editProduct.restore();
+    });
+
+    it('retorna um object', async () => {
+      const response = await ProductsService.editProduct(id, mockProduct);
+
+      expect(response).to.be.an('object');
+    })
+  });
+});
+
+describe('Function deleteProduct', () => {
+  describe('deleta um produto com ID', () => {
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(ProductsModel, 'deleteProduct')
         .resolves(null);
-      const errorMessage = {
-        err: { code: 'product_not_found', message: 'Product not found' }
-      };
-      const response = await SalesServices.create(payloadSale.itensSold);
-      expect(response).to.be.deep.equal(errorMessage);
-      ProductsServices.getById.restore();
     });
 
-    it('retorna erro "stock_problem" se não há quantidade suficiente do produto', async () => {
-      sinon.stub(ProductsServices, 'getById')
-        .resolves({ ...payloadSale.itensSold[0], quantity: 0 });
-      const errorMessage = {
-        err: { code: 'stock_problem', message: 'Such amount is not permitted to sell' }
-      };
-      const response = await SalesServices.create(payloadSale.itensSold);
-      expect(response).to.be.deep.equal(errorMessage);
-      ProductsServices.getById.restore();
+    after(async () => {
+      ProductsModel.deleteProduct.restore();
     });
 
+    it('retorna um object', async () => {
+      const response = await ProductsService.deleteProduct(id);
+
+      expect(response).to.be.null;
+    })
   });
+});
 
-  describe('SalesServices.getAll()', () => {
+describe('Function buyProduct', () => {
+  describe('decrementa o banco products quando faz compra', () => {
+    const id = '60e72ce912fb02363cd340e4';
+    const quantity = 2
 
-    const payloadSales = [
+    const mockProduct = {
+      name: 'Cerveja',
+      quantity: 8
+    }
+
+    before(async () => {
+      sinon.stub(ProductsModel, 'buyProduct')
+        .resolves(mockProduct);
+    });
+
+    after(async () => {
+      ProductsModel.buyProduct.restore();
+    });
+
+    it('retorna um object', async () => {
+      const response = await ProductsService.buyProduct(id, quantity);
+
+      expect(response).to.be.an('object');
+    })
+  });
+});
+
+describe('Function deleteSale', () => {
+  describe('incremente o banco products quando deleta compra', () => {
+    const id = '60e72ce912fb02363cd340e4';
+    const quantity = 2
+
+    const mockProduct = {
+      name: 'Cerveja',
+      quantity: 10
+    }
+
+    before(async () => {
+      sinon.stub(ProductsModel, 'deleteSale')
+        .resolves(mockProduct);
+    });
+
+    after(async () => {
+      ProductsModel.deleteSale.restore();
+    });
+
+    it('retorna um object', async () => {
+      const response = await ProductsService.deleteSale(id, quantity);
+
+      expect(response).to.be.an('object');
+    })
+  });
+});
+
+// // SALES
+
+describe('Function createSales', () => {
+  describe('quando criar um produto no banco', () => {
+    const mockProduct = [
       {
-        _id: '60f12da2631100c266486ec3',
-        itensSold: [
-          { productId: '60f12dac0a10888e4ef7d84a', quantity: 1 },
-        ]
-      },
-      {
-        _id: '60f12db564d020cfb719ddbb',
-        itensSold: [
-          { productId: '60f12dbcd1a4f5a9d4fa5aa3', quantity: 2 },
-        ]
-      },
+        productId: '60e72ce912fb02363cd340e4',
+        quantity: 10
+      }
     ];
 
-    before(() => {
-      sinon.stub(SalesModel, 'getAll')
-        .resolves(payloadSales);
-    });
-
-    after(() => {
-      SalesModel.getAll.restore();
-    });
-
-    it('retorna um objeto', async () => {
-      const response = await SalesServices.getAll();
-      expect(response).to.be.an('object');
-    });
-
-    it('retorna um objeto com propriedade sales', async () => {
-      const response = await SalesServices.getAll();
-      expect(response).to.have.property('sales');
-    });
-
-    it('propriedade sales é um array', async () => {
-      const response = await SalesServices.getAll();
-      expect(response.sales).to.be.an('array');
-    });
-
-    it('propriedade sales é um array de tamanho 2', async () => {
-      const response = await SalesServices.getAll();
-      expect(response.sales).to.have.lengthOf(2);
-    });
-
-  });
-
-  describe('SalesServices.getById()', () => {
-
-    const payloadSale = {
-      _id: '604cb554311d68f491ba5781',
-      itensSold: [
-        { productId: '604cb554311d68f491ba1342', quantity: 1 },
-      ]
+    const mockSale = {
+      insertedId: '60e72ce912fb02363cd340e4',
+      itensSold: mockProduct
     };
 
-    before(() => {
-      sinon.stub(SalesModel, 'findByQuery')
-        .callsFake(async (id) => {
-          if (id === ObjectId(id))
-            return Promise.resolve(payloadSale);
-        })
+    before(async () => {
+      sinon.stub(SalesModel, 'createSales')
+        .resolves(mockSale);
     });
 
+    after(async () => {
+      SalesModel.createSales.restore();
+    });
 
-    it('retorna um objeto', async () => {
-      const response = await SalesServices.getById(payloadSale._id);
+    it('retorna um object', async () => {
+      const response = await SalesService.createSales(mockProduct);
+
       expect(response).to.be.an('object');
-    });
+    })
+  });
+});
 
-    it('retorna o objeto com o id passado', async () => {
-      const response = await SalesServices.getById(payloadSale._id);
-      expect(response).to.be.deep.equal(payloadSale);
-    });
+describe('Function getAllSales', () => {
+  describe('quando nao tem compras no banco', () => {
+    it('retorna um array', async () => {
+      const response = await SalesService.getAllSales();
 
+      expect(response).to.be.an('array');
+    })
+
+    it('o Array [e vazio', async () => {
+      const response = await SalesService.getAllSales();
+
+      expect(response).to.be.empty;
+    })
   });
 
-  describe('SalesServices.remove()', () => {
+  describe('quando tem compras no banco', () => {
+    it('retorna um array', async () => {
+      const response = await SalesService.getAllSales();
 
-    const payloadSale = {
-      _id: '604cb554311d68f491ba5781',
-      itensSold: [
-        { productId: '604cb554311d68f491ba1342', quantity: 1 },
-      ]
+      expect(response).to.be.an('array');
+    })
+  });
+});
+
+describe('Function findById', () => {
+  describe('quando nao achar nenhum produto com ID', () => {
+    const mockSale = {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found'
+      }
     };
 
-    before(() => {
-      sinon.stub(SalesModel, 'remove')
-        .resolves(true);
-      sinon.stub(ProductsServices, 'getById')
-        .resolves({ _id: '60f130a563a28ed3f2e84857', name: 'Teste', quantity: 10 });
-      sinon.stub(ProductsModel, 'update')
-        .resolves(true);
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(SalesModel, 'findById')
+        .resolves(mockSale);
     });
 
-    after(() => {
-      SalesModel.remove.restore();
-      ProductsServices.getById.restore();
-      ProductsModel.update.restore();
+    after(async () => {
+      SalesModel.findById.restore();
     });
 
+    it('retorna um object com erro', async () => {
+      const response = await SalesService.findById(id);
 
-    it('retorna um objeto', async () => {
-      const response = await SalesServices.remove(payloadSale._id);
       expect(response).to.be.an('object');
-    });
-
-    it('retorna o objeto com o id passado', async () => {
-      const response = await SalesServices.remove(payloadSale._id);
-      expect(response).to.be.deep.equal(payloadSale);
-    });
-
+    })
   });
 
-  describe('SalesServices.update()', () => {
+  describe('quando achar um produto com ID', () => {
+    const mockProduct = [
+      {
+        productId: '60e72ce912fb02363cd340e4',
+        quantity: 10
+      }
+    ];
 
-    const payloadSale = {
-      _id: '604cb554311d68f491ba5781',
-      itensSold: [
-        { productId: '604cb554311d68f491ba1342', quantity: 1 },
-      ]
+    const mockSale = {
+      insertedId: '60e72ce912fb02363cd340e4',
+      itensSold: mockProduct
     };
 
-    before(() => {
-      sinon.stub(SalesModel, 'update')
-        .callsFake(async (id, name, quantity) => {
-          return Promise.resolve({ id, name, quantity });
-        })
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(SalesModel, 'findById')
+        .resolves(mockSale);
     });
 
-    after(() => {
-      SalesModel.findByQuery.restore();
-      SalesModel.update.restore();
+    after(async () => {
+      SalesModel.findById.restore();
     });
 
-    it('retorna um objeto', async () => {
-      const response = await SalesServices.update(
-        payloadSale._id,
-        payloadSale.itensSold,
-      );
+    it('retorna um object', async () => {
+      const response = await SalesService.findById(id);
+
       expect(response).to.be.an('object');
-    });
-
-    it('retorna o objeto com o id passado', async () => {
-      const response = await SalesServices.update(
-        payloadSale._id,
-        payloadSale.itensSold,
-      );
-      expect(response).to.be.deep.equal(payloadSale);
-    });
-
+    })
   });
+});
 
+describe('Function editSale', () => {
+  describe('edita um produto com ID', () => {
+    const mockProduct = [
+      {
+        productId: '60e72ce912fb02363cd340e4',
+        quantity: 10
+      }
+    ];
+
+    const mockSale = {
+      insertedId: '60e72ce912fb02363cd340e4',
+      itensSold: mockProduct
+    };
+
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(SalesModel, 'editSale')
+        .resolves(mockSale);
+    });
+
+    after(async () => {
+      SalesModel.editSale.restore();
+    });
+
+    it('retorna um object', async () => {
+      const response = await SalesService.editSale(id, mockProduct);
+
+      expect(response).to.be.an('object');
+    })
+  });
+});
+
+describe('Function deleteProduct', () => {
+  describe('deleta um produto com ID', () => {
+    const mockProduct = [
+      {
+        productId: '60e72ce912fb02363cd340e4',
+        quantity: 10
+      }
+    ];
+
+    const mockSale = {
+      insertedId: '60e72ce912fb02363cd340e4',
+      itensSold: mockProduct
+    };
+
+    const id = '60e72ce912fb02363cd340e4';
+
+    before(async () => {
+      sinon.stub(SalesModel, 'editSale')
+        .resolves(null);
+    });
+
+    after(async () => {
+      SalesModel.editSale.restore();
+    });
+
+    it('retorna um object', async () => {
+      const response = await SalesService.deleteSale(id);
+
+      expect(response).to.be.an('object');
+    })
+  });
 });

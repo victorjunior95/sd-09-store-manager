@@ -1,20 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const router = require('./routes/router');
-const errorMiddleware = require('./middlewares/ErrorMiddleware');
+const erroMiddleware = require('./middlewares/error');
+const products = require('./routers/ProductsRouter');
+const sales = require('./routers/SalesRouter');
+
+require('dotenv').config();
 
 const app = express();
-const DEFAULT_PORT = 3000;
-const PORT = process.env.PORT || DEFAULT_PORT;
-
+const NumberPORT = 3000;
+const PORT = process.env.PORT || NumberPORT;
 
 app.use(bodyParser.json());
-app.use(router);
-app.use(errorMiddleware);
 
-app.listen(PORT, () => console.log(`Connected at port ${PORT}`));
+app.use('/products', products);
+
+app.use('/sales', sales);
+
+app.use(erroMiddleware);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
+
+app.listen(PORT, () => console.log(`Servidor Ligado porta ${PORT}!!!`));
