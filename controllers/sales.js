@@ -1,24 +1,18 @@
 const sales = require('../services/sales');
 
-const postSale = (request, response) => sales.postSale(request.body)
-  .then(({ status, data }) => response.status(status).json(data));
+const create = (req, res) => sales.create([...req.body])
+  .then(({ status, data }) => res.status(status).json(data));
 
-const getAllSales = (request, response) => sales.getAllSales(request.body)
-  .then(({ status, data }) => response.status(status).json(data));
+const getAll = (_req, res) => sales.getAll()
+  .then(({ status, data }) => res.status(status).json({ 'sales': data }));
 
-const getSalesbyId = (request, response) => sales.getSalesbyId(request.body)
-  .then(({ status, data }) => response.status(status).json(data));
+const getById = (req, res) => sales.getById(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
-const putSale = (request, response) => sales.putSale(request.body)
-  .then(({ status, data }) => response.status(status).json(data));
+const update = ({ body: [...args], params: { id } }, res) => sales.update(id, args)
+  .then(({ status }) => res.status(status).json({ _id: id, itensSold: args }));
 
-const deleteSale = (request, response) => sales.deleteSale(request.body)
-  .then(({ status, data }) => response.status(status).json(data));
+const remove = (req, res) => sales.remove(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
-module.exports = {
-  postSale,
-  getAllSales,
-  getSalesbyId,
-  putSale,
-  deleteSale,
-};
+module.exports = { create, getAll, getById, update, remove };

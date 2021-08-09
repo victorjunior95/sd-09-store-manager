@@ -1,29 +1,18 @@
 const products = require('../services/products');
 
-const postProduct = (request, response) => products
-  .postProduct(request.body)
-  .then(({status, data}) => response.status(status).json(data));
+const create = (req, res) => products.create(req.body)
+  .then(({ status, data }) => res.status(status).json(data));
 
-const getAllProducts = (request, response) => products
-  .getAllProducts(request.body)
-  .then(({status, data}) => response.status(status).json(data));
+const getAll = (_req, res) => products.getAll()
+  .then(({ status, data }) => res.status(status).json({ 'products': data }));
 
-const getProductById = (request, response) => products
-  .getProductById(request.params.id, request.body)
-  .then(({status, data}) => response.status(status).json(data));
+const getById = (req, res) => products.getById(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
-const putProduct = (request, response) => products
-  .putProduct(request.body)
-  .then(({status, data}) => response.status(status).json(data));
+const update = (req, res) => products.update(req.params.id, req.body)
+  .then(({ status }) => res.status(status).json({ _id: req.params.id, ...req.body }));
 
-const deleteProduct = (request, response) => products
-  .deleteProduct(request.body)
-  .then(({status, data}) => response.status(status).json(data));
+const remove = (req, res) => products.remove(req.params.id)
+  .then(({ status, data }) => res.status(status).json(data));
 
-module.exports = {
-  postProduct,
-  getAllProducts,
-  getProductById,
-  putProduct,
-  deleteProduct,
-};
+module.exports = { create, getAll, getById, update, remove };

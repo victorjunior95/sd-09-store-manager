@@ -1,51 +1,22 @@
 const connection = require('./connection');
-const { ObjectId } = require('mongodb');
+const { ObjectID } = require('mongodb');
 
-// https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/#mongodb-method-db.collection.insertOne
-const postProduct = (name, quantity) => connection()
-  .then((db) => db.collection('products').insertOne({name, quantity}))
-  .then(({ ops }) => ops[0]);
+const create = (product) => connection().then((db) =>
+  db.collection('products').insertOne(product)).then(({ ops }) => ops[0]);
 
-// https://docs.mongodb.com/manual/reference/method/db.collection.find/#mongodb-method-db.collection.find
-const getAllProducts = () => connection()
-  .then((db) => db.collection('products')
-    .find().toArray()
-  );
+const getAll = () => connection().then((db) =>
+  db.collection('products').find().toArray());
 
-const getProductById = (id) => connection()
-  .then((db) => db.collection('products')
-    .find(ObjectId(id))
-  );
+const getById = (id) => connection().then((db) =>
+  db.collection('products').findOne(ObjectID(id)));
 
-const getProductByName = (name) => connection()
-  .then((db) => db.collection('products')
-    .find({name})
-  );
+const getByName = (name) => connection().then((db) =>
+  db.collection('products').findOne({ name }));
 
-// https://docs.mongodb.com/manual/reference/method/db.collection.update/#mongodb-method-db.collection.update
-const putProduct = (id, name, quantity) => connection()
-  .then((db) => db.collection('products')
-    .update({ _id: ObjectId(id)}, { $set:{ name, quantity }})
-  );
+const update = (id, product) => connection().then((db) =>
+  db.collection('products').updateOne({ _id: ObjectID(id) }, { $set: product }));
 
-// We can use $inc instead of $set, using $inc will increase the value. For decrease use negative numbers
-const putProductQuantity = (id, quantity) => connection()
-  .then((db) => db.collection('products')
-    .update({_id: ObjectId(id)}, {$set: {quantity}})
-  );
+const remove = (id) => connection().then((db) =>
+  db.collection('products').findOneAndDelete({ _id: ObjectID(id) }));
 
-// https://docs.mongodb.com/manual/reference/method/db.collection.deleteOne/#mongodb-method-db.collection.deleteOne
-const deleteProduct = (id) => connection()
-  .then((db) => db.collection('products')
-    .deleteOne({_id: ObjectId(id)})
-  );
-
-module.exports = {
-  postProduct,
-  getAllProducts,
-  getProductById,
-  getProductByName,
-  putProduct,
-  putProductQuantity,
-  deleteProduct,
-};
+module.exports = { create, getAll, getById, getByName, update, remove };

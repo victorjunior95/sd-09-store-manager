@@ -1,21 +1,25 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const products = require('./routes/products');
+const sales = require('./routes/sales');
 
 const app = express();
 app.use(bodyParser.json());
 
-const default_port = '3000';
-
-const PORT = process.env.PORT || default_port;
-
-app.listen(PORT, () => {
-  console.log(`Online - porta ${PORT}`);
-});
+const PORT = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use(({ status, error }, _request, response, _next) => {
-  response.status(status).json({ error });
+app.use('/products', products);
+app.use('/sales', sales);
+
+app.use(({ status, err }, _req, res, _next) => {
+  res.status(status).json({ err });
+});
+
+app.listen(PORT, () => {
+  console.log('Online');
 });

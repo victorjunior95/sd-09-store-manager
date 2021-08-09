@@ -1,13 +1,13 @@
 const express = require('express');
-const rescue = require('express-rescue');
 const sales = require('../controllers/sales');
+const validate = require('../middlewares/validators');
 
 const route = express.Router();
 
-route.post('/', rescue(sales.postSale));
-route.get('/', rescue(sales.getAllSales));
-route.get('/', rescue(sales.getSalesbyId));
-route.put('/', rescue(sales.putSale));
-route.delete('/', rescue(sales.deleteSale));
+route.post('/', validate.sale, validate.stock, sales.create);
+route.get('/', sales.getAll);
+route.get('/:id', validate.saleExists, sales.getById);
+route.put('/:id', validate.sale, sales.update);
+route.delete('/:id', validate.saleId, validate.saleExists, sales.remove);
 
 module.exports = route;
