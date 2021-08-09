@@ -1,10 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const productModel = require('../../models/productModel');
-const productService = require('../../services/productService');
-const saleModel = require('../../models/saleModel');
-const saleService = require('../../services/saleService');
+const productModel = require('../../models/Products');
+const productService = require('../../services/Products');
+const saleModel = require('../../models/Sales');
+const saleService = require('../../services/Sales');
 
 describe('productService.js', () => {
   const productPayload = {
