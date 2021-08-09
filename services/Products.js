@@ -1,9 +1,10 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 const model = require('../models/Products');
 
 const UNPROCESSABLE_ENTITY = 422;
 const MIN_NAME_LENGTH = 5;
+
 const validateProduct = Joi.object({
   name: Joi.string().min(MIN_NAME_LENGTH).required(),
   quantity: Joi.number().min(1).required(),
