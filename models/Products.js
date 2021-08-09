@@ -7,6 +7,12 @@ const create = async (name, quantity) =>
       return { id: result.insertedId, name, quantity};
     });
 
+const findProductByName = async (name) =>
+  connection()
+    .then((db) => db.collection('products').findOne({ name }))
+    .then(result => result);
+
 module.exports = {
   create,
+  findProductByName,
 };
