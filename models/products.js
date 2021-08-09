@@ -1,6 +1,6 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
-const { AppError, errorCodes} = require('../utils');
+const { AppError, errorCodes } = require('../utils');
 
 const checkNameExists = async (_schema, data) => {
   try {
@@ -38,9 +38,23 @@ const createProduct = async (product) => {
   }
 };
 
+const updateProduct = async (id, newInfo) => {
+  try {
+    const db = await connection();
+    const objectId = new ObjectId(id);
+    const updatedProduct = await db
+      .collection('products')
+      .updateOne({ _id: objectId },{ $set: newInfo});
+    return updateProduct;
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
 module.exports = {
   checkNameExists,
   createProduct,
+  updateProduct,
   getById,
   getAll,
 };

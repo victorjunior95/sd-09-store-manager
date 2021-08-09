@@ -6,14 +6,14 @@ const isValidationError = (err) => err instanceof ajvError;
 
 const responseValidationError = (errorObj) => ({
   err: {
-    code: errorCodes.INVALID_DATA,
-    message: errorObj.errors[0].message,
+    code: errorObj.code || errorCodes.INVALID_DATA,
+    message: errorObj.errors[0].message || errorObj[0].message,
   },
 });
 
 const responseAppError = (errorObj) => ({
   err: {
-    code: errorCodes.INVALID_DATA,
+    code: errorObj.code || errorCodes.INVALID_DATA,
     message: errorObj.message,
   },
 });
