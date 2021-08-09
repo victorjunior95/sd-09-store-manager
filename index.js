@@ -10,8 +10,9 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.get('/teste', (_request, response) => {
-  response.status(200).send({message: 'ok'});
+app.post('/products', (req, res) => {
+  const {name, quantity} = req.body;
+  res.status(200).send({name, quantity});
 });
 
 
