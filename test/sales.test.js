@@ -148,7 +148,6 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         const { json } = secondResponse;
         const idFirstItenSold = json.itensSold[0].productId;
         const quantityFirstItenSold = json.itensSold[0].quantity;
-        expect(json).toHaveProperty('_id');
         expect(idFirstItenSold).toBe(resultProductId);
         expect(quantityFirstItenSold).toBe(2);
       });
@@ -185,7 +184,6 @@ describe('5 - Crie um endpoint para cadastrar vendas', () => {
         const quantityFirstItenSold = json.itensSold[0].quantity;
         const idSecondItenSold = json.itensSold[1].productId;
         const quantitySecondItenSold = json.itensSold[1].quantity;
-        expect(json).toHaveProperty('_id');
         expect(idFirstItenSold).toBe(resultProductId);
         expect(quantityFirstItenSold).toBe(2);
         expect(idSecondItenSold).toBe(resultProductId);
@@ -281,7 +279,7 @@ describe('6 - Crie um endpoint para listar as vendas', () => {
       });
   });
 
-  it('Será validado que é possível listar uma determinada venda', async () => {
+  it.only('Será validado que é possível listar uma determinada venda', async () => {
     let result;
     let resultSales;
     let resultSalesId;
