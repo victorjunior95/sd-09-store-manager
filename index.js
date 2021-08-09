@@ -23,7 +23,6 @@ app.get('/sales', SalesController.getAll);
 app.put('/sales/:id', SalesController.updateById);
 app.delete('/sales/:id', SalesController.deleteById);
 
-
 app.use(ErrorMiddleware);
 
 const PORT = 3000;
