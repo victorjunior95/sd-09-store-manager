@@ -1,9 +1,10 @@
 const router = require('express').Router();
+const { sales: salesController } = require('../controllers');
 
-const HTTP_OK = 200;
-
-router.get('/', (_req, res) => {
-  res.status(HTTP_OK).json({ message: 'NOT_IMPLEMENTED' });
-});
+// router.get('/:id', salesController.salesGetId);
+// router.get('/', salesController.salesIndex);
+// router.put('/:id', salesController.updateSale);
+router.post('/', salesController.salesCreate);
+// router.delete('/:id', salesController.deleteSale);
 
 module.exports = router;

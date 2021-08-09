@@ -1,5 +1,5 @@
 const { products: productsServices } = require('../services');
-const { httpCodes, AppError, errorCodes } = require('../utils');
+const { httpCodes } = require('../utils');
 
 exports.productsIndex = async (_req, res, next) => {
   try {

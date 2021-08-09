@@ -11,6 +11,16 @@ const checkNameExists = async (_schema, data) => {
   }
 };
 
+const checkIdExists = async (_schema, data) => {
+  try {
+    const db = await connection();
+    return !!(await db.collection('products').findOne({ _id: ObjectId(data) }));
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
+
 const getAll = async () => {
   try {
     const db = await connection();
@@ -66,6 +76,7 @@ const deleteProduct = async (id) => {
 
 module.exports = {
   checkNameExists,
+  checkIdExists,
   createProduct,
   updateProduct,
   deleteProduct,
