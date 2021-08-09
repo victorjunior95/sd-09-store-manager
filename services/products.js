@@ -69,10 +69,24 @@ const deleteProduct = async (id) => {
   return { status: 200, response };
 };
 
+const decreaseProductQuantity = async ({ id, quantity }) => {
+  const product = await products.getProductById(id);
+  const newQuantity = product.quantity - quantity;
+  await products.putProduct(id, newQuantity);
+};
+
+const increaseProductQuantity = async ({ id, quantity }) => {
+  const product = await products.getProductById(id);
+  const newQuantity = product.quantity + quantity;
+  await products.putProduct(id, newQuantity);
+};
+
 module.exports = {
   postProduct,
   getAllProducts,
   getProductById,
   putProduct,
   deleteProduct,
+  decreaseProductQuantity,
+  increaseProductQuantity,
 };
