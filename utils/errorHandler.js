@@ -19,7 +19,6 @@ const responseAppError = (errorObj) => ({
 });
 
 const errorHandler = (errorObj, res) => {
-  console.log(errorObj);
   if(res === undefined) {
     console.error('Error uncaught: ', errorObj);
     return;

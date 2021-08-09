@@ -1,5 +1,5 @@
 const { products: productsServices } = require('../services');
-const { httpCodes, AppError } = require('../utils');
+const { httpCodes, AppError, errorCodes } = require('../utils');
 
 exports.productsIndex = async (_req, res, next) => {
   try {
@@ -36,6 +36,16 @@ exports.updateProduct = async (req, res, next) => {
     const updatedProduct = await productsServices.updateProductService(id, newInfo);
     const newProductInfo = await productsServices.getByIdService(id);
     res.status(httpCodes.HTTP_OK).json(newProductInfo);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteProduct =  async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedProduct = await productsServices.deleteProductService(id);
+    res.status(httpCodes.HTTP_OK).json(deletedProduct);
   } catch (error) {
     next(error);
   }

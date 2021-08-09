@@ -51,10 +51,24 @@ const updateProduct = async (id, newInfo) => {
   }
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const db = await connection();
+    const product = await db.collection('products').findOne(new ObjectId(id));
+    if (product) {
+      await db.collection('products').deleteOne({ _id: ObjectId(id) });
+    }
+    return product;
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
 module.exports = {
   checkNameExists,
   createProduct,
   updateProduct,
+  deleteProduct,
   getById,
   getAll,
 };
