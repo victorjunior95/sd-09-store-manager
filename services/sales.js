@@ -44,7 +44,6 @@ ajv.addKeyword('productIdExists', {
 // };
 
 exports.createService = async (sales) => {
-  console.log(sales);
   const validate = ajv.getSchema('sales');
   const isValid = await validate(sales);
   return await salesModel.createSale(sales);
