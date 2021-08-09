@@ -33,7 +33,7 @@ exports.updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { body: newInfo } = req;
-    const updatedProduct = await productsServices.updateProductService(id, newInfo);
+    await productsServices.updateProductService(id, newInfo);
     const newProductInfo = await productsServices.getByIdService(id);
     res.status(httpCodes.HTTP_OK).json(newProductInfo);
   } catch (error) {

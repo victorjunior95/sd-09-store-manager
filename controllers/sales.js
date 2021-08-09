@@ -32,8 +32,8 @@ exports.salesCreate = async (req, res, next) => {
 exports.updateSale = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { body: newInfo } = req;
-    const updatedSale = await salesServices.updateSaleService(id, newInfo);
+    const itensSold = req.body;
+    await salesServices.updateSaleService(id, { itensSold });
     const newSaleInfo = await salesServices.getByIdService(id);
     res.status(httpCodes.HTTP_OK).json(newSaleInfo);
   } catch (error) {

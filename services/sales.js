@@ -28,22 +28,22 @@ exports.getByIdService = async (id) => {
   }
 };
 
-// exports.updateSaleService = async (id, newInfo) => {
-//   let updatedSale = null;
-//   const validate = ajv.getSchema('salesUpdate');
-//   const isValid = await validate(newInfo);
+exports.updateSaleService = async (id, newInfo) => {
+  let updatedSale = null;
+  const validate = ajv.getSchema('sales');
+  const isValid = await validate(newInfo);
 
-//   if (ObjectId.isValid(id) && isValid) {
-//     updatedSale = await salesModel.updateSale(id, newInfo);
-//     if (updatedSale === null)
-//       throw new AppError(errorCodes.INVALID_DATA, WRONG_ID_MESSAGE);
-//     return updatedSale;
-//   } else if (!ObjectId.isValid(id)) {
-//     throw new AppError(errorCodes.INVALID_DATA, WRONG_ID_MESSAGE);
-//   } else {
-//     throw new AppError(errorCodes.INVALID_DATA, validate.errors[0].message);
-//   }
-// };
+  if (ObjectId.isValid(id) && isValid) {
+    updatedSale = await salesModel.updateSale(id, newInfo);
+    if (updatedSale === null)
+      throw new AppError(errorCodes.NOT_FOUND, SALE_NOT_FOUND);
+    return updatedSale;
+  } else if (!ObjectId.isValid(id)) {
+    throw new AppError(errorCodes.INVALID_DATA, SALE_NOT_FOUND);
+  } else {
+    throw new AppError(errorCodes.INVALID_DATA, validate.errors[0].message);
+  }
+};
 
 exports.createService = async (sales) => {
   const validate = ajv.getSchema('sales');
