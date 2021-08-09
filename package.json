@@ -30,6 +30,7 @@
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
     "mongodb": "^3.5.9",
+    "mongodb-memory-server": "^7.3.5",
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
