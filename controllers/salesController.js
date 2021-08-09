@@ -28,6 +28,13 @@ const getByIdOrName = rescue(async (req, res, next) => {
   res.status(successStatus).json(response);
 });
 
+const getById = rescue(async (req, res, next) => {
+  const { id } = req.params;
+  const response = await StoreService.getById(id);
+  if (response.message) return next(response.message);
+  res.status(successStatus).json(response);
+});
+
 const updateById = rescue(async (req, res, next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
@@ -48,6 +55,7 @@ module.exports = {
   create,
   getAll,
   getByIdOrName,
+  getById,
   updateById,
   deleteById,
 };
