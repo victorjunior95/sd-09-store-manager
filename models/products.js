@@ -1,4 +1,4 @@
-const connection = require('./products');
+const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
 // https://docs.mongodb.com/manual/reference/method/db.collection.insertOne/#mongodb-method-db.collection.insertOne
