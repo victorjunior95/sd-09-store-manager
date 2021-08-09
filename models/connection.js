@@ -1,4 +1,4 @@
-// Connection
+// Connection (para a turma 10...)
 
 const { MongoClient } = require('mongodb');
 
