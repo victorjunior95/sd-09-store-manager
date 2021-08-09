@@ -11,13 +11,28 @@ const responseValidationError = (errorObj) => ({
   },
 });
 
+const responseAppError = (errorObj) => ({
+  err: {
+    code: errorCodes.INVALID_DATA,
+    message: errorObj.message,
+  },
+});
+
 const errorHandler = (errorObj, res) => {
-  if (isValidationError(errorObj) && res) {
+  console.log(errorObj);
+  if(res === undefined) {
+    console.error('Error uncaught: ', errorObj);
+    return;
+  }
+  if (isValidationError(errorObj)) {
     res
       .status(httpCodes.HTTP_UNPROCESSABLE_ERROR)
       .json(responseValidationError(errorObj));
+  } else {
+    res
+      .status(httpCodes.HTTP_UNPROCESSABLE_ERROR)
+      .json(responseAppError(errorObj));
   }
-  if(res === undefined) console.error('Error uncaught: ', errorObj);
 };
 
 module.exports = errorHandler;

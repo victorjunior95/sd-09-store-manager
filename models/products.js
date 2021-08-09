@@ -1,12 +1,13 @@
 const connection = require('./connection');
-const utils = require('../utils');
+const { ObjectId } = require('mongodb');
+const { AppError, errorCodes} = require('../utils');
 
 const checkNameExists = async (_schema, data) => {
   try {
     const db = await connection();
     return !(await db.collection('products').findOne({ name: data }));
   } catch (error) {
-    throw new utils.AppError(utils.errorCodes.DATABASE_ERROR, error);
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
   }
 };
 
@@ -15,7 +16,16 @@ const getAll = async () => {
     const db = await connection();
     return await db.collection('products').find().toArray();
   } catch (error) {
-    throw new utils.AppError(utils.errorCodes.DATABASE_ERROR, error);
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
+  }
+};
+
+const getById = async (id) => {
+  try {
+    const db = await connection();
+    return await db.collection('products').findOne(new ObjectId(id));
+  } catch (error) {
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
   }
 };
 
@@ -24,12 +34,13 @@ const createProduct = async (product) => {
     const db = await connection();
     return await db.collection('products').insertOne(product);
   } catch (error) {
-    throw new utils.AppError(utils.errorCodes.DATABASE_ERROR, error);
+    throw new AppError(errorCodes.DATABASE_ERROR, error);
   }
 };
 
 module.exports = {
   checkNameExists,
   createProduct,
+  getById,
   getAll,
 };

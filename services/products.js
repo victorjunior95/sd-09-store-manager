@@ -1,5 +1,7 @@
 const { products: productsModel } = require('../models');
 const ajv = require('../schemas/validation');
+const { ObjectId } = require('mongodb');
+const { AppError, errorCodes } = require('../utils');
 
 ajv.addKeyword('productNameExists', {
   async: true,
@@ -11,11 +13,20 @@ exports.getAll = async () => {
   return await productsModel.getAll();
 };
 
+exports.getID = async (id) => {
+  let product = null;
+
+  if (ObjectId.isValid(id)) {
+    product = await productsModel.getById(id);
+    if (product === null) throw new AppError(errorCodes.INVALID_DATA, 'Wrong id format');
+    return product;
+  } else {
+    throw new AppError(errorCodes.INVALID_DATA, 'Wrong id format');
+  }
+};
+
 exports.create = async (product) => {
   const validate = ajv.getSchema('products');
   const isValid = await validate(product);
-  if (!isValid) {
-    throw new Error('Oops at create services at products domain');
-  }
   return await productsModel.createProduct(product);
 };
