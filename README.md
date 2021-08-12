@@ -8,6 +8,7 @@ Você já usa o GitHub diariamente para desenvolver os exercícios, certo? Agora
 
 Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu projeto a partir deste repositório, utilizando uma branch específica e um Pull Request para colocar seus códigos.
 
+
 ---
 
 # Sumário
@@ -41,7 +42,7 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
     - [10 - Valide a quantidade de produtos](#10---valide-a-quantidade-de-produtos)
 
     `Bônus`
-    
+
     - [11 - Escreva testes para seus models](#11---escreva-testes-para-seus-models)
     - [12 - Escreva testes para seus services](#12---escreva-testes-para-seus-services)
     - [13 - Escreva testes para seus controllers](#13---escreva-testes-para-seus-controllers)
