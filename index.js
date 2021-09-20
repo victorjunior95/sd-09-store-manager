@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const Product = require('./controllers/Products');
 const Sales = require('./controllers/Sales');
 const errorMiddleware = require('./middlewares/error');
-const { get } = require('frisby');
 const app = express();
 
 app.use(bodyParser.json());
